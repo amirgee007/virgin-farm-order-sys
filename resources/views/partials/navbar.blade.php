@@ -2,7 +2,7 @@
 
     <div class="navbar-brand-wrapper d-flex align-items-center justify-content-center">
         <a class="navbar-brand mr-0" href="{{ url('/') }}">
-            <img src="{{ url('assets/img/vanguard-logo.png') }}" class="logo-lg" height="35" alt="{{ setting('app_name') }}">
+            <img src="{{ url('assets/img/vanguard-logo.png') }}" class="logo-lg" height="60" alt="{{ setting('app_name') }}">
             <img src="{{ url('assets/img/vanguard-logo-no-text.png') }}" class="logo-sm" height="35" alt="{{ setting('app_name') }}">
         </a>
     </div>
