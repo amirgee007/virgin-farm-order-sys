@@ -1,5 +1,5 @@
 <nav class="col-md-2 sidebar">
-    <div class="user-box text-center pt-5 pb-3">
+    <div class="user-box text-center pt-3 pb-3">
         <div class="user-img">
             <img src="{{ auth()->user()->present()->avatar }}"
                  width="90"
