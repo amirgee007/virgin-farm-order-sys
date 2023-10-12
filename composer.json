@@ -45,7 +45,8 @@
         "vanguardapp/announcements": "^5.0",
         "vanguardapp/plugins": "^5.0",
         "webpatser/laravel-countries": "dev-master",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "arcanedev/log-viewer": "^10.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

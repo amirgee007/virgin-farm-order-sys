@@ -31,6 +31,7 @@ class ProfileController extends Controller
      */
     public function show()
     {
+
         $roles = $this->roles->all()->filter(function ($role) {
             return $role->id == auth()->user()->role_id;
         })->pluck('name', 'id');

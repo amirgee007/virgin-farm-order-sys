@@ -114,6 +114,9 @@
 @stop
 
 @section('scripts')
+
+    @include('partials.toaster-js')
+
     {!! HTML::script('assets/js/as/btn.js') !!}
     {!! HTML::script('assets/js/as/profile.js') !!}
     {!! JsValidator::formRequest('Vanguard\Http\Requests\User\UpdateDetailsRequest', '#details-form') !!}
