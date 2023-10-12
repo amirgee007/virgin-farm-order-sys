@@ -162,7 +162,7 @@ class UsersController extends Controller
 
     }
 
-    public function indexNotofications(){
+    public function indexNotifications(){
 
         return 'plz wait for the front page';
 

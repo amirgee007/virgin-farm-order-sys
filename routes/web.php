@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::group(['prefix'=>'notifications'], function() {
         Route::get('/', [
             'as' => 'notifications.index',
-            'uses' => 'Users/UsersController@indexNotifications'
+            'uses' => 'Users\UsersController@indexNotifications'
         ]);
     });
 
