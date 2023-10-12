@@ -40,19 +40,19 @@
                             @lang('Login Details')
                         </a>
                     </li>
-                    @if (setting('2fa.enabled'))
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               id="authentication-tab"
-                               data-toggle="tab"
-                               href="#2fa"
-                               role="tab"
-                               aria-controls="home"
-                               aria-selected="true">
-                                @lang('Two-Factor Authentication')
-                            </a>
-                        </li>
-                    @endif
+                    {{--@if (setting('2fa.enabled'))--}}
+                        {{--<li class="nav-item">--}}
+                            {{--<a class="nav-link"--}}
+                               {{--id="authentication-tab"--}}
+                               {{--data-toggle="tab"--}}
+                               {{--href="#2fa"--}}
+                               {{--role="tab"--}}
+                               {{--aria-controls="home"--}}
+                               {{--aria-selected="true">--}}
+                                {{--@lang('Two-Factor Authentication')--}}
+                            {{--</a>--}}
+                        {{--</li>--}}
+                    {{--@endif--}}
                 </ul>
 
                 <div class="tab-content mt-4" id="nav-tabContent">
@@ -80,16 +80,16 @@
                         </form>
                     </div>
 
-                    @if (setting('2fa.enabled'))
-                        <div class="tab-pane fade px-2" id="2fa" role="tabpanel" aria-labelledby="nav-profile-tab">
-                            <?php $route = Authy::isEnabled($user) ? 'disable' : 'enable'; ?>
+                    {{--@if (setting('2fa.enabled'))--}}
+                        {{--<div class="tab-pane fade px-2" id="2fa" role="tabpanel" aria-labelledby="nav-profile-tab">--}}
+                            {{--<?php $route = Authy::isEnabled($user) ? 'disable' : 'enable'; ?>--}}
 
-                            <form action="{{ route("two-factor.{$route}") }}" method="POST" id="two-factor-form">
-                                @csrf
-                                @include('user.partials.two-factor')
-                            </form>
-                        </div>
-                    @endif
+                            {{--<form action="{{ route("two-factor.{$route}") }}" method="POST" id="two-factor-form">--}}
+                                {{--@csrf--}}
+                                {{--@include('user.partials.two-factor')--}}
+                            {{--</form>--}}
+                        {{--</div>--}}
+                    {{--@endif--}}
                 </div>
 
             </div>

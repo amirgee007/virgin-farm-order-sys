@@ -47,8 +47,35 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/', 'DashboardController@index')->name('dashboard');
 
+    Route::group(['prefix'=>'products'], function() {
+        Route::get('/', [
+            'as' => 'products.index',
+            'uses' => 'ProductsController@index'
+        ]);
+    });
 
 
+    Route::group(['prefix'=>'boxes'], function() {
+        Route::get('/', [
+            'as' => 'boxes.index',
+            'uses' => 'BoxesController@index'
+        ]);
+    });
+
+    Route::group(['prefix'=>'carriers'], function() {
+        Route::get('/', [
+            'as' => 'carriers.index',
+            'uses' => 'CarriersController@index'
+        ]);
+    });
+
+
+    Route::group(['prefix'=>'notifications'], function() {
+        Route::get('/', [
+            'as' => 'notifications.index',
+            'uses' => 'Users/UsersController@indexNotifications'
+        ]);
+    });
 
 
 
@@ -80,34 +107,21 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             ->name('profile.sessions.invalidate')
             ->middleware('session.database');
     });
-
-    /**
-     * Two-Factor Authentication Setup
-     */
-
-    Route::group(['middleware' => 'two-factor'], function () {
-        Route::post('two-factor/enable', 'TwoFactorController@enable')->name('two-factor.enable');
-
-        Route::get('two-factor/verification', 'TwoFactorController@verification')
-            ->name('two-factor.verification')
-            ->middleware('verify-2fa-phone');
-
-        Route::post('two-factor/resend', 'TwoFactorController@resend')
-            ->name('two-factor.resend')
-            ->middleware('throttle:1,1', 'verify-2fa-phone');
-
-        Route::post('two-factor/verify', 'TwoFactorController@verify')
-            ->name('two-factor.verify')
-            ->middleware('verify-2fa-phone');
-
-        Route::post('two-factor/disable', 'TwoFactorController@disable')->name('two-factor.disable');
-    });
-
     /**
      * User Management
      */
-    Route::resource('users', 'Users\UsersController')
-        ->except('update')->middleware('permission:users.manage');
+    Route::resource('users', 'Users\UsersController')->except('update')
+        ->middleware('permission:users.manage');
+
+    Route::get('/{user}/admin-login', [
+        'as' => 'user.admin.login',
+        'uses' => 'Users\UsersController@adminLogin'
+    ]);
+
+    Route::get('/shipping-addresses', [
+        'as' => 'user.shipping.address',
+        'uses' => 'Users\UsersController@indexShippingAddress'
+    ]);
 
     Route::group(['prefix' => 'users/{user}', 'middleware' => 'permission:users.manage'], function () {
         Route::put('update/details', 'Users\DetailsController@update')->name('users.update.details');
@@ -140,6 +154,39 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::resource('permissions', 'PermissionsController')->middleware('permission:permissions.manage');
     });
+
+    /**
+     * Activity Log
+     */
+
+    Route::get('activity', 'ActivityController@index')->name('activity.index')
+        ->middleware('permission:users.activity');
+
+    Route::get('activity/user/{user}/log', 'Users\ActivityController@index')->name('activity.user')
+        ->middleware('permission:users.activity');
+
+    /**
+     * Two-Factor Authentication Setup
+     */
+
+    Route::group(['middleware' => 'two-factor'], function () {
+        Route::post('two-factor/enable', 'TwoFactorController@enable')->name('two-factor.enable');
+
+        Route::get('two-factor/verification', 'TwoFactorController@verification')
+            ->name('two-factor.verification')
+            ->middleware('verify-2fa-phone');
+
+        Route::post('two-factor/resend', 'TwoFactorController@resend')
+            ->name('two-factor.resend')
+            ->middleware('throttle:1,1', 'verify-2fa-phone');
+
+        Route::post('two-factor/verify', 'TwoFactorController@verify')
+            ->name('two-factor.verify')
+            ->middleware('verify-2fa-phone');
+
+        Route::post('two-factor/disable', 'TwoFactorController@disable')->name('two-factor.disable');
+    });
+
 
     /**
      * Settings
@@ -182,14 +229,4 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('settings/notifications', 'SettingsController@update')
         ->name('settings.notifications.update')
         ->middleware('permission:settings.notifications');
-
-    /**
-     * Activity Log
-     */
-
-    Route::get('activity', 'ActivityController@index')->name('activity.index')
-        ->middleware('permission:users.activity');
-
-    Route::get('activity/user/{user}/log', 'Users\ActivityController@index')->name('activity.user')
-        ->middleware('permission:users.activity');
 });

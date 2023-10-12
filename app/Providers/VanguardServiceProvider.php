@@ -22,7 +22,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
     protected function plugins()
     {
         return [
-            \Vanguard\Support\Plugins\Dashboard\Dashboard::class,
+//            \Vanguard\Support\Plugins\Dashboard\Dashboard::class,
             \Vanguard\Support\Plugins\Users::class,
             \Vanguard\UserActivity\UserActivity::class,
             \Vanguard\Support\Plugins\RolesAndPermissions::class,

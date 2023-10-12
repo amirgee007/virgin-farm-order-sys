@@ -21,9 +21,7 @@ use Vanguard\User;
  */
 class UsersController extends Controller
 {
-    public function __construct(private UserRepository $users)
-    {
-    }
+    public function __construct(private UserRepository $users) {  }
 
     /**
      * Display paginated list of all users.
@@ -149,5 +147,24 @@ class UsersController extends Controller
 
         return redirect()->route('users.index')
             ->withSuccess(__('User deleted successfully.'));
+    }
+
+    public function adminLogin(User $user)
+    {
+        auth()->loginUsingId($user->id);
+        return redirect()->route('dashboard');
+    }
+
+    #every user has its own page but if admin want to see all, he can see it.
+    public funtion indexShippingAddress(){
+
+        return 'plz wait for the front page';
+
+    }
+
+    public funtion indexNotofications(){
+
+        return 'plz wait for the front page';
+
     }
 }

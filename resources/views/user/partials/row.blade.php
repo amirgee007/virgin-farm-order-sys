@@ -44,6 +44,11 @@
                     @lang('View User')
                 </a>
 
+                <a href="{{ route('user.admin.login', $user->id) }}" class="dropdown-item text-gray-500">
+                    <i class="fas fa-arrow-right mr-2"></i>
+                    @lang('Login By This User')
+                </a>
+
                 @canBeImpersonated($user)
                     <a href="{{ route('impersonate', $user) }}" class="dropdown-item text-gray-500 impersonate">
                         <i class="fas fa-user-secret mr-2"></i>
