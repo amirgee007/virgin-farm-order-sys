@@ -59,12 +59,12 @@ class PermissionsSeeder extends Seeder
             'removable' => false
         ]);
 
-        $permissions[] = Permission::create([
-            'name' => 'settings.notifications',
-            'display_name' => 'Update Notifications Settings',
-            'description' => '',
-            'removable' => false
-        ]);
+//        $permissions[] = Permission::create([
+//            'name' => 'settings.notifications',
+//            'display_name' => 'Update Notifications Settings',
+//            'description' => '',
+//            'removable' => false
+//        ]);
 
         $adminRole->attachPermissions($permissions);
     }

@@ -24,7 +24,7 @@ class Settings extends Plugin
             ->route('settings.notifications')
             ->active("settings/notifications")
             ->permissions(function (User $user) {
-                return $user->hasPermission('settings.notifications');
+                return $user->hasPermission('settings.auth');
             });
 
         return Item::create(__('Settings'))
@@ -32,7 +32,7 @@ class Settings extends Plugin
             ->icon('fas fa-cogs')
             ->permissions(function (User $user) {
                 return $user->hasPermission(
-                    ['settings.general', 'settings.auth', 'settings.notifications'],
+                    ['settings.general', 'settings.auth'],
                     allRequired: false
                 );
             })
