@@ -156,13 +156,13 @@ class UsersController extends Controller
     }
 
     #every user has its own page but if admin want to see all, he can see it.
-    public funtion indexShippingAddress(){
+    public function indexShippingAddress(){
 
         return 'plz wait for the front page';
 
     }
 
-    public funtion indexNotofications(){
+    public function indexNotofications(){
 
         return 'plz wait for the front page';
 
