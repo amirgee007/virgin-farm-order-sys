@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('page-title', __('Users'))
-@section('page-heading', __('Users'))
+@section('page-title', __('Clients & Admins'))
+@section('page-heading', __('Clients & Admins'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">
-        @lang('Users')
+        @lang('Clients & Admins')
     </li>
 @stop
 
@@ -24,7 +24,7 @@
                                class="form-control input-solid"
                                name="search"
                                value="{{ Request::get('search') }}"
-                               placeholder="@lang('Search for users...')">
+                               placeholder="@lang('Search for clients and admins...')">
 
                             <span class="input-group-append">
                                 @if (Request::has('search') && Request::get('search') != '')
@@ -53,9 +53,9 @@
                 </div>
 
                 <div class="col-md-6">
-                    <a href="{{ route('users.create') }}" class="btn btn-primary btn-rounded float-right">
+                    <a href="{{ route('users.create') }}" class="btn btn-primary btn-rounded float-right btn-sm">
                         <i class="fas fa-plus mr-2"></i>
-                        @lang('Add User')
+                        @lang('Add Client OR Admin')
                     </a>
                 </div>
             </div>
@@ -70,6 +70,7 @@
                     <th class="min-width-150">@lang('Full Name')</th>
                     <th class="min-width-100">@lang('Email')</th>
                     <th class="min-width-80">@lang('Registration Date')</th>
+                    <th class="min-width-80">@lang('Company')</th>
                     <th class="min-width-80">@lang('Status')</th>
                     <th class="text-center min-width-150">@lang('Action')</th>
                 </tr>

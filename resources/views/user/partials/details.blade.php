@@ -43,10 +43,16 @@
             <input type="text" class="form-control input-solid" id="address"
                    name="address" placeholder="@lang('Address')" value="{{ $edit ? $user->address : '' }}">
         </div>
+
         <div class="form-group">
-            <label for="address">@lang('Country')</label>
-            {!! Form::select('country_id', $countries, $edit ? $user->country_id : '', ['class' => 'form-control input-solid']) !!}
+            <label for="address">@lang('Client Company')</label>
+            <input type="text" class="form-control input-solid" id="company"
+                   name="company" placeholder="@lang('Company')" value="{{ $edit ? $user->company : '' }}">
         </div>
+        {{--<div class="form-group">--}}
+            {{--<label for="address">@lang('Country')</label>--}}
+            {{--{!! Form::select('country_id', $countries, $edit ? $user->country_id : '', ['class' => 'form-control input-solid']) !!}--}}
+        {{--</div>--}}
     </div>
 
     @if ($edit)

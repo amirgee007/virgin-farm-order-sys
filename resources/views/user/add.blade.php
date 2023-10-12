@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', __('Add User'))
-@section('page-heading', __('Create New User'))
+@section('page-title', __('Add Client/Admin'))
+@section('page-heading', __('Create New Client/Admin'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item">

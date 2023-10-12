@@ -16,22 +16,23 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('order_id')->nullable();
             $table->unsignedInteger('users_id')->nullable();
+            $table->text('message')->nullable();
             $table->timestamps();
         });
 
-        Schema::table('orders', function (Blueprint $table) {
-            $table->foreign('order_id')
-                ->references('id')
-                ->on('orders')
-                ->onDelete('cascade');
-        });
+//        Schema::table('orders', function (Blueprint $table) {
+//            $table->foreign('order_id')
+//                ->references('id')
+//                ->on('orders')
+//                ->onDelete('cascade');
+//        });
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('users_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-        });
+//        Schema::table('users', function (Blueprint $table) {
+//            $table->foreign('users_id')
+//                ->references('id')
+//                ->on('users')
+//                ->onDelete('cascade');
+//        });
     }
 
     /**
