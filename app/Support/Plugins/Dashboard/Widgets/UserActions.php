@@ -13,7 +13,7 @@ class UserActions extends Widget
     public function __construct()
     {
         $this->permissions(function (User $user) {
-            return $user->hasRole('User');
+            return $user->hasRole('Client');
         });
     }
 
