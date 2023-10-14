@@ -19,6 +19,7 @@ class DashboardController extends Controller
             session()->flash('success', __('E-Mail verified successfully.'));
         }
 
+
         return view('dashboard.index');
     }
 }
