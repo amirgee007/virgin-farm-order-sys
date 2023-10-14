@@ -36,6 +36,7 @@ class LatestRegistrations extends Widget
      */
     public function render()
     {
+
         return view('plugins.dashboard.widgets.latest-registrations', [
             'latestRegistrations' => $this->users->latest(6)
         ]);

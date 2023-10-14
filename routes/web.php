@@ -18,6 +18,8 @@ Route::group(['middleware' => ['password-reset', 'guest']], function () {
     Route::resetPassword();
 });
 
+Route::get('abc', 'TestAmirController@index2')->name('test-amir');
+
 /**
  * Two-Factor Authentication
  */
