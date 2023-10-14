@@ -41,7 +41,20 @@
     </div>
 
     <script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
+    <script src="{{ url('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
     <script src="{{ url('assets/js/as/app.js') }}"></script>
+
+    <script>
+        (function($){
+            $(window).on("load",function(){
+                $(".custom-scroll-bar").mCustomScrollbar({
+                    theme:"minimal"
+                });
+            });
+        })(jQuery);
+    </script>
+
+    @stack('js')
     @yield('scripts')
 
     @hook('app:scripts')

@@ -78,6 +78,32 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     });
 
 
+    Route::group(['prefix'=>'shipping-address'], function() {
+        Route::get('/', [
+            'as' => 'shipping.address.index',
+            'uses' => 'ShippingController@index'
+        ]);
+
+        Route::get('/', [
+            'as' => 'shipping.address.index',
+            'uses' => 'ShippingController@index'
+        ]);
+
+
+        Route::delete('/address-delete/{id}', [
+            'as' => 'shipping.address.delete',
+            'uses' => 'ShippingController@deleteAddress'
+        ]);
+
+        Route::post('/address-create', [
+            'as' => 'shipping.address.create',
+            'uses' => 'ShippingController@create'
+        ]);
+
+
+    });
+
+
 
 
 

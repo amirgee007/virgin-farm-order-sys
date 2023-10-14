@@ -1,4 +1,4 @@
-<nav class="col-md-2 sidebar">
+<nav class="col-md-2 sidebar custom-scroll-bar">
     <div class="user-box text-center pt-3 pb-3">
         <div class="user-img">
             <img src="{{ auth()->user()->present()->avatar }}"
@@ -34,7 +34,7 @@
     </div>
 
 
-    <div class="sidebar-sticky">
+    <div class="sidebar-sticky custom-scroll-bar">
         <ul class="nav flex-column">
 
             <li class="nav-item">
@@ -47,7 +47,7 @@
             @permission('products.manage')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('products*') ? 'active' : ''  }}" href="{{ route('products.index') }}">
-                    <i class="fas fa-store"></i>
+                    <i class="fas fa-shopping-cart"></i>
                     <span>@lang('Products')</span>
                 </a>
             </li>
@@ -56,7 +56,7 @@
             @permission('boxes.manage')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('boxes*') ? 'active' : ''  }}" href="{{ route('boxes.index') }}">
-                    <i class="fas fa-store"></i>
+                    <i class="fas fa-box"></i>
                     <span>@lang('Manage Boxes')</span>
                 </a>
             </li>
@@ -65,7 +65,7 @@
             @permission('carriers.manage')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('carriers*') ? 'active' : ''  }}" href="{{ route('carriers.index') }}">
-                    <i class="fas fa-store"></i>
+                    <i class="fas fa-calculator"></i>
                     <span>@lang('Manage Carriers')</span>
                 </a>
             </li>
@@ -74,8 +74,17 @@
             @permission('notification.index')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('notifications*') ? 'active' : ''  }}" href="{{ route('notifications.index') }}">
-                    <i class="fas fa-store"></i>
+                    <i class="fas fa-envelope"></i>
                     <span>@lang('Notifications')</span>
+                </a>
+            </li>
+            @endpermission
+
+            @permission('shipping.address.index')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('shipping-address*') ? 'active' : ''  }}" href="{{ route('shipping.address.index') }}">
+                    <i class="fas fa-address-card"></i>
+                    <span>@lang('Shipping Address ')</span>
                 </a>
             </li>
             @endpermission

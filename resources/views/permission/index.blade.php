@@ -21,7 +21,7 @@
         <div class="row mb-3 pb-3 border-bottom-light">
             <div class="col-lg-12">
                 <div class="float-right">
-                    <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-rounded">
+                    <a href="{{ route('permissions.create') }}" class="btn btn-primary btn-rounded btn-sm">
                         <i class="fas fa-plus mr-2"></i>
                         @lang('Add Permission')
                     </a>
@@ -101,7 +101,7 @@
 @if (count($permissions))
     <div class="row">
         <div class="col-md-2">
-            <button type="submit" class="btn btn-primary">@lang('Save Permissions')</button>
+            <button type="submit" class="btn btn-primary float-right">@lang('Save Permissions')</button>
         </div>
     </div>
 @endif
