@@ -51,12 +51,33 @@ class ShippingController extends Controller
     }
 
 
-    public function create(Request $request)
+    public function createAndUpdate(Request $request)
     {
-        $address = ShippingAddress::create($request->except('_token'));
+        try{
 
-        session()->flash('app_message', 'The new Shipping Address has been created successfully.');
-        return back();
+            if ($request->_token) {
+                $address = ShippingAddress::create($request->except('_token'));
+                session()->flash('app_message', 'The new Shipping Address has been created successfully.');
+                return back();
+            }
+
+            ShippingAddress::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
+
+            return ['Done'];
+
+        }catch (\Exception $ex){
+            session()->flash('app_error', 'Something went wrong plz try again later.');
+            return back();
+        }
+
+
+
+
+
+
+
+
+
     }
 
 }

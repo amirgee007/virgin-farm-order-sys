@@ -24,6 +24,10 @@ function cleanArray($array)
     return $result;
 }
 
+function dateFormatMy($date){
+    return Carbon::parse($date)->format('m/d/Y');
+}
+
 
 function stripXSS($data)
 {

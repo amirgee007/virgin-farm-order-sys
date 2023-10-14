@@ -9,6 +9,10 @@
     </li>
 @stop
 
+@section ('styles')
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
+@stop
+
 @section('content')
 
 @include('partials.messages')
@@ -73,6 +77,7 @@
                     <th class="min-width-80">@lang('Phone')</th>
                     <th class="min-width-80">@lang('Address')</th>
                     <th class="min-width-80">@lang('Created')</th>
+                    <th class="min-width-80">@lang('Updated')</th>
                     <th class="min-width-80">@lang('Actions')</th>
                 </tr>
                 </thead>
@@ -87,11 +92,33 @@
                                         {{ $address->user->first_name ?: __('N/A') }}
                                     </span>
                                 </td>
-                                <td class="align-middle">{{ $address->name }}</td>
-                                <td class="align-middle">{{ $address->company }}</td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="name"
+                                       data-type="text"
+                                       data-emptytext="0"
+                                       data-pk="{{$address->id}}"
+                                       data-url="{{route('ship.address.create.update')}}"
+                                       data-value="{{ $address->name }}">
+                                    </a>
+                                </td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="company"
+                                       data-type="text"
+                                       data-emptytext="0"
+                                       data-pk="{{$address->id}}"
+                                       data-url="{{route('ship.address.create.update')}}"
+                                       data-value="{{ $address->company }}">
+                                    </a>
+                                </td>
+
                                 <td class="align-middle">{{ $address->phone }}</td>
-                                <td class="align-middle">{{ $address->address }}</td>
-                                <td class="align-middle">{{ diff4Human($address->created_at) }}</td>
+                                <td class="align-middle">{{ Str::limit($address->address , 50) }}</td>
+                                <td class="align-middle">{{ dateFormatMy($address->created_at) }}</td>
+                                <td class="align-middle">{{ diff4Human($address->updated_at) }}</td>
 
                                 <td class="align-middle">
                                     <a href="{{ route('shipping.address.delete', $address->id) }}"
@@ -107,11 +134,6 @@
                                     </a>
                                 </td>
 
-                                {{--<td class="align-middle">--}}
-                                    {{--<span class="badge badge-lg badge-{{ $user->present()->labelClass }}">--}}
-                                        {{--{{ trans("app.status.{$user->status}") }}--}}
-                                    {{--</span>--}}
-                                {{--</td>--}}
                             </tr>
                         @endforeach
                     @else
@@ -147,11 +169,14 @@
 @section('scripts')
 
     @include('partials.toaster-js')
-
+    <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
     {!! JsValidator::formRequest('Vanguard\Http\Requests\CreateShipAddressRequest', '#user-form') !!}
-    {{--<script>--}}
-        {{--$("#status").change(function () {--}}
-            {{--$("#users-form").submit();--}}
-        {{--});--}}
-    {{--</script>--}}
+    <script>
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.ajaxOptions = {
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        };
+
+        $('.editable').editable();
+    </script>
 @stop

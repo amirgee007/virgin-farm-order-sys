@@ -95,11 +95,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ShippingController@deleteAddress'
         ]);
 
-        Route::post('/address-create', [
-            'as' => 'shipping.address.create',
-            'uses' => 'ShippingController@create'
+        Route::post('/address-create-update', [
+            'as' => 'ship.address.create.update',
+            'uses' => 'ShippingController@createAndUpdate'
         ]);
-
 
     });
 

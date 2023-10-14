@@ -1,4 +1,4 @@
-{!! Form::open(['route' => 'shipping.address.create', 'id' => 'user-form']) !!}
+{!! Form::open(['route' => 'ship.address.create.update', 'id' => 'user-form']) !!}
 <div class="modal-body">
     <div class="card">
         <div class="card-body">
