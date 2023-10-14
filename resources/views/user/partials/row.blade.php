@@ -17,6 +17,7 @@
     <td class="align-middle">{{ $user->email }}</td>
     <td class="align-middle">{{ $user->created_at->format(config('app.date_format')) }}</td>
     <td class="align-middle">{{ $user->company }}</td>
+    <td class="align-middle">{{ $user->role->display_name }}</td>
 
     <td class="align-middle">
         <span class="badge badge-lg badge-{{ $user->present()->labelClass }}">
@@ -49,12 +50,12 @@
                     @lang('Login By This User')
                 </a>
 
-                @canBeImpersonated($user)
-                    <a href="{{ route('impersonate', $user) }}" class="dropdown-item text-gray-500 impersonate">
-                        <i class="fas fa-user-secret mr-2"></i>
-                        @lang('Impersonate')
-                    </a>
-                @endCanBeImpersonated
+                {{--@canBeImpersonated($user)--}}
+                    {{--<a href="{{ route('impersonate', $user) }}" class="dropdown-item text-gray-500 impersonate">--}}
+                        {{--<i class="fas fa-user-secret mr-2"></i>--}}
+                        {{--@lang('Impersonate')--}}
+                    {{--</a>--}}
+                {{--@endCanBeImpersonated--}}
             </div>
         </div>
 

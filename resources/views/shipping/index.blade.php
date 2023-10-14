@@ -48,14 +48,13 @@
                 <div class="col-md-2 mt-2 mt-md-0">
                     {!!
                         Form::select(
-                            'status',
+                            'user_id',
                             $users,
-                            Request::get('user'),
-                            ['id' => 'status', 'class' => 'form-control input-solid']
+                            Request::get('user_id'),
+                            ['id' => 'user_id', 'class' => 'form-control input-solid']
                         )
                     !!}
                 </div>
-
 
                 <div class="col-md-2">
                     <a href="#" class="btn btn-primary btn-rounded float-right btn-sm" data-toggle="modal" data-target="#createAddressModal">
@@ -178,5 +177,9 @@
         };
 
         $('.editable').editable();
+
+        $("#user_id").change(function () {
+            $("#users-form").submit();
+        });
     </script>
 @stop

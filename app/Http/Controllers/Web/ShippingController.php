@@ -13,6 +13,10 @@ class ShippingController extends Controller
 
     public function index(){
 
+
+        $search = \request()->search;
+        $user = \request()->user_id;
+
         $user_id = myRoleName() == 'Admin' ? null : auth()->id(); #for clients show only client but for admin show ALL.
 
         $query = ShippingAddress::with('user');
@@ -22,13 +26,29 @@ class ShippingController extends Controller
         #client showing and else is in ADMIN.
         if($user_id)
             $query->where('user_id' , $user_id);
-        else
+        else{
             $users = User::where('status' , UserStatus::ACTIVE)
                 ->orderby('first_name')
                 ->pluck('first_name', 'id')
                 ->toArray();
 
-        $addresses = ShippingAddress::with('user')->paginate(100);
+            array_unshift($users , 'Show All');
+        }
+
+        if($user){
+            $query->where('user_id' , $user);
+        }
+
+        if($search){
+            $query->where(function ($q) use ($search) {
+                $q->orWhere('name', 'like', "%{$search}%");
+                $q->orWhere('company', 'like', "%{$search}%");
+                $q->orWhere('phone', 'like', "%{$search}%");
+                $q->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+
+        $addresses = $query->paginate(100);
 
         return view('shipping.index' , compact('addresses' , 'user_id' , 'users'));
     }
