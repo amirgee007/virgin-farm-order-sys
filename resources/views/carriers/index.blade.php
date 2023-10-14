@@ -19,6 +19,24 @@
 
     <div class="card">
         <div class="card-body">
+            <form role="form" action="{{ route('carriers.create.update') }}" method="POST" >
+                @csrf
+                <div class="form-row align-items-center float-right">
+                    <div class="col-auto">
+                        <div class="input-group mb-2 input-group-sm">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                            </div>
+                            <input type="text" required class="form-control" name="carrier_name" id="inlineFormInputGroup" placeholder="Add New Carrier">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-2 btn-sm">Create</button>
+                    </div>
+                </div>
+            </form>
 
             <div class="table-responsive" id="users-table-wrapper">
                 <table class="table table-borderless table-striped">

@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
     Route::group(['prefix'=>'carriers'], function() {
-        Route::get('/', [
+        Route::get('/{id?}', [
             'as' => 'carriers.index',
             'uses' => 'CarriersController@index'
         ]);
