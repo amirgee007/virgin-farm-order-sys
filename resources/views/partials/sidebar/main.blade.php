@@ -20,7 +20,7 @@
             </li>
 
             <li class="list-inline-item">
-                <a href="{{ route('user.shipping.address') }}" class="text-custom" title="@lang('Shipping Addresses')">
+                <a href="{{ route('shipping.address.index') }}" class="text-custom" title="@lang('Shipping Addresses')">
                     <i class="fas fa-address-card"></i>
                 </a>
             </li>

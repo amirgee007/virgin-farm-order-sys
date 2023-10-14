@@ -11,8 +11,12 @@ use Vanguard\User;
 class ShippingController extends Controller
 {
 
-    public function index(){
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
+    public function index(){
 
         $search = \request()->search;
         $user = \request()->user_id;

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('shipping_addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
-            $table->string('name' , 350)->nullable();
-            $table->string('company' , 350)->nullable();
-            $table->string('phone' , 100)->nullable();
+            $table->string('name' , 100)->nullable();
+            $table->string('company' , 150)->nullable();
+            $table->string('phone' , 50)->nullable();
             $table->string('address' , 500)->nullable();
             $table->timestamps();
         });

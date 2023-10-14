@@ -1,11 +1,14 @@
 <?php
 
-namespace Vanguard\Models;
+namespace Vanguard\Models\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Shipping extends Model
+class Carrier extends Model
 {
     use HasFactory;
+
+    protected $table = 'carriers';
+    protected $guarded = [];
 }

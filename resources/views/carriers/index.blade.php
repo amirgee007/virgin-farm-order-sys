@@ -9,20 +9,94 @@
     </li>
 @stop
 
+@section ('styles')
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
+@stop
+
 @section('content')
 
     @include('partials.messages')
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
+    <div class="card">
+        <div class="card-body">
 
-                    Hello All Carriers here
+            <div class="table-responsive" id="users-table-wrapper">
+                <table class="table table-borderless table-striped">
+                    <thead>
+                    <tr>
+                        <th class="min-width-80">@lang('ID')</th>
+                        <th class="min-width-100">@lang('Name')</th>
+                        <th class="min-width-80">@lang('Created')</th>
+                        <th class="min-width-80">@lang('Updated')</th>
+                        <th class="min-width-80">@lang('Actions')</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (count($carriers))
+                        @foreach ($carriers as $index => $carrier)
+                            <tr>
 
-                </div>
+                                <td class="align-middle">{{ ++$index }}</td>
+
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="carrier_name"
+                                       data-type="text"
+                                       data-emptytext="empty"
+                                       data-pk="{{$carrier->id}}"
+                                       data-url="{{route('carriers.create.update')}}"
+                                       data-value="{{ $carrier->carrier_name }}">
+                                    </a>
+                                </td>
+
+                                <td class="align-middle">{{ dateFormatMy($carrier->created_at) }}</td>
+                                <td class="align-middle">{{ diff4Human($carrier->updated_at) }}</td>
+
+                                <td class="align-middle">
+                                    <a href="{{ route('carriers.index', $carrier->id) }}"
+                                       class="btn btn-icon"
+                                       title="@lang('Delete Carrier')"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-method="GET"
+                                       data-confirm-title="@lang('Please Confirm')"
+                                       data-confirm-text="@lang('Are you sure that you want to delete this carrier?')"
+                                       data-confirm-delete="@lang('Yes, delete it!')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="8"><em>@lang('No address found.')</em></td>
+                        </tr>
+                    @endif
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
+@stop
+
+@section('scripts')
+
+    @include('partials.toaster-js')
+    <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
+    {!! JsValidator::formRequest('Vanguard\Http\Requests\CreateShipAddressRequest', '#user-form') !!}
+    <script>
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.ajaxOptions = {
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        };
+
+        $('.editable').editable();
+
+        $("#user_id").change(function () {
+            $("#users-form").submit();
+        });
+    </script>
 @stop

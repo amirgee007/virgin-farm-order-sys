@@ -62,18 +62,23 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ]);
     });
 
+    Route::group(['prefix'=>'notifications'], function() {
+        Route::get('/', [
+            'as' => 'notifications.index',
+            'uses' => 'Users\UsersController@indexNotifications'
+        ]);
+    });
+
+
     Route::group(['prefix'=>'carriers'], function() {
         Route::get('/', [
             'as' => 'carriers.index',
             'uses' => 'CarriersController@index'
         ]);
-    });
 
-
-    Route::group(['prefix'=>'notifications'], function() {
-        Route::get('/', [
-            'as' => 'notifications.index',
-            'uses' => 'Users\UsersController@indexNotifications'
+        Route::post('/carriers-create-update', [
+            'as' => 'carriers.create.update',
+            'uses' => 'CarriersController@createAndUpdate'
         ]);
     });
 
@@ -88,7 +93,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'shipping.address.index',
             'uses' => 'ShippingController@index'
         ]);
-
 
         Route::delete('/address-delete/{id}', [
             'as' => 'shipping.address.delete',
@@ -141,11 +145,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/{user}/admin-login', [
         'as' => 'user.admin.login',
         'uses' => 'Users\UsersController@adminLogin'
-    ]);
-
-    Route::get('/shipping-addresses', [
-        'as' => 'user.shipping.address',
-        'uses' => 'Users\UsersController@indexShippingAddress'
     ]);
 
     Route::group(['prefix' => 'users/{user}', 'middleware' => 'permission:users.manage'], function () {
