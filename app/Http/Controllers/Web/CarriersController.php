@@ -4,7 +4,7 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Models\Models\Carrier;
+use Vanguard\Models\Carrier;
 
 class CarriersController extends Controller
 {

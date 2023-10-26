@@ -1,6 +1,6 @@
 <?php
 
-namespace Vanguard\Models\Models;
+namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

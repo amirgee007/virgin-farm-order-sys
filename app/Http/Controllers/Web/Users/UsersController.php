@@ -8,7 +8,8 @@ use Illuminate\View\View;
 use Vanguard\Events\User\Deleted;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\User\CreateUserRequest;
-use Vanguard\Repositories\Activity\ActivityRepository;
+//use Vanguard\Repositories\Activity\ActivityRepository;
+use Vanguard\Models\ClientNotification;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -163,8 +164,17 @@ class UsersController extends Controller
     }
 
     public function indexNotifications(){
-
-        return 'plz wait for the front page';
-
+        $notifications = ClientNotification::mine()->get();
+        return view('notifications.index' , compact('notifications'));
     }
+
+    public function deleteNotifications($id){
+
+        $not = ClientNotification::find($id);
+        $not->delete();
+
+        session()->flash('app_message', 'The Notification been deleted successfully.');
+        return back();
+    }
+
 }

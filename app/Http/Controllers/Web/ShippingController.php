@@ -4,7 +4,7 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Models\Models\ShippingAddress;
+use Vanguard\Models\ShippingAddress;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 

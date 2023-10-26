@@ -30,6 +30,7 @@
         "ext-json": "*",
         "akaunting/laravel-setting": "^1.2",
         "anhskohbo/no-captcha": "3.*",
+        "arcanedev/log-viewer": "^10.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.3",
         "jenssegers/agent": "^2.5",
@@ -37,6 +38,7 @@
         "laravel/framework": "^10.0",
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.0",
+        "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "laravelcollective/html": "^6.3",
         "proengsoft/laravel-jsvalidation": "^4.0.0",
@@ -44,9 +46,7 @@
         "vanguardapp/activity-log": "^5.0",
         "vanguardapp/announcements": "^5.0",
         "vanguardapp/plugins": "^5.0",
-        "webpatser/laravel-countries": "dev-master",
-        "laravel/tinker": "^2.7",
-        "arcanedev/log-viewer": "^10.0"
+        "webpatser/laravel-countries": "dev-master"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

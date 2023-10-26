@@ -65,9 +65,15 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     });
 
     Route::group(['prefix'=>'notifications'], function() {
+
         Route::get('/', [
             'as' => 'notifications.index',
             'uses' => 'Users\UsersController@indexNotifications'
+        ]);
+
+        Route::delete('/notification-delete/{id}', [
+            'as' => 'notification.delete',
+            'uses' => 'Users\UsersController@deleteNotifications'
         ]);
     });
 
