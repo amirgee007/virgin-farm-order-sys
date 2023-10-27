@@ -181,7 +181,7 @@
                                        data-placement="top"
                                        data-method="DELETE"
                                        data-confirm-title="@lang('Please Confirm')"
-                                       data-confirm-text="@lang('Are you sure that you want to delete this address?')"
+                                       data-confirm-text="@lang('Are you sure that you want to delete this box?')"
                                        data-confirm-delete="@lang('Yes, delete it!')">
                                         <i class="fas fa-trash"></i>
                                     </a>
