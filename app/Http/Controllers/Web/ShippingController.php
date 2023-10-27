@@ -74,7 +74,6 @@ class ShippingController extends Controller
         return back();
     }
 
-
     public function createAndUpdate(Request $request)
     {
         try{

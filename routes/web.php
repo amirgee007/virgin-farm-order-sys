@@ -62,6 +62,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'boxes.index',
             'uses' => 'BoxesController@index'
         ]);
+
+        Route::delete('/boxes-delete/{id}', [
+            'as' => 'boxes.delete',
+            'uses' => 'BoxesController@deletebox'
+        ]);
+
+        Route::post('/box-create-update', [
+            'as' => 'box.create.update',
+            'uses' => 'BoxesController@createAndUpdate'
+        ]);
     });
 
     Route::group(['prefix'=>'notifications'], function() {

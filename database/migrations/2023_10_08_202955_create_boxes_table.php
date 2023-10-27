@@ -16,11 +16,12 @@ return new class extends Migration
             $table->increments('id');
 
             $table->string('description' , 500)->nullable();
-            $table->smallInteger('width')->default(0);
-            $table->smallInteger('height')->default(0);
-            $table->smallInteger('length')->default(0);
-            $table->integer('volume')->default(0);
-            $table->smallInteger('weight')->default(0);
+            $table->float('length' , 7,2)->default(0);
+            $table->float('width' , 7,2)->default(0);
+            $table->float('height' , 7,2)->default(0);
+            $table->float('volume' , 7,2)->default(0);
+            $table->float('weight' , 7,2)->default(0);
+
             $table->smallInteger('min_value')->default(0);
 
             $table->timestamps();
