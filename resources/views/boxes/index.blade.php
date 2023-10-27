@@ -67,9 +67,9 @@
                 <tr>
                     <th class="min-width-80">@lang('ID')</th>
                     <th class="min-width-150">@lang('Description')</th>
+                    <th class="min-width-80">@lang('Length')</th>
                     <th class="min-width-100">@lang('Width')</th>
                     <th class="min-width-80">@lang('Height')</th>
-                    <th class="min-width-80">@lang('Length')</th>
                     <th class="min-width-80">@lang('Volume')</th>
                     <th class="min-width-80">@lang('Weight')</th>
                     <th class="min-width-80">@lang('Min Value')</th>
@@ -97,6 +97,19 @@
                                        data-value="{{ $box->description }}">
                                     </a>
                                 </td>
+
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="length"
+                                       data-type="text"
+                                       data-emptytext="0"
+                                       data-pk="{{$box->id}}"
+                                       data-url="{{route('box.create.update')}}"
+                                       data-value="{{ $box->length }}">
+                                    </a>
+                                </td>
+
                                 <td class="align-middle">
                                     <a class="editable"
                                        style="cursor:pointer;"
@@ -118,18 +131,6 @@
                                        data-pk="{{$box->id}}"
                                        data-url="{{route('box.create.update')}}"
                                        data-value="{{ $box->height }}">
-                                    </a>
-                                </td>
-
-                                <td class="align-middle">
-                                    <a class="editable"
-                                       style="cursor:pointer;"
-                                       data-name="length"
-                                       data-type="text"
-                                       data-emptytext="0"
-                                       data-pk="{{$box->id}}"
-                                       data-url="{{route('box.create.update')}}"
-                                       data-value="{{ $box->length }}">
                                     </a>
                                 </td>
 

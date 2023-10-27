@@ -29,13 +29,13 @@
 
                                     <input type="date"
                                            class="form-control rounded"
-                                           name="search"
-                                           title="What is your carrier choice?"
+                                           name="date_shipped"
+                                           title="When do you want your product to be shipped?"
                                            data-trigger="hover"
                                            data-toggle="tooltip"
                                            value="{{ \Request::get('search') }}">
 
-                                    <select name="search_by" class="form-control ml-2 rounded"
+                                    <select name="carrier_choice" class="form-control ml-2 rounded"
                                             title="What is your carrier choice?"
                                             data-trigger="hover"
                                             data-toggle="tooltip"
@@ -73,6 +73,7 @@
                                 </div>
                             </form>
                         </div>
+
 
                         {{--@permission('orders.filter')--}}
                         @include('products._partial.filter')
