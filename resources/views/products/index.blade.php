@@ -11,6 +11,11 @@
 
 @section('styles')
     <style>
+
+        [role=main] {
+            padding-top: 75px;
+        }
+
         .loader {
             height: 70px !important;
         }
@@ -82,7 +87,6 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
-
                     <span>
                         <b>
                             1. Enter your shipping information
