@@ -9284,7 +9284,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .content-page {
-  margin-left: 250px;
+  margin-left: 220px;
   overflow: hidden;
   width: 100%;
 }
@@ -9451,7 +9451,7 @@ label {
   text-align: center;
   height: 70px;
   position: relative;
-  width: 250px;
+  width: 220px;
   z-index: 1;
 }
 .navbar-brand-wrapper .logo-lg {
@@ -9515,8 +9515,8 @@ label {
 
 .sidebar {
   top: 70px;
-  width: 250px;
-  min-width: 250px;
+  width: 220px;
+  min-width: 220px;
   z-index: 10;
   background: #30353e;
   bottom: 0;

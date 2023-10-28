@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\Product;
 
 class ProductsController extends Controller
 {
@@ -20,6 +21,13 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return view('products.index');
+        $products = Product::paginate(10);
+        return view('products.index' ,compact('products'));
+    }
+
+    public function addToCart(){
+
+        $response['result'] = true;
+        return response()->json($response);
     }
 }

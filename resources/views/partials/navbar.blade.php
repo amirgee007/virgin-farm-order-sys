@@ -49,14 +49,12 @@
         </div>
 
         <ul class="navbar-nav ml-auto pr-3 flex-row">
-            @if (app('impersonate')->isImpersonating())
-                <li class="nav-item d-flex align-items-center visible-lg">
-                    <a href="{{ route('impersonate.leave') }}" class="btn text-danger">
-                        <i class="fas fa-user-secret mr-2"></i>
-                        @lang('Stop Impersonating')
-                    </a>
-                </li>
-            @endif
+            <li class="nav-item d-flex align-items-center visible-lg">
+                <a href="#" class="btn text-danger">
+                    <i class="fas fa-shopping-cart mr-2"></i>
+                    Shopping Cart
+                </a>
+            </li>
 
             @hook('navbar:items')
 

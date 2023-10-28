@@ -19,7 +19,7 @@ class RolesAndPermissions extends Plugin
             ->active("permissions*")
             ->permissions('permissions.manage');
 
-        return Item::create(__('Roles & Permissions'))
+        return Item::create(__('Role Permission'))
             ->href('#roles-dropdown')
             ->icon('fas fa-users-cog')
             ->permissions(['roles.manage', 'permissions.manage'])
