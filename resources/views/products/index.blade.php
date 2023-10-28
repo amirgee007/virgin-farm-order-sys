@@ -73,40 +73,44 @@
                                            title="When do you want your product to be shipped?"
                                            data-trigger="hover"
                                            data-toggle="tooltip"
-                                           value="{{ \Request::get('search') }}">
+                                           value="{{ \Request::get('date_shipped') }}">
 
-                                    <select name="carrier_choice" class="form-control ml-2 rounded"
+                                    <select name="carrier_id" class="form-control ml-2 rounded"
                                             title="What is your carrier choice?"
                                             data-trigger="hover"
                                             data-toggle="tooltip"
                                     >
-                                        <option hidden value="">Search By</option>
-                                        @foreach([] AS $key => $searchBy)
+                                        <option hidden value="">Select Carrier</option>
+                                        @foreach($carriers AS $key => $name)
                                             <option value="{{$key}}"
-                                                {{ Request::get('search_by') == $key ? 'selected' : '' }}>
-                                                {{$searchBy}}
+                                                {{ Request::get('carrier_id') == $key ? 'selected' : '' }}>
+                                                {{$name}}
                                             </option>
                                         @endforeach
                                         <option value="" >Clear Option</option>
                                     </select>
 
-                                    <input type="date"
+                                    <input type="text"
                                            class="form-control rounded ml-2"
-                                           name="search"
+                                           name="po"
+                                           placeholder="What is PO#?"
                                            title="What is your PO#? (optional)"
                                            data-trigger="hover"
                                            data-toggle="tooltip"
-                                           value="{{ \Request::get('search') }}">
+                                           value="{{ \Request::get('po') }}">
 
                                     <span class="input-group-append">
-                                    @if (\Request::has('search') && \Request::get('search') != '')
-                                            <a href="{{ route('orders') }}"
+                                        @if (\Request::has('carrier_id') && \Request::get('carrier_id') != '')
+                                            <a href="{{ route('products.index') }}"
+                                               title="Reset Filters"
+                                               data-trigger="hover"
+                                               data-toggle="tooltip"
                                                class="btn btn-light d-flex align-items-center text-muted"
                                                role="button">
                                                 <i class="fas fa-times"></i>
                                         </a>
                                         @endif
-                                        <button class="btn btn-secondary ml-1" type="submit" id="search-users-btn">
+                                        <button class="btn btn-secondary ml-1" type="submit" id="search-products-btn">
                                         <i class="fas fa-search "></i>
                                     </button>
                                 </span>
@@ -118,9 +122,7 @@
                         @include('products._partial.filter')
                         {{--@endpermission--}}
 
-
                     </div>
-
 
                     <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
@@ -222,11 +224,15 @@
             $('#largeImgModal').modal('show');
         });
 
+//        $("#doubleCheckMode1, #search-products-btn").change(function () {
+//            $("#filters-form").submit();
+//        });
+
+
         $(".add-to-cart").click(function (event) {
 
             var _this = $(this);
             var product_id = _this.data("id");
-
 
             $.ajax({
                 url: "{{ route('product.add.to.cart') }}",

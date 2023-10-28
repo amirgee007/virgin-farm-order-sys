@@ -1,31 +1,29 @@
 <div class="col-md-2 col-sm-12 mt-md-0 mt-1 ">
-        <button type="button"
-
-                class="btn btn-secondary mr-1 float-right"
-                data-toggle="collapse"
-                data-target="#filterBy">
-            <i class="fas fa-cogs"></i> Filter By
-        </button>
+    <button type="button" class="btn btn-secondary mr-1 float-right" data-toggle="collapse" data-target="#filterBy">
+        <i class="fas fa-cogs"></i> Filter By
+    </button>
 </div>
 
 <div class="clearfix"></div>
 
-<div class="col-12 mt-4 collapse {{ @$filter ? 'show' : '' }}" id="filterBy" >
-
+<div class="col-12 mt-4 collapse {{ $filter ? 'show' : '' }}" id="filterBy" >
     <span><b>2. Add items from the product availability to your shopping cart</b></span>
-    <form id="filterOrdersForm2" method="GET">
+    <form id="filterProductForm2" method="GET">
         <div class="row mt-1">
             <div class="col-4">
                 <div class="form-group">
-                    <label for="show_order_by">Category:</label>
-                    <select class="form-control" name="show_order_by" id="show_order_by" >
-                        <option  value="">All</option>
+                    <label for="category_id">Category:</label>
+                    <select class="form-control" name="filter[category]" id="category_id" >
+                        <option selected value="">All</option>
                         @foreach([
-                            'is_active' => 'Is Active',
-                            'is_delivered' => 'Is Delivered',
-                            'is_deleted' => 'Is Deleted',
+                            'Achillea',
+                            'SPXAgapanthus',
+                            'SPXAlstroAmmi',
+                            'Majus'
                         ] AS $key => $val)
-                            <option value="{{$key}}" {{ @$showOrderBy == $key ? 'selected': '' }}>{{$val}}</option>
+                            <option value="{{$key}}"
+                                {{ (isset($filter['category']) && $filter['category'] == $key) ? 'selected': ''  }}
+                            >{{$val}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -41,15 +39,12 @@
                            data-toggle="tooltip"
                            aria-hidden="true"></i>
                     </label>
-                    <select class="form-control" name="filter[status_id]" id="select_status" >
-                        <option  value="">All</option>
-                        {{--@foreach($orderStatus AS $key => $status)--}}
-                            {{--<option value="{{$key}}"--}}
-                                    {{--{{ (isset($filter['status_id']) && $filter['status_id'] == $key) ? 'selected' : '' }}>--}}
-                                {{--{{$status}}--}}
-                            {{--</option>--}}
-                        {{--@endforeach--}}
-                    </select>
+
+                    <input type="text"
+                           class="form-control rounded"
+                           placeholder="Search by name, category, variety, grade, color"
+                           name="filter[product_text]"
+                           value="{{@$filter['product_text']}}">
                 </div>
             </div>
 
@@ -58,9 +53,10 @@
                     <label for="select_country">Vendor:</label>
 
                     <input type="text"
+                           placeholder="Search by vendor name"
                            class="form-control rounded"
                            name="filter[vendor]"
-                           value="{{ \Request::get('vendor') }}">
+                           value="{{@$filter['vendor']}}">
                 </div>
             </div>
 
