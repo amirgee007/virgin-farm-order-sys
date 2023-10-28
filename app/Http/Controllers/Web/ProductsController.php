@@ -38,7 +38,6 @@ class ProductsController extends Controller
         if ($date_shipped)
             $query->where('created_at', 'like', "%{$date_shipped}%");
 
-
 //        if ($date_shipped || $carrier_id || $purchase_order || $filter) {
 //            $orders->appends([
 //                'search' => $search,
@@ -55,9 +54,103 @@ class ProductsController extends Controller
         ));
     }
 
-    public function addToCart(){
+//    public function addToCart(){
+//
+//        $response['result'] = true;
+//        return response()->json($response);
+//    }
 
-        $response['result'] = true;
-        return response()->json($response);
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function cart()
+    {
+        return view('products.cart');
     }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function addToCart(Request $request)
+    {
+
+            //  "product_id" => "1"
+            //  "mark_code" => null
+            //  "quantity" => "123"
+
+        $id = $request->product_id;
+        $quantity = $request->quantity;
+
+        $product = Product::findOrFail($id);
+
+        $cart = session()->get('cart', []);
+
+        if(isset($cart[$id])) {
+            $cart[$id]['quantity']++;
+        } else {
+            $cart[$id] = [
+                "name" => $product->product_text,
+                "quantity" => $quantity,
+                "price" => $product->unit_price,
+                "image" => $product->image_url
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        #$response['result'] = true;
+        #return response()->json($response);
+
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function update(Request $request)
+    {
+        if($request->id && $request->quantity){
+            $cart = session()->get('cart');
+            $cart[$request->id]["quantity"] = $request->quantity;
+            session()->put('cart', $cart);
+            session()->flash('success', 'Cart updated successfully');
+        }
+    }
+
+    /**
+     * Write code on Method
+     *
+     * @return response()
+     */
+    public function remove(Request $request)
+    {
+        if($request->id) {
+            $cart = session()->get('cart');
+            if(isset($cart[$request->id])) {
+                unset($cart[$request->id]);
+                session()->put('cart', $cart);
+            }
+            session()->flash('success', 'Product removed successfully');
+        }
+    }
+
+
 }

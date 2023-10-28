@@ -38,10 +38,46 @@
     </style>
 @endsection
 
+<div class="dropdown">
+    <button type="button" class="btn btn-info" data-toggle="dropdown">
+
+    </button>
+    <div class="dropdown-menu">
+        <div class="row total-header-section">
+            <div class="col-lg-6 col-sm-6 col-6">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
+            </div>
+            @php $total = 0 @endphp
+            @foreach((array) session('cart') as $id => $details)
+                @php $total += $details['price'] * $details['quantity'] @endphp
+            @endforeach
+            <div class="col-lg-6 col-sm-6 col-6 total-section text-right">
+                <p>Total: <span class="text-info">$ {{ $total }}</span></p>
+            </div>
+        </div>
+        @if(session('cart'))
+            @foreach(session('cart') as $id => $details)
+                <div class="row cart-detail">
+                    <div class="col-lg-4 col-sm-4 col-4 cart-detail-img">
+                        <img src="{{ $details['image'] }}" />
+                    </div>
+                    <div class="col-lg-8 col-sm-8 col-8 cart-detail-product">
+                        <p>{{ $details['name'] }}</p>
+                        <span class="price text-info"> ${{ $details['price'] }}</span> <span class="count"> Quantity:{{ $details['quantity'] }}</span>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-12 text-center checkout">
+                <a href="" class="btn btn-primary btn-block">View all</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section('content')
-
     @include('partials.messages')
-
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -163,23 +199,30 @@
                                         <td class="align-middle">{{ $product->box_type }}</td>
                                         <td class="align-middle">{{ $product->units_box }}</td>
 
+                                        <form action="{{route('add.to.cart')}}" method="POST" enctype="multipart/form-data">
+                                            {{csrf_field()}}
+                                            <input type="hidden" name="product_id" value="{{$product->id}}">
                                         <td class="align-middle">
-                                            <input class="form-control form-control-sm width50" type="text">
+                                            <input class="form-control form-control-sm width50" name="mark_code" type="text">
+                                        </td>
+                                        <td class="align-middle">
+                                            <input required class="form-control form-control-sm width50" name="quantity" type="number">
+                                        </td>
 
-                                        </td>
                                         <td class="align-middle">
-                                            <input class="form-control form-control-sm width50" type="number">
-                                        </td>
 
-                                        <td class="align-middle">
-                                            <a href="#" class="btn btn-icon add-to-cart"
-                                               data-id="{{$product->id}}"
-                                               title="@lang('Add to cart')"
-                                               data-toggle="tooltip"
-                                               data-placement="top">
-                                                <i class="fas fa-plus-circle"></i>
-                                            </a>
+                                            <button type="submit" class="btn btn-icon" title="@lang('Add product to cart')" data-toggle="tooltip"
+                                                    data-placement="top"><i class="fas fa-plus-circle "></i>
+                                            </button>
+                                            {{--<a href="" class="btn btn-icon add-to-cart"--}}
+                                               {{--data-id="{{$product->id}}"--}}
+                                               {{--title="@lang('Add product to cart')"--}}
+                                               {{--data-toggle="tooltip"--}}
+                                               {{--data-placement="top">--}}
+                                                {{--<i class="fas fa-plus-circle "></i>--}}
+                                            {{--</a>--}}
                                         </td>
+                                        </form>
 
                                     </tr>
                                 @endforeach
@@ -231,28 +274,56 @@
 
         $(".add-to-cart").click(function (event) {
 
-            var _this = $(this);
-            var product_id = _this.data("id");
+            {{--var _this = $(this);--}}
+            {{--var product_id = _this.data("id");--}}
 
-            $.ajax({
-                url: "{{ route('product.add.to.cart') }}",
-                method: 'post',
-                data: {
-                    product_id: product_id
-                },
-                success: function (data) {
-                    if (data.result) {
-                        toastr.success("Product added to cart successfully.", "Success");
-                        //reload if needed
-                        //window.location.href = window.location.href + "#myItems";
-                        //location.reload();
-                    }
-                    else {
-                        toastr.error("Something went wrong please contact admin.", "Error");
-                    }
-                }
-            });
+            {{--$.ajax({--}}
+                {{--url: "{{ route('product.add.to.cart') }}",--}}
+                {{--method: 'post',--}}
+                {{--data: {--}}
+                    {{--product_id: product_id--}}
+                {{--},--}}
+                {{--success: function (data) {--}}
+                    {{--if (data.result) {--}}
+                        {{--toastr.success("Product added to cart successfully.", "Success");--}}
+                        {{--//reload if needed--}}
+                        {{--//window.location.href = window.location.href + "#myItems";--}}
+                        {{--//location.reload();--}}
+                    {{--}--}}
+                    {{--else {--}}
+                        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--});--}}
 
         });
+
+
+//        #later when need to make it more accurate VIA AJAX
+        {{--$(".add-to-cart").click(function (event) {--}}
+
+            {{--var _this = $(this);--}}
+            {{--var product_id = _this.data("id");--}}
+
+            {{--$.ajax({--}}
+                {{--url: "{{ route('product.add.to.cart') }}",--}}
+                {{--method: 'post',--}}
+                {{--data: {--}}
+                    {{--product_id: product_id--}}
+                {{--},--}}
+                {{--success: function (data) {--}}
+                    {{--if (data.result) {--}}
+                        {{--toastr.success("Product added to cart successfully.", "Success");--}}
+                        {{--//reload if needed--}}
+                        {{--//window.location.href = window.location.href + "#myItems";--}}
+                        {{--//location.reload();--}}
+                    {{--}--}}
+                    {{--else {--}}
+                        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--});--}}
+
+        {{--});--}}
     </script>
 @endsection

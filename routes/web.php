@@ -1,5 +1,16 @@
 <?php
 
+
+use Vanguard\Http\Controllers\Web\ProductsController;
+
+Route::get('/', [ProductsController::class, 'index']);
+Route::get('cart', [ProductsController::class, 'cart'])->name('cart');
+Route::post('add-to-cart', [ProductsController::class, 'addToCart'])->name('add.to.cart');
+Route::patch('update-cart', [ProductsController::class, 'update'])->name('update.cart');
+Route::delete('remove-from-cart', [ProductsController::class, 'remove'])->name('remove.from.cart');
+
+
+
 /**
  * Authentication
  */
