@@ -52,7 +52,7 @@
 
             <div class="dropdown" style="padding-right: 40px;">
                 <button type="button" class="btn btn-light btnCart" data-toggle="dropdown">
-                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>Cart
+                    <i class="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp;Cart
                     <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
                 </button>
 

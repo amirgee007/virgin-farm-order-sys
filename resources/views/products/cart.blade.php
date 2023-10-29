@@ -151,21 +151,28 @@
                         @endif
                         </tbody>
                         <tfoot>
+
                         <tr>
-                            <td colspan="5" class="text-right"><h4><strong>VAT $0</strong></h4></td>
+                            <td colspan="5" class="text-right"><h4><strong>Order Subtotal: ${{ $total }}</strong></h4></td>
                         </tr>
 
                         <tr>
-                            <td colspan="5" class="text-right"><h4><strong>Shipping $0</strong></h4></td>
+                            <td colspan="5" class="text-right"><h4><strong>Ex Additional Charges: $0</strong></h4></td>
                         </tr>
 
                         <tr>
-                            <td colspan="5" class="text-right"><h3><strong>Total ${{ $total }}</strong></h3></td>
+                            <td colspan="5" class="text-right"><h4><strong>Tax $0</strong></h4></td>
                         </tr>
+
+                        <tr>
+                            <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total }}</strong></h3></td>
+                        </tr>
+
+
                         <tr>
                             <td colspan="5" class="text-right">
                                 <a href="{{ route('products.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
-                                <button class="btn btn-primary">Checkout</button>
+                                <a href="{{ route('checkout.cart') }}" class="btn btn-primary">Checkout &nbsp;<i class="fa fa-angle-right"></i></a>
                             </td>
                         </tr>
                         </tfoot>

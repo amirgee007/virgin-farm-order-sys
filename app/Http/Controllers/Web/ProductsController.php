@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Mail\CartDetailMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Product;
 
@@ -150,6 +151,31 @@ class ProductsController extends Controller
             }
             session()->flash('success', 'Product removed successfully');
         }
+    }
+
+
+    public function checkOutCart(){
+
+        $carts = session()->get('cart');
+
+        $content = "decreased otherwise increased.";
+
+        \Mail::to('amir@infcompany.com')
+            ->cc(['amirseersol@gmail.com'])
+            ->send(new CartDetailMail("New Order received PLZ check ", $content));
+
+        dd($carts);
+
+
+        if($request->id) {
+            if(isset($cart[$request->id])) {
+                unset($cart[$request->id]);
+                session()->put('cart', $cart);
+            }
+            session()->flash('success', 'Product removed successfully');
+        }
+
+        dd('checkout');
     }
 
 
