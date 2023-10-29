@@ -46,9 +46,9 @@ class ProductsController extends Controller
 //            ]);
 //        }
 
-        $carriers = Carrier::pluck('carrier_name' , 'id')->toArray();
+        $carriers = Carrier::pluck('carrier_name', 'id')->toArray();
         $products = (clone $query)->paginate(250);
-        return view('products.index' ,compact(
+        return view('products.index', compact(
             'products',
             'carriers',
             'filter'
@@ -60,17 +60,6 @@ class ProductsController extends Controller
 //        $response['result'] = true;
 //        return response()->json($response);
 //    }
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -91,9 +80,9 @@ class ProductsController extends Controller
     public function addToCart(Request $request)
     {
 
-            //  "product_id" => "1"
-            //  "mark_code" => null
-            //  "quantity" => "123"
+        //  "product_id" => "1"
+        //  "mark_code" => null
+        //  "quantity" => "123"
 
         $id = $request->product_id;
         $quantity = $request->quantity;
@@ -102,7 +91,7 @@ class ProductsController extends Controller
 
         $cart = session()->get('cart', []);
 
-        if(isset($cart[$id])) {
+        if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
         } else {
             $cart[$id] = [
@@ -128,7 +117,7 @@ class ProductsController extends Controller
      */
     public function update(Request $request)
     {
-        if($request->id && $request->quantity){
+        if ($request->id && $request->quantity) {
             $cart = session()->get('cart');
             $cart[$request->id]["quantity"] = $request->quantity;
             session()->put('cart', $cart);
@@ -143,9 +132,9 @@ class ProductsController extends Controller
      */
     public function remove(Request $request)
     {
-        if($request->id) {
+        if ($request->id) {
             $cart = session()->get('cart');
-            if(isset($cart[$request->id])) {
+            if (isset($cart[$request->id])) {
                 unset($cart[$request->id]);
                 session()->put('cart', $cart);
             }
@@ -154,7 +143,8 @@ class ProductsController extends Controller
     }
 
 
-    public function checkOutCart(){
+    public function checkOutCart()
+    {
 
         $carts = session()->get('cart');
 
@@ -164,19 +154,11 @@ class ProductsController extends Controller
             ->cc(['amirseersol@gmail.com'])
             ->send(new CartDetailMail("New Order received PLZ check ", $content));
 
-        dd($carts);
 
-
-        if($request->id) {
-            if(isset($cart[$request->id])) {
-                unset($cart[$request->id]);
-                session()->put('cart', $cart);
-            }
-            session()->flash('success', 'Product removed successfully');
-        }
-
-        dd('checkout');
+        session()->put('cart', []);
+        session()->flash('success', 'Product removed successfully');
     }
+}
 
 
 }
