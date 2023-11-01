@@ -158,7 +158,6 @@ class ProductsController extends Controller
         session()->put('cart', []);
         session()->flash('success', 'Product removed successfully');
     }
-}
 
 
 }
