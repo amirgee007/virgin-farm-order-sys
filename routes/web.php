@@ -141,7 +141,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     });
 
-
+    Route::get('/categories', [
+        'as' => 'categories.index',
+        'uses' => 'ProductsController@categoriesIndex'
+    ]);
 
 
 

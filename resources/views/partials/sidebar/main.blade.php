@@ -44,7 +44,6 @@
                 </a>
             </li>
 
-
             @permission(['products.manage', 'products.manage'] ,false)
             <li class="nav-item">
                 <a href="#reports-dropdown"
@@ -105,6 +104,15 @@
                 <a class="nav-link {{ Request::is('shipping-address*') ? 'active' : ''  }}" href="{{ route('shipping.address.index') }}">
                     <i class="fas fa-address-card"></i>
                     <span>@lang('Shipping Address ')</span>
+                </a>
+            </li>
+            @endpermission
+
+            @permission('categories.index')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('categories*') ? 'active' : ''  }}" href="{{ route('categories.index') }}">
+                    <i class="fas fa-address-card"></i>
+                    <span>@lang('Categories')</span>
                 </a>
             </li>
             @endpermission

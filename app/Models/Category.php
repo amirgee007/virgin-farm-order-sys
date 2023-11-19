@@ -5,9 +5,9 @@ namespace Vanguard\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Carrier extends Model
+class Category extends Model
 {
     use HasFactory;
-    protected $table = 'carriers';
+    protected $table = 'categories';
     protected $guarded = [];
 }

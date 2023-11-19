@@ -7,6 +7,7 @@ use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\CartDetailMail;
 use Vanguard\Models\Carrier;
+use Vanguard\Models\Category;
 use Vanguard\Models\Product;
 
 class ProductsController extends Controller
@@ -157,6 +158,14 @@ class ProductsController extends Controller
 
         session()->put('cart', []);
         session()->flash('success', 'Product removed successfully');
+    }
+
+    public function categoriesIndex(){
+        $categories = Category::all();
+
+        return view('categories.index', compact(
+            'categories'
+        ));
     }
 
 
