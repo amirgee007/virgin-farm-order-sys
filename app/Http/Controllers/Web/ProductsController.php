@@ -28,7 +28,6 @@ class ProductsController extends Controller
         $carrier_id = trim($request->carrier_id);
         $purchase_order = trim($request->po);
 
-
         $filter = $request->filter;
 
         $filter = is_array($filter) ? $filter : [];
@@ -48,10 +47,12 @@ class ProductsController extends Controller
 //        }
 
         $carriers = Carrier::pluck('carrier_name', 'id')->toArray();
+        $categories = Category::pluck('description', 'category_id')->toArray();
         $products = (clone $query)->paginate(250);
         return view('products.index', compact(
             'products',
             'carriers',
+            'categories',
             'filter'
         ));
     }

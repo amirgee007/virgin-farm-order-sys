@@ -15,12 +15,7 @@
                     <label for="category_id">Category:</label>
                     <select class="form-control" name="filter[category]" id="category_id" >
                         <option selected value="">All</option>
-                        @foreach([
-                            'Achillea',
-                            'SPXAgapanthus',
-                            'SPXAlstroAmmi',
-                            'Majus'
-                        ] AS $key => $val)
+                        @foreach($categories AS $key => $val)
                             <option value="{{$key}}"
                                 {{ (isset($filter['category']) && $filter['category'] == $key) ? 'selected': ''  }}
                             >{{$val}}</option>
