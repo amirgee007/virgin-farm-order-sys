@@ -30,6 +30,59 @@ class SettingsController extends Controller
         return view('settings.general');
     }
 
+    public static function cubeRanges(){
+        return [
+            'Small' => [
+                '38x10x8' ,
+                '13-15'
+            ],
+            'Medium' => [
+                '41x10x10' ,
+                '18-21'
+            ],
+            'Medium Large' => [
+                '38x12x12' ,
+                '22-25'
+            ],
+            'Black' => [
+                '38x20x8' ,
+                '28-31'
+            ],
+            'Super' => [
+                '38x20x12' ,
+                '40-45'
+            ]
+        ];
+    }
+
+    public static function unitOfMeaures(){
+        return [
+            "B03" => "Pack 3 stems (bunch)",
+            "B16" => "Pack 16 (Used for bouquets)",
+            "B18" => "Pack 18 (bunch)",
+            "B1C" => "Pack 100 (box)",
+            "B24" => "Pack 24 stems (bunch)",
+            "B30" => "Pack 30 stems (bunch)",
+            "B32" => "Pack 32 stems (bunch)",
+            "B35" => "Pack 35 stems (bunch)",
+            "B40" => "Pack 40 stems (bunch)",
+            "B48" => "Pack 48 stems (bunch or mini box)",
+            "B60" => "Pack 60 stems (bunch or mini box)",
+            "B80" => "Pack 80 stems (mini box)",
+            "BC6" => "Pack 126 units (large Box)",
+            "BLC" => "Pack 150 stems (mini box)",
+            "BU1" => "Pack 25 stems (bunch)",
+            "BU2" => "Pack 20 stems (bunch)",
+            "BU3" => "Pack 10 stems (bunch)",
+            "BU4" => "Pack 15 stems (bunch)",
+            "BU5" => "Pack 6 stems (bunch)",
+            "BU6" => "Pack 5 stems (bunch)",
+            "BU7" => "Pack 50 stems (bunch)",
+            "BUD" => "Pack 12 stems (bunch)",
+            "BUE" => "Pack Bunch (usually a weighted bunch)",
+        ];
+    }
+
     /**
      * Display Authentication & Registration settings page.
      *

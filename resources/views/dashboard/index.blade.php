@@ -265,6 +265,47 @@
             </div>
         </div>
 
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive" id="users-table-wrapper">
+                        <table class="table table-borderless table-striped table-sm">
+                            <thead>
+
+                            @foreach($cubes as $name => $cube)
+                                <tr>
+                                    <td class="min-width-150"><b>{{$name}}</b></td>
+                                    <td>
+                                        {{$cube[0]}} : {{$cube[1]}}
+                                    </td>
+                                </tr>
+                            @endforeach
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive" id="users-table-wrapper">
+                        <table class="table table-borderless table-striped table-sm">
+                            <thead>
+                            @foreach($unitOfMeaures as $name => $measure)
+                                <tr>
+                                    <td class="min-width-150"><b>{{$name}}</b></td>
+                                    <td>
+                                        {{$measure}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 
