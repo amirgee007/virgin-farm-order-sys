@@ -17,6 +17,15 @@ class ProductsController extends Controller
         $this->middleware('auth');
     }
 
+    public function inventoryIndex(){
+
+        $query = Product::query();
+
+        $products = (clone $query)->paginate(500);
+        return view('products.inventory.index', compact(
+            'products'
+        ));
+    }
     /**
      * Display products page page.
      *

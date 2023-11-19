@@ -67,10 +67,17 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@index'
         ]);
 
+        Route::get('/inventory', [
+            'as' => 'inventory.index',
+            'uses' => 'ProductsController@inventoryIndex'
+        ]);
+
         Route::post('/add-to-cart', [
             'as' => 'product.add.to.cart',
             'uses' => 'ProductsController@addToCart'
         ]);
+
+
     });
 
 

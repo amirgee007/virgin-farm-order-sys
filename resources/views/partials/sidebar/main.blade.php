@@ -44,7 +44,7 @@
                 </a>
             </li>
 
-            @permission(['products.manage', 'products.manage'] ,false)
+            @permission(['products.manage', 'inventory.manage'] ,false)
             <li class="nav-item">
                 <a href="#reports-dropdown"
                    class="nav-link"
@@ -53,12 +53,19 @@
                     <i class="fa fa-chart-bar"></i>
                     <span>@lang('product.products')</span>
                 </a>
-                <ul class="{{ Request::is('reports*')  ? '' : 'collapse' }} list-unstyled sub-menu" id="reports-dropdown">
+                <ul class="{{ Request::is('products*')  ? '' : 'collapse' }} list-unstyled sub-menu" id="reports-dropdown">
 
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('products*') ? 'active' : ''  }}" href="{{ route('products.index') }}">
-                            <i class="fas fa-shopping-cart"></i>
+                        <a class="nav-link {{ Request::is('products') ? 'active' : ''  }}" href="{{ route('products.index') }}">
+                            <i class="fas fa-tag"></i>
                             <span>@lang('Products')</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('products/inventory*') ? 'active' : ''  }}" href="{{ route('inventory.index') }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>@lang('Inventory')</span>
                         </a>
                     </li>
 
