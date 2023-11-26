@@ -28,6 +28,7 @@ mix.styles([
     'public/assets/css/fontawesome-all.min.css',
     'public/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css',
     'public/assets/plugins/croppie/croppie.css',
+    'public/assets/css/custom.css'
 ], 'public/assets/css/vendor.css');
 
 mix.sass('resources/sass/app.scss', 'public/assets/css');

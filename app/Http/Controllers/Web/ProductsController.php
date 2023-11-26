@@ -2,9 +2,14 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Imports\ImportExcelFiles;
 use Vanguard\Mail\CartDetailMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
@@ -21,11 +26,63 @@ class ProductsController extends Controller
 
         $query = Product::query();
 
+        #depend ON date in and date OUT.
+
         $products = (clone $query)->paginate(500);
         return view('products.inventory.index', compact(
             'products'
         ));
     }
+
+    public function uploadInventory(Request $request){
+
+        $date_in = Carbon::parse($request->date_in)->toDateString();
+        $date_out = Carbon::parse($request->date_out)->toDateString();
+
+        Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
+        $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
+
+        #0 ITEM_ID #1 ITEM_DESC #2 PRICE_1  #3 PRICE_2	#4 PRICE_3	#5 QUANTITY
+        if (isset($products[0]))
+            foreach ($products[0] as $index => $row) {
+
+                try {
+
+                    if ($index < 2) continue;
+
+                    $product = Product::where('item_no', trim($row[0]))->first();
+
+                    $data = [
+                        'price_fedex' => trim($row[2]),
+                        'price_fob' => trim($row[3]),
+                        'price_hawaii' => trim($row[4]),
+                        'quantity' => $row[5] ? $row[5] : 0,
+                        'date_in' => $date_in,
+                        'date_out' => $date_out,
+                    ];
+
+                    if ($product) {
+                        $product->update($data);
+
+                    } else {
+                        $data['item_no'] = trim($row[0]);
+                        $data['product_text'] = trim($row[1]);
+                        $data['product_id'] = rand(100, 999999);
+
+                        #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
+                    }
+
+                } catch (\Exception $exception) {
+                    Log::error('Error during inventory import ' . $exception->getMessage());
+                    dd($exception->getMessage(), $data);
+                }
+            }
+
+        session()->flash('app_message', 'Inventory file has been imported in the system.');
+        return back();
+    }
+
+
     /**
      * Display products page page.
      *

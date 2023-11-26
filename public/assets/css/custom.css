@@ -1,0 +1,62 @@
+.bg-success {
+    background: #96e396 !important;
+}
+.pagination{
+    float: right !important;
+}
+.btn-download {
+    padding: 3px 5px;
+    color: #fc0000;
+}
+.btn-view-file {
+    padding: 3px 5px;
+    color: #303e3a;
+}
+.label-table-wrapper-scroll-y {
+    display: block;
+    max-height: 210px;
+    overflow-y: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.notes-warning {
+    margin-bottom: 10px;
+    padding: 15px 0px 1px 10px;
+    background-color: #ffdddd;
+    border-left: 6px solid #cec29c;
+}
+
+.notes-danger {
+    margin-bottom: 06px;
+    padding: 8px 0px 1px 4px;
+    background-color: #ffdddd;
+    border-left: 6px solid #fb1e63;
+}
+
+.notes-success {
+    margin-bottom: 06px;
+    padding: 8px 0px 1px 4px;
+    background-color: #ddffdd;
+    border-left: 7px solid #4CAF50;
+}
+
+.v-select  .dropdown-toggle::after {
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: unset !important;
+    border-right: unset !important;
+    border-bottom: unset !important;
+    border-left: unset !important;
+}
+.hs-code-href {
+    font-weight: bold !important;
+    font-size: small !important;
+}
+
+.disableControl >td:not(:last-child):not(:nth-child(3)):not(:nth-child(2)) {
+    pointer-events: none;
+    opacity: 0.6;
+    background-color: cornsilk;
+}

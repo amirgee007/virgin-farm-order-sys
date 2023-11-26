@@ -41,6 +41,7 @@
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.0",
         "laravelcollective/html": "^6.3",
+        "maatwebsite/excel": "^3.1",
         "proengsoft/laravel-jsvalidation": "^4.0.0",
         "spatie/laravel-query-builder": "^5.0",
         "vanguardapp/activity-log": "^5.0",
