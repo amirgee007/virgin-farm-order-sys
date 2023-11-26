@@ -283,5 +283,18 @@ class ProductsController extends Controller
         ));
     }
 
+    public function updateCategory(Request $request)
+    {
+        try {
+            Category::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
+            return ['Done'];
+
+        } catch (\Exception $ex) {
+            Log::error('Edit category error.' . $ex->getMessage());
+        }
+    }
+
+
+
 
 }

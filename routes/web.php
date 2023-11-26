@@ -163,6 +163,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'uses' => 'ProductsController@categoriesIndex'
     ]);
 
+    Route::post('/categories-update', [
+        'as' => 'categories.update',
+        'uses' => 'ProductsController@updateCategory'
+    ]);
+
 
 
 

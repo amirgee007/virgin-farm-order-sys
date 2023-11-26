@@ -42,7 +42,6 @@ class CarriersController extends Controller
                 return back();
             }
 
-
             Carrier::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
 
             return ['Done'];
@@ -51,14 +50,6 @@ class CarriersController extends Controller
             session()->flash('app_error', 'Something went wrong OR plz try again with unique carrier.');
             return back();
         }
-
-
-
-
-
-
-
-
 
     }
 }

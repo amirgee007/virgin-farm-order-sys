@@ -34,10 +34,19 @@
                     @if (count($categories))
                         @foreach ($categories as $index => $category)
                             <tr>
-
-{{--                                <td class="align-middle">{{ ++$index }}</td>--}}
                                 <td class="align-middle">{{ $category->category_id }}</td>
-                                <td class="align-middle">{{ $category->description }}</td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="description"
+                                       data-type="text"
+                                       data-emptytext="empty"
+                                       data-pk="{{$category->id}}"
+                                       data-url="{{route('categories.update')}}"
+                                       data-value="{{ $category->description }}">
+                                    </a>
+                                </td>
+
                                 <td class="align-middle">{{ dateFormatMy($category->created_at) }}</td>
                                 <td class="align-middle">{{ diff4Human($category->updated_at) }}</td>
 
