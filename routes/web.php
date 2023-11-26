@@ -106,6 +106,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'box.create.update',
             'uses' => 'BoxesController@createAndUpdate'
         ]);
+
+        Route::post('unit-of-measures-update', [
+            'as' => 'unit_of_measures.update',
+            'uses' => 'BoxesController@unitOfMeasuresUpdate'
+        ]);
     });
 
     Route::group(['prefix'=>'notifications'], function() {

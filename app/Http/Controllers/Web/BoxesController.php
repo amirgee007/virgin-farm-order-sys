@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Box;
+use Vanguard\Models\UnitOfMeasure;
 
 class BoxesController extends Controller
 {
@@ -38,7 +39,8 @@ class BoxesController extends Controller
 
         $boxes = $query->paginate(100);
 
-        return view('boxes.index' , compact('boxes'));
+        $unitOfMeasure = UnitOfMeasure::all();
+        return view('boxes.index' , compact('boxes' , 'unitOfMeasure'));
     }
 
     public function deleteBox($id)
@@ -71,14 +73,16 @@ class BoxesController extends Controller
             session()->flash('app_error', 'Something went wrong plz try again later.');
             return back();
         }
+    }
 
+    public function unitOfMeasuresUpdate(Request $request)
+    {
+        try {
+            UnitOfMeasure::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
+            return ['Done'];
 
-
-
-
-
-
-
+        } catch (\Exception $ex) {
+        }
 
     }
 }

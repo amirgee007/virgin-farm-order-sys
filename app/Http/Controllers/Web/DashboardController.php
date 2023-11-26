@@ -19,9 +19,6 @@ class DashboardController extends Controller
             session()->flash('success', __('E-Mail verified successfully.'));
         }
 
-        $cubes = SettingsController::cubeRanges();
-        $unitOfMeaures = SettingsController::unitOfMeaures();
-
-        return view('dashboard.index' , compact('cubes' , 'unitOfMeaures'));
+        return view('dashboard.index');
     }
 }

@@ -5,7 +5,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">
-        @lang('Boxes')
+        @lang('Boxes') & UOM
     </li>
 @stop
 
@@ -19,7 +19,6 @@
 
 <div class="card">
     <div class="card-body">
-
         <form action="" method="GET" id="users-form" class="pb-2 mb-3 border-bottom-light">
             <div class="row my-3 flex-md-row flex-column-reverse">
                 <div class="col-md-10 mt-md-0 mt-2">
@@ -197,6 +196,39 @@
                     @endif
                 </tbody>
             </table>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Unit Of Measures</h5>
+                <div class="table-responsive" id="users-table-wrapper">
+                    <table class="table table-borderless table-striped table-sm">
+                        <thead>
+                        @foreach($unitOfMeasure as $measure)
+                            <tr>
+                                <th><b>{{$measure->unit}}</b></th>
+                                <td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="detail"
+                                       data-type="text"
+                                       data-emptytext="empty"
+                                       data-pk="{{$measure->id}}"
+                                       data-url="{{route('unit_of_measures.update')}}"
+                                       data-value=" {{$measure->detail}}">
+                                    </a>
+                                </td>
+
+                                </td>
+                                <td class="float-right">
+                                    {{diff4Human($measure->updated_at)}}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>

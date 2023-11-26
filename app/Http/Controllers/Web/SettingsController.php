@@ -30,31 +30,6 @@ class SettingsController extends Controller
         return view('settings.general');
     }
 
-    public static function cubeRanges(){
-        return [
-            'Small' => [
-                '38x10x8' ,
-                '13-15'
-            ],
-            'Medium' => [
-                '41x10x10' ,
-                '18-21'
-            ],
-            'Medium Large' => [
-                '38x12x12' ,
-                '22-25'
-            ],
-            'Black' => [
-                '38x20x8' ,
-                '28-31'
-            ],
-            'Super' => [
-                '38x20x12' ,
-                '40-45'
-            ]
-        ];
-    }
-
     public static function unitOfMeaures(){
         return [
             "B03" => "Pack 3 stems (bunch)",

@@ -26,6 +26,15 @@ return new class extends Migration
 
             $table->timestamps();
         });
+
+        Schema::create('unit_of_measures', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('unit' , 10);
+            $table->string('detail' , 250)->nullable();
+
+            $table->timestamps();
+        });
     }
 
     /**
@@ -34,5 +43,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('boxes');
+        Schema::dropIfExists('unit_of_measures');
     }
 };
