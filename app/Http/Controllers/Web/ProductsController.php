@@ -25,13 +25,61 @@ class ProductsController extends Controller
     public function inventoryIndex(){
 
         $query = Product::query();
+        $count = Product::query()->count();
 
         #depend ON date in and date OUT.
 
-        $products = (clone $query)->paginate(500);
+        $products = (clone $query)->paginate(100);
+        $categories = Category::pluck('description','category_id')->toArray();
+
         return view('products.inventory.index', compact(
-            'products'
+            'products',
+            'categories',
+            'count'
         ));
+    }
+
+    public function uploadProducts(Request $request){
+
+        Storage::put('temp/import_products.xlsx', file_get_contents($request->file('file_products')->getRealPath()));
+        $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_products.xlsx'));
+
+        #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
+        if (isset($products[0]))
+            foreach ($products[0] as $index => $row) {
+
+                try {
+
+                    if ($index < 2) continue;
+
+                    if($index == 250)  break;
+
+                    $data = [
+                        'category_id' => trim($row[0]),
+                        'item_no' => trim($row[1]),
+                        'product_id' => rand(100, 999999),
+                        'product_text' => trim($row[2]),
+                        'unit_of_measure' => trim($row[3]),
+
+                        'price_fedex' => trim($row[4]),
+                        'price_fob' => trim($row[5]),
+                        'price_hawaii' => trim($row[6]),
+
+                        'weight' => trim($row[7]),
+                        'size' => trim($row[8]),
+
+                    ];
+
+                    Product::updateOrCreate(['item_no' => trim($row[1])],$data); #as for now no specific requirments for the adding product if not found. also no history etc
+
+                } catch (\Exception $exception) {
+                    Log::error('Error during inventory import ' . $exception->getMessage());
+                    dd($exception->getMessage(), $data);
+                }
+            }
+
+        session()->flash('app_message', 'Inventory file has been imported in the system.');
+        return back();
     }
 
     public function uploadInventory(Request $request){

@@ -23,11 +23,16 @@
                     <div class="notes-success" style="">
                         <p>Total products are in the system are.
                             <b>
-                                {{rand(10,1000)}}
+                                {{$count}}
                             </b>
 
                             <a href="javascript:void(0)" id="import_excel_inventory" title="Upload excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
                                class="btn btn-primary btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-upload"></i>
+                            </a>
+
+                            <a href="javascript:void(0)" id="import_excel_products" title="Upload products file i.e Web item Masters with Class This is the basis of all products." data-toggle="tooltip" data-placement="left"
+                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-upload"></i>
                             </a>
                         </p>
@@ -37,22 +42,25 @@
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
-                                <th class="min-width-80">@lang('Vendor')</th>
+                                <th class="min-width-80">@lang('Category')</th>
+                                <th class="min-width-80">@lang('item')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
-                                <th class="min-width-80">@lang('Unit Price')</th>
-                                <th class="min-width-80">@lang('Stem/Bunch')</th>
+                                <th class="min-width-80">@lang('UOM')</th>
+                                <th class="min-width-80">@lang('Price 1')</th>
+                                <th class="min-width-80">@lang('Price 2')</th>
+                                <th class="min-width-80">@lang('Price 3')</th>
+                                <th class="min-width-80">@lang('Weight')</th>
+                                <th class="min-width-80">@lang('Size')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
-                                <th class="min-width-80">@lang('Box Type')</th>
 
-                                <th class="min-width-80">@lang('Unit/Box')</th>
                             </tr>
                             </thead>
                             <tbody>
                             @if (count($products))
                                 @foreach ($products as $index => $product)
                                     <tr>
-
-                                        <td class="align-middle">{{ $product->vendor }}</td>
+                                        <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
+                                        <td class="align-middle">{{ $product->item_no }}</td>
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
                                                  title="Click to show Larger image"
@@ -64,11 +72,14 @@
                                             {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
                                         </td>
 
-                                        <td class="align-middle">${{ $product->unit_price }}/ST</td>
-                                        <td class="align-middle">{{ $product->stems }}</td>
-                                        <td class="align-middle">{{ $product->quantity }} BX</td>
-                                        <td class="align-middle">{{ $product->box_type }}</td>
-                                        <td class="align-middle">{{ $product->box_type }}</td>
+                                        <td class="align-middle">{{ $product->unit_of_measure }}</td>
+                                        <td class="align-middle">${{ $product->price_fedex }}</td>
+                                        <td class="align-middle">${{ $product->price_fob }}</td>
+                                        <td class="align-middle">${{ $product->price_hawaii }}</td>
+
+                                        <td class="align-middle">{{ $product->weight }}</td>
+                                        <td class="align-middle">{{ $product->size }}</td>
+                                        <td class="align-middle">{{ $product->quantity }}</td>
                                     </tr>
                                 @endforeach
                             @else
@@ -83,6 +94,9 @@
             </div>
         </div>
     </div>
+
+    {!! $products->render() !!}
+
 
     <div class="modal" id="upload_excel_inventory" type="">
         <div class="modal-dialog">
@@ -133,6 +147,55 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" id="upload_excel_products" type="">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Products </h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{route('upload.products.excel')}}" method="POST" enctype="multipart/form-data">
+                        {{csrf_field()}}
+
+                        <div class="form-groups">
+                            <label for="number_socks">Click to Upload Products File</label>
+                            <label class="btn btn-primary btn-sm center-block btn-file">
+                                <i class="fa fa-upload " aria-hidden="true"></i>
+                                <input required type="file" style="display: none;" name="file_products">
+                            </label>
+                        </div>
+
+{{--                        <div class="form-group row">--}}
+{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>--}}
+{{--                            <div class="col-sm-8 mt-2">--}}
+{{--                                <input required type="text" name="date_in" class="form-control-sm datepicker" id="dateInput" placeholder="Date In">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+{{--                        <div class="form-group row">--}}
+{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>--}}
+{{--                            <div class="col-sm-8 mt-2">--}}
+{{--                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+                        <small>
+                            Only 9 columns include i.e Item Class,	Item No., Description,	UOM	Price 1, Price 3,Price 5, Weight, Size
+                        </small>
+                        <br>
+                        <br>
+                        <input type="submit" value="Create Products" class="btn btn-primary btn-sm float-right">
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('scripts')
@@ -144,6 +207,10 @@
         });
 
         $('.datepicker').datepicker();
+
+        $('#import_excel_products').on('click', function () {
+            $('#upload_excel_products').modal('show');
+        });
 
         $('#import_excel_inventory').on('click', function () {
             $('#upload_excel_inventory').modal('show');
