@@ -2,10 +2,15 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use App\Imports\ProductSkuListImport;
 use Carbon\Carbon;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Http\Controllers\Controller;
@@ -130,6 +135,88 @@ class ProductsController extends Controller
         return back();
     }
 
+    public function uploadProductImages(Request $request){
+        try {
+
+//            ini_set('max_execution_time', 18000);
+//
+//            ini_set('max_execution_time', 300000); //300 seconds = 5 minutes
+//            ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
+//            ini_set('memory_limit', '4096M');
+
+            $v = Validator::make($request->all(), [
+                'images_zip' => 'required|mimes:zip',
+            ]);
+
+            $userId = \auth()->id();
+            $token = date('dMy-His');
+
+            if($v->fails()) {
+                Log::error("images_zip seems like with wrong way data..");
+                return back()->withErrors($v);
+            }
+            else
+            {
+
+                $namePathZIP = self::getStorageBackupPath('imagesZip' , '.zip');
+                Storage::put($namePathZIP,file_get_contents($request->file('images_zip')->getRealPath()));
+
+                Log::emergency('uploadProductImages Started and file saved public/images zip');
+
+                $file = new Filesystem;
+                #$file->cleanDirectory("images");
+
+                $zip = new \ZipArchive();
+                $file = $request->file('images_zip');
+
+                if ($zip->open($file->path()) === TRUE) {
+                    $zip->extractTo("images/$token");
+                    $zip->close();
+                } else {
+                    $zip->close();
+                    Log::error("System error UNABLE TO READ the zip file.");
+                    return Redirect::back()->withErrors('Your imported ZIP file is invalid please try again.');
+                }
+
+                $path = public_path("images/$token");
+                $files = File::allFiles($path);
+
+                foreach ($files as $counter => $file){
+                    $url = url("images/$token").'/'.$file->getFilename();
+
+                    $sku = $file->getFilenameWithoutExtension();
+
+                    $product = Product::where('item_no', trim($sku))->first();
+
+                    if ($product)
+                        $product->update([
+                            'image_url' => $url
+                        ]);
+                    else
+                        unlink($file->getRealPath());
+                }
+            }
+
+            return Redirect::back()->withMessage('Your zip file and images has been updated and attached.');
+
+        } catch (\Exception $ex) {
+
+
+            dd($ex);
+            Log::error("Your imported excel file is invalid please try again RENAMING images " .$ex->getMessage().'-'.$ex->getLine());
+            return Redirect::back()->withErrors('Your imported excel file is invalid please try again.');
+        }
+    }
+
+    public static function getStorageBackupPath($for , $ext = '.xls'){
+
+        $user = '-by-'.auth()->user()->name;
+
+        $now = now()->toDateTimeString();
+        $folder = 'public/backups/'.$for.'/'.now()->year.'/'.strtolower(now()->format('M')).'/';
+
+        return $folder.\Str::slug($now).$user.$ext;
+    }
 
     /**
      * Display products page page.

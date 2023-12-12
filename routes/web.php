@@ -77,6 +77,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@uploadProducts'
         ]);
 
+        Route::post('/upload-images', [
+            'as' => 'upload.products.zip.images',
+            'uses' => 'ProductsController@uploadProductImages'
+        ]);
+
         Route::post('/upload-inventory', [
             'as' => 'upload.inventory.excel',
             'uses' => 'ProductsController@uploadInventory'

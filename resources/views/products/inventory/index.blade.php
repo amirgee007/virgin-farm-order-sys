@@ -35,6 +35,11 @@
                                class="btn btn-danger btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-upload"></i>
                             </a>
+
+                            <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-warning btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-upload"></i>
+                            </a>
                         </p>
                     </div>
 
@@ -196,6 +201,41 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" id="upload_excel_images" type="">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Products </h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{route('upload.products.zip.images')}}" method="POST" enctype="multipart/form-data">
+                        {{csrf_field()}}
+
+                        <div class="form-groups">
+                            <label for="number_socks">Click to Upload Products Zip Images</label>
+                            <label class="btn btn-primary btn-sm center-block btn-file">
+                                <i class="fa fa-upload " aria-hidden="true"></i>
+                                <input required type="file" style="display: none;" name="images_zip">
+                            </label>
+                        </div>
+
+                        <small>
+                            Only zip file is allowed here also image names are should be SKU
+                        </small>
+                        <br>
+                        <br>
+                        <input type="submit" value="Create Products" class="btn btn-primary btn-sm float-right">
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('scripts')
@@ -210,6 +250,10 @@
 
         $('#import_excel_products').on('click', function () {
             $('#upload_excel_products').modal('show');
+        });
+
+        $('#import_excel_images').on('click', function () {
+            $('#upload_excel_images').modal('show');
         });
 
         $('#import_excel_inventory').on('click', function () {
