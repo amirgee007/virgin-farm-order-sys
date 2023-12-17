@@ -135,7 +135,8 @@ class ProductsController extends Controller
         return back();
     }
 
-    public function uploadProductImages(Request $request){
+    public function uploadProductImages(Request $request)
+    {
         try {
 
 //            ini_set('max_execution_time', 18000);
@@ -151,15 +152,13 @@ class ProductsController extends Controller
             $userId = \auth()->id();
             $token = date('dMy-His');
 
-            if($v->fails()) {
+            if ($v->fails()) {
                 Log::error("images_zip seems like with wrong way data..");
                 return back()->withErrors($v);
-            }
-            else
-            {
+            } else {
 
-                $namePathZIP = self::getStorageBackupPath('imagesZip' , '.zip');
-                Storage::put($namePathZIP,file_get_contents($request->file('images_zip')->getRealPath()));
+                $namePathZIP = self::getStorageBackupPath('imagesZip', '.zip');
+                Storage::put($namePathZIP, file_get_contents($request->file('images_zip')->getRealPath()));
 
                 Log::emergency('uploadProductImages Started and file saved public/images zip');
 
@@ -181,17 +180,15 @@ class ProductsController extends Controller
                 $path = public_path("images/$token");
                 $files = File::allFiles($path);
 
-                foreach ($files as $counter => $file){
-                    $url = url("images/$token").'/'.$file->getFilename();
+                foreach ($files as $counter => $file) {
+                    $url = url("images/$token") . '/' . $file->getFilename();
 
                     $sku = $file->getFilenameWithoutExtension();
 
                     $product = Product::where('item_no', trim($sku))->first();
 
                     if ($product)
-                        $product->update([
-                            'image_url' => $url
-                        ]);
+                        $product->update(['image_url' => $url]);
                     else
                         unlink($file->getRealPath());
                 }
@@ -200,10 +197,7 @@ class ProductsController extends Controller
             return Redirect::back()->withMessage('Your zip file and images has been updated and attached.');
 
         } catch (\Exception $ex) {
-
-
-            dd($ex);
-            Log::error("Your imported excel file is invalid please try again RENAMING images " .$ex->getMessage().'-'.$ex->getLine());
+            Log::error("Your imported excel file is invalid please try again uploading images " . $ex->getMessage() . '-' . $ex->getLine());
             return Redirect::back()->withErrors('Your imported excel file is invalid please try again.');
         }
     }

@@ -168,7 +168,7 @@
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
-                                <th class="min-width-80">@lang('Vendor')</th>
+{{--                                <th class="min-width-80">@lang('Vendor')</th>--}}
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('Unit Price')</th>
                                 <th class="min-width-80">@lang('Stem/Bunch')</th>
@@ -185,7 +185,7 @@
                                 @foreach ($products as $index => $product)
                                     <tr>
 
-                                        <td class="align-middle">{{ $product->vendor }}</td>
+{{--                                        <td class="align-middle">{{ $product->vendor }}</td>--}}
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
                                                  title="Click to show Larger image"

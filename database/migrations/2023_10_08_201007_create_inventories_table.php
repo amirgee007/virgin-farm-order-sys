@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('uploaded_date')->nullable();
             $table->date('end_valid_date')->nullable();
             $table->date('start_valid_date')->nullable();
-            $table->string('vendor' , 250)->nullable();
+//            $table->string('vendor' , 250)->nullable();
             $table->text('product_text')->nullable();
             $table->string('image' , 350)->nullable();
             $table->integer('unit_price')->default(0);
