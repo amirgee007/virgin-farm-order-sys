@@ -208,7 +208,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Upload Products </h5>
+                    <h5 class="modal-title">Upload Products Images </h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -229,7 +229,7 @@
                         </small>
                         <br>
                         <br>
-                        <input type="submit" value="Create Products" class="btn btn-primary btn-sm float-right">
+                        <input type="submit" value="Upload Images" class="btn btn-primary btn-sm float-right">
                     </form>
                 </div>
 
