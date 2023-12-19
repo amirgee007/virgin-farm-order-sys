@@ -86,7 +86,7 @@ class EloquentRole implements RoleRepository
      */
     public function lists($column = 'name', $key = 'id')
     {
-        return Role::pluck($column, $key);
+        return Role::orderByDesc('name')->pluck($column, $key); #just dont want to create admin all the times mostly its client.
     }
 
     /**
