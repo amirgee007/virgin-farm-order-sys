@@ -14,8 +14,8 @@
 
         <ul class="list-inline mb-2">
             <li class="list-inline-item">
-                <a href="{{ route('profile') }}" title="@lang('My Profile')">
-                    <i class="fas fa-cog"></i>
+                <a href="{{ route('log-viewer::logs.list') }}" title="Logs Viewer">
+                    <i class="fas fa-history"></i>
                 </a>
             </li>
 
