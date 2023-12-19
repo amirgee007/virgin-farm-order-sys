@@ -241,7 +241,7 @@ class ProductsController extends Controller
 //            ]);
 //        }
 
-        $carriers = Carrier::pluck('carrier_name', 'id')->toArray();
+        $carriers = getCarriers();
         $categories = Category::pluck('description', 'category_id')->toArray();
         $products = (clone $query)->paginate(250);
         return view('products.index', compact(

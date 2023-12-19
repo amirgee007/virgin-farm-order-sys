@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Vanguard\Models\Carrier;
 
 function diff4Human($date ){
     return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
@@ -13,6 +14,10 @@ function getPrices(){
         2 => 'FOB',
         3 => 'Hawaii',
     ];
+}
+
+function getCarriers(){
+    return Carrier::pluck('carrier_name', 'id')->srtBy('carrier_name')->toArray();
 }
 
 
