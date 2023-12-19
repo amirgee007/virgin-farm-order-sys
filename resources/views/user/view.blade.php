@@ -52,7 +52,7 @@
                     @endif
 
                     <a href="mailto:{{ $user->email }}" class="text-muted font-weight-light mb-2">
-                        {{ $user->email }}
+                        {{ $user->email }}  ({{$user->customer_number}})
                     </a>
                 </div>
 

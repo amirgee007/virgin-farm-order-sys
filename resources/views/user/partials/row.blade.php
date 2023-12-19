@@ -13,7 +13,7 @@
             {{ $user->username ?: __('N/A') }}
         </a>
     </td>
-    <td class="align-middle">{{ $user->first_name . ' ' . $user->last_name }}</td>
+    <td class="align-middle">{{ $user->first_name . ' ' . $user->last_name . '('.$user->customer_number.')'}}</td>
     <td class="align-middle">{{ $user->email }}</td>
     <td class="align-middle">{{ $user->address }}</td>
     <td class="align-middle">{{ $user->created_at->format(config('app.date_format')) }}</td>
