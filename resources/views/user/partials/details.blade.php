@@ -33,7 +33,7 @@
         <div class="form-group">
             <label for="customer_number">@lang('Customer Number')</label>
             <input type="text" class="form-control input-solid" id="customer_number"
-                   name="customer_number" placeholder="@lang('Customer Number')" value="{{ $edit ? $user->customer_number : '' }}">
+                   name="customer_number" placeholder="@lang('Customer Number')" value="{{ $edit ? $user->customer_number : 0 }}">
         </div>
     </div>
 
