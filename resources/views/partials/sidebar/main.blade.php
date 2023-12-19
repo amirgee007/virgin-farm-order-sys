@@ -44,7 +44,7 @@
                 </a>
             </li>
 
-            @permission(['products.manage', 'inventory.manage'] ,false)
+            @permission(['products.manage', 'p.inventory.manage'] ,false)
             <li class="nav-item">
                 <a href="#reports-dropdown"
                    class="nav-link"
@@ -61,13 +61,14 @@
                             <span>@lang('Products')</span>
                         </a>
                     </li>
-
+                    @permission('p.inventory.manage')
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('products/inventory*') ? 'active' : ''  }}" href="{{ route('inventory.index') }}">
                             <i class="fas fa-shopping-cart"></i>
                             <span>@lang('Inventory')</span>
                         </a>
                     </li>
+                    @endpermission
 
                     {{--<li class="nav-item">--}}
                         {{--<a class="nav-link {{ Request::is('reports/stock-report/*') ? 'active' : ''  }}"--}}
