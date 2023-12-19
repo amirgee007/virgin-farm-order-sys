@@ -107,16 +107,16 @@
                    name="contract_code" placeholder="@lang('Contract Code')" value="{{ $edit ? $user->contract_code : '' }}">
         </div>
 
-        <div class="form-group">
-            <label for="birthday">@lang('Date of Birth')</label>
-            <div class="form-group">
-                <input type="text"
-                       name="birthday"
-                       id='birthday'
-                       value="{{ $edit && $user->birthday ? $user->present()->birthday : '' }}"
-                       class="form-control input-solid" />
-            </div>
-        </div>
+{{--        <div class="form-group">--}}
+{{--            <label for="birthday">@lang('Date of Birth')</label>--}}
+{{--            <div class="form-group">--}}
+{{--                <input type="text"--}}
+{{--                       name="birthday"--}}
+{{--                       id='birthday'--}}
+{{--                       value="{{ $edit && $user->birthday ? $user->present()->birthday : '' }}"--}}
+{{--                       class="form-control input-solid" />--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
     </div>
 
