@@ -48,7 +48,7 @@
                     </div>
 
                     @if ($name = $user->present()->name)
-                        <h5>{{ $user->present()->name }} ({{$user->company_contact}})</h5>
+                        <h5>{{ $user->present()->name }} ({{$user->company_name}})</h5>
                     @endif
 
                     <a href="mailto:{{ $user->email }}" class="text-muted font-weight-light mb-2">

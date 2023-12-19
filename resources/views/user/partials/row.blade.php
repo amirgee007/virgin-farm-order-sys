@@ -17,7 +17,7 @@
     <td class="align-middle">{{ $user->email }}</td>
     <td class="align-middle">{{ $user->address }}</td>
     <td class="align-middle">{{ $user->created_at->format(config('app.date_format')) }}</td>
-    <td class="align-middle">{{ $user->company_contact }}</td>
+    <td class="align-middle">{{ $user->company_name }}</td>
     <td class="align-middle">{{ $user->role->display_name }}</td>
 
     <td class="align-middle">

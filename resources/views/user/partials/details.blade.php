@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="first_name">@lang('Role')</label>
             {!! Form::select('role_id', $roles, $edit ? $user->role->id : '',
@@ -15,7 +15,7 @@
 
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="status">@lang('Status')</label>
             {!! Form::select('status', $statuses, $edit ? $user->status : '',
@@ -26,6 +26,14 @@
             <label for="last_name">@lang('Last Name')</label>
             <input type="text" class="form-control input-solid" id="last_name"
                    name="last_name" placeholder="@lang('Last Name')" value="{{ $edit ? $user->last_name : '' }}">
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="form-group">
+            <label for="customer_number">@lang('Customer Number')</label>
+            <input type="text" class="form-control input-solid" id="customer_number"
+                   name="customer_number" placeholder="@lang('Customer Number')" value="{{ $edit ? $user->customer_number : '' }}">
         </div>
     </div>
 
@@ -73,9 +81,9 @@
 
 
         <div class="form-group">
-            <label for="address">@lang('Company Contact')</label>
-            <input type="text" class="form-control input-solid" id="company_contact"
-                   name="company_contact" placeholder="@lang('Company Contact')" required value="{{ $edit ? $user->company_contact : '' }}">
+            <label for="address">@lang('Company Name')</label>
+            <input type="text" class="form-control input-solid" id="company_name"
+                   name="company_name" placeholder="@lang('Company Name')" required value="{{ $edit ? $user->company_name : '' }}">
         </div>
 
         <div class="form-group">
