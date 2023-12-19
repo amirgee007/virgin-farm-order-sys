@@ -36,13 +36,18 @@ class ProfileController extends Controller
             return $role->id == auth()->user()->role_id;
         })->pluck('name', 'id');
 
+        $carriers = getCarriers();
+        $prices = getPrices();
+
         return view('user.profile', [
             'user' => auth()->user(),
             'edit' => true,
             'roles' => $roles,
             'countries' => [0 => __('Select a Country')] + $this->countries->lists()->toArray(),
             'socialLogins' => $this->users->getUserSocialLogins(auth()->id()),
-            'statuses' => UserStatus::lists()
+            'statuses' => UserStatus::lists(),
+            'carriers' => $carriers,
+            'prices' => $prices,
         ]);
     }
 }
