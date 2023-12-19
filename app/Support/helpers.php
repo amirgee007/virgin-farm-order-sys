@@ -6,6 +6,16 @@ function diff4Human($date ){
     return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
 }
 
+function getPrices(){
+    return [
+        0 => 'Select Price',
+        1 => 'Fedex',
+        2 => 'FOB',
+        3 => 'Hawaii',
+    ];
+}
+
+
 function myRoleName(){
     return  auth()->user() ? auth()->user()->role->name : '';
 }

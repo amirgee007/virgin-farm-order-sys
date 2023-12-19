@@ -19,17 +19,16 @@
         <div class="card">
             <h6 class="card-header d-flex align-items-center justify-content-between">
                 @lang('Details')
-
                 <small>
-                    @canBeImpersonated($user)
-                    <a href="{{ route('impersonate', $user) }}"
-                       data-toggle="tooltip"
-                       data-placement="top"
-                       title="@lang('Impersonate User')">
-                        @lang('Impersonate')
-                    </a>
-                    <span class="text-muted">|</span>
-                    @endCanBeImpersonated
+{{--                    @canBeImpersonated($user)--}}
+{{--                    <a href="{{ route('impersonate', $user) }}"--}}
+{{--                       data-toggle="tooltip"--}}
+{{--                       data-placement="top"--}}
+{{--                       title="@lang('Impersonate User')">--}}
+{{--                        @lang('Impersonate')--}}
+{{--                    </a>--}}
+{{--                    <span class="text-muted">|</span>--}}
+{{--                    @endCanBeImpersonated--}}
 
                     <a href="{{ route('users.edit', $user) }}"
                        class="edit"
@@ -49,7 +48,7 @@
                     </div>
 
                     @if ($name = $user->present()->name)
-                        <h5>{{ $user->present()->name }}</h5>
+                        <h5>{{ $user->present()->name }} ({{$user->company_contact}})</h5>
                     @endif
 
                     <a href="mailto:{{ $user->email }}" class="text-muted font-weight-light mb-2">
@@ -75,6 +74,44 @@
                     <li class="list-group-item">
                         <strong>@lang('Last Logged In'):</strong>
                         {{ $user->present()->lastLogin }}
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>@lang('Apt/Suit'):</strong>
+                        {{ $user->apt_suit }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('City'):</strong>
+                        {{ $user->city }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('State'):</strong>
+                        {{ $user->state }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('Zip'):</strong>
+                        {{ $user->zip }}
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>@lang('Price List'):</strong>
+                        {{ $user->price_list }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('Contract Code'):</strong>
+                        {{ $user->contract_code }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('Terms'):</strong>
+                        {{ $user->terms }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('Credit limit'):</strong>
+                        {{ $user->credit_limit }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>@lang('Carrier Id'):</strong>
+                        {{ $user->carrier_id }}
                     </li>
                 </ul>
             </div>

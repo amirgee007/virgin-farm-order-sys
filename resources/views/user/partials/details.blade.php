@@ -9,7 +9,7 @@
 
         <div class="form-group">
             <label for="first_name">@lang('First Name')</label>
-            <input type="text" class="form-control input-solid" id="first_name"
+            <input type="text" class="form-control input-solid" id="first_name" required
                    name="first_name" placeholder="@lang('First Name')" value="{{ $edit ? $user->first_name : '' }}">
         </div>
 
@@ -46,7 +46,7 @@
         </div>
 
         <div class="form-group">
-            <label for="city">@lang('Zip')</label>
+            <label for="zip">@lang('Zip')</label>
             <input type="number" class="form-control input-solid" id="zip" maxlength="10"
                    name="zip" placeholder="@lang('Zip')" value="{{ $edit ? $user->zip : '' }}">
         </div>
@@ -59,34 +59,33 @@
         <div class="form-group">
             <label for="credit_limit">@lang('Credit Limit')</label>
             <input type="number" class="form-control input-solid" id="credit_limit"
-                   name="terms" placeholder="@lang('Credit Limit')" value="{{ $edit ? $user->credit_limit : '' }}">
+                   name="terms" placeholder="@lang('100,2000,40000')" value="{{ $edit ? $user->credit_limit : '' }}">
         </div>
-        
+
     </div>
 
     <div class="col-md-4">
         <div class="form-group">
             <label for="city">@lang('City')</label>
             <input type="text" class="form-control input-solid" id="city"
-                   name="city" placeholder="@lang('City')" value="{{ $edit ? $user->city : '' }}">
+                   name="city" placeholder="@lang('City')" required value="{{ $edit ? $user->city : '' }}">
         </div>
 
 
         <div class="form-group">
             <label for="address">@lang('Company Contact')</label>
             <input type="text" class="form-control input-solid" id="company_contact"
-                   name="company_contact" placeholder="@lang('Company Contact')" value="{{ $edit ? $user->company_contact : '' }}">
+                   name="company_contact" placeholder="@lang('Company Contact')" required value="{{ $edit ? $user->company_contact : '' }}">
         </div>
 
         <div class="form-group">
             <label for="price_list">@lang('Price List')</label>
-            <input type="number" class="form-control input-solid" id="price_list"
-                   name="price_list" placeholder="@lang('Price List')" value="{{ $edit ? $user->price_list : '' }}">
+            {!! Form::select('price_list', $prices, $edit ? $user->price_list : '', ['class' => 'form-control input-solid']) !!}
         </div>
 
         <div class="form-group">
             <label for="carrier_id">@lang('Carrier')</label>
-            {!! Form::select('carrier_id', $countries, $edit ? $user->carrier_id : '', ['class' => 'form-control input-solid']) !!}
+            {!! Form::select('carrier_id', $carriers, $edit ? $user->carrier_id : '', ['class' => 'form-control input-solid']) !!}
         </div>
 
     </div>
@@ -100,7 +99,7 @@
         <div class="form-group">
             <label for="terms">@lang('Terms')</label>
             <input type="text" class="form-control input-solid" id="terms"
-                   name="terms" placeholder="@lang('Terms')" value="{{ $edit ? $user->terms : '' }}">
+                   name="terms" placeholder="@lang('i.e N1, CC')" value="{{ $edit ? $user->terms : '' }}">
         </div>
         <div class="form-group">
             <label for="contract_code">@lang('Contract Code')</label>

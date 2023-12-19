@@ -9,6 +9,7 @@ use Vanguard\Events\User\Deleted;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\User\CreateUserRequest;
 //use Vanguard\Repositories\Activity\ActivityRepository;
+use Vanguard\Models\Carrier;
 use Vanguard\Models\ClientNotification;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
@@ -32,11 +33,14 @@ class UsersController extends Controller
      */
     public function index(Request $request)
     {
+        $carriers = Carrier::pluck('carrier_name', 'id')->toArray();
+        $prices = getPrices();
+
         $users = $this->users->paginate($perPage = 20, $request->search, $request->status);
 
         $statuses = ['' => __('All')] + UserStatus::lists();
 
-        return view('user.list', compact('users', 'statuses'));
+        return view('user.list', compact('users', 'statuses' , 'carriers' , 'prices'));
     }
 
     /**
@@ -59,10 +63,13 @@ class UsersController extends Controller
      */
     public function create(CountryRepository $countryRepository, RoleRepository $roleRepository)
     {
+        $carriers = Carrier::pluck('carrier_name', 'id')->toArray();
         return view('user.add', [
             'countries' => $this->parseCountries($countryRepository),
             'roles' => $roleRepository->lists(),
-            'statuses' => UserStatus::lists()
+            'statuses' => UserStatus::lists(),
+            'carriers' => $carriers,
+            'prices' => getPrices(),
         ]);
     }
 
@@ -119,12 +126,15 @@ class UsersController extends Controller
      */
     public function edit(User $user, CountryRepository $countryRepository, RoleRepository $roleRepository)
     {
+        $carriers = Carrier::pluck('carrier_name', 'id')->toArray();
         return view('user.edit', [
             'edit' => true,
             'user' => $user,
             'countries' => $this->parseCountries($countryRepository),
             'roles' => $roleRepository->lists(),
             'statuses' => UserStatus::lists(),
+            'carriers' => $carriers,
+            'prices' => getPrices(),
             'socialLogins' => $this->users->getUserSocialLogins($user->id)
         ]);
     }
