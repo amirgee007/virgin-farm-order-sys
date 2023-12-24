@@ -85,6 +85,8 @@
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
+                                <th class="min-width-80">@lang('Date IN')</th>
+                                <th class="min-width-80">@lang('Date Out')</th>
 
                             </tr>
                             </thead>
@@ -113,6 +115,8 @@
                                         <td class="align-middle">{{ $product->weight }}</td>
                                         <td class="align-middle">{{ $product->size }}</td>
                                         <td class="align-middle">{{ $product->quantity }}</td>
+                                        <td class="align-middle">{{ $product->date_in }}</td>
+                                        <td class="align-middle">{{ $product->date_out }}</td>
                                     </tr>
                                 @endforeach
                             @else
