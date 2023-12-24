@@ -67,6 +67,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@index'
         ]);
 
+        Route::delete('/delete-product/{id}', [
+            'as' => 'products.delete',
+            'uses' => 'ProductsController@deleteProduct'
+        ]);
+
         Route::get('/inventory', [
             'as' => 'inventory.index',
             'uses' => 'ProductsController@inventoryIndex'

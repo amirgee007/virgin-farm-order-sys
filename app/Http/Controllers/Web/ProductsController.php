@@ -107,7 +107,7 @@ class ProductsController extends Controller
             return ['Done'];
 
         }catch (\Exception $ex){
-            dd($ex);
+            dd($ex->getMessage());
             session()->flash('app_error', 'Something went wrong plz try again later inventoryUpdateColumn.');
             return back();
         }
@@ -398,6 +398,15 @@ class ProductsController extends Controller
         } catch (\Exception $ex) {
             Log::error('Edit category error.' . $ex->getMessage());
         }
+    }
+
+    public function deleteProduct($id){
+
+        #todo: plz check all relational data here.
+
+        Product::where('id' , $id)->delete();
+        session()->flash('success', 'Product deleted successfully');
+        return back();
     }
 
 

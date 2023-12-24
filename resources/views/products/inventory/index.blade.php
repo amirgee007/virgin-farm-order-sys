@@ -27,8 +27,8 @@
                                 {{$count}}
                             </b>
 
-                            <a href="javascript:void(0)" id="import_excel_inventory" title="Upload excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-primary btn-sm float-right ml-2 mr-1">
+                            <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-warning btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-upload"></i>
                             </a>
 
@@ -37,10 +37,12 @@
                                 <i class="fas fa-upload"></i>
                             </a>
 
-                            <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-warning btn-sm float-right ml-2 mr-1">
+                            <a href="javascript:void(0)" id="import_excel_inventory" title="Upload excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-primary btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-upload"></i>
                             </a>
+
+
                         </p>
                     </div>
 
@@ -88,6 +90,7 @@
                                 <th class="min-width-80">@lang('Quantity')</th>
                                 <th class="min-width-80">@lang('Date In')</th>
                                 <th class="min-width-80">@lang('Date Out')</th>
+                                <th class="min-width-80">@lang('Delete')</th>
 
                             </tr>
                             </thead>
@@ -159,6 +162,19 @@
                                         <td class="align-middle">{{ $product->quantity }}</td>
                                         <td class="align-middle">{{ $product->date_in }}</td>
                                         <td class="align-middle">{{ $product->date_out }}</td>
+                                        <td class="align-middle">
+                                            <a href="{{ route('products.delete', $product->id) }}"
+                                               class="btn btn-icon"
+                                               title="@lang('Delete Product')"
+                                               data-toggle="tooltip"
+                                               data-placement="top"
+                                               data-method="DELETE"
+                                               data-confirm-title="@lang('Please Confirm')"
+                                               data-confirm-text="@lang('Are you sure that you want to delete this product?')"
+                                               data-confirm-delete="@lang('Yes, delete it!')">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else
