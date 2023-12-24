@@ -21,7 +21,8 @@ class ShippingController extends Controller
         $search = \request()->search;
         $user = \request()->user_id;
 
-        $user_id = myRoleName() == 'Admin' ? null : auth()->id(); #for clients show only client but for admin show ALL.
+        $user_id = myRoleName() == 'Admin' ? null : auth()->id();
+        #for clients show only client but for admin show ALL.
 
         $query = ShippingAddress::with('user');
 
@@ -36,7 +37,7 @@ class ShippingController extends Controller
                 ->pluck('first_name', 'id')
                 ->toArray();
 
-            array_unshift($users , 'Show All');
+            $users = [0 => 'Show All']+$users;
         }
 
         if($user){
