@@ -49,6 +49,8 @@ class ProductsController extends Controller
         Storage::put('temp/import_products.xlsx', file_get_contents($request->file('file_products')->getRealPath()));
         $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_products.xlsx'));
 
+        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', 600); //600 seconds = 10 minutes
         #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
         if (isset($products[0]))
             foreach ($products[0] as $index => $row) {
@@ -56,8 +58,6 @@ class ProductsController extends Controller
                 try {
 
                     if ($index < 2) continue;
-
-                    if($index == 250)  break;
 
                     $data = [
                         'category_id' => trim($row[0]),
@@ -79,7 +79,9 @@ class ProductsController extends Controller
 
                 } catch (\Exception $exception) {
                     Log::error('Error during inventory import ' . $exception->getMessage());
-                    dd($exception->getMessage(), $data);
+
+                    session()->flash('app_error', 'Inventory file has some error please check with admin or upload correct file.');
+                    return back();
                 }
             }
 

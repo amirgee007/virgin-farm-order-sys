@@ -323,4 +323,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('settings/notifications', 'SettingsController@update')
         ->name('settings.settings.auth')
         ->middleware('permission:settings.auth');
+
+    Route::post('/notifications', [
+        'as' => 'settings.notifications.update',
+        'uses' => 'SettingsController@update',
+        'middleware' => 'permission:settings.notifications'
+    ]);
 });
