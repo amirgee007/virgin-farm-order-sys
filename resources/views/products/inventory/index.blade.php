@@ -43,6 +43,34 @@
                         </p>
                     </div>
 
+                    <form action="" method="GET" id="product-form" class="pb-2 mb-3 border-bottom-light">
+                        <div class="row my-2 flex-md-row flex-column-reverse">
+                            <div class="col-md-6 mt-md-0 mt-2">
+                                <div class="input-group custom-search-form">
+                                    <input type="text"
+                                           class="form-control input-solid"
+                                           name="search"
+                                           value="{{ Request::get('search') }}"
+                                           placeholder="Search by Item, Description">
+
+                                    <span class="input-group-append">
+                                    @if (Request::has('search') && Request::get('search') != '')
+                                            <a href="{{ route('inventory.index') }}"
+                                               class="btn btn-light d-flex align-items-center text-muted"
+                                               role="button">
+                                                <i class="fas fa-times"></i>
+                                        </a>
+                                   @endif
+                                    <button class="btn btn-light" type="submit">
+                                              <i class="fas fa-search text-muted"></i>
+                                    </button>
+                                </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
                     <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>

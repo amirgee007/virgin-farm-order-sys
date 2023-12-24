@@ -30,12 +30,24 @@ class ProductsController extends Controller
     public function inventoryIndex(){
 
         $query = Product::query();
-        $count = Product::query()->count();
+        $search = \Request::get('search');
+
+
+        #Search by Item, Description
 
         #depend ON date in and date OUT.
 
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->orWhere('item_no', 'like', "%{$search}%");
+                $q->orWhere('product_text', 'like', "%{$search}%");
+            });
+        }
+
         $products = (clone $query)->paginate(100);
         $categories = Category::pluck('description','category_id')->toArray();
+
+        $count = (clone $query)->count();
 
         return view('products.inventory.index', compact(
             'products',
@@ -66,9 +78,9 @@ class ProductsController extends Controller
                         'product_text' => trim($row[2]),
                         'unit_of_measure' => trim($row[3]),
 
-                        'price_fedex' => trim($row[4]),
-                        'price_fob' => trim($row[5]),
-                        'price_hawaii' => trim($row[6]),
+                        'price_fedex' => trim($row[4]), #price 1
+                        'price_fob' => trim($row[5]), #price 3
+                        'price_hawaii' => trim($row[6]), #price 5
 
                         'weight' => trim($row[7]),
                         'size' => trim($row[8]),
@@ -78,7 +90,7 @@ class ProductsController extends Controller
                     Product::updateOrCreate(['item_no' => trim($row[1])],$data); #as for now no specific requirments for the adding product if not found. also no history etc
 
                 } catch (\Exception $exception) {
-                    Log::error('Error during inventory import ' . $exception->getMessage());
+                    Log::error('Error during inventory import ' . $exception->getMessage().' and line '. $exception->getLine());
 
                     session()->flash('app_error', 'Inventory file has some error please check with admin or upload correct file.');
                     return back();
