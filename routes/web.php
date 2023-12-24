@@ -72,6 +72,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@inventoryIndex'
         ]);
 
+        Route::post('/inventory-update-column', [
+            'as' => 'inventory.update.column',
+            'uses' => 'ProductsController@inventoryUpdateColumn'
+        ]);
+
         Route::post('/upload-products', [
             'as' => 'upload.products.excel',
             'uses' => 'ProductsController@uploadProducts'

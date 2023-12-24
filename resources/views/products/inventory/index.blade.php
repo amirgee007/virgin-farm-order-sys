@@ -11,6 +11,7 @@
 
 @section('styles')
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/css/custom.css') }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
 @endsection
 
 @section('content')
@@ -79,13 +80,13 @@
                                 <th class="min-width-80">@lang('item')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('UOM')</th>
-                                <th class="min-width-80">@lang('Price 1')</th>
-                                <th class="min-width-80">@lang('Price 2')</th>
-                                <th class="min-width-80">@lang('Price 3')</th>
+                                <th class="min-width-80">@lang('Price-1 $')</th>
+                                <th class="min-width-80">@lang('Price-2 $')</th>
+                                <th class="min-width-80">@lang('Price-3 $')</th>
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
-                                <th class="min-width-80">@lang('Date IN')</th>
+                                <th class="min-width-80">@lang('Date In')</th>
                                 <th class="min-width-80">@lang('Date Out')</th>
 
                             </tr>
@@ -108,9 +109,50 @@
                                         </td>
 
                                         <td class="align-middle">{{ $product->unit_of_measure }}</td>
-                                        <td class="align-middle">${{ $product->price_fedex }}</td>
-                                        <td class="align-middle">${{ $product->price_fob }}</td>
-                                        <td class="align-middle">${{ $product->price_hawaii }}</td>
+
+                                        <td class="align-middle">
+                                            <a class="editable"
+                                               style="cursor:pointer;"
+                                               data-name="price_fedex"
+                                               data-step="any"
+                                               data-type="number"
+                                               data-emptytext="0"
+                                               data-pk="{{$product->id}}"
+                                               data-url="{{route('inventory.update.column')}}"
+                                               data-value="{{ $product->price_fedex }}">
+                                            </a>
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <a class="editable"
+                                               style="cursor:pointer;"
+                                               data-name="price_fob"
+                                               data-step="any"
+                                               data-type="number"
+                                               data-emptytext="0"
+                                               data-pk="{{$product->id}}"
+                                               data-url="{{route('inventory.update.column')}}"
+                                               data-value="{{ $product->price_fob }}">
+                                            </a>
+                                        </td>
+
+                                        <td class="align-middle">
+                                            <a class="editable"
+                                               style="cursor:pointer;"
+                                               data-name="price_hawaii"
+                                               data-step="any"
+                                               data-type="number"
+                                               data-emptytext="0"
+                                               data-pk="{{$product->id}}"
+                                               data-url="{{route('inventory.update.column')}}"
+                                               data-value="{{ $product->price_hawaii }}">
+                                            </a>
+                                        </td>
+
+
+{{--                                        <td class="align-middle">${{ $product->price_fedex }}</td>--}}
+{{--                                        <td class="align-middle">${{ $product->price_fob }}</td>--}}
+{{--                                        <td class="align-middle">${{ $product->price_hawaii }}</td>--}}
 
                                         <td class="align-middle">{{ $product->weight }}</td>
                                         <td class="align-middle">{{ $product->size }}</td>
@@ -272,7 +314,16 @@
 
 @section('scripts')
     @include('partials.toaster-js')
+    <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
+
     <script>
+        $.fn.editable.defaults.mode = 'inline';
+        $.fn.editable.defaults.ajaxOptions = {
+            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        };
+
+        $('.editable').editable();
+
         $('.img-thumbnail').click(function () {
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));
             $('#largeImgModal').modal('show');

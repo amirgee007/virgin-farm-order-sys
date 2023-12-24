@@ -32,7 +32,6 @@ class ProductsController extends Controller
         $query = Product::query();
         $search = \Request::get('search');
 
-
         #Search by Item, Description
 
         #depend ON date in and date OUT.
@@ -101,6 +100,18 @@ class ProductsController extends Controller
         return back();
     }
 
+    public function inventoryUpdateColumn(Request $request){
+        try{
+
+            Product::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
+            return ['Done'];
+
+        }catch (\Exception $ex){
+            dd($ex);
+            session()->flash('app_error', 'Something went wrong plz try again later inventoryUpdateColumn.');
+            return back();
+        }
+    }
     public function uploadInventory(Request $request){
 
         $date_in = Carbon::parse($request->date_in)->toDateString();
