@@ -52,7 +52,8 @@
 
 </div>
 
-    <div class="row">
+    @if(myRoleName() == 'Admin')
+        <div class="row">
         <div class="col-6">
             <div class="card">
                 <div class="card-body">
@@ -265,6 +266,7 @@
             </div>
         </div>
     </div>
+    @endif
 @stop
 
 @section('scripts')
