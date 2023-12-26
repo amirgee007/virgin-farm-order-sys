@@ -80,6 +80,28 @@
             </li>
             @endpermission
 
+            @permission('orders.manage')
+            <li class="nav-item">
+                <a href="#orders-dropdown"
+                   class="nav-link"
+                   data-toggle="collapse"
+                   aria-expanded="{{ Request::is('orders*') ? 'true' : 'false' }}">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>@lang('order.orders')</span>
+                </a>
+                <ul class="{{ Request::is('orders*')  ? '' : 'collapse' }} list-unstyled sub-menu" id="orders-dropdown">
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('orders') ? 'active' : ''  }}" href="">
+                            <i class="fas fa-car"></i>
+                            <span>@lang('My Orders')</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+            @endpermission
+
             @permission('boxes.manage')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('boxes*') ? 'active' : ''  }}" href="{{ route('boxes.index') }}">
