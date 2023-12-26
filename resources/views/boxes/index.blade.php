@@ -47,10 +47,10 @@
 
                 <div class="col-md-2">
 
-                    <a class="float-right mb-2" href="#">
-                        <i title="Import BOX by EXCEL sheet"
-                           data-toggle="tooltip" data-placement="top" class="fas fa-upload fa-2x"></i>
-                    </a>
+{{--                    <a class="float-right mb-2" href="#">--}}
+{{--                        <i title="Import BOX by EXCEL sheet"--}}
+{{--                           data-toggle="tooltip" data-placement="top" class="fas fa-upload fa-2x"></i>--}}
+{{--                    </a>--}}
 
                     <a href="#" class="btn btn-primary btn-rounded float-right btn-sm" data-toggle="modal" data-target="#createBoxModal">
                         <i class="fas fa-plus mr-2"></i>
@@ -72,6 +72,7 @@
                     <th class="min-width-80">@lang('Volume')</th>
                     <th class="min-width-80">@lang('Weight')</th>
                     <th class="min-width-80">@lang('Min Value')</th>
+                    <th class="min-width-80">@lang('Max Value')</th>
                     <th class="min-width-80">@lang('Created')</th>
                     <th class="min-width-80">@lang('Updated')</th>
                     <th class="min-width-80">@lang('Actions')</th>
@@ -161,11 +162,22 @@
                                     <a class="editable"
                                        style="cursor:pointer;"
                                        data-name="min_value"
-                                       data-type="text"
+                                       data-type="number"
                                        data-emptytext="0"
                                        data-pk="{{$box->id}}"
                                        data-url="{{route('box.create.update')}}"
                                        data-value="{{ $box->min_value }}">
+                                    </a>
+                                </td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="max_value"
+                                       data-type="number"
+                                       data-emptytext="0"
+                                       data-pk="{{$box->id}}"
+                                       data-url="{{route('box.create.update')}}"
+                                       data-value="{{ $box->max_value }}">
                                     </a>
                                 </td>
 
@@ -220,7 +232,6 @@
                                     </a>
                                 </td>
 
-                                </td>
                                 <td class="float-right">
                                     {{diff4Human($measure->updated_at)}}
                                 </td>
