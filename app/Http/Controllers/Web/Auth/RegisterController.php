@@ -38,7 +38,7 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request, RoleRepository $roles)
     {
         $user = $this->users->create(
-            array_merge($request->validFormData(), ['role_id' => $roles->findByName('User')->id])
+            array_merge($request->validFormData(), ['role_id' => $roles->findByName('Client')->id])
         );
 
         event(new Registered($user));
