@@ -114,7 +114,19 @@
                                     </a>
                                 </td>
 
-                                <td class="align-middle">{{ $address->phone }}</td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="phone"
+                                       data-type="text"
+                                       data-emptytext="-"
+                                       data-pk="{{$address->id}}"
+                                       data-url="{{route('ship.address.create.update')}}"
+                                       data-value="{{ $address->phone }}">
+                                    </a>
+                                </td>
+
+{{--                                <td class="align-middle">{{ $address->phone }}</td>--}}
                                 <td class="align-middle">{{ Str::limit($address->address , 50) }}</td>
                                 <td class="align-middle">{{ dateFormatMy($address->created_at) }}</td>
                                 <td class="align-middle">{{ diff4Human($address->updated_at) }}</td>

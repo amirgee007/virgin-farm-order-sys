@@ -208,13 +208,9 @@
                         {{csrf_field()}}
 
                         <div class="form-groups">
-                            <label for="number_socks">Click to Upload Inventory File</label>
-                            <label class="btn btn-primary btn-sm center-block btn-file">
-                                <i class="fa fa-upload " aria-hidden="true"></i>
-                                <input required type="file" style="display: none;" name="file_inventory">
-                            </label>
+                            <label for="file_inventory" class="form-label">Click to Upload Inventory File</label>
+                            <input class="form-control" type="file" id="file_inventory" name="file_inventory">
                         </div>
-
 
                         <div class="form-group row">
                             <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>
@@ -258,11 +254,8 @@
                         {{csrf_field()}}
 
                         <div class="form-groups">
-                            <label for="number_socks">Click to Upload Products File</label>
-                            <label class="btn btn-primary btn-sm center-block btn-file">
-                                <i class="fa fa-upload " aria-hidden="true"></i>
-                                <input required type="file" style="display: none;" name="file_products">
-                            </label>
+                            <label for="file_products" class="form-label">Click to Upload Products File</label>
+                            <input class="form-control" type="file" id="file_products" name="file_products">
                         </div>
 
 {{--                        <div class="form-group row">--}}
@@ -307,11 +300,8 @@
                         {{csrf_field()}}
 
                         <div class="form-groups">
-                            <label for="number_socks">Click to Upload Products Zip Images</label>
-                            <label class="btn btn-primary btn-sm center-block btn-file">
-                                <i class="fa fa-upload " aria-hidden="true"></i>
-                                <input required type="file" style="display: none;" name="images_zip">
-                            </label>
+                            <label for="images_zip" class="form-label">Click to Upload Products Zip Images</label>
+                            <input class="form-control" type="file" id="images_zip" name="images_zip">
                         </div>
 
                         <small>

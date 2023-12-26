@@ -71,8 +71,8 @@
                     <th class="min-width-80">@lang('Height')</th>
                     <th class="min-width-80">@lang('Volume')</th>
                     <th class="min-width-80">@lang('Weight')</th>
-                    <th class="min-width-80">@lang('Min Value')</th>
-                    <th class="min-width-80">@lang('Max Value')</th>
+                    <th class="min-width-80">@lang('Min Value(Cube)')</th>
+                    <th class="min-width-80">@lang('Max Value(Cube)')</th>
                     <th class="min-width-80">@lang('Created')</th>
                     <th class="min-width-80">@lang('Updated')</th>
                     <th class="min-width-80">@lang('Actions')</th>
