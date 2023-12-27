@@ -28,7 +28,7 @@ class CarriersController extends Controller
             return back();
         }
 
-        $carriers = Carrier::all();
+        $carriers = Carrier::latest()->get();
         return view('carriers.index' , compact('carriers'));
     }
 

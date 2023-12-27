@@ -43,6 +43,7 @@
                     <thead>
                     <tr>
                         <th class="min-width-80">@lang('ID')</th>
+                        <th class="min-width-100">@lang('Code')</th>
                         <th class="min-width-100">@lang('Name')</th>
                         <th class="min-width-80">@lang('Created')</th>
                         <th class="min-width-80">@lang('Updated')</th>
@@ -55,6 +56,18 @@
                             <tr>
 
                                 <td class="align-middle">{{ ++$index }}</td>
+
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="c_code"
+                                       data-type="text"
+                                       data-emptytext="--"
+                                       data-pk="{{$carrier->id}}"
+                                       data-url="{{route('carriers.create.update')}}"
+                                       data-value="{{ $carrier->c_code }}">
+                                    </a>
+                                </td>
 
                                 <td class="align-middle">
                                     <a class="editable"
