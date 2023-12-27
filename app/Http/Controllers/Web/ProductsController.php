@@ -376,7 +376,7 @@ class ProductsController extends Controller
 
     public function iventoryReset(){
 
-        Product::query()->update([
+        Product::query()->whereDate('date_out' , '<' , now()->toDateString())->update([
             'quantity' => 0,
             'date_in' => null,
             'date_out' => null,
