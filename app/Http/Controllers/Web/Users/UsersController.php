@@ -179,6 +179,8 @@ class UsersController extends Controller
             'West Virginia',
             'Wisconsin',
             'Wyoming',
+            'Puerto Rico',
+            'U.S. Virgin Islands',
         ];
 
         $terms = [
