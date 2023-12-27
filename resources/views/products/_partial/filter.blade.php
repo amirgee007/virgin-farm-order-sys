@@ -59,7 +59,7 @@
 
             <div class="col-12">
                 <div class="text-center align-content-center">
-                    <a class="btn btn-secondary btn-sm" href="{{route('products.index')}}">
+                    <a class="btn btn-secondary btn-sm" href="{{route('products.index.manage')}}">
                         <i class="fas fa-times"></i>
                         Clear Filter
                     </a>

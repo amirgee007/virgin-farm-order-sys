@@ -37,15 +37,11 @@
                                        name="height" placeholder="@lang('height')">
                             </div>
                             <div class="form-group">
-                                <label for="volume">@lang('Volume')</label>
-                                <input required type="number" class="form-control input-solid" id="volume"
-                                       name="volume" placeholder="@lang('volume')">
+                                <label for="min_value">@lang('Min Value')</label>
+                                <input required type="number" class="form-control input-solid" id="min_value"
+                                       name="min_value" placeholder="@lang('Minimum Value')">
                             </div>
-                            <div class="form-group">
-                                <label for="max_value">@lang('Max Value')</label>
-                                <input required type="number" class="form-control input-solid" id="max_value"
-                                       name="max_value" placeholder="@lang('Minimum Value')">
-                            </div>
+
 
                         </div>
 
@@ -58,10 +54,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="min_value">@lang('Min Value')</label>
-                                <input required type="number" class="form-control input-solid" id="min_value"
-                                       name="min_value" placeholder="@lang('Minimum Value')">
+                                <label for="max_value">@lang('Max Value')</label>
+                                <input required type="number" class="form-control input-solid" id="max_value"
+                                       name="max_value" placeholder="@lang('Minimum Value')">
                             </div>
+
+
 
 
                         </div>

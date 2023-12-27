@@ -27,7 +27,7 @@
                                class="form-control input-solid"
                                name="search"
                                value="{{ Request::get('search') }}"
-                               placeholder="@lang('Search for box name, size, volume')">
+                               placeholder="@lang('Search for box name, size')">
 
                             <span class="input-group-append">
                                 @if (Request::has('search') && Request::get('search') != '')
@@ -69,7 +69,6 @@
                     <th class="min-width-80">@lang('Length')</th>
                     <th class="min-width-100">@lang('Width')</th>
                     <th class="min-width-80">@lang('Height')</th>
-                    <th class="min-width-80">@lang('Volume')</th>
                     <th class="min-width-80">@lang('Weight')</th>
                     <th class="min-width-80">@lang('Min Value(Cube)')</th>
                     <th class="min-width-80">@lang('Max Value(Cube)')</th>
@@ -131,18 +130,6 @@
                                        data-pk="{{$box->id}}"
                                        data-url="{{route('box.create.update')}}"
                                        data-value="{{ $box->height }}">
-                                    </a>
-                                </td>
-
-                                <td class="align-middle">
-                                    <a class="editable"
-                                       style="cursor:pointer;"
-                                       data-name="volume"
-                                       data-type="text"
-                                       data-emptytext="0"
-                                       data-pk="{{$box->id}}"
-                                       data-url="{{route('box.create.update')}}"
-                                       data-value="{{ $box->volume }}">
                                     </a>
                                 </td>
 

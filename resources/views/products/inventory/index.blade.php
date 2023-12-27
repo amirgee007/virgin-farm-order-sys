@@ -1,18 +1,85 @@
 @extends('layouts.app')
 
-@section('page-title', __('Manage Inventory'))
-@section('page-heading', __('Manage Inventory'))
+@section('page-title', __('Client Inventory'))
+@section('page-heading', __('Client Inventory'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted">
-        @lang('Inventory')
+        @lang('Products')
     </li>
 @stop
 
 @section('styles')
-    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/css/custom.css') }}">
-    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
+    <style>
+
+        [role=main] {
+            padding-top: 75px;
+        }
+
+        .loader {
+            height: 70px !important;
+        }
+        .products-list-table th, .products-list-table td {
+            padding: 0.3rem !important;
+        }
+        .products-list-table {
+            font-weight: 400 !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+        }
+        .width50{
+            width: 60px !important;
+        }
+        /*button {*/
+        /*font-size: 11px !important;*/
+        /*font-weight: 300 !important;*/
+        /*}*/
+        /*caption {*/
+        /*caption-side:top;*/
+        /*}*/
+        /*tr:hover > td {*/
+        /*cursor: pointer !important;*/
+        /*}*/
+    </style>
 @endsection
+
+<div class="dropdown">
+    <button type="button" class="btn btn-info" data-toggle="dropdown">
+
+    </button>
+    <div class="dropdown-menu">
+        <div class="row total-header-section">
+            <div class="col-lg-6 col-sm-6 col-6">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
+            </div>
+            @php $total = 0 @endphp
+            @foreach((array) session('cart') as $id => $details)
+                @php $total += $details['price'] * $details['quantity'] @endphp
+            @endforeach
+            <div class="col-lg-6 col-sm-6 col-6 total-section text-right">
+                <p>Total: <span class="text-info">$ {{ $total }}</span></p>
+            </div>
+        </div>
+        @if(session('cart'))
+            @foreach(session('cart') as $id => $details)
+                <div class="row cart-detail">
+                    <div class="col-lg-4 col-sm-4 col-4 cart-detail-img">
+                        <img src="{{ $details['image'] }}" />
+                    </div>
+                    <div class="col-lg-8 col-sm-8 col-8 cart-detail-product">
+                        <p>{{ $details['name'] }}</p>
+                        <span class="price text-info"> ${{ $details['price'] }}</span> <span class="count"> Quantity:{{ $details['quantity'] }}</span>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-12 text-center checkout">
+                <a href="" class="btn btn-primary btn-block">View all</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section('content')
     @include('partials.messages')
@@ -20,86 +87,105 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
-
-                    <div class="notes-success" style="">
-                        <p>Total products are in the system are.
-                            <b>
-                                {{$count}}
-                            </b>
-
-                            <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-warning btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
-
-                            <a href="javascript:void(0)" id="import_excel_products" title="Upload products file i.e Web item Masters with Class This is the basis of all products." data-toggle="tooltip" data-placement="left"
-                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
-
-                            <a href="javascript:void(0)" id="import_excel_inventory" title="Upload excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-primary btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
-
-
-                        </p>
-                    </div>
-
-                    <form action="" method="GET" id="product-form" class="pb-2 mb-3 border-bottom-light">
-                        <div class="row my-2 flex-md-row flex-column-reverse">
-                            <div class="col-md-6 mt-md-0 mt-2">
+                    <span>
+                        <b>
+                            1. Enter your shipping information
+                        </b>
+                    </span>
+                    <label class="form-check-label float-right"
+                           data-trigger="hover"
+                           data-toggle="popover" data-html='true'
+                           data-content="
+                                    Virgin Farms Inc. <br/>
+                                    8495 NW 66 Street <br/>
+                                    Miami, FL 33166<br/>
+                                    ">
+                        Where should it be shipped?
+                    </label>
+                    <div class="row my-2 flex-md-row flex-column-reverse">
+                        <div class="col-md-10 col-sm-12 mt-md-0 mt-1">
+                            <form action="" method="GET" id="filters-form" class="border-bottom-light">
                                 <div class="input-group custom-search-form">
+
+                                    <input type="date"
+                                           class="form-control rounded"
+                                           name="date_shipped"
+                                           title="When do you want your product to be shipped?"
+                                           data-trigger="hover"
+                                           data-toggle="tooltip"
+                                           value="{{ \Request::get('date_shipped') }}">
+
+                                    <select name="carrier_id" class="form-control ml-2 rounded"
+                                            title="What is your carrier choice?"
+                                            data-trigger="hover"
+                                            data-toggle="tooltip"
+                                    >
+                                        <option hidden value="">Select Carrier</option>
+                                        @foreach($carriers AS $key => $name)
+                                            <option value="{{$key}}"
+                                                {{ Request::get('carrier_id') == $key ? 'selected' : '' }}>
+                                                {{$name}}
+                                            </option>
+                                        @endforeach
+                                        <option value="" >Clear Option</option>
+                                    </select>
+
                                     <input type="text"
-                                           class="form-control input-solid"
-                                           name="search"
-                                           value="{{ Request::get('search') }}"
-                                           placeholder="Search by Item, Description">
+                                           class="form-control rounded ml-2"
+                                           name="po"
+                                           placeholder="What is PO#?"
+                                           title="What is your PO#? (optional)"
+                                           data-trigger="hover"
+                                           data-toggle="tooltip"
+                                           value="{{ \Request::get('po') }}">
 
                                     <span class="input-group-append">
-                                    @if (Request::has('search') && Request::get('search') != '')
-                                            <a href="{{ route('inventory.index') }}"
+                                        @if (\Request::has('carrier_id') && \Request::get('carrier_id') != '')
+                                            <a href="{{ route('products.index') }}"
+                                               title="Reset Filters"
+                                               data-trigger="hover"
+                                               data-toggle="tooltip"
                                                class="btn btn-light d-flex align-items-center text-muted"
                                                role="button">
                                                 <i class="fas fa-times"></i>
                                         </a>
-                                   @endif
-                                    <button class="btn btn-light" type="submit">
-                                              <i class="fas fa-search text-muted"></i>
+                                        @endif
+                                        <button class="btn btn-secondary ml-1" type="submit" id="search-products-btn">
+                                        <i class="fas fa-search "></i>
                                     </button>
                                 </span>
                                 </div>
-                            </div>
-
+                            </form>
                         </div>
-                    </form>
+
+                        {{--@permission('orders.filter')--}}
+                        @include('products._partial.filter')
+                        {{--@endpermission--}}
+
+                    </div>
 
                     <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
-                                <th class="min-width-80">@lang('Category')</th>
-                                <th class="min-width-80">@lang('item')</th>
+{{--                                <th class="min-width-80">@lang('Vendor')</th>--}}
                                 <th class="min-width-200">@lang('Product Description')</th>
-                                <th class="min-width-80">@lang('UOM')</th>
-                                <th class="min-width-80">@lang('Price-1 $')</th>
-                                <th class="min-width-80">@lang('Price-2 $')</th>
-                                <th class="min-width-80">@lang('Price-3 $')</th>
-                                <th class="min-width-80">@lang('Weight')</th>
-                                <th class="min-width-80">@lang('Size')</th>
+                                <th class="min-width-80">@lang('Unit Price')</th>
+                                <th class="min-width-80">@lang('Stem/Bunch')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
-                                <th class="min-width-80">@lang('Date In')</th>
-                                <th class="min-width-80">@lang('Date Out')</th>
-                                <th class="min-width-80">@lang('Delete')</th>
-
+                                <th class="min-width-80">@lang('Box Type')</th>
+                                <th class="min-width-80">@lang('Unit/Box')</th>
+                                <th class="min-width-80">@lang('Mark Code')</th>
+                                <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
+                                <th class="min-width-80">@lang('Actions')</th>
                             </tr>
                             </thead>
                             <tbody>
                             @if (count($products))
                                 @foreach ($products as $index => $product)
                                     <tr>
-                                        <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
-                                        <td class="align-middle">{{ $product->item_no }}</td>
+
+{{--                                        <td class="align-middle">{{ $product->vendor }}</td>--}}
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
                                                  title="Click to show Larger image"
@@ -111,70 +197,37 @@
                                             {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
                                         </td>
 
-                                        <td class="align-middle">{{ $product->unit_of_measure }}</td>
+                                        <td class="align-middle">${{ $product->unit_price }}/ST</td>
+                                        <td class="align-middle">{{ $product->stems }}</td>
+                                        <td class="align-middle">{{ $product->quantity }} BX</td>
+                                        <td class="align-middle">{{ $product->box_type }}</td>
+                                        <td class="align-middle">{{ $product->units_box }}</td>
 
+                                        <form action="{{route('add.to.cart')}}" method="POST" enctype="multipart/form-data">
+                                            {{csrf_field()}}
+                                            <input type="hidden" name="product_id" value="{{$product->id}}">
                                         <td class="align-middle">
-                                            <a class="editable"
-                                               style="cursor:pointer;"
-                                               data-name="price_fedex"
-                                               data-step="any"
-                                               data-type="number"
-                                               data-emptytext="0"
-                                               data-pk="{{$product->id}}"
-                                               data-url="{{route('inventory.update.column')}}"
-                                               data-value="{{ $product->price_fedex }}">
-                                            </a>
+                                            <input class="form-control form-control-sm width50" name="mark_code" type="text">
+                                        </td>
+                                        <td class="align-middle">
+                                            <input required class="form-control form-control-sm width50" name="quantity" type="number">
                                         </td>
 
                                         <td class="align-middle">
-                                            <a class="editable"
-                                               style="cursor:pointer;"
-                                               data-name="price_fob"
-                                               data-step="any"
-                                               data-type="number"
-                                               data-emptytext="0"
-                                               data-pk="{{$product->id}}"
-                                               data-url="{{route('inventory.update.column')}}"
-                                               data-value="{{ $product->price_fob }}">
-                                            </a>
+
+                                            <button type="submit" class="btn btn-icon" title="@lang('Add product to cart')" data-toggle="tooltip"
+                                                    data-placement="top"><i class="fas fa-plus-circle "></i>
+                                            </button>
+                                            {{--<a href="" class="btn btn-icon add-to-cart"--}}
+                                               {{--data-id="{{$product->id}}"--}}
+                                               {{--title="@lang('Add product to cart')"--}}
+                                               {{--data-toggle="tooltip"--}}
+                                               {{--data-placement="top">--}}
+                                                {{--<i class="fas fa-plus-circle "></i>--}}
+                                            {{--</a>--}}
                                         </td>
+                                        </form>
 
-                                        <td class="align-middle">
-                                            <a class="editable"
-                                               style="cursor:pointer;"
-                                               data-name="price_hawaii"
-                                               data-step="any"
-                                               data-type="number"
-                                               data-emptytext="0"
-                                               data-pk="{{$product->id}}"
-                                               data-url="{{route('inventory.update.column')}}"
-                                               data-value="{{ $product->price_hawaii }}">
-                                            </a>
-                                        </td>
-
-
-{{--                                        <td class="align-middle">${{ $product->price_fedex }}</td>--}}
-{{--                                        <td class="align-middle">${{ $product->price_fob }}</td>--}}
-{{--                                        <td class="align-middle">${{ $product->price_hawaii }}</td>--}}
-
-                                        <td class="align-middle">{{ $product->weight }}</td>
-                                        <td class="align-middle">{{ $product->size }}</td>
-                                        <td class="align-middle">{{ $product->quantity }}</td>
-                                        <td class="align-middle">{{ $product->date_in }}</td>
-                                        <td class="align-middle">{{ $product->date_out }}</td>
-                                        <td class="align-middle">
-                                            <a href="{{ route('products.delete', $product->id) }}"
-                                               class="btn btn-icon"
-                                               title="@lang('Delete Product')"
-                                               data-toggle="tooltip"
-                                               data-placement="top"
-                                               data-method="DELETE"
-                                               data-confirm-title="@lang('Please Confirm')"
-                                               data-confirm-text="@lang('Are you sure that you want to delete this product?')"
-                                               data-confirm-delete="@lang('Yes, delete it!')">
-                                                <i class="fas fa-trash"></i>
-                                            </a>
-                                        </td>
                                     </tr>
                                 @endforeach
                             @else
@@ -186,133 +239,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    {!! $products->render() !!}
-
-
-    <div class="modal" id="upload_excel_inventory" type="">
-        <div class="modal-dialog">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Inventory (<small>Future inventory for Nov to Dec</small>)</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <form action="{{route('upload.inventory.excel')}}" method="POST" enctype="multipart/form-data">
-                        {{csrf_field()}}
-
-                        <div class="form-groups">
-                            <label for="file_inventory" class="form-label">Click to Upload Inventory File</label>
-                            <input class="form-control" type="file" id="file_inventory" name="file_inventory">
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>
-                            <div class="col-sm-8 mt-2">
-                                <input required type="text" name="date_in" class="form-control-sm datepicker" id="dateInput" placeholder="Date In">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>
-                            <div class="col-sm-8 mt-2">
-                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">
-                            </div>
-                        </div>
-
-                        <small>
-                            Only 6 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY
-                        </small>
-                        <br>
-                        <br>
-                        <input type="submit" value="Upload Inventory" class="btn btn-primary btn-sm float-right">
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="upload_excel_products" type="">
-        <div class="modal-dialog">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Products </h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <form action="{{route('upload.products.excel')}}" method="POST" enctype="multipart/form-data">
-                        {{csrf_field()}}
-
-                        <div class="form-groups">
-                            <label for="file_products" class="form-label">Click to Upload Products File</label>
-                            <input class="form-control" type="file" id="file_products" name="file_products">
-                        </div>
-
-{{--                        <div class="form-group row">--}}
-{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>--}}
-{{--                            <div class="col-sm-8 mt-2">--}}
-{{--                                <input required type="text" name="date_in" class="form-control-sm datepicker" id="dateInput" placeholder="Date In">--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
-{{--                        <div class="form-group row">--}}
-{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>--}}
-{{--                            <div class="col-sm-8 mt-2">--}}
-{{--                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
-                        <small>
-                            Only 9 columns include i.e Item Class,	Item No., Description,	UOM	Price 1, Price 3,Price 5, Weight, Size
-                        </small>
-                        <br>
-                        <br>
-                        <input type="submit" value="Create Products" class="btn btn-primary btn-sm float-right">
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="upload_excel_images" type="">
-        <div class="modal-dialog">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Upload Products Images </h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    <form action="{{route('upload.products.zip.images')}}" method="POST" enctype="multipart/form-data">
-                        {{csrf_field()}}
-
-                        <div class="form-groups">
-                            <label for="images_zip" class="form-label">Click to Upload Products Zip Images</label>
-                            <input class="form-control" type="file" id="images_zip" name="images_zip">
-                        </div>
-
-                        <small>
-                            Only zip file is allowed here also image names are should be SKU
-                        </small>
-                        <br>
-                        <br>
-                        <input type="submit" value="Upload Images" class="btn btn-primary btn-sm float-right">
-                    </form>
-                </div>
-
             </div>
         </div>
     </div>
@@ -339,33 +265,69 @@
 
 @section('scripts')
     @include('partials.toaster-js')
-    <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
-
     <script>
-        $.fn.editable.defaults.mode = 'inline';
-        $.fn.editable.defaults.ajaxOptions = {
-            headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
-        };
-
-        $('.editable').editable();
-
         $('.img-thumbnail').click(function () {
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));
             $('#largeImgModal').modal('show');
         });
 
-        $('.datepicker').datepicker();
+//        $("#doubleCheckMode1, #search-products-btn").change(function () {
+//            $("#filters-form").submit();
+//        });
 
-        $('#import_excel_products').on('click', function () {
-            $('#upload_excel_products').modal('show');
+
+        $(".add-to-cart").click(function (event) {
+
+            {{--var _this = $(this);--}}
+            {{--var product_id = _this.data("id");--}}
+
+            {{--$.ajax({--}}
+                {{--url: "{{ route('product.add.to.cart') }}",--}}
+                {{--method: 'post',--}}
+                {{--data: {--}}
+                    {{--product_id: product_id--}}
+                {{--},--}}
+                {{--success: function (data) {--}}
+                    {{--if (data.result) {--}}
+                        {{--toastr.success("Product added to cart successfully.", "Success");--}}
+                        {{--//reload if needed--}}
+                        {{--//window.location.href = window.location.href + "#myItems";--}}
+                        {{--//location.reload();--}}
+                    {{--}--}}
+                    {{--else {--}}
+                        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--});--}}
+
         });
 
-        $('#import_excel_images').on('click', function () {
-            $('#upload_excel_images').modal('show');
-        });
 
-        $('#import_excel_inventory').on('click', function () {
-            $('#upload_excel_inventory').modal('show');
-        });
+//        #later when need to make it more accurate VIA AJAX
+        {{--$(".add-to-cart").click(function (event) {--}}
+
+            {{--var _this = $(this);--}}
+            {{--var product_id = _this.data("id");--}}
+
+            {{--$.ajax({--}}
+                {{--url: "{{ route('product.add.to.cart') }}",--}}
+                {{--method: 'post',--}}
+                {{--data: {--}}
+                    {{--product_id: product_id--}}
+                {{--},--}}
+                {{--success: function (data) {--}}
+                    {{--if (data.result) {--}}
+                        {{--toastr.success("Product added to cart successfully.", "Success");--}}
+                        {{--//reload if needed--}}
+                        {{--//window.location.href = window.location.href + "#myItems";--}}
+                        {{--//location.reload();--}}
+                    {{--}--}}
+                    {{--else {--}}
+                        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+                    {{--}--}}
+                {{--}--}}
+            {{--});--}}
+
+        {{--});--}}
     </script>
 @endsection

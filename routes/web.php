@@ -62,9 +62,25 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
 
     Route::group(['prefix'=>'products'], function() {
-        Route::get('/', [
-            'as' => 'products.index',
-            'uses' => 'ProductsController@index'
+
+        #its for client ONLY
+        Route::get('/inventory', [
+            'as' => 'inventory.index',
+            'uses' => 'ProductsController@inventoryIndex'
+        ]);
+
+        Route::post('/add-to-cart', [
+            'as' => 'product.add.to.cart',
+            'uses' => 'ProductsController@addToCart'
+        ]);
+        #client side ended here....!
+
+
+
+
+        Route::get('/manage', [
+            'as' => 'products.index.manage',
+            'uses' => 'ProductsController@indexManageProducts'
         ]);
 
         Route::delete('/delete-product/{id}', [
@@ -72,10 +88,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@deleteProduct'
         ]);
 
-        Route::get('/inventory', [
-            'as' => 'inventory.index',
-            'uses' => 'ProductsController@inventoryIndex'
-        ]);
+
 
         Route::post('/inventory-update-column', [
             'as' => 'inventory.update.column',
@@ -95,11 +108,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::post('/upload-inventory', [
             'as' => 'upload.inventory.excel',
             'uses' => 'ProductsController@uploadInventory'
-        ]);
-
-        Route::post('/add-to-cart', [
-            'as' => 'product.add.to.cart',
-            'uses' => 'ProductsController@addToCart'
         ]);
 
 

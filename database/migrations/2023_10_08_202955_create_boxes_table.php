@@ -19,7 +19,7 @@ return new class extends Migration
             $table->float('length' , 7,2)->default(0);
             $table->float('width' , 7,2)->default(0);
             $table->float('height' , 7,2)->default(0);
-            $table->float('volume' , 7,2)->default(0);
+//            $table->float('volume' , 7,2)->default(0);
             $table->float('weight' , 7,2)->default(0);
 
             $table->smallInteger('min_value')->default(0);

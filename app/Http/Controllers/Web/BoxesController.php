@@ -31,7 +31,6 @@ class BoxesController extends Controller
                 $q->orWhere('width', 'like', "%{$search}%");
                 $q->orWhere('height', 'like', "%{$search}%");
                 $q->orWhere('length', 'like', "%{$search}%");
-                $q->orWhere('volume', 'like', "%{$search}%");
                 $q->orWhere('weight', 'like', "%{$search}%");
                 $q->orWhere('min_value', 'like', "%{$search}%");
             });
