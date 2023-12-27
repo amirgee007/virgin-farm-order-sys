@@ -38,6 +38,9 @@ class ProfileController extends Controller
 
         $carriers = getCarriers();
         $prices = getPrices();
+        $states= getStates();
+        $terms = getTerms();
+
 
         return view('user.profile', [
             'user' => auth()->user(),
@@ -48,6 +51,8 @@ class ProfileController extends Controller
             'statuses' => UserStatus::lists(),
             'carriers' => $carriers,
             'prices' => $prices,
+            'states' => $states,
+            'terms' => $terms,
         ]);
     }
 }

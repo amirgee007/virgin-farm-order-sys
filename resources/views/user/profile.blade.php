@@ -67,18 +67,22 @@
                         </form>
                     </div>
 
+
                     <div class="tab-pane fade px-2"
                          id="login-details"
                          role="tabpanel"
                          aria-labelledby="nav-profile-tab">
-                        <form action="{{ route('profile.update.login-details') }}"
-                              method="POST"
-                              id="login-details-form">
-                            @method('PUT')
-                            @csrf
-                            @include('user.partials.auth')
-                        </form>
+                        @if(myRoleName() == 'Admin')
+                            <form action="{{ route('profile.update.login-details') }}"
+                                  method="POST"
+                                  id="login-details-form">
+                                @method('PUT')
+                                @csrf
+                                @include('user.partials.auth')
+                            </form>
+                        @endif
                     </div>
+
 
                     {{--@if (setting('2fa.enabled'))--}}
                         {{--<div class="tab-pane fade px-2" id="2fa" role="tabpanel" aria-labelledby="nav-profile-tab">--}}

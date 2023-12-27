@@ -127,66 +127,6 @@ class UsersController extends Controller
     public function edit(User $user, CountryRepository $countryRepository, RoleRepository $roleRepository)
     {
 
-        $states = [
-            'Alabama',
-            'Alaska',
-            'Arizona',
-            'Arkansas',
-            'California',
-            'Colorado',
-            'Connecticut',
-            'Delaware',
-            'District of Columbia',
-            'Florida',
-            'Georgia',
-            'Hawaii',
-            'Idaho',
-            'Illinois',
-            'Indiana',
-            'Iowa',
-            'Kansas',
-            'Kentucky',
-            'Louisiana',
-            'Maine',
-            'Maryland',
-            'Massachusetts',
-            'Michigan',
-            'Minnesota',
-            'Mississippi',
-            'Missouri',
-            'Montana',
-            'Nebraska',
-            'Nevada',
-            'New Hampshire',
-            'New Jersey',
-            'New Mexico',
-            'New York',
-            'North Carolina',
-            'North Dakota',
-            'Ohio',
-            'Oklahoma',
-            'Oregon',
-            'Pennsylvania',
-            'Rhode Island',
-            'South Carolina',
-            'South Dakota',
-            'Tennessee',
-            'Texas',
-            'Utah',
-            'Vermont',
-            'Virginia',
-            'Washington',
-            'West Virginia',
-            'Wisconsin',
-            'Wyoming',
-            'Puerto Rico',
-            'U.S. Virgin Islands',
-        ];
-
-        $terms = [
-            'N1', 'CC', 'Check by Phone'
-        ];
-
         return view('user.edit', [
             'edit' => true,
             'user' => $user,
@@ -195,8 +135,8 @@ class UsersController extends Controller
             'statuses' => UserStatus::lists(),
             'carriers' => getCarriers(),
             'prices' => getPrices(),
-            'states' => $states,
-            'terms' => $terms,
+            'states' => getStates(),
+            'terms' => getTerms(),
             'socialLogins' => $this->users->getUserSocialLogins($user->id)
         ]);
     }
