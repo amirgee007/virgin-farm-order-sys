@@ -105,6 +105,7 @@
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
                                                  title="Click to show Larger image"
+                                                 data-info="{{$product->product_text}}"
                                                  data-toggle="tooltip" data-placement="bottom"
                                                  data-largeimg="{{$product->image_url}}"
                                                  src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="Virgin Farm">
@@ -334,7 +335,7 @@
         <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Large Image</h5>
+                    <h5 class="modal-title" id="imagePreviewTitle">Large Image</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -391,6 +392,7 @@
 
         $('.img-thumbnail').click(function () {
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));
+            $('#imagePreviewTitle').text($(this).data('info'));
             $('#largeImgModal').modal('show');
         });
 
