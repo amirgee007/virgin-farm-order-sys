@@ -12,6 +12,8 @@
 @section('styles')
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/css/custom.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/daterangepicker/daterangepicker.css') }}">
+
 @endsection
 
 @section('content')
@@ -199,7 +201,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Upload Inventory (<small>Future inventory for Nov to Dec</small>)</h5>
+                    <h5 class="modal-title">Upload Inventory (<small>Future inventory for xxx to xxx</small>)</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -212,18 +214,29 @@
                             <input class="form-control" type="file" id="file_inventory" name="file_inventory">
                         </div>
 
-                        <div class="form-group row">
-                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>
-                            <div class="col-sm-8 mt-2">
-                                <input required type="text" name="date_in" class="form-control-sm datepicker" id="dateInput" placeholder="Date In">
-                            </div>
-                        </div>
+{{--                        <div class="form-group row">--}}
+{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>--}}
+{{--                            <div class="col-sm-8 mt-2">--}}
+{{--                                <input required type="text" name="date_in" class="form-control-sm datepicker" id="dateInput" placeholder="Date In">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
 
-                        <div class="form-group row">
-                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>
-                            <div class="col-sm-8 mt-2">
-                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">
+                        <div class="form-group">
+                            <input type="hidden" name="range" value="" id="dateRangeVal">
+                            <label for="dateRange" class="form-label mt-3">Date in/out</label>
+                            <div id="dateRange" class="form-control float-right " style="cursor: pointer; ">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span></span>
+                                &nbsp;<i class="fa fa-caret-down"></i>
                             </div>
+
+
+
+
+{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>--}}
+{{--                            <div class="col-sm-8 mt-2">--}}
+{{--                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">--}}
+{{--                            </div>--}}
                         </div>
 
                         <small>
@@ -318,7 +331,7 @@
     </div>
 
     <div class="modal" id="largeImgModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Large Image</h5>
@@ -327,7 +340,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img src="" id="imagePreviewId" style="width: 750px; height: 750px;" >
+                    <img src="" id="imagePreviewId" style="width: 450px; height: 450px;" >
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -339,9 +352,36 @@
 
 @section('scripts')
     @include('partials.toaster-js')
+    <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>
+
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
 
     <script>
+        $(function() {
+
+
+            var start = moment('{{$selected['start']}}');
+            var end = moment('{{$selected['end']}}');
+
+            function cb(start, end) {
+                $('#dateRange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                $('#dateRangeVal').val($("#dateRange span").html());
+            }
+
+            $('#dateRange').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Next 6 Days': [moment().add(6, 'days'), moment()],
+                    'Next 7 Days': [moment().add(7, 'days'), moment()],
+                    'Next 15 Days': [moment().add(15, 'days'), moment()],
+                    'Next 30 Days': [moment().add(30, 'days'), moment()]
+                }
+            }, cb);
+
+            cb(start, end);
+        });
+
         $.fn.editable.defaults.mode = 'inline';
         $.fn.editable.defaults.ajaxOptions = {
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }

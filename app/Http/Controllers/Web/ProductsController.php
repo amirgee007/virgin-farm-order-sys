@@ -172,10 +172,17 @@ class ProductsController extends Controller
 
         $count = (clone $query)->count();
 
+        #will check if need to change it
+        $start_date = Carbon::now();
+        $end_date = Carbon::now()->addDays(5);
+        $selected['start'] = $start_date->toDayDateTimeString();
+        $selected['end'] = $end_date->toDayDateTimeString();
+
         return view('products.index', compact(
             'products',
             'categories',
-            'count'
+            'count',
+            'selected'
         ));
     }
 
@@ -238,8 +245,17 @@ class ProductsController extends Controller
     }
     public function uploadInventory(Request $request){
 
-        $date_in = Carbon::parse($request->date_in)->toDateString();
-        $date_out = Carbon::parse($request->date_out)->toDateString();
+        $dateInOut = $request->range;
+
+        $date_range = explode("-", $dateInOut);
+
+        $date_in = now()->toDateString();
+        $date_out = now()->toDateString();
+
+        if (!empty(array_filter($date_range))) {
+            $date_in = Carbon::parse(trim($date_range[0]))->toDateString();
+            $date_out = Carbon::parse(trim($date_range[1]))->toDateString();
+        }
 
         Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
         $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));

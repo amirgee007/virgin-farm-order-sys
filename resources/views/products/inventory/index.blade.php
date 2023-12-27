@@ -244,7 +244,7 @@
     </div>
 
     <div class="modal" id="largeImgModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Large Image</h5>
@@ -253,7 +253,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img src="" id="imagePreviewId" style="width: 750px; height: 750px;" >
+                    <img src="" id="imagePreviewId" style="width: 450px; height: 450px;" >
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
