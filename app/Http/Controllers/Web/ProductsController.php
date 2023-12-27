@@ -376,7 +376,7 @@ class ProductsController extends Controller
 
     public function iventoryReset(){
 
-        Product::update([
+        Product::query()->update([
             'quantity' => 0,
             'date_in' => null,
             'date_out' => null,
