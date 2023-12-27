@@ -67,7 +67,7 @@
         <div class="form-group">
             <label for="credit_limit">@lang('Credit Limit')</label>
             <input type="number" class="form-control input-solid" id="credit_limit"
-                   name="terms" placeholder="@lang('100,2000,40000')" value="{{ $edit ? $user->credit_limit : '' }}">
+                   name="credit_limit" placeholder="@lang('100,2000,40000')" value="{{ $edit ? $user->credit_limit : '' }}">
         </div>
 
     </div>

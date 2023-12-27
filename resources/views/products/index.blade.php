@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
-@section('page-title', __('Manage Inventory'))
-@section('page-heading', __('Manage Inventory'))
+@section('page-title', __('All Products Manage'))
+@section('page-heading', __('All Products Manage'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted">
-        @lang('Inventory')
+        @lang('Manage Inventory')
     </li>
 @stop
 
@@ -194,7 +194,6 @@
     </div>
 
     {!! $products->render() !!}
-
 
     <div class="modal" id="upload_excel_inventory" type="">
         <div class="modal-dialog">
