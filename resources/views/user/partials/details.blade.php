@@ -101,13 +101,14 @@
     <div class="col-md-4">
         <div class="form-group">
             <label for="state">@lang('State')</label>
-            <input type="text" class="form-control input-solid" id="state"
-                   name="state" placeholder="@lang('State')" maxlength="3" value="{{ $edit ? $user->state : '' }}">
+            {!! Form::select('state', $states, $edit ? $user->state : '', ['class' => 'form-control input-solid']) !!}
+
+{{--            <input type="text" class="form-control input-solid" id="state"--}}
+{{--                   name="state" placeholder="@lang('State')" maxlength="3" value="{{ $edit ? $user->state : '' }}">--}}
         </div>
         <div class="form-group">
             <label for="terms">@lang('Terms')</label>
-            <input type="text" class="form-control input-solid" id="terms"
-                   name="terms" placeholder="@lang('i.e N1, CC')" value="{{ $edit ? $user->terms : '' }}">
+            {!! Form::select('terms', $terms, $edit ? $user->terms : '', ['class' => 'form-control input-solid']) !!}
         </div>
         <div class="form-group">
             <label for="contract_code">@lang('Contract Code')</label>

@@ -17,7 +17,7 @@ function getPrices(){
 }
 
 function getCarriers(){
-    return Carrier::pluck('carrier_name', 'id')->sortBy('carrier_name')->toArray();
+    return Carrier::pluck('c_code', 'id')->sortBy('c_code')->toArray();
 }
 
 
