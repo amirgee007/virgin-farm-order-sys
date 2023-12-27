@@ -65,6 +65,7 @@ class ProductsController extends Controller
             'filter'
         ));
     }
+
     public function cart()
     {
         return view('products.cart');
@@ -102,6 +103,7 @@ class ProductsController extends Controller
 
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
+
     public function update(Request $request)
     {
         if ($request->id && $request->quantity) {
@@ -111,6 +113,7 @@ class ProductsController extends Controller
             session()->flash('success', 'Cart updated successfully');
         }
     }
+
     public function remove(Request $request)
     {
         if ($request->id) {
@@ -122,6 +125,7 @@ class ProductsController extends Controller
             session()->flash('success', 'Product removed successfully');
         }
     }
+
     public function checkOutCart()
     {
 
@@ -138,20 +142,19 @@ class ProductsController extends Controller
         session()->flash('success', 'Product removed successfully');
     }
 
-    public function deleteProduct($id){
+    public function deleteProduct($id)
+    {
 
         #todo: plz check all relational data here.
 
-        Product::where('id' , $id)->delete();
+        Product::where('id', $id)->delete();
         session()->flash('success', 'Product deleted successfully');
         return back();
     }
 
 
-
-
-
-    public function indexManageProducts(){
+    public function indexManageProducts()
+    {
 
         $query = Product::query();
         $search = \Request::get('search');
@@ -168,7 +171,7 @@ class ProductsController extends Controller
         }
 
         $products = (clone $query)->paginate(100);
-        $categories = Category::pluck('description','category_id')->toArray();
+        $categories = Category::pluck('description', 'category_id')->toArray();
 
         $count = (clone $query)->count();
 
@@ -186,7 +189,8 @@ class ProductsController extends Controller
         ));
     }
 
-    public function uploadProducts(Request $request){
+    public function uploadProducts(Request $request)
+    {
 
         Storage::put('temp/import_products.xlsx', file_get_contents($request->file('file_products')->getRealPath()));
         $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_products.xlsx'));
@@ -217,10 +221,10 @@ class ProductsController extends Controller
 
                     ];
 
-                    Product::updateOrCreate(['item_no' => trim($row[1])],$data); #as for now no specific requirments for the adding product if not found. also no history etc
+                    Product::updateOrCreate(['item_no' => trim($row[1])], $data); #as for now no specific requirments for the adding product if not found. also no history etc
 
                 } catch (\Exception $exception) {
-                    Log::error('Error during inventory import ' . $exception->getMessage().' and line '. $exception->getLine());
+                    Log::error('Error during inventory import ' . $exception->getMessage() . ' and line ' . $exception->getLine());
 
                     session()->flash('app_error', 'Inventory file has some error please check with admin or upload correct file.');
                     return back();
@@ -231,19 +235,22 @@ class ProductsController extends Controller
         return back();
     }
 
-    public function inventoryUpdateColumn(Request $request){
-        try{
+    public function inventoryUpdateColumn(Request $request)
+    {
+        try {
 
             Product::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
             return ['Done'];
 
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             dd($ex->getMessage());
             session()->flash('app_error', 'Something went wrong plz try again later inventoryUpdateColumn.');
             return back();
         }
     }
-    public function uploadInventory(Request $request){
+
+    public function uploadInventory(Request $request)
+    {
 
         $dateInOut = $request->range;
 
@@ -367,14 +374,15 @@ class ProductsController extends Controller
         }
     }
 
-    public static function getStorageBackupPath($for , $ext = '.xls'){
+    public static function getStorageBackupPath($for, $ext = '.xls')
+    {
 
-        $user = '-by-'.auth()->user()->name;
+        $user = '-by-' . auth()->user()->name;
 
         $now = now()->toDateTimeString();
-        $folder = 'public/backups/'.$for.'/'.now()->year.'/'.strtolower(now()->format('M')).'/';
+        $folder = 'public/backups/' . $for . '/' . now()->year . '/' . strtolower(now()->format('M')) . '/';
 
-        return $folder.\Str::slug($now).$user.$ext;
+        return $folder . \Str::slug($now) . $user . $ext;
     }
 
     /**
@@ -390,17 +398,44 @@ class ProductsController extends Controller
 //        return response()->json($response);
 //    }
 
-    public function categoriesIndex(){
-        $categories = Category::all();
+    public function categoriesIndex()
+    {
+        $categories = Category::latest()->get();
+        #->orderBy('description' , 'desc')
 
         return view('categories.index', compact(
             'categories'
         ));
     }
 
+    public function categoriesDelete($id = null)
+    {
+        if($id){
+            #plz check we dont have any other links categories etc
+            Category::where('id' , $id)->delete();
+            session()->flash('app_message', 'Your Category has been deleted successfully.');
+
+            return back();
+        }
+    }
+
     public function updateCategory(Request $request)
     {
         try {
+            if ($request->category_name) {
+                $found = Category::where('description', $request->category_name)->first();
+                if (!$found){
+                    $last = Category::whereNotNull('category_id')->orderBy('category_id' , 'desc')->first();
+
+                    Category::create([
+                        'description' => $request->category_name,
+                        'category_id' => $last->category_id+1,
+                    ]);
+                }
+                session()->flash('app_message', 'Your Category has been added successfully.');
+                return back();
+            }
+
             Category::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
             return ['Done'];
 
@@ -408,8 +443,6 @@ class ProductsController extends Controller
             Log::error('Edit category error.' . $ex->getMessage());
         }
     }
-
-
 
 
 }

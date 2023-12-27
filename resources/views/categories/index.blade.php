@@ -19,21 +19,42 @@
 
     <div class="card">
         <div class="card-body">
+            <form role="form" action="{{ route('categories.update') }}" method="POST" >
+                @csrf
+                <div class="form-row align-items-center float-right">
+                    <div class="col-auto">
+                        <div class="input-group mb-2 input-group-sm">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="fas fa-calendar-times"></i>
+                                </div>
+                            </div>
+                            <input type="text" required class="form-control" name="category_name" id="inlineFormInputGroup" placeholder="Add New Category">
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary mb-2 btn-sm">Create</button>
+                    </div>
+                </div>
+            </form>
+
             <div class="table-responsive" id="users-table-wrapper">
                 <table class="table table-borderless table-striped">
                     <thead>
                     <tr>
-{{--                        <th class="min-width-80">@lang('ID')</th>--}}
+                        <th class="min-width-80">@lang('#')</th>
                         <th class="min-width-100">@lang('Item Id')</th>
                         <th class="min-width-100">@lang('Name')</th>
                         <th class="min-width-80">@lang('Created')</th>
                         <th class="min-width-80">@lang('Updated')</th>
+                        <th class="min-width-80">@lang('Action')</th>
                     </tr>
                     </thead>
                     <tbody>
                     @if (count($categories))
                         @foreach ($categories as $index => $category)
                             <tr>
+                                <td class="align-middle">{{ ++$index }}</td>
                                 <td class="align-middle">{{ $category->category_id }}</td>
                                 <td class="align-middle">
                                     <a class="editable"
@@ -49,6 +70,19 @@
 
                                 <td class="align-middle">{{ dateFormatMy($category->created_at) }}</td>
                                 <td class="align-middle">{{ diff4Human($category->updated_at) }}</td>
+                                <td class="align-middle">
+                                    <a href="{{ route('categories.delete', $category->id) }}"
+                                       class="btn btn-icon"
+                                       title="@lang('Delete Category')"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-method="DELETE"
+                                       data-confirm-title="@lang('Please Confirm')"
+                                       data-confirm-text="@lang('Are you sure that you want to delete this category?')"
+                                       data-confirm-delete="@lang('Yes, delete it!')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
 
                             </tr>
                         @endforeach

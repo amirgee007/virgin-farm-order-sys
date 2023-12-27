@@ -191,6 +191,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'uses' => 'ProductsController@categoriesIndex'
     ]);
 
+    Route::delete('/categories-delete/{id?}', [
+        'as' => 'categories.delete',
+        'uses' => 'ProductsController@categoriesDelete'
+    ]);
+
     Route::post('/categories-update', [
         'as' => 'categories.update',
         'uses' => 'ProductsController@updateCategory'
