@@ -89,7 +89,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ]);
 
 
-
         Route::post('/inventory-update-column', [
             'as' => 'inventory.update.column',
             'uses' => 'ProductsController@inventoryUpdateColumn'
@@ -110,6 +109,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@uploadInventory'
         ]);
 
+        Route::get('/inventory-reset', [
+            'as' => 'inventory.reset.clear',
+            'uses' => 'ProductsController@iventoryReset'
+        ]);
 
     });
 

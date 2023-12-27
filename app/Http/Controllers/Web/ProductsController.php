@@ -374,6 +374,18 @@ class ProductsController extends Controller
         }
     }
 
+    public function iventoryReset(){
+
+        Product::update([
+            'quantity' => 0,
+            'date_in' => null,
+            'date_out' => null,
+        ]);
+
+        session()->flash('app_message', 'Inventory has been reset successfully.');
+        return back();
+    }
+
     public static function getStorageBackupPath($for, $ext = '.xls')
     {
 
