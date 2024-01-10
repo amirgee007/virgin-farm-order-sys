@@ -14,6 +14,12 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/daterangepicker/daterangepicker.css') }}">
 
+    <style>
+        .clickable {
+            cursor: pointer;
+        }
+    </style>
+
 @endsection
 
 @section('content')
@@ -95,14 +101,9 @@
                                 <th class="min-width-80">@lang('item')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('UOM')</th>
-{{--                                <th class="min-width-80">@lang('Price-FOB $')</th>--}}
-{{--                                <th class="min-width-80">@lang('FedEx $')</th>--}}
-{{--                                <th class="min-width-80">@lang('HI & AK $')</th>--}}
+
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
-{{--                                <th class="min-width-80">@lang('Quantity')</th>--}}
-{{--                                <th class="min-width-80">@lang('Date In')</th>--}}
-{{--                                <th class="min-width-80">@lang('Date Out')</th>--}}
                                 <th class="min-width-80">@lang('Delete')</th>
 
                             </tr>
@@ -350,6 +351,10 @@
         };
 
         $('.editable').editable();
+
+        $('.collapse').on('show.bs.collapse', function () {
+            $('.collapse.in').collapse('hide');
+        });
 
         $('.img-thumbnail').click(function () {
             var url = $(this).data('largeimg');

@@ -5,10 +5,9 @@ namespace Vanguard\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UnitOfMeasure extends Model
+class ProductQuantity extends Model
 {
     use HasFactory;
-
-    protected $table = 'unit_of_measures';
+    protected $table = 'product_quantities';
     protected $guarded = [];
 }

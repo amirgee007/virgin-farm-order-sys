@@ -1,6 +1,6 @@
-<tr>
+<tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
     <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
-    <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
+    <td class="align-middle" title="{{$product->product_id}}">{{ $product->item_no }}</td>
     <td class="align-middle">
         <img style="max-width: 35px; cursor: pointer;"
              id="{{$product->id}}"
@@ -16,55 +16,8 @@
 
     <td class="align-middle">{{ $product->unit_of_measure }}</td>
 
-    <td class="align-middle">
-        <a class="editable"
-           style="cursor:pointer;"
-           data-name="price_fob"
-           data-step="any"
-           data-type="number"
-           data-emptytext="0"
-           data-pk="{{$product->id}}"
-           data-url="{{route('inventory.update.column')}}"
-           data-value="{{ $product->price_fob }}">
-        </a>
-    </td>
-
-    <td class="align-middle">
-        <a class="editable"
-           style="cursor:pointer;"
-           data-name="price_fedex"
-           data-step="any"
-           data-type="number"
-           data-emptytext="0"
-           data-pk="{{$product->id}}"
-           data-url="{{route('inventory.update.column')}}"
-           data-value="{{ $product->price_fedex }}">
-        </a>
-    </td>
-
-    <td class="align-middle">
-        <a class="editable"
-           style="cursor:pointer;"
-           data-name="price_hawaii"
-           data-step="any"
-           data-type="number"
-           data-emptytext="0"
-           data-pk="{{$product->id}}"
-           data-url="{{route('inventory.update.column')}}"
-           data-value="{{ $product->price_hawaii }}">
-        </a>
-    </td>
-
-
-    {{--                                        <td class="align-middle">${{ $product->price_fedex }}</td>--}}
-    {{--                                        <td class="align-middle">${{ $product->price_fob }}</td>--}}
-    {{--                                        <td class="align-middle">${{ $product->price_hawaii }}</td>--}}
-
     <td class="align-middle">{{ $product->weight }}</td>
     <td class="align-middle">{{ $product->size }}</td>
-    <td class="align-middle">{{ $product->quantity }}</td>
-    <td class="align-middle">{{ $product->date_in }}</td>
-    <td class="align-middle">{{ $product->date_out }}</td>
     <td class="align-middle">
         <a href="{{ route('products.delete', $product->id) }}"
            class="btn btn-icon"
@@ -77,5 +30,86 @@
            data-confirm-delete="@lang('Yes, delete it!')">
             <i class="fas fa-trash"></i>
         </a>
+    </td>
+</tr>
+
+<tr>
+    <td colspan="7">
+        <div id="accordion{{$product->id}}" class="collapse">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="min-width-80">@lang('#')</th>
+                    <th class="min-width-80">@lang('Item')</th>
+                    <th class="min-width-80">@lang('Price-FOB $')</th>
+                    <th class="min-width-80">@lang('FedEx $')</th>
+                    <th class="min-width-80">@lang('HI & AK $')</th>
+                    <th class="min-width-80">@lang('Quantity')</th>
+                    <th class="min-width-80">@lang('Date In')</th>
+                    <th class="min-width-80">@lang('Date Out')</th>
+                    {{--<th scope="col">#</th>--}}
+                </tr>
+                </thead>
+                <tbody>
+
+                @if ($product->prodQty)
+                    @foreach ($product->prodQty as $index => $prod)
+                        <tr>
+                            <td scope="row">{{++$index}}</td>
+                            <td scope="row">{{$prod->item_no}}</td>
+                            <td class="align-middle">
+                                <a class="editable"
+                                   style="cursor:pointer;"
+                                   data-name="price_fob"
+                                   data-step="any"
+                                   data-type="number"
+                                   data-emptytext="0"
+                                   data-pk="{{$prod->id}}"
+                                   data-url="{{route('inventory.update.column')}}"
+                                   data-value="{{ $prod->price_fob }}">
+                                </a>
+                            </td>
+
+                            <td class="align-middle">
+                                <a class="editable"
+                                   style="cursor:pointer;"
+                                   data-name="price_fedex"
+                                   data-step="any"
+                                   data-type="number"
+                                   data-emptytext="0"
+                                   data-pk="{{$prod->id}}"
+                                   data-url="{{route('inventory.update.column')}}"
+                                   data-value="{{ $prod->price_fedex }}">
+                                </a>
+                            </td>
+
+                            <td class="align-middle">
+                                <a class="editable"
+                                   style="cursor:pointer;"
+                                   data-name="price_hawaii"
+                                   data-step="any"
+                                   data-type="number"
+                                   data-emptytext="0"
+                                   data-pk="{{$product->id}}"
+                                   data-url="{{route('inventory.update.column')}}"
+                                   data-value="{{ $product->price_hawaii }}">
+                                </a>
+                            </td>
+
+                            <td class="align-middle">{{ $prod->quantity }}</td>
+                            <td class="align-middle">{{ $prod->date_in }}</td>
+                            <td class="align-middle">{{ $prod->date_out }}</td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr>
+                        <td colspan="8"><em>@lang('No product inventory found.')</em></td>
+                    </tr>
+                @endif
+                </tbody>
+            </table>
+
+        </div>
     </td>
 </tr>
