@@ -114,6 +114,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@iventoryReset'
         ]);
 
+        Route::post('/copy-image', [
+            'as' => 'copy.image.product',
+            'uses' => 'ProductsController@copyImageToOtherProduct'
+        ]);
+
     });
 
 

@@ -115,7 +115,8 @@
                                         <td class="align-middle">{{ $product->item_no }}</td>
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
-                                                 title="Click to show Larger image"
+                                                 id="{{$product->id}}"
+                                                 title="Click to show Larger image OR Copy image from any other ITEM"
                                                  data-info="{{$product->product_text}}"
                                                  data-toggle="tooltip" data-placement="bottom"
                                                  data-largeimg="{{$product->image_url}}"
@@ -139,7 +140,7 @@
                                                data-value="{{ $product->price_fob }}">
                                             </a>
                                         </td>
-                                        
+
                                         <td class="align-middle">
                                             <a class="editable"
                                                style="cursor:pointer;"
@@ -359,6 +360,37 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="copyPicModal" tabindex="-1" role="dialog" aria-labelledby="copyPicModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Copy Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{route('copy.image.product')}}" method="POST" enctype="multipart/form-data">
+                        {{csrf_field()}}
+                        <input type="hidden" name="item_copy_too" value="0" id="item_copy_too">
+
+                        <div class="form-group row">
+{{--                            We can also show all items here to faciliate user--}}
+                            <label for="copyImg" class="col-sm-3 col-form-label">Write Item No</label>
+                            <div class="col-sm-8">
+                                <input required type="text" name="item_copy_from" class="form-control " id="copyImg" placeholder="Item Name">
+                            </div>
+                        </div>
+
+                       <br>
+                        <input type="submit" value="Copy Image" class="btn btn-primary btn-sm float-right">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('scripts')
@@ -369,7 +401,6 @@
 
     <script>
         $(function() {
-
 
             var start = moment('{{$selected['start']}}');
             var end = moment('{{$selected['end']}}');
@@ -401,9 +432,17 @@
         $('.editable').editable();
 
         $('.img-thumbnail').click(function () {
-            $('#imagePreviewId').attr('src', $(this).data('largeimg'));
-            $('#imagePreviewTitle').text($(this).data('info'));
-            $('#largeImgModal').modal('show');
+            var url = $(this).data('largeimg');
+
+            if(url){
+                $('#imagePreviewId').attr('src', url);
+                $('#imagePreviewTitle').text($(this).data('info'));
+                $('#largeImgModal').modal('show');
+            }
+            else{
+                $('#item_copy_too').val($(this).attr('id'));
+                $('#copyPicModal').modal('show');
+            }
         });
 
         $('.datepicker').datepicker();

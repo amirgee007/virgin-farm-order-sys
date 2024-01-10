@@ -243,7 +243,7 @@ class ProductsController extends Controller
             return ['Done'];
 
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
+            #dd($ex->getMessage());
             session()->flash('app_error', 'Something went wrong plz try again later inventoryUpdateColumn.');
             return back();
         }
@@ -374,6 +374,22 @@ class ProductsController extends Controller
         }
     }
 
+    public function copyImageToOtherProduct(Request $request){
+
+        $productToo = Product::where('id', $request->item_copy_too)->first();
+        $productFrom = Product::where('item_no', $request->item_copy_from)->first();
+
+        if($productFrom && $productToo && $productFrom->image_url){
+            $productToo->image_url = $productFrom->image_url;
+            $productToo->save();
+
+            session()->flash('app_message', 'Product Image has been copied successfully.');
+        }
+        else
+            session()->flash('app_error', 'Product not found in the system plz write correct and try again.');
+
+        return back();
+    }
     public function iventoryReset(){
 
         Product::query()->whereDate('date_out' , '<' , now()->toDateString())->update([
