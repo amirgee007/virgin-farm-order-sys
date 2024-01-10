@@ -95,9 +95,9 @@
                                 <th class="min-width-80">@lang('item')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('UOM')</th>
-                                <th class="min-width-80">@lang('Price-1 $')</th>
-                                <th class="min-width-80">@lang('Price-2 $')</th>
-                                <th class="min-width-80">@lang('Price-3 $')</th>
+                                <th class="min-width-80">@lang('Price-FOB $')</th>
+                                <th class="min-width-80">@lang('FedEx $')</th>
+                                <th class="min-width-80">@lang('HI & AK $')</th>
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
@@ -130,19 +130,6 @@
                                         <td class="align-middle">
                                             <a class="editable"
                                                style="cursor:pointer;"
-                                               data-name="price_fedex"
-                                               data-step="any"
-                                               data-type="number"
-                                               data-emptytext="0"
-                                               data-pk="{{$product->id}}"
-                                               data-url="{{route('inventory.update.column')}}"
-                                               data-value="{{ $product->price_fedex }}">
-                                            </a>
-                                        </td>
-
-                                        <td class="align-middle">
-                                            <a class="editable"
-                                               style="cursor:pointer;"
                                                data-name="price_fob"
                                                data-step="any"
                                                data-type="number"
@@ -150,6 +137,19 @@
                                                data-pk="{{$product->id}}"
                                                data-url="{{route('inventory.update.column')}}"
                                                data-value="{{ $product->price_fob }}">
+                                            </a>
+                                        </td>
+                                        
+                                        <td class="align-middle">
+                                            <a class="editable"
+                                               style="cursor:pointer;"
+                                               data-name="price_fedex"
+                                               data-step="any"
+                                               data-type="number"
+                                               data-emptytext="0"
+                                               data-pk="{{$product->id}}"
+                                               data-url="{{route('inventory.update.column')}}"
+                                               data-value="{{ $product->price_fedex }}">
                                             </a>
                                         </td>
 

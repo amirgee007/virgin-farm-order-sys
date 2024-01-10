@@ -212,8 +212,8 @@ class ProductsController extends Controller
                         'product_text' => trim($row[2]),
                         'unit_of_measure' => trim($row[3]),
 
-                        'price_fedex' => trim($row[4]), #price 1
-                        'price_fob' => trim($row[5]), #price 3
+                        'price_fob' => trim($row[4]), #price 1
+                        'price_fedex' => trim($row[5]), #price 3
                         'price_hawaii' => trim($row[6]), #price 5
 
                         'weight' => trim($row[7]),
