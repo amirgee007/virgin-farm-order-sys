@@ -66,7 +66,7 @@
                                    data-type="number"
                                    data-emptytext="0"
                                    data-pk="{{$prod->id}}"
-                                   data-url="{{route('inventory.update.column')}}"
+                                   data-url="{{route('product.update.column')}}"
                                    data-value="{{ $prod->price_fob }}">
                                 </a>
                             </td>
@@ -79,7 +79,7 @@
                                    data-type="number"
                                    data-emptytext="0"
                                    data-pk="{{$prod->id}}"
-                                   data-url="{{route('inventory.update.column')}}"
+                                   data-url="{{route('product.update.column')}}"
                                    data-value="{{ $prod->price_fedex }}">
                                 </a>
                             </td>
@@ -92,7 +92,7 @@
                                    data-type="number"
                                    data-emptytext="0"
                                    data-pk="{{$product->id}}"
-                                   data-url="{{route('inventory.update.column')}}"
+                                   data-url="{{route('product.update.column')}}"
                                    data-value="{{ $product->price_hawaii }}">
                                 </a>
                             </td>

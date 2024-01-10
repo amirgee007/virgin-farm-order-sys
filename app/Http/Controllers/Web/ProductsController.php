@@ -19,6 +19,7 @@ use Vanguard\Mail\CartDetailMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
 use Vanguard\Models\Product;
+use Vanguard\Models\ProductQuantity;
 
 class ProductsController extends Controller
 {
@@ -235,11 +236,11 @@ class ProductsController extends Controller
         return back();
     }
 
-    public function inventoryUpdateColumn(Request $request)
+    public function productUpdateColumn(Request $request)
     {
         try {
 
-            Product::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
+            ProductQuantity::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
             return ['Done'];
 
         } catch (\Exception $ex) {
@@ -278,6 +279,8 @@ class ProductsController extends Controller
                     $product = Product::where('item_no', trim($row[0]))->first();
 
                     $data = [
+                        'product_id' => $product->product_id,
+                        'item_no' => $product->item_no,
                         'price_fedex' => trim($row[2]),
                         'price_fob' => trim($row[3]),
                         'price_hawaii' => trim($row[4]),
@@ -287,7 +290,12 @@ class ProductsController extends Controller
                     ];
 
                     if ($product) {
-                        $product->update($data);
+                        ProductQuantity::updateOrCreate([
+                            'product_id' => $product->product_id,
+                            'item_no' => $product->item_no,
+                            'date_in' => $date_in,
+                            'date_out' => $date_out,
+                        ], $data);
 
                     } else {
                         $data['item_no'] = trim($row[0]);
@@ -299,7 +307,6 @@ class ProductsController extends Controller
 
                 } catch (\Exception $exception) {
                     Log::error('Error during inventory import ' . $exception->getMessage());
-                    dd($exception->getMessage(), $data);
                 }
             }
 

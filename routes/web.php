@@ -89,9 +89,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ]);
 
 
-        Route::post('/inventory-update-column', [
-            'as' => 'inventory.update.column',
-            'uses' => 'ProductsController@inventoryUpdateColumn'
+        Route::post('/product-update-column', [
+            'as' => 'product.update.column',
+            'uses' => 'ProductsController@productUpdateColumn'
         ]);
 
         Route::post('/upload-products', [
