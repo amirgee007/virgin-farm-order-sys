@@ -452,10 +452,10 @@
                 startDate: start,
                 endDate: end,
                 ranges: {
-                    'Next 6 Days': [moment().add(6, 'days'), moment()],
-                    'Next 7 Days': [moment().add(7, 'days'), moment()],
-                    'Next 15 Days': [moment().add(15, 'days'), moment()],
-                    'Next 30 Days': [moment().add(30, 'days'), moment()]
+                    'Next 6 Days': [moment(), moment().add(6, 'days')],
+                    'Next 7 Days': [moment(),moment().add(7, 'days')],
+                    'Next 15 Days': [moment(), moment().add(15, 'days'), moment()],
+                    'Next 30 Days': [moment(), moment().add(30, 'days'), moment()]
                 }
             }, cb);
 

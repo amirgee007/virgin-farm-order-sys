@@ -405,7 +405,6 @@ class ProductsController extends Controller
     public function resetSpecificInventory(Request $request){
 
         $dates =  dateRangeConverter($request->range);
-
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
 
