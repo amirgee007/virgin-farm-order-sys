@@ -93,7 +93,7 @@
                                    data-emptytext="0"
                                    data-pk="{{$product->id}}"
                                    data-url="{{route('product.update.column')}}"
-                                   data-value="{{ $product->price_hawaii }}">
+                                   data-value="{{ $prod->price_hawaii }}">
                                 </a>
                             </td>
 
