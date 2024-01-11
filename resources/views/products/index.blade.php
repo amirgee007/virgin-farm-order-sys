@@ -37,6 +37,11 @@
                                 {{$count}}
                             </b>
 
+                            <a href="javascript:void(0)" title="Create New Product" data-toggle="modal"
+                               data-target="#createProductModal" class="btn btn-primary btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+
                             <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
                                class="btn btn-warning btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-upload"></i>
@@ -379,6 +384,49 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="createProductModal" role="dialog" aria-labelledby="createProductModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create New</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {{csrf_field()}}
+
+                        <div class="row">
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <label for="terms">@lang('Select Category')</label>
+                                    {!! Form::select('terms', [],['class' => 'form-control input-solid']) !!}
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="contract_code">@lang('item Description')</label>
+                                    <input type="number" class="form-control input-solid" id="contract_code"
+                                           name="contract_code" placeholder="@lang('Contract Code')" value="">
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                        <br>
+                        <input type="submit" value="Create Product" class="btn btn-primary btn-sm float-right">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('scripts')
