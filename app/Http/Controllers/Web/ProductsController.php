@@ -180,11 +180,13 @@ class ProductsController extends Controller
         $selected['start'] = $start_date->toDayDateTimeString();
         $selected['end'] = $end_date->toDayDateTimeString();
 
+        $itemsHaveImage = Product::whereNotNull('image_url')->pluck('item_no');
         return view('products.index', compact(
             'products',
             'categories',
             'count',
-            'selected'
+            'selected',
+            'itemsHaveImage'
         ));
     }
 

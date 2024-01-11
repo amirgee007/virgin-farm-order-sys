@@ -13,11 +13,13 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/css/custom.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/daterangepicker/daterangepicker.css') }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/select2/select2.min.css') }}">
 
     <style>
         .clickable {
             cursor: pointer;
         }
+
     </style>
 
 @endsection
@@ -352,12 +354,22 @@
                         {{csrf_field()}}
                         <input type="hidden" name="item_copy_too" value="0" id="item_copy_too">
 
-                        <div class="form-group row">
+{{--                        <div class="form-group row">--}}
 {{--                            We can also show all items here to faciliate user--}}
-                            <label for="copyImg" class="col-sm-3 col-form-label">Write Item No</label>
-                            <div class="col-sm-8">
-                                <input required type="text" name="item_copy_from" class="form-control " id="copyImg" placeholder="Item Name">
-                            </div>
+{{--                            <label for="copyImg" class="col-sm-3 col-form-label">Write Item No</label>--}}
+{{--                            <div class="col-sm-8">--}}
+{{--                                <input required type="text" name="item_copy_from" class="form-control " id="copyImg" placeholder="Item Name">--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+                        <div class="form-group">
+                            <label for="copyImg">Select Item:</label>
+                            <select  class="form-control select2" name="item_copy_from" id="copyImg" style="width: 100%; height: 25px">
+                                <option selected value="">Search & Select</option>
+                                @foreach($itemsHaveImage AS $val)
+                                    <option value="{{$val}}">{{$val}}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                        <br>
@@ -372,11 +384,13 @@
 @section('scripts')
     @include('partials.toaster-js')
     <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>
-
+    <script src="{{ url('assets/plugins/select2/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
 
     <script>
         $(function() {
+
+            $('.select2').select2();
 
             var start = moment('{{$selected['start']}}');
             var end = moment('{{$selected['end']}}');
