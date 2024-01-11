@@ -62,6 +62,11 @@
                                 <i class="fas fa-sync"></i>
                             </a>
 
+                            <a href="javascript:void(0)" id="reset_delete_inventory" title="Reset/Delete a specified inventory" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-trash"></i>
+                            </a>
+
                         </p>
                     </div>
 
@@ -127,6 +132,56 @@
     </div>
 
     {!! $products->render() !!}
+
+    <div class="modal" id="reset_delete_inventory_mod" type="">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Reset a specified inventory By Date</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{route('reset.specific.inventory')}}" method="POST" enctype="multipart/form-data">
+                        {{csrf_field()}}
+
+                        <div class="form-group">
+                            <input type="hidden" name="range" value="" id="dateRangeVal">
+                            <label for="dateRange" class="form-label mt-3">Date in/out</label>
+                            <div id="dateRange" class="form-control float-right " style="cursor: pointer; ">
+                                <i class="fa fa-calendar"></i>&nbsp;
+                                <span></span>
+                                &nbsp;<i class="fa fa-caret-down"></i>
+                            </div>
+                        </div>
+
+                        <br/>
+                        <br/>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="reset" name="flag" id="flexRadioDefault1" checked>
+                                <label class="form-check-label" for="flexRadioDefault1">
+                                    Reset Selected Date Inventory
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" value="delete" name="flag" id="flexRadioDefault2" >
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                    Delete Selected Date Inventory
+                                </label>
+                            </div>
+                        </div>
+
+                        <br>
+                        <input type="submit" value="Upload Inventory" class="btn btn-primary btn-sm float-right">
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <div class="modal" id="upload_excel_inventory" type="">
         <div class="modal-dialog">
@@ -382,6 +437,10 @@
 
         $('#import_excel_inventory').on('click', function () {
             $('#upload_excel_inventory').modal('show');
+        });
+
+        $('#reset_delete_inventory').on('click', function () {
+            $('#reset_delete_inventory_mod').modal('show');
         });
     </script>
 @endsection

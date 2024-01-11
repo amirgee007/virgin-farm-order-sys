@@ -145,9 +145,7 @@ class ProductsController extends Controller
 
     public function deleteProduct($id)
     {
-
         #todo: plz check all relational data here.
-
         Product::where('id', $id)->delete();
         session()->flash('success', 'Product deleted successfully');
         return back();
@@ -253,17 +251,10 @@ class ProductsController extends Controller
     public function uploadInventory(Request $request)
     {
 
-        $dateInOut = $request->range;
+       $dates =  dateRangeConverter($request->range);
 
-        $date_range = explode("-", $dateInOut);
-
-        $date_in = now()->toDateString();
-        $date_out = now()->toDateString();
-
-        if (!empty(array_filter($date_range))) {
-            $date_in = Carbon::parse(trim($date_range[0]))->toDateString();
-            $date_out = Carbon::parse(trim($date_range[1]))->toDateString();
-        }
+        $date_in = $dates['date_in'];
+        $date_out = $dates['date_out'];
 
         Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
         $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
@@ -277,7 +268,7 @@ class ProductsController extends Controller
                     if ($index < 2) continue;
 
                     $product = Product::where('item_no', trim($row[0]))->first();
-                    
+
                     $data = [
                         'product_id' => $product->product_id,
                         'item_no' => $product->item_no,
@@ -399,13 +390,37 @@ class ProductsController extends Controller
     }
     public function iventoryReset(){
 
-        Product::query()->whereDate('date_out' , '<' , now()->toDateString())->update([
+        ProductQuantity::query()->whereDate('date_out' , '<' , now()->toDateString())->update([
             'quantity' => 0,
             'date_in' => null,
             'date_out' => null,
         ]);
 
         session()->flash('app_message', 'Inventory has been reset successfully.');
+        return back();
+    }
+
+    public function resetSpecificInventory(Request $request){
+
+        $dates =  dateRangeConverter($request->range);
+
+        $date_in = $dates['date_in'];
+        $date_out = $dates['date_out'];
+
+        $query = ProductQuantity::query()
+            ->whereDate('date_in' , $date_in)
+            ->whereDate('date_out' , $date_out);
+
+        if($request->flag == 'delete')
+            $query->delete();
+        else
+            $query->update([
+                'quantity' => 0,
+                'date_in' => null,
+                'date_out' => null,
+            ]);
+
+        session()->flash('app_message', 'Your selected inventory has been updated successfully.');
         return back();
     }
 

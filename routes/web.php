@@ -119,6 +119,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@copyImageToOtherProduct'
         ]);
 
+        Route::post('/reset-specific-inventory', [
+            'as' => 'reset.specific.inventory',
+            'uses' => 'ProductsController@resetSpecificInventory'
+        ]);
+
     });
 
 

@@ -108,6 +108,21 @@ function dateFormatMy($date){
     return Carbon::parse($date)->format('m/d/Y');
 }
 
+function dateRangeConverter($dateInOut){
+
+    $date_range = explode("-", $dateInOut);
+
+    $date_in = now()->toDateString();
+    $date_out = now()->toDateString();
+
+    if (!empty(array_filter($date_range))) {
+        $date_in = Carbon::parse(trim($date_range[0]))->toDateString();
+        $date_out = Carbon::parse(trim($date_range[1]))->toDateString();
+    }
+
+    return compact('date_in', 'date_out');
+}
+
 
 function stripXSS($data)
 {
