@@ -155,9 +155,9 @@
                         {{csrf_field()}}
 
                         <div class="form-group">
-                            <input type="hidden" name="range" value="" id="dateRangeVal">
+                            <input type="hidden" name="range" value="" class="dateRangeVal">
                             <label for="dateRange" class="form-label mt-3">Date in/out</label>
-                            <div id="dateRange" class="form-control float-right " style="cursor: pointer; ">
+                            <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
                                 <i class="fa fa-calendar"></i>&nbsp;
                                 <span></span>
                                 &nbsp;<i class="fa fa-caret-down"></i>
@@ -217,9 +217,9 @@
 {{--                        </div>--}}
 
                         <div class="form-group">
-                            <input type="hidden" name="range" value="" id="dateRangeVal">
+                            <input type="hidden" name="range" value="" class="dateRangeVal">
                             <label for="dateRange" class="form-label mt-3">Date in/out</label>
-                            <div id="dateRange" class="form-control float-right " style="cursor: pointer; ">
+                            <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
                                 <i class="fa fa-calendar"></i>&nbsp;
                                 <span></span>
                                 &nbsp;<i class="fa fa-caret-down"></i>
@@ -445,10 +445,10 @@
 
             function cb(start, end) {
                 $('#dateRange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                $('#dateRangeVal').val($("#dateRange span").html());
+                $('.dateRangeVal').val($("#dateRange span").html());
             }
 
-            $('#dateRange').daterangepicker({
+            $('.dateRanges').daterangepicker({
                 startDate: start,
                 endDate: end,
                 ranges: {
