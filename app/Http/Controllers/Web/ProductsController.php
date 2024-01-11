@@ -274,9 +274,10 @@ class ProductsController extends Controller
                     $data = [
                         'product_id' => $product->product_id,
                         'item_no' => $product->item_no,
-                        'price_fob' => trim($row[2]),
-                        'price_fedex' => trim($row[3]),
+                        'price_fedex' => trim($row[2]),
+                        'price_fob' => trim($row[3]),
                         'price_hawaii' => trim($row[4]),
+
                         'quantity' => $row[5] ? $row[5] : 0,
                         'date_in' => $date_in,
                         'date_out' => $date_out,
