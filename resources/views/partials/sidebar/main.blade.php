@@ -44,7 +44,7 @@
                 </a>
             </li>
 
-            @permission(['products.manage', 'p.inventory.manage'] ,false)
+            @permission(['products.manage', 'client.inventory'] ,false)
             <li class="nav-item">
                 <a href="#reports-dropdown"
                    class="nav-link"
