@@ -37,40 +37,45 @@ class ProductsController extends Controller
     {
 
         $date_shipped = trim($request->date_shipped);
-        $carrier_id = trim($request->carrier_id);
-        $purchase_order = trim($request->po);
+        $category_id = trim($request->category);
+        $searching = trim($request->searching);
 
-        $filter = $request->filter;
 
         $address = auth()->user()->shipAddress;
 
-        $filter = is_array($filter) ? $filter : [];
-        $filter = array_filter($filter, function ($a) {
-            return trim($a) !== "";
-        });
-
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id');
         if ($date_shipped){
-            #we will use JOIN later on to make it fast:
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
 
-//        if ($date_shipped || $carrier_id || $purchase_order || $filter) {
-//            $orders->appends([
-//                'search' => $search,
-//                'filter' => $filter,
-//            ]);
-//        }
+        if ($category_id){
+            $query->where('category_id' , $category_id);
+        }
+
+        if ($searching) {
+            $query->where(function ($q) use ($searching) {
+                $q->orWhere('products.item_no', 'like', "%{$searching}%");
+                $q->orWhere('product_text', 'like', "%{$searching}%");
+                $q->orWhere('unit_of_measure', 'like', "%{$searching}%");
+            });
+        }
 
         $carriers = getCarriers();
         $categories = Category::pluck('description', 'category_id')->toArray();
         $products = (clone $query)->paginate(250);
 
+        if ($date_shipped || $category_id || $searching ) {
+            $products->appends([
+                'date_shipped' => $date_shipped,
+                'searching' => $searching,
+                'category' => $category_id,
+            ]);
+        }
+
         return view('products.inventory.index', compact(
             'products',
             'carriers',
             'categories',
-            'filter',
             'address'
         ));
     }
