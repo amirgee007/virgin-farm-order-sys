@@ -69,6 +69,8 @@ class UsersController extends Controller
             'roles' => $roleRepository->lists(),
             'statuses' => UserStatus::lists(),
             'carriers' => getCarriers(),
+            'states' => getStates(),
+            'terms' => getTerms(),
             'prices' => getPrices(),
         ]);
     }

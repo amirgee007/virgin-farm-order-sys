@@ -40,7 +40,6 @@ class ProductsController extends Controller
         $category_id = trim($request->category);
         $searching = trim($request->searching);
 
-
         $address = auth()->user()->shipAddress;
 
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id');
