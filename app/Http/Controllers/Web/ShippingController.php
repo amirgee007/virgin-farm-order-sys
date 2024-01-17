@@ -79,6 +79,11 @@ class ShippingController extends Controller
     {
         try{
 
+            if ($request->address_id) {
+                User::where('id' , auth()->id())->update(['address_id' => $request->address_id]);
+                return ['Done'];
+            }
+
             if ($request->_token) {
                 $address = ShippingAddress::create($request->except('_token'));
                 session()->flash('app_message', 'The new Shipping Address has been created successfully.');

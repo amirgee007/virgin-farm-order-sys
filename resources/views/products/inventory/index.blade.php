@@ -94,12 +94,12 @@
                                     title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i class="fas fa-plus-circle "></i>
                                  </a>
 
-                                 <select class="form-control form-control-md"
+                                 <select class="form-control form-control-md" id="changeAddress"
                                          title="When do you want your product to be shipped?"
                                          data-trigger="hover"
                                          data-toggle="tooltip">
                                      @foreach($address as $add)
-                                         <option id="{{$add->id}}">{{$add->address}}</option>
+                                         <option {{auth()->user()->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
                                      @endforeach
                                  </select>
                              </label>
@@ -275,6 +275,21 @@
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));
             $('#imagePreviewTitle').text($(this).data('info'));
             $('#largeImgModal').modal('show');
+        });
+
+        $('#changeAddress').on('change', function () {
+            var address_id = this.value;
+
+            $.ajax({
+                url: '{{route('ship.address.create.update')}}',
+                data: {address_id},
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function (response) {
+                    toastr.success("Your shiping address has been changed.", "Success");
+                }
+            });
+
         });
 
 //        $("#doubleCheckMode1, #search-products-btn").change(function () {
