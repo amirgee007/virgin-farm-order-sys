@@ -20,6 +20,7 @@ use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
+use Vanguard\Models\ShippingAddress;
 
 class ProductsController extends Controller
 {
@@ -34,20 +35,25 @@ class ProductsController extends Controller
 
     public function inventoryIndex(Request $request)
     {
+
         $date_shipped = trim($request->date_shipped);
         $carrier_id = trim($request->carrier_id);
         $purchase_order = trim($request->po);
 
         $filter = $request->filter;
 
+        $address = auth()->user()->shipAddress;
+
         $filter = is_array($filter) ? $filter : [];
         $filter = array_filter($filter, function ($a) {
             return trim($a) !== "";
         });
 
-        $query = Product::query();
-        if ($date_shipped)
-            $query->where('created_at', 'like', "%{$date_shipped}%");
+        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id');
+        if ($date_shipped){
+            #we will use JOIN later on to make it fast:
+            $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
+        }
 
 //        if ($date_shipped || $carrier_id || $purchase_order || $filter) {
 //            $orders->appends([
@@ -63,7 +69,8 @@ class ProductsController extends Controller
             'products',
             'carriers',
             'categories',
-            'filter'
+            'filter',
+            'address'
         ));
     }
 

@@ -171,7 +171,7 @@
 
                         <tr>
                             <td colspan="5" class="text-right">
-                                <a href="{{ route('products.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                                <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
                                 <a href="{{ route('checkout.cart') }}" class="btn btn-primary">Checkout &nbsp;<i class="fa fa-angle-right"></i></a>
                             </td>
                         </tr>

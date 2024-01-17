@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Mail;
 use Vanguard\Events\User\RequestedPasswordResetEmail;
+use Vanguard\Models\ShippingAddress;
 use Vanguard\Presenters\Traits\Presentable;
 use Vanguard\Presenters\UserPresenter;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
@@ -117,6 +118,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function role()
     {
         return $this->hasOne(Role::class , 'id' , 'role_id');
+    }
+
+    public function shipAddress()
+    {
+        return $this->hasMany(ShippingAddress::class , 'user_id' , 'id');
     }
 
     /**

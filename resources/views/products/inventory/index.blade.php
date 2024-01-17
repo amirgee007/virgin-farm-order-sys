@@ -40,13 +40,12 @@
         /*tr:hover > td {*/
         /*cursor: pointer !important;*/
         /*}*/
+
     </style>
 @endsection
 
 <div class="dropdown">
-    <button type="button" class="btn btn-info" data-toggle="dropdown">
-
-    </button>
+    <button type="button" class="btn btn-info" data-toggle="dropdown"></button>
     <div class="dropdown-menu">
         <div class="row total-header-section">
             <div class="col-lg-6 col-sm-6 col-6">
@@ -90,18 +89,23 @@
                     <span>
                         <b>
                             1. Enter your shipping information
+                             <label class="form-check-label float-right mt-2">Where it be shipped?
+                                 <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
+                                    title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i class="fas fa-plus-circle "></i>
+                                 </a>
+
+                                 <select class="form-control form-control-md"
+                                         title="When do you want your product to be shipped?"
+                                         data-trigger="hover"
+                                         data-toggle="tooltip">
+                                     @foreach($address as $add)
+                                         <option id="{{$add->id}}">{{$add->address}}</option>
+                                     @endforeach
+                                 </select>
+                             </label>
                         </b>
                     </span>
-                    <label class="form-check-label float-right"
-                           data-trigger="hover"
-                           data-toggle="popover" data-html='true'
-                           data-content="
-                                    Virgin Farms Inc. <br/>
-                                    8495 NW 66 Street <br/>
-                                    Miami, FL 33166<br/>
-                                    ">
-                        Where should it be shipped?
-                    </label>
+
                     <div class="row my-2 flex-md-row flex-column-reverse">
                         <div class="col-md-10 col-sm-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
@@ -141,7 +145,7 @@
 
                                     <span class="input-group-append">
                                         @if (\Request::has('carrier_id') && \Request::get('carrier_id') != '')
-                                            <a href="{{ route('products.index') }}"
+                                            <a href="{{ route('inventory.index') }}"
                                                title="Reset Filters"
                                                data-trigger="hover"
                                                data-toggle="tooltip"
