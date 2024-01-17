@@ -10,9 +10,9 @@ function diff4Human($date ){
 function getPrices(){
     return [
         0 => 'Select Price',
-        1 => 'Fedex',
-        2 => 'FOB',
-        3 => 'Hawaii',
+        1 => 'price_fedex',
+        2 => 'price_fob',
+        3 => 'price_hawaii',
     ];
 }
 
@@ -84,7 +84,6 @@ function getTerms(){
         'N1', 'CC', 'Check by Phone'
     ];
 }
-
 
 function myRoleName(){
     return  auth()->user() ? auth()->user()->role->name : '';

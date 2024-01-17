@@ -126,6 +126,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         return $this->hasMany(ShippingAddress::class , 'user_id' , 'id');
     }
 
+    public function shipingAddress()
+    {
+        return $this->hasOne(ShippingAddress::class , 'id' , 'address_id');
+    }
+
     /**
      * Send the password reset notification.
      *

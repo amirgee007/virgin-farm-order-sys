@@ -203,7 +203,7 @@
                                 <th class="min-width-80">@lang('Quantity')</th>
                                 <th class="min-width-80">@lang('Box Type')</th>
                                 <th class="min-width-80">@lang('Unit/Box')</th>
-                                <th class="min-width-80">@lang('Mark Code')</th>
+{{--                                <th class="min-width-80">@lang('Mark Code')</th>--}}
                                 <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
                                 <th class="min-width-80">@lang('Actions')</th>
                             </tr>
@@ -227,8 +227,9 @@
                                             {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
                                         </td>
 
-                                        <td class="align-middle">${{ $product->unit_price }}/ST</td>
-                                        <td class="align-middle">{{ $product->stems }}</td>
+                                        <td class="align-middle">${{ $product->$priceCol }}/ST</td>
+                                            {{--ST stad for per STEM flowers --}}
+                                        <td class="align-middle">{{ $product->unit_of_measure }}</td>
                                         <td class="align-middle">{{ $product->quantity }} BX</td>
                                         <td class="align-middle">{{ $product->box_type }}</td>
                                         <td class="align-middle">{{ $product->units_box }}</td>
@@ -237,10 +238,10 @@
                                               enctype="multipart/form-data">
                                             {{csrf_field()}}
                                             <input type="hidden" name="product_id" value="{{$product->id}}">
-                                            <td class="align-middle">
-                                                <input class="form-control form-control-sm width50" name="mark_code"
-                                                       type="text">
-                                            </td>
+{{--                                            <td class="align-middle">--}}
+{{--                                                <input class="form-control form-control-sm width50" name="mark_code"--}}
+{{--                                                       type="text">--}}
+{{--                                            </td>--}}
                                             <td class="align-middle">
                                                 <input required class="form-control form-control-sm width50"
                                                        name="quantity" type="number">

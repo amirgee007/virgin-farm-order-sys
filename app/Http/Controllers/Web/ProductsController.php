@@ -35,14 +35,13 @@ class ProductsController extends Controller
 
     public function inventoryIndex(Request $request)
     {
-
         $date_shipped = trim($request->date_shipped);
         $category_id = trim($request->category);
         $searching = trim($request->searching);
 
         $address = auth()->user()->shipAddress;
 
-        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id');
+        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id')->where('quantity', '>' ,0);
         if ($date_shipped){
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
@@ -71,11 +70,14 @@ class ProductsController extends Controller
             ]);
         }
 
+        $priceCol = getPrices()[auth()->user()->price_list];
+
         return view('products.inventory.index', compact(
             'products',
             'carriers',
             'categories',
-            'address'
+            'address',
+            'priceCol'
         ));
     }
 
