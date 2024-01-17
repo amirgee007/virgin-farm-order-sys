@@ -65,6 +65,7 @@ class ProductsController extends Controller
         $carriers = getCarriers();
         $categories = Category::pluck('description', 'category_id')->toArray();
         $products = (clone $query)->paginate(250);
+
         return view('products.inventory.index', compact(
             'products',
             'carriers',

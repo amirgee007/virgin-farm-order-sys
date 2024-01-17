@@ -19,17 +19,21 @@
         .loader {
             height: 70px !important;
         }
+
         .products-list-table th, .products-list-table td {
             padding: 0.3rem !important;
         }
+
         .products-list-table {
             font-weight: 400 !important;
             font-size: 13px !important;
             line-height: 1.6 !important;
         }
-        .width50{
+
+        .width50 {
             width: 60px !important;
         }
+
         /*button {*/
         /*font-size: 11px !important;*/
         /*font-weight: 300 !important;*/
@@ -49,7 +53,8 @@
     <div class="dropdown-menu">
         <div class="row total-header-section">
             <div class="col-lg-6 col-sm-6 col-6">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span
+                    class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
             </div>
             @php $total = 0 @endphp
             @foreach((array) session('cart') as $id => $details)
@@ -63,11 +68,12 @@
             @foreach(session('cart') as $id => $details)
                 <div class="row cart-detail">
                     <div class="col-lg-4 col-sm-4 col-4 cart-detail-img">
-                        <img src="{{ $details['image'] }}" />
+                        <img src="{{ $details['image'] }}"/>
                     </div>
                     <div class="col-lg-8 col-sm-8 col-8 cart-detail-product">
                         <p>{{ $details['name'] }}</p>
-                        <span class="price text-info"> ${{ $details['price'] }}</span> <span class="count"> Quantity:{{ $details['quantity'] }}</span>
+                        <span class="price text-info"> ${{ $details['price'] }}</span> <span
+                            class="count"> Quantity:{{ $details['quantity'] }}</span>
                     </div>
                 </div>
             @endforeach
@@ -89,72 +95,89 @@
                     <span>
                         <b>
                             1. Enter your shipping information
-                             <label class="form-check-label float-right mt-2">Where it be shipped?
+                             <label class="form-check-label float-right mt-2 ml-2 text-danger">Where it be shipped?
                                  <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
-                                    title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i class="fas fa-plus-circle "></i>
+                                    title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
+                                         class="fas fa-plus-circle "></i>
                                  </a>
 
                                  <select class="form-control form-control-md" id="changeAddress"
                                          title="When do you want your product to be shipped?"
                                          data-trigger="hover"
                                          data-toggle="tooltip">
+                                     <option selected value="0">My Default Address</option>
                                      @foreach($address as $add)
-                                         <option {{auth()->user()->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
+                                         <option
+                                             {{auth()->user()->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
                                      @endforeach
                                  </select>
+                             </label>
+
+                            <label class="form-check-label float-right mt-2 text-danger">Select Carrier
+                                 <select class="form-control form-control-md" id="changeCarrier"
+                                         title="Click to change carrier how you want to ship the items?"
+                                         data-trigger="hover"
+                                         data-toggle="tooltip">
+                                     <option hidden value="">Select Shipping Carrier</option>
+                                    @foreach($carriers AS $key => $name)
+                                         <option value="{{$key}}" {{ auth()->user()->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
+                                     @endforeach
+                                 </select>
+
                              </label>
                         </b>
                     </span>
 
                     <div class="row my-2 flex-md-row flex-column-reverse">
-                        <div class="col-md-10 col-sm-12 mt-md-0 mt-1">
+                        <div class="col-md-12 col-sm-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
                                 <div class="input-group custom-search-form">
 
                                     <input type="date"
                                            class="form-control rounded"
+                                           id="date_shipped"
                                            name="date_shipped"
                                            title="When do you want your product to be shipped?"
                                            data-trigger="hover"
                                            data-toggle="tooltip"
                                            value="{{ \Request::get('date_shipped') }}">
 
-                                    <select name="carrier_id" class="form-control ml-2 rounded"
-                                            title="What is your carrier choice?"
-                                            data-trigger="hover"
-                                            data-toggle="tooltip"
-                                    >
-                                        <option hidden value="">Select Carrier</option>
-                                        @foreach($carriers AS $key => $name)
+                                    <select class="form-control rounded ml-3" name="category" id="category_id">
+                                        <option selected value="">All Categories</option>
+                                        @foreach($categories AS $key => $val)
                                             <option value="{{$key}}"
-                                                {{ Request::get('carrier_id') == $key ? 'selected' : '' }}>
-                                                {{$name}}
-                                            </option>
+                                                {{ (\Request::get('category') == $key) ? 'selected': ''  }}
+                                            >{{$val}}</option>
                                         @endforeach
-                                        <option value="" >Clear Option</option>
                                     </select>
 
                                     <input type="text"
                                            class="form-control rounded ml-2"
-                                           name="po"
-                                           placeholder="What is PO#?"
-                                           title="What is your PO#? (optional)"
-                                           data-trigger="hover"
-                                           data-toggle="tooltip"
-                                           value="{{ \Request::get('po') }}">
+                                           placeholder="Search by name, item, variety, grade, color"
+                                           name="searching"
+                                           value="{{\Request::get('searching')}}">
+
+                                    {{--                                    <input type="text"--}}
+                                    {{--                                           class="form-control rounded ml-2"--}}
+                                    {{--                                           name="po"--}}
+                                    {{--                                           placeholder="What is PO#?"--}}
+                                    {{--                                           title="What is your PO#? (optional)"--}}
+                                    {{--                                           data-trigger="hover"--}}
+                                    {{--                                           data-toggle="tooltip"--}}
+                                    {{--                                           value="{{ \Request::get('po') }}">--}}
 
                                     <span class="input-group-append">
-                                        @if (\Request::has('carrier_id') && \Request::get('carrier_id') != '')
+                                        @if (\Request::get('date_shipped') || \Request::get('category') || \Request::get('searching'))
                                             <a href="{{ route('inventory.index') }}"
                                                title="Reset Filters"
                                                data-trigger="hover"
                                                data-toggle="tooltip"
-                                               class="btn btn-light d-flex align-items-center text-muted"
+                                               class="btn btn-light d-flex align-items-center text-muted ml-2"
                                                role="button">
                                                 <i class="fas fa-times"></i>
                                         </a>
                                         @endif
-                                        <button class="btn btn-secondary ml-1" type="submit" id="search-products-btn">
+                                        <button class="btn btn-secondary ml-2" type="submit" id="search-products-btn">
                                         <i class="fas fa-search "></i>
                                     </button>
                                 </span>
@@ -168,11 +191,12 @@
 
                     </div>
 
+                    <hr>
                     <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
-{{--                                <th class="min-width-80">@lang('Vendor')</th>--}}
+                                {{--                                <th class="min-width-80">@lang('Vendor')</th>--}}
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('Unit Price')</th>
                                 <th class="min-width-80">@lang('Stem/Bunch')</th>
@@ -189,14 +213,15 @@
                                 @foreach ($products as $index => $product)
                                     <tr>
 
-{{--                                        <td class="align-middle">{{ $product->vendor }}</td>--}}
+                                        {{--                                        <td class="align-middle">{{ $product->vendor }}</td>--}}
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
                                                  title="Click to show Larger image"
                                                  data-info="{{$product->product_text}}"
                                                  data-toggle="tooltip" data-placement="bottom"
                                                  data-largeimg="{{$product->image_url}}"
-                                                 src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="Virgin Farm">
+                                                 src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}"
+                                                 class="img-thumbnail" alt="Virgin Farm">
                                             {{ $product->product_text }}
 
                                             {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
@@ -208,29 +233,33 @@
                                         <td class="align-middle">{{ $product->box_type }}</td>
                                         <td class="align-middle">{{ $product->units_box }}</td>
 
-                                        <form action="{{route('add.to.cart')}}" method="POST" enctype="multipart/form-data">
+                                        <form action="{{route('add.to.cart')}}" method="POST"
+                                              enctype="multipart/form-data">
                                             {{csrf_field()}}
                                             <input type="hidden" name="product_id" value="{{$product->id}}">
-                                        <td class="align-middle">
-                                            <input class="form-control form-control-sm width50" name="mark_code" type="text">
-                                        </td>
-                                        <td class="align-middle">
-                                            <input required class="form-control form-control-sm width50" name="quantity" type="number">
-                                        </td>
+                                            <td class="align-middle">
+                                                <input class="form-control form-control-sm width50" name="mark_code"
+                                                       type="text">
+                                            </td>
+                                            <td class="align-middle">
+                                                <input required class="form-control form-control-sm width50"
+                                                       name="quantity" type="number">
+                                            </td>
 
-                                        <td class="align-middle">
+                                            <td class="align-middle">
 
-                                            <button type="submit" class="btn btn-icon" title="@lang('Add product to cart')" data-toggle="tooltip"
-                                                    data-placement="top"><i class="fas fa-plus-circle "></i>
-                                            </button>
-                                            {{--<a href="" class="btn btn-icon add-to-cart"--}}
-                                               {{--data-id="{{$product->id}}"--}}
-                                               {{--title="@lang('Add product to cart')"--}}
-                                               {{--data-toggle="tooltip"--}}
-                                               {{--data-placement="top">--}}
+                                                <button type="submit" class="btn btn-icon"
+                                                        title="@lang('Add product to cart')" data-toggle="tooltip"
+                                                        data-placement="top"><i class="fas fa-plus-circle "></i>
+                                                </button>
+                                                {{--<a href="" class="btn btn-icon add-to-cart"--}}
+                                                {{--data-id="{{$product->id}}"--}}
+                                                {{--title="@lang('Add product to cart')"--}}
+                                                {{--data-toggle="tooltip"--}}
+                                                {{--data-placement="top">--}}
                                                 {{--<i class="fas fa-plus-circle "></i>--}}
-                                            {{--</a>--}}
-                                        </td>
+                                                {{--</a>--}}
+                                            </td>
                                         </form>
 
                                     </tr>
@@ -258,7 +287,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img src="" id="imagePreviewId" style="width: 450px; height: 450px;" >
+                    <img src="" id="imagePreviewId" style="width: 450px; height: 450px;">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -277,6 +306,11 @@
             $('#largeImgModal').modal('show');
         });
 
+        $('#date_shipped, #category_id').change(function () {
+            var date = $(this).val();
+            $("#filters-form").submit();
+        });
+
         $('#changeAddress').on('change', function () {
             var address_id = this.value;
 
@@ -284,7 +318,7 @@
                 url: '{{route('ship.address.create.update')}}',
                 data: {address_id},
                 type: 'POST',
-                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 success: function (response) {
                     toastr.success("Your shiping address has been changed.", "Success");
                 }
@@ -292,10 +326,21 @@
 
         });
 
-//        $("#doubleCheckMode1, #search-products-btn").change(function () {
-//            $("#filters-form").submit();
-//        });
 
+        $('#changeCarrier').on('change', function () {
+            var carrier_id = this.value;
+
+            $.ajax({
+                url: '{{route('carriers.create.update')}}',
+                data: {carrier_id},
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                success: function (response) {
+                    toastr.success("Your career has been updated successfully.", "Success");
+                }
+            });
+
+        });
 
         $(".add-to-cart").click(function (event) {
 
@@ -303,51 +348,51 @@
             {{--var product_id = _this.data("id");--}}
 
             {{--$.ajax({--}}
-                {{--url: "{{ route('product.add.to.cart') }}",--}}
-                {{--method: 'post',--}}
-                {{--data: {--}}
-                    {{--product_id: product_id--}}
-                {{--},--}}
-                {{--success: function (data) {--}}
-                    {{--if (data.result) {--}}
-                        {{--toastr.success("Product added to cart successfully.", "Success");--}}
-                        {{--//reload if needed--}}
-                        {{--//window.location.href = window.location.href + "#myItems";--}}
-                        {{--//location.reload();--}}
-                    {{--}--}}
-                    {{--else {--}}
-                        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
-                    {{--}--}}
-                {{--}--}}
+            {{--url: "{{ route('product.add.to.cart') }}",--}}
+            {{--method: 'post',--}}
+            {{--data: {--}}
+            {{--product_id: product_id--}}
+            {{--},--}}
+            {{--success: function (data) {--}}
+            {{--if (data.result) {--}}
+            {{--toastr.success("Product added to cart successfully.", "Success");--}}
+            {{--//reload if needed--}}
+            {{--//window.location.href = window.location.href + "#myItems";--}}
+            {{--//location.reload();--}}
+            {{--}--}}
+            {{--else {--}}
+            {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+            {{--}--}}
+            {{--}--}}
             {{--});--}}
 
         });
 
 
-//        #later when need to make it more accurate VIA AJAX
+        //        #later when need to make it more accurate VIA AJAX
         {{--$(".add-to-cart").click(function (event) {--}}
 
-            {{--var _this = $(this);--}}
-            {{--var product_id = _this.data("id");--}}
+        {{--var _this = $(this);--}}
+        {{--var product_id = _this.data("id");--}}
 
-            {{--$.ajax({--}}
-                {{--url: "{{ route('product.add.to.cart') }}",--}}
-                {{--method: 'post',--}}
-                {{--data: {--}}
-                    {{--product_id: product_id--}}
-                {{--},--}}
-                {{--success: function (data) {--}}
-                    {{--if (data.result) {--}}
-                        {{--toastr.success("Product added to cart successfully.", "Success");--}}
-                        {{--//reload if needed--}}
-                        {{--//window.location.href = window.location.href + "#myItems";--}}
-                        {{--//location.reload();--}}
-                    {{--}--}}
-                    {{--else {--}}
-                        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
-                    {{--}--}}
-                {{--}--}}
-            {{--});--}}
+        {{--$.ajax({--}}
+        {{--url: "{{ route('product.add.to.cart') }}",--}}
+        {{--method: 'post',--}}
+        {{--data: {--}}
+        {{--product_id: product_id--}}
+        {{--},--}}
+        {{--success: function (data) {--}}
+        {{--if (data.result) {--}}
+        {{--toastr.success("Product added to cart successfully.", "Success");--}}
+        {{--//reload if needed--}}
+        {{--//window.location.href = window.location.href + "#myItems";--}}
+        {{--//location.reload();--}}
+        {{--}--}}
+        {{--else {--}}
+        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+        {{--}--}}
+        {{--}--}}
+        {{--});--}}
 
         {{--});--}}
     </script>

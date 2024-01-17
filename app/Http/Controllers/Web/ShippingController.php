@@ -79,7 +79,7 @@ class ShippingController extends Controller
     {
         try{
 
-            if ($request->address_id) {
+            if ($request->address_id || $request->address_id == 0) {
                 User::where('id' , auth()->id())->update(['address_id' => $request->address_id]);
                 return ['Done'];
             }

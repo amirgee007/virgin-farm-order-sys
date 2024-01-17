@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Carrier;
+use Vanguard\User;
 
 class CarriersController extends Controller
 {
@@ -35,6 +36,11 @@ class CarriersController extends Controller
     public function createAndUpdate(Request $request)
     {
         try{
+
+            if ($request->carrier_id) {
+                User::where('id' , auth()->id())->update(['carrier_id' => $request->carrier_id]);
+                return ['Done'];
+            }
 
             if ($request->_token) {
                 $address = Carrier::create($request->except('_token'));
