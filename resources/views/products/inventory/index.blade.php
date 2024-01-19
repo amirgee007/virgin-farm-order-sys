@@ -199,10 +199,10 @@
                                 {{--                                <th class="min-width-80">@lang('Vendor')</th>--}}
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('Unit Price')</th>
-                                <th class="min-width-80">@lang('Stem/Bunch')</th>
+                                <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Stem/Bunch')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
-                                <th class="min-width-80">@lang('Box Type')</th>
-                                <th class="min-width-80">@lang('Unit/Box')</th>
+                                <th class="min-width-80" title="Size">@lang('Box Type')</th>
+                                <th class="min-width-80" title="Weight">@lang('Unit/Box')</th>
 {{--                                <th class="min-width-80">@lang('Mark Code')</th>--}}
                                 <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
                                 <th class="min-width-80">@lang('Actions')</th>
@@ -229,10 +229,10 @@
 
                                         <td class="align-middle">${{ $product->$priceCol }}/ST</td>
                                             {{--ST stad for per STEM flowers --}}
-                                        <td class="align-middle">{{ $product->unit_of_measure }}</td>
-                                        <td class="align-middle">{{ $product->quantity }} BX</td>
-                                        <td class="align-middle">{{ $product->box_type }}</td>
-                                        <td class="align-middle">{{ $product->units_box }}</td>
+                                        <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
+                                        <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
+                                        <td class="align-middle" title="Size">{{ $product->weight }}</td>
+                                        <td class="align-middle" title="Weight">{{ $product->size }}</td>
 
                                         <form action="{{route('add.to.cart')}}" method="POST"
                                               enctype="multipart/form-data">
