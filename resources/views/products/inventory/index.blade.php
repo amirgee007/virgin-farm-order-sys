@@ -195,16 +195,14 @@
                     <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
-                            <tr>
-                                {{--                                <th class="min-width-80">@lang('Vendor')</th>--}}
+                                <tr>
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80">@lang('Unit Price')</th>
                                 <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Stem/Bunch')</th>
                                 <th class="min-width-80">@lang('Quantity')</th>
-                                <th class="min-width-80" title="Size">@lang('Box Type')</th>
-                                <th class="min-width-80" title="Weight">@lang('Unit/Box')</th>
-{{--                                <th class="min-width-80">@lang('Mark Code')</th>--}}
-                                <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
+                                <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>
+                                <th class="min-width-80" title="Size of the item">@lang('Size')</th>
+                                <th class="min-width-80">@lang('Order Qty(Bunches)')</th>
                                 <th class="min-width-80">@lang('Actions')</th>
                             </tr>
                             </thead>
@@ -212,8 +210,6 @@
                             @if (count($products))
                                 @foreach ($products as $index => $product)
                                     <tr>
-
-                                        {{--                                        <td class="align-middle">{{ $product->vendor }}</td>--}}
                                         <td class="align-middle">
                                             <img style="max-width: 35px; cursor: pointer;"
                                                  title="Click to show Larger image"
@@ -227,21 +223,18 @@
                                             {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
                                         </td>
 
-                                        <td class="align-middle">${{ $product->$priceCol }}/ST</td>
+                                        <td class="align-middle" title="Per STEM flowers">${{ $product->$priceCol }}/ST</td>
                                             {{--ST stad for per STEM flowers --}}
                                         <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
                                         <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
-                                        <td class="align-middle" title="Size">{{ $product->weight }}</td>
-                                        <td class="align-middle" title="Weight">{{ $product->size }}</td>
+                                        <td class="align-middle" title="Weight">{{ $product->weight }}</td>
+                                        <td class="align-middle" title="Size">{{ $product->size }}</td>
 
                                         <form action="{{route('add.to.cart')}}" method="POST"
                                               enctype="multipart/form-data">
                                             {{csrf_field()}}
+
                                             <input type="hidden" name="product_id" value="{{$product->id}}">
-{{--                                            <td class="align-middle">--}}
-{{--                                                <input class="form-control form-control-sm width50" name="mark_code"--}}
-{{--                                                       type="text">--}}
-{{--                                            </td>--}}
                                             <td class="align-middle">
                                                 <input required class="form-control form-control-sm width50" name="quantity" type="number" min="0">
                                             </td>
