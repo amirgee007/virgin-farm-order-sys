@@ -243,8 +243,7 @@
 {{--                                                       type="text">--}}
 {{--                                            </td>--}}
                                             <td class="align-middle">
-                                                <input required class="form-control form-control-sm width50"
-                                                       name="quantity" type="number">
+                                                <input required class="form-control form-control-sm width50" name="quantity" type="number" min="0">
                                             </td>
 
                                             <td class="align-middle">
