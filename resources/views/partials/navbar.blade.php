@@ -94,6 +94,8 @@
                         </div>
                     </div>
                 </div>
+
+                Order Total: <span class="text-danger"><b>${{$total}}</b></span>
             </div>
 
 
