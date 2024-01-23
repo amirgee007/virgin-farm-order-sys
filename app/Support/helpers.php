@@ -19,7 +19,14 @@ function getPrices(){
 
 function getCubeSize($total)
 {
-    return Box::where('min_value' , '<=' ,$total)->where('max_value' , '>=' , $total)->first();
+    #check cube ranges if match then good otherwise check if its largest
+    $found = Box::where('min_value' , '<=' ,$total)->where('max_value' , '>=' , $total)->first();
+    if(is_null($found)){
+        $max = Box::orderBy('max_value' , 'desc')->first();
+        if($max && $max->max_value <= $total)
+            $found = $max;
+    }
+    return $found;
 }
 
 function getCarriers(){

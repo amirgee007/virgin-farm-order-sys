@@ -130,7 +130,7 @@
                             @foreach(session('cart') as $id => $details)
                                 @php
                                     $total += $details['price'] * $details['quantity'];
-                                    $size = $size + @$details['size'];
+                                    $size += $details['size'] * $details['quantity'];
                                 @endphp
                                 <tr data-id="{{ $id }}">
                                     <td data-th="Product">
@@ -189,7 +189,7 @@
                         </tr>
                         @else
                             <tr>
-                                <td colspan="5" class="text-center text-danger "><h3><strong>You are not matching with cube size please select few more flowers</strong></h3></td>
+                                <td colspan="5" class="text-center text-danger "><h3><strong>You are not matching with cube size please select few more flowers i.e size now {{$size}}</strong></h3></td>
                             </tr>
 
                         @endif
