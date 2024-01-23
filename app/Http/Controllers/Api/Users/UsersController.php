@@ -61,7 +61,8 @@ class UsersController extends ApiController
 
         $data += [
             'status' => UserStatus::ACTIVE,
-            'email_verified_at' => $request->verified ? now() : null
+//            'email_verified_at' => $request->verified ? now() : null
+            'email_verified_at' => now()
         ];
 
         $user = $this->users->create($data);
