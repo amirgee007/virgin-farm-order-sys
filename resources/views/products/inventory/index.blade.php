@@ -223,7 +223,8 @@
                                             {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
                                         </td>
 
-                                        <td class="align-middle" title="Per STEM flowers">${{ $product->$priceCol }}/ST</td>
+                                        <?php $priceNow = $product->$priceCol; ?>
+                                        <td class="align-middle" title="Per STEM flowers">${{ $priceNow }}/ST</td>
                                             {{--ST stad for per STEM flowers --}}
                                         <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
                                         <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
@@ -240,11 +241,12 @@
                                             </td>
 
                                             <td class="align-middle">
-
-                                                <button type="submit" class="btn btn-icon"
-                                                        title="@lang('Add product to cart')" data-toggle="tooltip"
-                                                        data-placement="top"><i class="fas fa-plus-circle "></i>
-                                                </button>
+                                                @if($priceNow)
+                                                    <button type="submit" class="btn btn-icon"
+                                                            title="@lang('Add product to cart')" data-toggle="tooltip"
+                                                            data-placement="top"><i class="fas fa-plus-circle "></i>
+                                                    </button>
+                                                @endif
                                                 {{--<a href="" class="btn btn-icon add-to-cart"--}}
                                                 {{--data-id="{{$product->id}}"--}}
                                                 {{--title="@lang('Add product to cart')"--}}
