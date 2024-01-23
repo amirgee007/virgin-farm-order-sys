@@ -127,7 +127,9 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="8"><em>@lang('No address found.')</em></td>
+                                    <td colspan="12">
+                                        No products found
+                                    </td>
                                 </tr>
                             @endif
                             </tbody>

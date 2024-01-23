@@ -223,7 +223,9 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="8"><em>@lang('No address found.')</em></td>
+                                    <td colspan="12" style="text-align: center">
+                                        <b class="text-danger">@lang('Choose a Ship date to shop available inventory.')</b>
+                                    </td>
                                 </tr>
                             @endif
                             </tbody>
