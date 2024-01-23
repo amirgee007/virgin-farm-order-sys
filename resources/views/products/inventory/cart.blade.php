@@ -5,7 +5,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted">
-        @lang('Cart')
+        @lang('Order Summary')
     </li>
 @stop
 
@@ -125,10 +125,13 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @php $total = 0 @endphp
+                        @php $total = 0; $size = 0 @endphp
                         @if(session('cart'))
                             @foreach(session('cart') as $id => $details)
-                                @php $total += $details['price'] * $details['quantity'] @endphp
+                                @php
+                                    $total += $details['price'] * $details['quantity'];
+                                    $size = $size + @$details['size'];
+                                @endphp
                                 <tr data-id="{{ $id }}">
                                     <td data-th="Product">
                                         <div class="row">

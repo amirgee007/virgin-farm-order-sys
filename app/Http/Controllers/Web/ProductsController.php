@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Imports\ImportExcelFiles;
 use Vanguard\Mail\CartDetailMail;
+use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
 use Vanguard\Models\Product;
@@ -83,7 +84,8 @@ class ProductsController extends Controller
 
     public function cart()
     {
-        return view('products.cart');
+        $sizeMin = Box::
+        return view('products.inventory.cart');
     }
 
     public function addToCart(Request $request)
@@ -96,7 +98,11 @@ class ProductsController extends Controller
         $id = $request->product_id;
         $quantity = $request->quantity;
 
+
         $product = Product::findOrFail($id);
+        $productInfo = $product->prodQty; #need to check which product qty need to be get OR store id somehwere
+
+        $priceCol = getPrices()[auth()->user()->price_list];
 
         $cart = session()->get('cart', []);
 
@@ -106,8 +112,9 @@ class ProductsController extends Controller
             $cart[$id] = [
                 "name" => $product->product_text,
                 "quantity" => $quantity,
-                "price" => $product->unit_price,
-                "image" => $product->image_url
+                "price" => $productInfo->$priceCol,
+                "image" => $product->image_url,
+                "size" => $productInfo->size,
             ];
         }
 
