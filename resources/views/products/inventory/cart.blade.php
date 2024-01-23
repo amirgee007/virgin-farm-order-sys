@@ -119,6 +119,7 @@
                         <tr>
                             <th style="width:50%">Product</th>
                             <th style="width:10%">Price</th>
+{{--                            <th style="width:4%">Size</th>--}}
                             <th style="width:8%">Quantity</th>
                             <th style="width:22%" class="text-center">Subtotal</th>
                             <th style="width:10%">Action</th>
@@ -142,6 +143,7 @@
                                         </div>
                                     </td>
                                     <td data-th="Price">${{ $details['price'] }}</td>
+{{--                                    <td data-th="Price">{{ $details['size'] }}</td>--}}
                                     <td data-th="Quantity">
                                         <input type="number" value="{{ $details['quantity'] }}" class="form-control quantity update-cart" />
                                     </td>
@@ -161,7 +163,7 @@
 
                         @if($cubeSize)
                         <tr>
-                            <td colspan="5" class="text-center text-warning"><h4>Selected Cube is {{$cubeSize->description}}</h4></td>
+                            <td colspan="5" class="text-center text-warning"><h4>Selected Cube is {{$cubeSize->description}} with size : {{$size}}</h4></td>
                         </tr>
 
                         <tr>
