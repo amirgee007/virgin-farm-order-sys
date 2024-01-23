@@ -97,21 +97,20 @@ class ProductsController extends Controller
         $id = $request->product_id;
         $quantity = $request->quantity;
 
-
         $product = Product::findOrFail($id);
-        $productInfo = $product->prodQty; #need to check which product qty need to be get OR store id somehwere
+        $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = getPrices()[auth()->user()->price_list];
 
         $cart = session()->get('cart', []);
-
+        
         if (isset($cart[$id])) {
             $cart[$id]['quantity']++;
         } else {
             $cart[$id] = [
                 "name" => $product->product_text,
                 "quantity" => $quantity,
-                "price" => $productInfo->$priceCol,
+                "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
                 "size" => $productInfo->size,
             ];
