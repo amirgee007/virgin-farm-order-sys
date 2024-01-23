@@ -57,7 +57,7 @@
                     <span>
                         <b>
                             1. Enter your shipping information
-                             <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship To Address
+                             <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
                                  <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
                                     title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
                                          class="fas fa-plus-circle "></i>
