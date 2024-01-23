@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 
 function diff4Human($date ){
@@ -14,6 +15,11 @@ function getPrices(){
         2 => 'price_fob',
         3 => 'price_hawaii',
     ];
+}
+
+function getCubeSize($total)
+{
+    return Box::where('min_value' , '<=' ,$total)->where('max_value' , '>=' , $total)->first();
 }
 
 function getCarriers(){

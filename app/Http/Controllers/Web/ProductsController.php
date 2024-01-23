@@ -84,7 +84,6 @@ class ProductsController extends Controller
 
     public function cart()
     {
-        $sizeMin = Box::
         return view('products.inventory.cart');
     }
 

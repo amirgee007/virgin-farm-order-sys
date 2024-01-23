@@ -155,6 +155,15 @@
                         </tbody>
                         <tfoot>
 
+                        @php
+                            $cubeSize = getCubeSize($size);
+                        @endphp
+
+                        @if($cubeSize)
+                        <tr>
+                            <td colspan="5" class="text-center text-warning"><h4>Selected Cube is </h4></td>
+                        </tr>
+
                         <tr>
                             <td colspan="5" class="text-right"><h4><strong>Order Subtotal: ${{ $total }}</strong></h4></td>
                         </tr>
@@ -178,6 +187,12 @@
                                 <a href="{{ route('checkout.cart') }}" class="btn btn-primary">Checkout &nbsp;<i class="fa fa-angle-right"></i></a>
                             </td>
                         </tr>
+                        @else
+                            <tr>
+                                <td colspan="5" class="text-center text-danger "><h3><strong>You are not matching with cube size please select few more flowers</strong></h3></td>
+                            </tr>
+
+                        @endif
                         </tfoot>
                     </table>
                 </div>
