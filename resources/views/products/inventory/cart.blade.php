@@ -161,7 +161,7 @@
 
                         @if($cubeSize)
                         <tr>
-                            <td colspan="5" class="text-center text-warning"><h4>Selected Cube is </h4></td>
+                            <td colspan="5" class="text-center text-warning"><h4>Selected Cube is {{$cubeSize->description}}</h4></td>
                         </tr>
 
                         <tr>
