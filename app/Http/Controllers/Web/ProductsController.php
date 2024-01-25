@@ -47,7 +47,7 @@ class ProductsController extends Controller
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
         else
-            $query->where('quantity' , '<',0); #just to ingnore will make it zero after testing
+            $query->where('quantity' , '<',30); #just to ingnore will make it zero after testing
 
         if ($category_id){
             $query->where('category_id' , $category_id);
@@ -106,6 +106,8 @@ class ProductsController extends Controller
 
         $cart = session()->get('cart', []);
 
+        $stems = $product->stemsCount ? $product->stemsCount->total : 1;
+
         if (isset($cart[$id])) {
             $cart[$id]['quantity'] = $cart[$id]['quantity']+$quantity;
         } else {
@@ -115,6 +117,7 @@ class ProductsController extends Controller
                 "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
                 "size" => $product->size,
+                "stems" => $product->stemsCount ? $product->stemsCount->total : 1,
             ];
         }
 
@@ -150,6 +153,8 @@ class ProductsController extends Controller
             session()->put('cart', []);
         }
         session()->flash('success', 'Product removed successfully');
+
+        return back();
     }
 
     public function checkOutCart()

@@ -134,7 +134,7 @@
                         @if(session('cart'))
                             @foreach(session('cart') as $id => $details)
                                 @php
-                                    $total += $details['price'] * $details['quantity'];
+                                    $total += ($details['price'] * $details['quantity'] * $details['stems']);
                                     $size += $details['size'] * $details['quantity'];
                                 @endphp
                                 <tr data-id="{{ $id }}">
@@ -142,16 +142,16 @@
                                         <div class="row">
                                             <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" style="max-width: 40px;" class="img-responsive"/></div>
                                             <div class="col-sm-9">
-                                                <h4 class="nomargin">{{ $details['name'] }}</h4>
+                                                <h4 class="nomargin">{{ $details['name'] }} {{ $details['stems'] }}</h4>
                                             </div>
                                         </div>
                                     </td>
-                                    <td data-th="Price">${{ $details['price'] }}</td>
+                                    <td data-th="Price">${{ $details['price'] }} * {{$details['stems']}}</td>
 {{--                                    <td data-th="Price">{{ $details['size'] }}</td>--}}
                                     <td data-th="Quantity">
                                         <input type="number" value="{{ $details['quantity'] }}" class="form-control quantity update-cart" />
                                     </td>
-                                    <td data-th="Subtotal" class="text-center">${{ $details['price'] * $details['quantity'] }}</td>
+                                    <td data-th="Subtotal" class="text-center">${{ $details['price'] * $details['quantity'] * $details['stems'] }}</td>
                                     <td class="actions" data-th="" title="Remove from cat">
                                         <button class="btn btn-danger btn-sm remove-from-cart"><i class="fas fa-trash"></i></button>
                                     </td>

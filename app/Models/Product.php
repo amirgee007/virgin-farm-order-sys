@@ -16,4 +16,8 @@ class Product extends Model
         return $this->hasMany(ProductQuantity::class , 'product_id' , 'product_id');
     }
 
+    public function stemsCount() {
+        return $this->hasOne(UnitOfMeasure::class , 'unit' , 'unit_of_measure');
+    }
+
 }

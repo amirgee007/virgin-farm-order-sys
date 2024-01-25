@@ -199,7 +199,7 @@
 
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Unit Of Measures</h5>
+                <h5 class="card-title">Unit Of Measures (Detail + Total Bunches)</h5>
                 <div class="table-responsive" id="users-table-wrapper">
                     <table class="table table-borderless table-striped table-sm">
                         <thead>
@@ -216,6 +216,18 @@
                                        data-pk="{{$measure->id}}"
                                        data-url="{{route('unit_of_measures.update')}}"
                                        data-value=" {{$measure->detail}}">
+                                    </a>
+                                </td>
+
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="total"
+                                       data-type="number"
+                                       data-emptytext="0"
+                                       data-pk="{{$measure->id}}"
+                                       data-url="{{route('unit_of_measures.update')}}"
+                                       data-value=" {{$measure->total}}">
                                     </a>
                                 </td>
 

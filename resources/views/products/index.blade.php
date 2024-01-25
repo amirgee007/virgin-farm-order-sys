@@ -112,7 +112,7 @@
                                 <th class="min-width-80">@lang('Category')</th>
                                 <th class="min-width-80">@lang('item')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
-                                <th class="min-width-80">@lang('UOM')</th>
+                                <th class="min-width-80" title="the UOM is how many stems per bunch">@lang('UOM')</th>
 
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
