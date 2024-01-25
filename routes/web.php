@@ -88,6 +88,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@deleteProduct'
         ]);
 
+        Route::delete('/reset-product/{id}', [
+            'as' => 'products.reset',
+            'uses' => 'ProductsController@resetProduct'
+        ]);
+
 
         Route::post('/product-update-column', [
             'as' => 'product.update.column',

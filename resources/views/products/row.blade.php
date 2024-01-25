@@ -28,7 +28,19 @@
            data-confirm-title="@lang('Please Confirm')"
            data-confirm-text="@lang('Are you sure that you want to delete this product?')"
            data-confirm-delete="@lang('Yes, delete it!')">
-            <i class="fas fa-trash"></i>
+            <i class="fas fa-trash text-danger"></i>
+        </a>
+
+        <a href="{{ route('products.reset', $product->id) }}"
+           class="btn btn-icon"
+           title="@lang('Reset Product Image')"
+           data-toggle="tooltip"
+           data-placement="top"
+           data-method="DELETE"
+           data-confirm-title="@lang('Please Confirm')"
+           data-confirm-text="@lang('Are you sure that you want to reset this product image?')"
+           data-confirm-delete="@lang('Yes, reset it!')">
+            <i class="fas fa-sync text-primary"></i>
         </a>
     </td>
 </tr>

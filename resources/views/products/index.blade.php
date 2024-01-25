@@ -116,7 +116,7 @@
 
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
-                                <th class="min-width-80">@lang('Delete')</th>
+                                <th class="min-width-80">@lang('Action')</th>
 
                             </tr>
                             </thead>

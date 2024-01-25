@@ -47,7 +47,7 @@ class ProductsController extends Controller
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
         else
-            $query->where('quantity' , '<',0); #just to ingnore 
+            $query->where('quantity' , '<',0); #just to ingnore will make it zero after testing
 
         if ($category_id){
             $query->where('category_id' , $category_id);
@@ -171,6 +171,15 @@ class ProductsController extends Controller
         #todo: plz check all relational data here.
         Product::where('id', $id)->delete();
         session()->flash('success', 'Product deleted successfully');
+        return back();
+    }
+
+    public function resetProduct($id)
+    {
+        Product::where('id', $id)->update([
+            'image_url' => null
+        ]);
+        session()->flash('success', 'Product image has ben removed.');
         return back();
     }
 
