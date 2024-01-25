@@ -99,8 +99,7 @@ class ProductsController extends Controller
         $id = $request->product_id;
         $quantity = $request->quantity;
 
-
-        $product = Product::findOrFail($id);
+        $product = Product::where('product_id',$id)->first();
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = getPrices()[auth()->user()->price_list];
