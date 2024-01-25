@@ -145,8 +145,11 @@ class ProductsController extends Controller
                 unset($cart[$request->id]);
                 session()->put('cart', $cart);
             }
-            session()->flash('success', 'Product removed successfully');
         }
+        else{
+            session()->put('cart', []);
+        }
+        session()->flash('success', 'Product removed successfully');
     }
 
     public function checkOutCart()
@@ -159,7 +162,6 @@ class ProductsController extends Controller
         \Mail::to('amir@infcompany.com')
             ->cc(['amirseersol@gmail.com'])
             ->send(new CartDetailMail("New Order received PLZ check ", $content));
-
 
         session()->put('cart', []);
         session()->flash('success', 'Product removed successfully');

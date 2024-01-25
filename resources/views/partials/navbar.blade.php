@@ -89,8 +89,25 @@
                         @endforeach
                     @endif
                     <div class="row">
-                        <div class="col-lg-12 col-sm-12 col-12 text-center checkout">
-                            <a href="{{ route('cart') }}" class="btn btn-primary btn-block">View all</a>
+                        <div class="col checkout">
+                            <a href="{{ route('cart') }}" class="btn btn-primary btn-block">
+                                <i class="fas fa-shopping-cart"></i> &nbsp; View all
+                            </a>
+                        </div>
+
+                        <div class="col checkout">
+
+                            <a href="{{ route('remove.from.cart') }}"
+                               class="btn btn-danger btn-blockn"
+                               title="@lang('Delete all items from cart?')"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               data-method="DELETE"
+                               data-confirm-title="@lang('Please Confirm')"
+                               data-confirm-text="@lang('Are you sure that you want to remove all items from cart?')"
+                               data-confirm-delete="@lang('Yes, delete all!')">
+                                <i class="fas fa-shopping-cart"></i> &nbsp; Empty Cart
+                            </a>
                         </div>
                     </div>
                 </div>

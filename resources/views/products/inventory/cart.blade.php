@@ -95,11 +95,15 @@
         }
         .checkout{
             border-top:1px solid #d2d2d2;
-            padding-top: 15px;
+            padding-top: 10px;
         }
         .checkout .btn-primary{
-            border-radius:50px;
-            height:50px;
+            border-radius:35px;
+            height:42px;
+        }
+        .checkout .btn-danger{
+            border-radius:35px;
+            height:42px;
         }
 
 
