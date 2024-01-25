@@ -136,7 +136,7 @@
                                 <tr data-id="{{ $id }}">
                                     <td data-th="Product">
                                         <div class="row">
-                                            <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" width="75" height="50" class="img-responsive"/></div>
+                                            <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" style="max-width: 40px;" class="img-responsive"/></div>
                                             <div class="col-sm-9">
                                                 <h4 class="nomargin">{{ $details['name'] }}</h4>
                                             </div>
