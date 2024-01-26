@@ -142,7 +142,7 @@
                                         <div class="row">
                                             <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" style="max-width: 40px;" class="img-responsive"/></div>
                                             <div class="col-sm-9">
-                                                <h4 class="nomargin">{{ $details['name'] }} {{ $details['stems'] }}</h4>
+                                                <h4 class="nomargin">{{ $details['name'] }} Pack {{ $details['stemCode'] }}</h4>
                                             </div>
                                         </div>
                                     </td>
