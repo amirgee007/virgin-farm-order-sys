@@ -170,6 +170,9 @@ class ProductsController extends Controller
             ->cc(['amirseersol@gmail.com'])
             ->send(new CartDetailMail("New Order received PLZ check ", $content));
 
+        #$order = // retrieve the order
+        #Mail::to($order->email)->send(new OrderConfirmation($order));
+
         session()->put('cart', []);
         session()->flash('success', 'Product removed successfully');
     }
