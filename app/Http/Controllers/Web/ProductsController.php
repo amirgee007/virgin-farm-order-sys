@@ -47,7 +47,7 @@ class ProductsController extends Controller
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
         else
-            $query->where('quantity' , '<',30); #just to ingnore will make it zero after testing
+            $query->where('quantity' , '<',0); #just to ingnore will make it zero after testing
 
         if ($category_id){
             $query->where('category_id' , $category_id);
@@ -161,6 +161,8 @@ class ProductsController extends Controller
     {
 
         $carts = session()->get('cart');
+
+        #dd($carts);
 
         $content = "decreased otherwise increased.";
 

@@ -65,7 +65,7 @@
                         @php $total = 0;  $totalQty = 0; @endphp
                         @foreach((array) session('cart') as $id => $details)
                             @php
-                                $total += $details['price'] * $details['quantity'];
+                                $total += ($details['price'] * $details['quantity'] * $details['stems']);
                                 $totalQty =+ $totalQty + $details['quantity'];
                             @endphp
 
@@ -82,8 +82,8 @@
                                     <img src="{{ $details['image'] }}" />
                                 </div>
                                 <div class="col-lg-8 col-sm-8 col-8 cart-detail-product">
-                                    <p>{{ $details['name'] }}</p>
-                                    <span class="price text-info"> ${{ $details['price'] }}</span> <span class="count"> Quantity:{{ $details['quantity'] }}</span>
+                                    <p>{{ $details['name'] }}  <small>({{$details['stems']}})</small></p>
+                                    <span class="price text-info"> ${{ $details['price']* $details['stems'] }}</span> <span class="count"> Quantity:{{ $details['quantity'] }}</span>
                                 </div>
                             </div>
                         @endforeach
