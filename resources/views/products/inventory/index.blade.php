@@ -70,7 +70,7 @@
                                      <option selected value="0">My Default Address</option>
                                      @foreach($address as $add)
                                          <option
-                                             {{auth()->user()->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
+                                             {{$user->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
                                      @endforeach
                                  </select>
                              </label>
@@ -82,7 +82,7 @@
                                          data-toggle="tooltip">
                                      <option hidden value="">Select Shipping Carrier</option>
                                     @foreach($carriers AS $key => $name)
-                                         <option value="{{$key}}" {{ auth()->user()->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
+                                         <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
                                      @endforeach
                                  </select>
 

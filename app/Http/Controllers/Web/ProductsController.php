@@ -19,6 +19,8 @@ use Vanguard\Mail\CartDetailMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
+use Vanguard\Models\Order;
+use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\ShippingAddress;
@@ -39,14 +41,14 @@ class ProductsController extends Controller
         $date_shipped = trim($request->date_shipped);
         $category_id = trim($request->category);
         $searching = trim($request->searching);
+        $user = auth()->user();
 
-        $address = auth()->user()->shipAddress;
+        $address = $user->shipAddress;
 
         if(!$date_shipped)
-            $date_shipped = auth()->user()->last_ship_date;
+            $date_shipped = $user->last_ship_date;
         else
         {
-            $user = auth()->user();
             $user->update([
                 'last_ship_date' => $date_shipped
             ]);
@@ -92,7 +94,8 @@ class ProductsController extends Controller
             'categories',
             'address',
             'priceCol',
-            'date_shipped'
+            'date_shipped',
+            'user'
         ));
     }
 
@@ -125,6 +128,7 @@ class ProductsController extends Controller
         } else {
             $cart[$id] = [
                 "name" => $product->product_text,
+                "item_no" => $product->item_no,
                 "quantity" => $quantity,
                 "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
@@ -171,13 +175,64 @@ class ProductsController extends Controller
 
     public function checkOutCart()
     {
+        $user = $shipAddress = auth()->user();
 
         $carts = session()->get('cart');
+        $address_id = auth()->user()->address_id; #if empty/ZERO then default address will be user not others.
+        if($address_id)
+            $shipAddress = ShippingAddress::find($address_id);
 
-        dd($carts);
+        #"name" => #"company_name" #"phone"  #"address"
 
+        $date_shipped = auth()->user()->last_ship_date;
+        $carrier_id = auth()->user()->carrier_id;
+
+        $order = Order::create([
+            'user_id' => $user->id,
+            'date_shipped' => $date_shipped,
+            'carrier_id' => $carrier_id,
+            'name' => $shipAddress->name,
+            'company' => $shipAddress->company,
+            'phone' => $shipAddress->phone,
+            'shipping_address' => $shipAddress->address,
+        ]);
+
+        $total = $size = 0;
+        $items = [];
+        foreach ($carts as $id => $details){
+            $product = Product::where('product_id',$id)->first();
+
+            $total += $details['price'] * $details['quantity'] * $details['stems'];
+            $size += $details['size'] * $details['quantity'];
+
+            $item = [
+                'order_id' => $order->id,
+                'product_id' => $id,
+                'item_no' => @$details['item_no'],
+                'name' => $details['name'],
+                'quantity' => $details['quantity'],
+                'price' => $details['price'],
+                'size' => $details['size'],
+                'stems' => $details['stems'],
+                'sub_total' => $details['price'] * $details['quantity'] * $details['stems'],
+            ];
+
+            OrderItem::create($item);
+        }
+
+        #sub_total	discount	tax		total
+        $order->update([
+            'sub_total' => $total,
+            'discount' => 0,
+            'tax' => 0,
+            'shipping_cost' => 0,
+            'total' => $total,
+        ]);
+
+        dd($order->items);
         $content = "decreased otherwise increased.";
 
+        #	 UPDATE these values
         \Mail::to('amir@infcompany.com')
             ->cc(['amirseersol@gmail.com'])
             ->send(new CartDetailMail("New Order received PLZ check ", $content));

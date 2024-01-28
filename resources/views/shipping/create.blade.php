@@ -14,8 +14,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="address">@lang('Company')</label>
-                                <input type="text" class="form-control input-solid" id="company"
-                                       name="company" placeholder="@lang('Company')" value="">
+                                <input type="text" class="form-control input-solid" id="company_name"
+                                       name="company_name" placeholder="@lang('Company')" value="">
                             </div>
 
                             <div class="form-group">

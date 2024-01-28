@@ -186,7 +186,6 @@
                             <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total }}</strong></h3></td>
                         </tr>
 
-
                         <tr>
                             <td colspan="5" class="text-right">
                                 <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>

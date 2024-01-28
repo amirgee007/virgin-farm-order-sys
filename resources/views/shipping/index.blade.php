@@ -105,12 +105,12 @@
                                 <td class="align-middle">
                                     <a class="editable"
                                        style="cursor:pointer;"
-                                       data-name="company"
+                                       data-name="company_name"
                                        data-type="text"
                                        data-emptytext="0"
                                        data-pk="{{$address->id}}"
                                        data-url="{{route('ship.address.create.update')}}"
-                                       data-value="{{ $address->company }}">
+                                       data-value="{{ $address->company_name }}">
                                     </a>
                                 </td>
 
