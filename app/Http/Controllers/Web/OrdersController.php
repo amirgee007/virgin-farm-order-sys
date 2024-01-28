@@ -43,9 +43,9 @@ class OrdersController extends Controller
         if($search){
             $query->where(function ($q) use ($search) {
                 $q->orWhere('name', 'like', "%{$search}%");
-                $q->orWhere('company_name', 'like', "%{$search}%");
+                $q->orWhere('company', 'like', "%{$search}%");
                 $q->orWhere('phone', 'like', "%{$search}%");
-                $q->orWhere('address', 'like', "%{$search}%");
+                $q->orWhere('shipping_address', 'like', "%{$search}%");
             });
         }
 

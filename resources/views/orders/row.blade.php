@@ -8,9 +8,9 @@
     <td class="align-middle">{{ $order->company }}</td>
     <td class="align-middle">{{ $order->phone }}</td>
     <td class="align-middle">{{ $order->shipping_address }}</td>
-    <td class="align-middle">{{ $order->sub_total }}</td>
+    <td class="align-middle">${{ $order->sub_total }}</td>
     <td class="align-middle">0</td>
-    <td class="align-middle">{{ $order->total }}</td>
+    <td class="align-middle">${{ $order->total }}</td>
     <td class="align-middle">{{ $order->size }}</td>
     <td class="align-middle">
        <span class="badge badge-lg badge-primary">
@@ -21,7 +21,7 @@
 </tr>
 
 <tr>
-    <td colspan="7">
+    <td colspan="13">
         <div id="accordion{{$order->id}}" class="collapse">
 
             <table class="table">
@@ -29,7 +29,7 @@
                 <tr>
                     <th class="min-width-80">@lang('#')</th>
                     <th class="min-width-80">@lang('Item')</th>
-                    <th class="min-width-100">@lang('Product')</th>
+                    <th class="min-width-100">@lang('Product Name')</th>
                     <th class="min-width-100">@lang('Quantity')</th>
                     <th class="min-width-100">@lang('Price')</th>
                     <th class="min-width-100">@lang('Size')</th>
@@ -44,7 +44,12 @@
                         <tr>
                             <td scope="row">{{++$index}}</td>
                             <td scope="row">{{$prod->item_no}}</td>
+                            <td class="align-middle">{{ $prod->name }}</td>
                             <td class="align-middle">{{ $prod->quantity }}</td>
+                            <td class="align-middle">${{ $prod->price }}</td>
+                            <td class="align-middle">{{ $prod->size }}</td>
+                            <td class="align-middle">{{ $prod->stems }}</td>
+                            <td class="align-middle">${{ $prod->sub_total }}</td>
                         </tr>
                     @endforeach
                 @else
