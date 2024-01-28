@@ -102,7 +102,7 @@
                                            title="When do you want your product to be shipped?"
                                            data-trigger="hover"
                                            data-toggle="tooltip"
-                                           value="{{ \Request::get('date_shipped') }}">
+                                           value="{{ $date_shipped }}">
 
                                     <select class="form-control rounded ml-3" name="category" id="category_id">
                                         <option selected value="">All Categories</option>
@@ -129,7 +129,7 @@
                                     {{--                                           value="{{ \Request::get('po') }}">--}}
 
                                     <span class="input-group-append">
-                                        @if (\Request::get('date_shipped') || \Request::get('category') || \Request::get('searching'))
+                                        @if ($date_shipped || \Request::get('category') || \Request::get('searching'))
                                             <a href="{{ route('inventory.index') }}"
                                                title="Reset Filters"
                                                data-trigger="hover"

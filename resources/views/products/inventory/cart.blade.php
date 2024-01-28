@@ -140,8 +140,8 @@
                                 <tr data-id="{{ $id }}">
                                     <td data-th="Product">
                                         <div class="row">
-                                            <div class="col-sm-3 hidden-xs"><img src="{{ $details['image'] }}" style="max-width: 40px;" class="img-responsive"/></div>
-                                            <div class="col-sm-9">
+                                            <div class="col-sm-3 hidden-xs mt-2"><img src="{{ $details['image'] }}" style="max-width: 40px;" class="img-responsive"/></div>
+                                            <div class="col-sm-9 mt-2">
                                                 <h4 class="nomargin">{{ $details['name'] }} Pack {{ $details['stems'] }}</h4>
                                             </div>
                                         </div>
@@ -167,7 +167,7 @@
 
                         @if($cubeSize)
                         <tr>
-                            <td colspan="5" class="text-center text-warning"><h4>Selected Cube is {{$cubeSize->description}} with size : {{$size}}</h4></td>
+                            <td colspan="5" class="text-center text-primary"><h4>Selected Cube is {{$cubeSize->description}} with size : {{$size}}</h4></td>
                         </tr>
 
                         <tr>

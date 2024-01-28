@@ -42,12 +42,23 @@ class ProductsController extends Controller
 
         $address = auth()->user()->shipAddress;
 
+        if(!$date_shipped)
+            $date_shipped = auth()->user()->last_ship_date;
+        else
+        {
+            $user = auth()->user();
+            $user->update([
+                'last_ship_date' => $date_shipped
+            ]);
+        }
+
+        #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id')->where('quantity', '>' ,0);
         if ($date_shipped){
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
         else
-            $query->where('quantity' , '<',0); #just to ingnore will make it zero after testing
+            $query->where('quantity' , '<',2); #just to ingnore will make it zero after testing
 
         if ($category_id){
             $query->where('category_id' , $category_id);
@@ -80,7 +91,8 @@ class ProductsController extends Controller
             'carriers',
             'categories',
             'address',
-            'priceCol'
+            'priceCol',
+            'date_shipped'
         ));
     }
 
@@ -162,7 +174,7 @@ class ProductsController extends Controller
 
         $carts = session()->get('cart');
 
-        #dd($carts);
+        dd($carts);
 
         $content = "decreased otherwise increased.";
 
