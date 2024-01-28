@@ -4,6 +4,7 @@ namespace Vanguard\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Vanguard\User;
 
 class Order extends Model
 {
@@ -18,5 +19,14 @@ class Order extends Model
     public function getShipToAttribute()
     {
         return $this->company.' '. $this->shipping_address;
+    }
+
+    public function user() {
+        return $this->hasOne(User::class , 'id' , 'user_id');
+    }
+
+    public function carrier()
+    {
+        return $this->hasOne(Carrier::class , 'id' , 'carrier_id');
     }
 }

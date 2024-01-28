@@ -95,7 +95,7 @@
                 <ul class="{{ Request::is('orders*')  ? '' : 'collapse' }} list-unstyled sub-menu" id="orders-dropdown">
 
                     <li class="nav-item">
-                        <a class="nav-link {{ Request::is('orders') ? 'active' : ''  }}" href="">
+                        <a class="nav-link {{ Request::is('orders') ? 'active' : ''  }}" href="{{route('orders.index')}}">
                             <i class="fas fa-car"></i>
                             <span>@lang('My Orders')</span>
                         </a>

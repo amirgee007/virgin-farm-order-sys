@@ -131,6 +131,17 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     });
 
+    Route::group(['prefix'=>'orders'], function() {
+        Route::get('/', [
+            'as' => 'orders.index',
+            'uses' => 'OrdersController@index'
+        ]);
+
+//        Route::post('/carriers-create-update', [
+//            'as' => 'carriers.create.update',
+//            'uses' => 'CarriersController@createAndUpdate'
+//        ]);
+    });
 
     Route::group(['prefix'=>'boxes'], function() {
         Route::get('/', [
