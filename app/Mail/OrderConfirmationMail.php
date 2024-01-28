@@ -9,23 +9,22 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class CartDetailMail extends Mailable
+class OrderConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
+    public $order,$subject,$user;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public  $content;
-    public function __construct($subject, $content)
+    public function __construct($order,$subject , $user)
     {
-        $this->content = $content;
+        $this->order = $order;
         $this->subject = $subject;
+        $this->user = $user;
     }
 
     /**
@@ -35,8 +34,10 @@ class CartDetailMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('mail.cart.test')->with([
-            'content' => $this->content,
-        ]);
+        return $this->markdown('mail.order.confirmation')
+            ->with([
+                'user' => $this->user
+            ])
+            ->subject($this->subject);
     }
 }

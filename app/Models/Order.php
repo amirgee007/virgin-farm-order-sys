@@ -14,4 +14,9 @@ class Order extends Model
     public function items() {
         return $this->hasMany(OrderItem::class , 'order_id' , 'id');
     }
+
+    public function getShipToAttribute()
+    {
+        return $this->company.' '. $this->shipping_address;
+    }
 }

@@ -4,9 +4,7 @@
 
     @lang('New user was just registered on :app website.', ['app' => setting('app_name')])
 
-
     @lang('To view the user details just visit the link below.')
-
 
     @component('mail::table')
         |           |                |                  |           |
@@ -20,12 +18,10 @@
         {{--@endif--}}
     @endcomponent
 
-
     @lang('Regards'),<br>
     {{ setting('app_name') }}
 
 @endcomponent
-
 
 {{--<p>--}}
     {{--{{$order['customer_first_name'] .' '. $order['customer_last_name']}}<br />--}}

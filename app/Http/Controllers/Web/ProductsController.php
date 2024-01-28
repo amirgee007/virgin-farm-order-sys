@@ -16,6 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Imports\ImportExcelFiles;
 use Vanguard\Mail\CartDetailMail;
+use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
@@ -229,17 +230,16 @@ class ProductsController extends Controller
             'total' => $total,
         ]);
 
-        dd($order->items);
-        $content = "decreased otherwise increased.";
+        #dd($order->items);
+        #$content = "decreased otherwise increased."; E-Commerce Checkout - Virgin Farms Inc. / PB W831718
 
-        #	 UPDATE these values
-        \Mail::to('amir@infcompany.com')
+        $subject = "E-Commerce Checkout - Virgin Farms Inc. / Order: ".$order->id;
+
+        \Mail::to($user->email)
             ->cc(['amirseersol@gmail.com'])
-            ->send(new CartDetailMail("New Order received PLZ check ", $content));
+            ->send(new OrderConfirmationMail($order , $subject , $user));
 
-        #$order = // retrieve the order
-        #Mail::to($order->email)->send(new OrderConfirmation($order));
-
+       dd('ok now');
         session()->put('cart', []);
         session()->flash('success', 'Product removed successfully');
     }

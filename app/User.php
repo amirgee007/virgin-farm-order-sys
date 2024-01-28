@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Mail;
 use Vanguard\Events\User\RequestedPasswordResetEmail;
+use Vanguard\Models\Carrier;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Presenters\Traits\Presentable;
 use Vanguard\Presenters\UserPresenter;
@@ -148,5 +149,10 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function getNameAttribute()
     {
         return $this->first_name.' '.$this->last_name;
+    }
+
+    public function carrier()
+    {
+        return $this->hasOne(Carrier::class , 'id' , 'carrier_id');
     }
 }
