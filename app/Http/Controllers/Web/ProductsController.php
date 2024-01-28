@@ -239,9 +239,8 @@ class ProductsController extends Controller
             ->cc(['amirseersol@gmail.com'])
             ->send(new OrderConfirmationMail($order , $subject , $user));
 
-       dd('ok now');
         session()->put('cart', []);
-        session()->flash('success', 'Product removed successfully');
+        session()->flash('success', 'Your order has been recived successfully. You will be notified soon.');
     }
 
     public function deleteProduct($id)
