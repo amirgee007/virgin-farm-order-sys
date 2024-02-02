@@ -48,15 +48,15 @@
             </div>
         </div>
 
-        <ul class="navbar-nav ml-auto pr-3 flex-row">
+        <ul class="navbar-nav ml-auto pr-3 flex-row" >
 
-            <div class="dropdown" style="padding-right: 40px;">
+            <div class="dropdown" style="padding-right: 40px; ">
                 <button type="button" class="btn btn-light btnCart" data-toggle="dropdown">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp;Cart
                     <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
                 </button>
 
-                <div class="dropdown-menu">
+                <div class="dropdown-menu" style="max-height: 600px;   overflow:auto;">
                     <div class="row total-header-section">
                         <div class="col-lg-3 col-sm-6 col-6">
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -90,7 +90,7 @@
                     @endif
                     <div class="row">
                         <div class="col checkout">
-                            <a href="{{ route('cart') }}" class="btn btn-primary btn-block">
+                            <a href="{{ route('cart') }}" class="btn btn-primary btn-block p-2">
                                 <i class="fas fa-shopping-cart"></i> &nbsp;View all
                             </a>
                         </div>
@@ -98,7 +98,7 @@
                         <div class="col checkout">
 
                             <a href="{{ route('remove.from.cart') }}"
-                               class="btn btn-danger btn-block"
+                               class="btn btn-danger btn-block p-2"
                                title="@lang('Delete all items from cart?')"
                                data-toggle="tooltip"
                                data-placement="top"

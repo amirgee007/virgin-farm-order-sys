@@ -71,11 +71,11 @@
         }
         .checkout .btn-primary{
             border-radius:35px;
-            height:42px;
+            height:36px;
         }
         .checkout .btn-danger{
             border-radius:35px;
-            height:42px;
+            height:36px;
         }
         .dropdown-menu:before{
             content: " ";
