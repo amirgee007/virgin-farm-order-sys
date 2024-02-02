@@ -241,6 +241,9 @@ class ProductsController extends Controller
 
         session()->put('cart', []);
         session()->flash('success', 'Your order has been recived successfully. You will be notified soon.');
+
+
+        return \redirect(route('inventory.index'));
     }
 
     public function deleteProduct($id)

@@ -31,10 +31,9 @@
 Your sales reperentative wil contact you to confirm your online order.
 
 If you have any questions, feel free to contact us.
-sales@virginfarms.net
+##### sales@virginfarms.net
 1-888-548-7673
 
-Thank you, Virgin Farms Web Team
 Thanks,
 {{ config('app.name') }}
 @endcomponent
