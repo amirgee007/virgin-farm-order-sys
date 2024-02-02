@@ -1,5 +1,5 @@
 @component('mail::message')
-# Checkout Notification
+# Web Order Summary
 ## Hey "{{strtoupper($order->name)}}", thanks for your order! Here are the details.
 
 ### Customer Name: {{$user->name}}
@@ -20,7 +20,7 @@
     @endforeach
     | <strong>Summary</strong>   |    |  |  |
     |    |    |  <small>Subtotal:</small>| <small>${{$order->total }}</small> |
-    |    |    |  <small>Estimated Additional Charges:</small>| <small>$0</small> |
+    |    |    |  <small>Estimated Additional Charges:</small>| <small>$00</small> |
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
     |    |    |     Total             | <small>${{$order->total }}</small> |
     @endif
@@ -28,7 +28,13 @@
 
 # Total Boxes: {{count($order->items)}}
 
+Your sales reperentative wil contact you to confirm your online order.
+
 If you have any questions, feel free to contact us.
+sales@virginfarms.net
+1-888-548-7673
+
+Thank you, Virgin Farms Web Team
 Thanks,
 {{ config('app.name') }}
 @endcomponent
