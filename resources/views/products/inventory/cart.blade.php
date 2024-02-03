@@ -197,8 +197,8 @@
                                    data-placement="top"
                                    data-method="GET"
                                    data-confirm-title="@lang('Please Confirm To Proceed?')"
-                                   data-confirm-text="@lang('Once you checkout you can no longer change this order.?')"
-                                   data-confirm-delete="@lang('Yes, Proceed it!')">
+                                   data-confirm-text="@lang('Once you checkout you can no longer change this order?')"
+                                   data-confirm-delete="@lang('Yes, Proceed!')">
                                     Checkout &nbsp;<i class="fa fa-angle-right"></i>
                                 </a>
 

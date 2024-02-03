@@ -15,13 +15,17 @@
                             <div class="form-group">
                                 <label for="address">@lang('Company')</label>
                                 <input type="text" class="form-control input-solid" id="company_name"
-                                       name="company_name" placeholder="@lang('Company')" value="">
+                                       name="company_name" placeholder="@lang('Company')" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="status">@lang('Select User')</label>
-                                {!! Form::select('user_id', $users, auth()->id(),['class' => 'form-control input-solid', 'id' => 'status']) !!}
-                                <small class="text-warning">Client can select only his name.</small>
+                                <label for="state_id">@lang('Select State')</label>
+                                {!! Form::select('state_id', $states, 0, ['class' => 'form-control input-solid', 'id' => 'state_id']) !!}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="zip_code">@lang('Zip Code')</label>
+                                <input type="text" class="form-control input-solid" id="zip_code" name="zip_code" placeholder="@lang('Zip Code')" required>
                             </div>
                         </div>
 
@@ -29,12 +33,17 @@
 
                             <div class="form-group">
                                 <label for="phone">@lang('Phone')</label>
-                                <input type="text" class="form-control input-solid" id="phone"
-                                       name="phone" placeholder="@lang('Phone')" value="">
+                                <input type="text" class="form-control input-solid" id="phone" name="phone" placeholder="@lang('Phone')" value="">
                             </div>
                             <div class="form-group">
                                 <label for="address">@lang('Address')</label>
-                                <textarea name="address" rows="5" class="form-control input-solid" id="address"></textarea>
+                                <input type="text" class="form-control input-solid" id="address" name="address" placeholder="@lang('Phone')" value="">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="city_id">@lang('Select City')</label>
+                                {!! Form::select('city_id', [], 0, ['class' => 'form-control input-solid', 'id' => 'city_id']) !!}
                             </div>
 
                         </div>

@@ -23,9 +23,12 @@ class CreateShipAddressRequest extends FormRequest
     {
         return [
             'name' => 'min:5|max:50|string|required',
-            'company' => 'min:5|max:150|string|required',
+            'company_name' => 'min:5|max:150|string|required',
             'phone' => 'min:5|max:20|string|required',
             'address' => 'required|string',
+            'state_id' => 'required',
+            'city_id' => 'required',
+            'zip_code' => 'required',
         ];
     }
 }

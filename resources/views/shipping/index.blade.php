@@ -193,5 +193,26 @@
         $("#user_id").change(function () {
             $("#users-form").submit();
         });
+
+        $('#state_id').on('change', function () {
+            var data = {
+                state_id : $(this).val(),
+            };
+
+            $.ajax({
+                url: '{{route('ship.address.load.cities')}}',
+                data: data,
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function (response) {
+                    $('#city_id').html('<option value="">-- Select City --</option>');
+                    $.each(response.cities, function (key, value) {
+                        $("#city_id").append('<option value="' + value
+                            .id + '">' + value.city + '</option>');
+                    });
+                }
+            });
+
+        });
     </script>
 @stop

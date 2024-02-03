@@ -213,6 +213,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ShippingController@createAndUpdate'
         ]);
 
+        Route::post('/address-load-cities', [
+            'as' => 'ship.address.load.cities',
+            'uses' => 'ShippingController@loadCities'
+        ]);
+
     });
 
     Route::get('/categories', [

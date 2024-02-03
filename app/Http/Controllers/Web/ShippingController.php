@@ -3,8 +3,11 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use NunoMaduro\Collision\Adapters\Phpunit\State;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\ShippingAddress;
+use Vanguard\Models\UsCity;
+use Vanguard\Models\UsState;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
 
@@ -55,7 +58,13 @@ class ShippingController extends Controller
 
         $addresses = $query->paginate(100);
 
-        return view('shipping.index' , compact('addresses' , 'user_id' , 'users'));
+        $states = UsState::orderby('state_name')
+            ->pluck('state_name', 'id')
+            ->toArray();
+
+        $states = [null => 'Select State']+$states;
+
+        return view('shipping.index' , compact('addresses' , 'user_id' , 'users' , 'states'));
     }
 
     public function deleteAddress($id)
@@ -79,15 +88,17 @@ class ShippingController extends Controller
     {
         try{
 
+            if ($request->_token) {
+                $data = $request->except('_token');
+                $data['user_id'] = auth()->id();
+                $address = ShippingAddress::create($data);
+                session()->flash('app_message', 'The new Shipping Address has been created successfully.');
+                return back();
+            }
+
             if ($request->address_id || $request->address_id == 0) {
                 User::where('id' , auth()->id())->update(['address_id' => $request->address_id]);
                 return ['Done'];
-            }
-
-            if ($request->_token) {
-                $address = ShippingAddress::create($request->except('_token'));
-                session()->flash('app_message', 'The new Shipping Address has been created successfully.');
-                return back();
             }
 
             ShippingAddress::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
@@ -95,18 +106,17 @@ class ShippingController extends Controller
             return ['Done'];
 
         }catch (\Exception $ex){
+
+            dd($ex);
             session()->flash('app_error', 'Something went wrong plz try again later.');
             return back();
         }
 
+    }
 
-
-
-
-
-
-
-
+    public function loadCities(Request $request){
+        $data['cities'] = UsCity::where("state_id", $request->state_id)->get(["city", "id"]);;
+        return response()->json($data);
     }
 
 }
