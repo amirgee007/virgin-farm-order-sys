@@ -307,6 +307,20 @@ class ProductsController extends Controller
         ));
     }
 
+    public function createNewProduct(Request $request){
+
+        $product =  Product::where('item_no' , $request->item_no)->first();
+
+        $data = $request->except('_token');
+        if($product){
+            $product->update($data);
+        }
+        else
+            Product::create($data);
+
+        session()->flash('app_message', 'Product has been created in the system.');
+        return back();
+    }
     public function uploadProducts(Request $request)
     {
 

@@ -129,6 +129,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@resetSpecificInventory'
         ]);
 
+        Route::post('/create-product', [
+            'as' => 'create.product',
+            'uses' => 'ProductsController@createNewProduct'
+        ]);
+
     });
 
     Route::group(['prefix'=>'orders'], function() {

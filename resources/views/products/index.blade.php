@@ -39,7 +39,7 @@
 
                             <a href="javascript:void(0)" title="Create New Product" data-toggle="modal"
                                data-target="#createProductModal" class="btn btn-primary btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-edit"></i>
+                                <i class="fas fa-plus-circle"></i>
                             </a>
 
                             <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
@@ -392,35 +392,61 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Create New</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Create New Product</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('create.product')}}" method="POST" enctype="multipart/form-data">
                         {{csrf_field()}}
 
                         <div class="row">
-                            <div class="col-md-12">
-
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="terms">@lang('Select Category')</label>
-                                    {!! Form::select('terms', [],['class' => 'form-control input-solid']) !!}
+                                    <label for="category_id">@lang('Select Category')</label>
+                                    {!! Form::select('category_id', $categories, 1, ['class' => 'form-control input-solid', 'id' => 'category_id'] , ['required']) !!}
                                 </div>
+                            </div>
 
-
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="contract_code">@lang('item Description')</label>
-                                    <input type="number" class="form-control input-solid" id="contract_code"
-                                           name="contract_code" placeholder="@lang('Contract Code')" value="">
+                                    <label for="item_no">@lang('Item No.')</label>
+                                    <input type="text" class="form-control input-solid" id="item_no" name="item_no" placeholder="@lang('Item No')" required>
                                 </div>
 
                             </div>
+
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <label for="product_text">@lang('Item Text')</label>
+                                    <input type="text" class="form-control input-solid" id="product_text" name="product_text" placeholder="@lang('Item Text')" required>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="unit_of_measure">@lang('UOM')</label>
+                                    <input type="number" class="form-control input-solid" id="unit_of_measure" name="unit_of_measure" placeholder="@lang('Unit Of Measure')" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="size">@lang('Size')</label>
+                                    <input type="number" step="0.01" class="form-control input-solid" id="size" name="size" placeholder="@lang('Size')" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="weight">@lang('Weight')</label>
+                                    <input type="number" step="0.01" class="form-control input-solid" id="weight" name="weight" placeholder="@lang('Weight')" required>
+                                </div>
+                            </div>
                         </div>
-
-
-
                         <br>
                         <input type="submit" value="Create Product" class="btn btn-primary btn-sm float-right">
                     </form>
