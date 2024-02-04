@@ -271,11 +271,18 @@ class ProductsController extends Controller
 
     public function indexManageProducts()
     {
+        $filters = [
+            0 => 'Filter/Sort Products',
+            1 => 'Sorty by item A-Z',
+            2 => 'Sorty by item Z-A',
+            3 => 'Products with images',
+            4 => 'Products without images',
+        ];
 
         $query = Product::query();
         $search = \Request::get('search');
-
-        #Search by Item, Description
+        $category = \Request::get('category');
+        $filter = \Request::get('filter');
 
         #depend ON date in and date OUT.
 
@@ -286,6 +293,22 @@ class ProductsController extends Controller
             });
         }
 
+        if ($category) {
+            $query->where(function ($q) use ($category) {
+                $q->orWhere('category_id', 'like', $category);
+            });
+        }
+
+        if($filter){
+            if($filter == 1) #a-z
+                $query->orderBy('item_no', 'ASC');
+            elseif($filter == 2) #z-a
+                $query->orderBy('item_no', 'DESC');
+            elseif($filter == 3) #with images
+                $query->whereNotNull('image_url');
+            elseif($filter == 3) #without images
+                $query->whereNull('image_url');
+        }
         $products = (clone $query)->paginate(100);
         $categories = Category::pluck('description', 'category_id')->toArray();
 
@@ -303,7 +326,8 @@ class ProductsController extends Controller
             'categories',
             'count',
             'selected',
-            'itemsHaveImage'
+            'itemsHaveImage',
+            'filters'
         ));
     }
 

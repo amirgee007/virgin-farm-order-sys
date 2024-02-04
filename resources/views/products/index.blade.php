@@ -88,18 +88,29 @@
                                            placeholder="Search by Item, Description">
 
                                     <span class="input-group-append">
-                                    @if (Request::has('search') && Request::get('search') != '')
-                                            <a href="{{ route('inventory.index') }}"
-                                               class="btn btn-light d-flex align-items-center text-muted"
-                                               role="button">
-                                                <i class="fas fa-times"></i>
-                                        </a>
-                                   @endif
-                                    <button class="btn btn-light" type="submit">
-                                              <i class="fas fa-search text-muted"></i>
-                                    </button>
-                                </span>
+                                        @if (Request::has('search') && Request::get('search') != '')
+                                                <a href="{{ route('inventory.index') }}"
+                                                   class="btn btn-light d-flex align-items-center text-muted"
+                                                   role="button">
+                                                    <i class="fas fa-times"></i>
+                                            </a>
+                                       @endif
+                                        <button class="btn btn-light" type="submit"> <i class="fas fa-search text-muted"></i></button>
+                                    </span>
                                 </div>
+                            </div>
+
+                            <div class="col-md-2 mb-2">
+                                <select  class="form-control " name="category" id="category">
+                                    <option selected value="">Filter By Category</option>
+                                    @foreach($categories AS $id => $val)
+                                        <option {{Request::get('category') == $id ? 'selected' : ''}} value="{{$id}}">{{$val}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 mb-2">
+                                {!! Form::select('filter', $filters, Request::get('filter') , ['id' => 'filter', 'class' => 'form-control input-solid']) !!}
                             </div>
 
                         </div>
@@ -405,7 +416,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="category_id">@lang('Select Category')</label>
-                                    {!! Form::select('category_id', $categories, 1, ['class' => 'form-control input-solid', 'id' => 'category_id'] , ['required']) !!}
+                                    {!! Form::select('category_id', $categories, 0, ['class' => 'form-control input-solid', 'id' => 'category_id'] , ['required']) !!}
                                 </div>
                             </div>
 
@@ -465,6 +476,10 @@
 
     <script>
         $(function() {
+
+            $("#category ,#filter").change(function () {
+                $("#product-form").submit();
+            });
 
             $('.select2').select2();
 
