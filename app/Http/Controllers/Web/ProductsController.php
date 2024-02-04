@@ -56,7 +56,7 @@ class ProductsController extends Controller
         }
 
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
-        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.product_id')->where('quantity', '>' ,0);
+        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')->where('quantity', '>' ,0);
         if ($date_shipped){
             $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
         }
@@ -77,7 +77,7 @@ class ProductsController extends Controller
 
         $carriers = getCarriers();
         $categories = Category::pluck('description', 'category_id')->toArray();
-        $products = (clone $query)->paginate(250);
+        $products = (clone $query)->selectRaw('product_quantities.product_id as product_id , products.id,product_text,image_url,is_deal,unit_of_measure,quantity,weight,size ')->paginate(250);
 
         if ($date_shipped || $category_id || $searching ) {
             $products->appends([
@@ -102,20 +102,24 @@ class ProductsController extends Controller
 
     public function cart()
     {
+
+        $carts = session()->get('cart');
+        #Similar to the Solé web shop, we would like a time-out session timer. After 1 hour, if the customer does not checkout, the items in the cart are emptied back to inventory.
+
         return view('products.inventory.cart');
     }
 
     public function addToCart(Request $request)
     {
 
-        //  "product_id" => "1"
+        //  "id" => "1"
         //  "mark_code" => null
         //  "quantity" => "123"
 
-        $id = $request->product_id;
+        $id = $request->id;
         $quantity = $request->quantity;
 
-        $product = Product::where('product_id',$id)->first();
+        $product = Product::where('id',$id)->first();
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = getPrices()[auth()->user()->price_list];
@@ -135,6 +139,7 @@ class ProductsController extends Controller
                 "image" => $product->image_url,
                 "size" => $product->size,
                 "stems" => $product->stemsCount ? $product->stemsCount->total : 1,
+                "time" => now()->toDateTimeString(),
             ];
         }
 
@@ -201,7 +206,7 @@ class ProductsController extends Controller
         $total = $size = 0;
         $items = [];
         foreach ($carts as $id => $details){
-            $product = Product::where('product_id',$id)->first();
+            $product = Product::where('id',$id)->first();
 
             $total += $details['price'] * $details['quantity'] * $details['stems'];
             $size += $details['size'] * $details['quantity'];
@@ -319,26 +324,33 @@ class ProductsController extends Controller
                     if ($index < 2) continue;
 
                     $data = [
-                        'category_id' => trim($row[0]),
                         'item_no' => trim($row[1]),
-                        'product_id' => rand(100, 999999),
+                        'category_id' => trim($row[0]),
                         'product_text' => trim($row[2]),
                         'unit_of_measure' => trim($row[3]),
 
+                        'weight' => trim($row[7]),
+                        'size' => trim($row[8]),
+                    ];
+
+                    $prices = [
                         'price_fob' => trim($row[4]), #price 1
                         'price_fedex' => trim($row[5]), #price 3
                         'price_hawaii' => trim($row[6]), #price 5
-
-                        'weight' => trim($row[7]),
-                        'size' => trim($row[8]),
-
                     ];
 
-                    Product::updateOrCreate(['item_no' => trim($row[1])], $data); #as for now no specific requirments for the adding product if not found. also no history etc
+                    $product =  Product::where('item_no' , trim($row[1]))->first();
 
+                    if($product){
+                        $product->update($data);
+                    }else{
+//                        $data['product_id']  = rand(100, 999999);
+                        $product =  Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
+                    }
+
+                    #need to check if here we can also need to put an extra inventory or not.
                 } catch (\Exception $exception) {
                     Log::error('Error during inventory import ' . $exception->getMessage() . ' and line ' . $exception->getLine());
-
                     session()->flash('app_error', 'Inventory file has some error please check with admin or upload correct file.');
                     return back();
                 }
@@ -384,7 +396,7 @@ class ProductsController extends Controller
                     $product = Product::where('item_no', trim($row[0]))->first();
 
                     $data = [
-                        'product_id' => $product->product_id,
+                        'product_id' => $product->id,
                         'item_no' => $product->item_no,
                         'price_fedex' => trim($row[2]),
                         'price_fob' => trim($row[3]),
@@ -397,7 +409,7 @@ class ProductsController extends Controller
 
                     if ($product) {
                         ProductQuantity::updateOrCreate([
-                            'product_id' => $product->product_id,
+                            'product_id' => $product->id,
                             'item_no' => $product->item_no,
                             'date_in' => $date_in,
                             'date_out' => $date_out,
@@ -406,8 +418,7 @@ class ProductsController extends Controller
                     } else {
                         $data['item_no'] = trim($row[0]);
                         $data['product_text'] = trim($row[1]);
-                        $data['product_id'] = rand(100, 999999);
-
+                        #$data['product_id'] = rand(100, 999999);
                         #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
                     }
 

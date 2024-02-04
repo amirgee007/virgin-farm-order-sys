@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('tax')->default(0);
             $table->integer('shipping_cost')->default(0);
             $table->integer('total')->default(0);
-            $table->unsignedInteger('product_id')->nullable();
+//            $table->unsignedInteger('product_id')->nullable();
 
             $table->timestamps();
         });
@@ -35,12 +35,12 @@ return new class extends Migration
                 ->onDelete('cascade');
         });
 
-        Schema::table('products', function (Blueprint $table) {
-            $table->foreign('product_id')
-                ->references('id')
-                ->on('products')
-                ->onDelete('cascade');
-        });
+//        Schema::table('products', function (Blueprint $table) {
+//            $table->foreign('product_id')
+//                ->references('id')
+//                ->on('products')
+//                ->onDelete('cascade');
+//        });
     }
 
     /**

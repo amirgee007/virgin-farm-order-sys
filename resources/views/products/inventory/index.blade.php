@@ -197,7 +197,7 @@
                                               enctype="multipart/form-data">
                                             {{csrf_field()}}
 
-                                            <input type="hidden" name="product_id" value="{{$product->product_id}}">
+                                            <input type="hidden" name="product_id" value="{{$product->id}}">
                                             <td class="align-middle">
                                                 <input required class="form-control form-control-sm width50" max="{{$product->quantity}}" name="quantity" type="number" min="0">
                                             </td>

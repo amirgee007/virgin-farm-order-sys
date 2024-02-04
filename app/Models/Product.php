@@ -13,7 +13,7 @@ class Product extends Model
     protected $guarded = [];
 
     public function prodQty() {
-        return $this->hasMany(ProductQuantity::class , 'product_id' , 'product_id');
+        return $this->hasMany(ProductQuantity::class , 'product_id' , 'id');
     }
 
     public function stemsCount() {

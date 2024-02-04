@@ -1,6 +1,6 @@
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
     <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
-    <td class="align-middle" title="{{$product->product_id}}">{{ $product->item_no }}</td>
+    <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
     <td class="align-middle">
         <img style="max-width: 35px; cursor: pointer;"
              id="{{$product->id}}"
