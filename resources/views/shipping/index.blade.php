@@ -84,7 +84,6 @@
                     @if (count($addresses))
                         @foreach ($addresses as $index => $address)
                             <tr>
-
                                 <td class="align-middle">{{ ++$index }}</td>
                                 <td class="align-middle">
                                     <span class="badge badge-lg badge-primary">
@@ -143,6 +142,14 @@
                                        data-confirm-delete="@lang('Yes, delete it!')">
                                         <i class="fas fa-trash"></i>
                                     </a>
+
+                                    <a href="#" data-jsondt="{{$address->toJson()}}"
+                                       class="btn btn-icon edit-address"
+                                       title="@lang('Edit Address')"
+                                       data-toggle="tooltip"
+                                       data-placement="top">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
                                 </td>
 
                             </tr>
@@ -160,7 +167,6 @@
 
 {!! $addresses->render() !!}
 
-
 <!-- Create Address Modal -->
 <div class="modal fade" id="createAddressModal" tabindex="-1" role="dialog" aria-labelledby="createAddressModal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -171,10 +177,64 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @include('shipping.create')
+            {!! Form::open(['route' => 'ship.address.create.update', 'id' => 'user-form']) !!}
+            <input type="hidden" name="address_id" value="" id="address_id">
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">@lang('Name')</label>
+                                    <input type="text" class="form-control input-solid" id="name" name="name" placeholder="@lang('Name')">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">@lang('Company')</label>
+                                    <input type="text" class="form-control input-solid" id="company_name" name="company_name" placeholder="@lang('Company')" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="state_id">@lang('Select State')</label>
+                                    {!! Form::select('state_id', $states, 0, ['class' => 'form-control input-solid', 'id' => 'state_id']) !!}
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="zip_code">@lang('Zip Code')</label>
+                                    <input type="text" class="form-control input-solid" id="zip_code" name="zip_code" placeholder="@lang('Zip Code')" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label for="phone">@lang('Phone')</label>
+                                    <input type="text" class="form-control input-solid" id="phone" name="phone" placeholder="@lang('Phone')" value="">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">@lang('Address')</label>
+                                    <input type="text" class="form-control input-solid" id="address" name="address" placeholder="@lang('Address')" value="">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="city_id">@lang('Select City')</label>
+                                    {!! Form::select('city_id', [], 0, ['class' => 'form-control input-solid', 'id' => 'city_id']) !!}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">@lang('Create Shipping Address')</button>
+            </div>
+
+            {!! Form::close() !!}
         </div>
     </div>
 </div>
+
 @stop
 
 @section('scripts')
@@ -183,6 +243,7 @@
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
     {!! JsValidator::formRequest('Vanguard\Http\Requests\CreateShipAddressRequest', '#user-form') !!}
     <script>
+
         $.fn.editable.defaults.mode = 'inline';
         $.fn.editable.defaults.ajaxOptions = {
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
@@ -194,9 +255,29 @@
             $("#users-form").submit();
         });
 
+        $(document).on('click', ".edit-address", function() {
+            var jsonDt = $(this).data('jsondt');
+
+            $("#address_id").val(jsonDt.id);
+            $("#name").val(jsonDt.name);
+            $("#phone").val(jsonDt.phone);
+            $("#company_name").val(jsonDt.company_name);
+            $("#address").val(jsonDt.address);
+
+            refreshCities(jsonDt.state_id , jsonDt.city_id);
+            $("#state_id").val(jsonDt.state_id);
+            $("#zip_code").val(jsonDt.zip_code);
+
+            $('#createAddressModal').modal('show');
+        })
+
         $('#state_id').on('change', function () {
+            refreshCities($(this).val());
+        });
+
+        function refreshCities(state_id , city = null){
             var data = {
-                state_id : $(this).val(),
+                state_id : state_id,
             };
 
             $.ajax({
@@ -207,12 +288,12 @@
                 success: function (response) {
                     $('#city_id').html('<option value="">-- Select City --</option>');
                     $.each(response.cities, function (key, value) {
-                        $("#city_id").append('<option value="' + value
-                            .id + '">' + value.city + '</option>');
+                        $("#city_id").append('<option value="' + value.id + '">' + value.city + '</option>');
                     });
+
+                    $("#city_id").val(city);
                 }
             });
-
-        });
+        }
     </script>
 @stop

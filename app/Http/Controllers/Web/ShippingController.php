@@ -90,8 +90,16 @@ class ShippingController extends Controller
 
             if ($request->_token) {
                 $data = $request->except('_token');
-                $data['user_id'] = auth()->id();
-                $address = ShippingAddress::create($data);
+                if($request->address_id){
+                    $address = ShippingAddress::where('id' , $request->address_id)->first();
+                    unset($data['address_id']);
+                    $address->update($data);
+                }
+                else{
+                    $data['user_id'] = auth()->id();
+                    $address = ShippingAddress::create($data);
+                }
+
                 session()->flash('app_message', 'The new Shipping Address has been created successfully.');
                 return back();
             }
