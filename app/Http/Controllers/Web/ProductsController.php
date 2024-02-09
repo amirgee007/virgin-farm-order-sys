@@ -241,7 +241,8 @@ class ProductsController extends Controller
         $subject = "E-Commerce Checkout - Virgin Farms Inc. / Order: ".$order->id;
 
         \Mail::to($user->email)
-            ->cc(['amirseersol@gmail.com'])
+            ->cc(['sales@virginfarms.net'])
+            ->bcc(['amirseersol@gmail.com'])
             ->send(new OrderConfirmationMail($order , $subject , $user));
 
         session()->put('cart', []);
