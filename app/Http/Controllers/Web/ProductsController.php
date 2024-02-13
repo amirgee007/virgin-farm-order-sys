@@ -77,7 +77,7 @@ class ProductsController extends Controller
 
         $carriers = getCarriers();
         $categories = Category::pluck('description', 'category_id')->toArray();
-        $products = (clone $query)->selectRaw('product_quantities.product_id as product_id , products.id,product_text,image_url,is_deal,unit_of_measure,quantity,weight,size,price_fob,price_fedex,price_hawaii ')->paginate(250);
+        $products = (clone $query)->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,quantity,weight,size,price_fob,price_fedex,price_hawaii ')->paginate(250);
 
         if ($date_shipped || $category_id || $searching ) {
             $products->appends([
@@ -117,9 +117,11 @@ class ProductsController extends Controller
         //  "quantity" => "123"
 
         $id = $request->id;
+
         $quantity = $request->quantity;
 
         $product = Product::where('id',$id)->first();
+        
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = getPrices()[auth()->user()->price_list];

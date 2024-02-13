@@ -440,7 +440,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="unit_of_measure">@lang('UOM')</label>
-                                    <input type="number" class="form-control input-solid" id="unit_of_measure" name="unit_of_measure" placeholder="@lang('Unit Of Measure')" required>
+                                    <input type="text" class="form-control input-solid" id="unit_of_measure" name="unit_of_measure" placeholder="@lang('Unit Of Measure')" required>
                                 </div>
                             </div>
 
