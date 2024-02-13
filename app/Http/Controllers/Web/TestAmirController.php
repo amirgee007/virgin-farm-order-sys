@@ -10,6 +10,6 @@ class TestAmirController extends Controller
 
     public function index2(){
 
-        dd(now()->toDateTimeString());
+        dd(getCubeSizeTax(52));
     }
 }

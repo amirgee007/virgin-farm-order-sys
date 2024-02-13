@@ -9,12 +9,44 @@ function diff4Human($date ){
 }
 
 function getPrices(){
+    #if any change plz check this too 1,2,3 getCubeSizeTax
     return [
         0 => 'Select Price',
         1 => 'price_fedex',
         2 => 'price_fob',
         3 => 'price_hawaii',
     ];
+}
+
+function getCubeSizeTax($size){
+
+    $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii
+
+    $price = $additional = 0;
+    if($priceName == 2){
+        $price = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
+    }
+    #FedEx /HI&AK Fee Charges
+    else{
+        if($size <= 15)
+            $price = 31;
+        elseif($size >= 16 && $size <= 20)
+            $price = 34;
+        elseif($size >= 21 && $size <= 25)
+            $price = 32;
+        elseif($size >= 28 && $size <= 31)
+            $price = 33;
+        elseif($size >= 40 && $size <= 45)
+            $price = 34;
+        elseif($size > 45)
+            $price = 34;
+    }
+
+    if($size/45 > 1){
+        $additional = 32 * (int)ceil($size/45);
+    }
+
+    return [$price , $additional];
 }
 
 function getCubeSize($total)
