@@ -10,6 +10,19 @@ class TestAmirController extends Controller
 
     public function index2(){
 
-        dd(getCubeSizeTax(52));
+        $rand = rand(12 , 500);
+
+        $ok = getCubeSizeTax($rand);
+
+        echo 'Estimated Fees for CUBE: '.$rand;
+
+        echo '</br> ';
+
+        echo 'Additional Fees: '.$ok[0];
+
+        echo '</br> ';
+
+        echo 'Tax: '.$ok[1];
+        
     }
 }
