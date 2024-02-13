@@ -43,7 +43,7 @@ function getCubeSizeTax($size){
     }
 
     if($size/45 > 1){
-        $additional = 32 * (int)ceil($size/45);
+        $additional = 32 * ((int)ceil($size/45) - 1);
     }
 
     return [$additional , $tax];
