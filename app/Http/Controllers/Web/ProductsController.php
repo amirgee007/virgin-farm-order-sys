@@ -231,13 +231,14 @@ class ProductsController extends Controller
             OrderItem::create($item);
         }
 
+        $totalCubeTax = getCubeSizeTax($size);
         #sub_total	discount	tax		total
         $order->update([
             'sub_total' => $total,
             'discount' => 0,
             'tax' => 0,
-            'shipping_cost' => 0,
-            'total' => $total,
+            'shipping_cost' => $totalCubeTax,
+            'total' => $total+$totalCubeTax,
         ]);
 
         #dd($order->items);

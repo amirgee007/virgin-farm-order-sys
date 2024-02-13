@@ -18,11 +18,7 @@ class TestAmirController extends Controller
 
         echo '</br> ';
 
-        echo 'Additional Fees: '.$ok[0];
-
-        echo '</br> ';
-
-        echo 'Tax: '.$ok[1];
+        echo 'Service/Transportation: '.$ok;
 
     }
 }

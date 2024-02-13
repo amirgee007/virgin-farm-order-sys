@@ -20,7 +20,7 @@
     @endforeach
     | <strong>Summary</strong>   |    |  |  |
     |    |    |  <small>Subtotal:</small>| <small>${{$order->total }}</small> |
-    |    |    |  <small>Estimated Additional Charges:</small>| <small>$00</small> |
+    |    |    |  <small>Service/Transportation:</small>| <small>${{$order->shipping_cost}}</small> |
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
     |    |    |     Total             | <small>${{$order->total }}</small> |
     @endif

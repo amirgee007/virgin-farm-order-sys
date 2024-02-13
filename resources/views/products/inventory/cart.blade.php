@@ -173,9 +173,9 @@
                         <tr>
                             <td colspan="5" class="text-right"><h4><strong>Order Subtotal: ${{ $total }}</strong></h4></td>
                         </tr>
-
+                        @php $totalCubeTax = getCubeSizeTax($size);  @endphp
                         <tr>
-                            <td colspan="5" class="text-right"><h4><strong>Ex Additional Charges: $0</strong></h4></td>
+                            <td colspan="5" class="text-right"><h4><strong>Service/Transportation: ${{$totalCubeTax}}</strong></h4></td>
                         </tr>
 
                         <tr>
@@ -183,7 +183,7 @@
                         </tr>
 
                         <tr>
-                            <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total }}</strong></h3></td>
+                            <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total+$totalCubeTax }}</strong></h3></td>
                         </tr>
 
                         <tr>

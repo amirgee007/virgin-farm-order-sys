@@ -46,7 +46,8 @@ function getCubeSizeTax($size){
         $additional = 32 * ((int)ceil($size/45) - 1);
     }
 
-    return [$additional , $tax];
+    #return [$additional , $tax];
+    return $additional + $tax;
 }
 
 function getCubeSize($total)
