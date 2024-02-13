@@ -121,7 +121,7 @@ class ProductsController extends Controller
         $quantity = $request->quantity;
 
         $product = Product::where('id',$id)->first();
-        
+
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = getPrices()[auth()->user()->price_list];
@@ -417,8 +417,10 @@ class ProductsController extends Controller
 
     public function uploadInventory(Request $request)
     {
+        #reset and delete zero qty products
+        $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
 
-       $dates =  dateRangeConverter($request->range);
+        $dates =  dateRangeConverter($request->range);
 
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
