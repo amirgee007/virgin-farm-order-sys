@@ -8,9 +8,9 @@ use Vanguard\Http\Controllers\Controller;
 class TestAmirController extends Controller
 {
 
-    public function index2(){
+    public function index2($value = 0){
 
-        $rand = rand(12 , 500);
+        $rand = $value ? $value : rand(12 , 500);
 
         $ok = getCubeSizeTax($rand);
 
@@ -23,6 +23,6 @@ class TestAmirController extends Controller
         echo '</br> ';
 
         echo 'Tax: '.$ok[1];
-        
+
     }
 }
