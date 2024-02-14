@@ -18,6 +18,18 @@ function getPrices(){
     ];
 }
 
+function getSalesReps(){
+    #if any change plz check this too 1,2,3 getCubeSizeTax
+    return [
+        '0' => 'Select',
+        'Mario' => 'Mario',
+        'Robert' => 'Robert',
+        'Joe' => 'Joe',
+        'Nestor' => 'Nestor',
+        'Peter' => 'Peter',
+    ];
+}
+
 function getCubeSizeTax($size){
 
     $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii

@@ -40,7 +40,8 @@ class UsersController extends Controller
 
         $statuses = ['' => __('All')] + UserStatus::lists();
 
-        return view('user.list', compact('users', 'statuses' , 'carriers' , 'prices'));
+        $salesRep = getSalesReps();
+        return view('user.list', compact('users', 'statuses' , 'carriers' , 'prices' , 'salesRep'));
     }
 
     /**
@@ -68,6 +69,7 @@ class UsersController extends Controller
             'countries' => $this->parseCountries($countryRepository),
             'roles' => $roleRepository->lists(),
             'statuses' => UserStatus::lists(),
+            'salesRep' => getSalesReps(),
             'carriers' => getCarriers(),
             'states' => getStates(),
             'terms' => getTerms(),
@@ -135,6 +137,7 @@ class UsersController extends Controller
             'countries' => $this->parseCountries($countryRepository),
             'roles' => $roleRepository->lists(),
             'statuses' => UserStatus::lists(),
+            'salesRep' => getSalesReps(),
             'carriers' => getCarriers(),
             'prices' => getPrices(),
             'states' => getStates(),

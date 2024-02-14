@@ -35,6 +35,11 @@
             <input type="text" class="form-control input-solid" id="customer_number"
                    name="customer_number" placeholder="@lang('Customer Number')" value="{{ $edit ? $user->customer_number : 0 }}">
         </div>
+
+        <div class="form-group">
+            <label for="sales_rep">@lang('Sales Rep')</label>
+            {!! Form::select('sales_rep', $salesRep, $edit ? $user->sales_rep : '', ['class' => 'form-control input-solid', 'id' => 'sales_rep']) !!}
+        </div>
     </div>
 
 
