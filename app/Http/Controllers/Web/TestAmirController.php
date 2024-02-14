@@ -14,6 +14,13 @@ class TestAmirController extends Controller
 
         $ok = getCubeSizeTax($rand);
 
+        $additional = 12.344;
+        $tax = 12.344;
+        
+        dd(round($additional + $tax , 2));
+
+        dd($ok);
+
         echo 'Estimated Fees for CUBE: '.$rand;
 
         echo '</br> ';

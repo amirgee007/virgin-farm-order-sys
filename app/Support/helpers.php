@@ -47,7 +47,7 @@ function getCubeSizeTax($size){
     }
 
     #return [$additional , $tax];
-    return $additional + $tax;
+    return round($additional + $tax , 2);
 }
 
 function getCubeSize($total)
