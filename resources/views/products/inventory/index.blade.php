@@ -165,7 +165,7 @@
                                 <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>
                                 <th class="min-width-80" title="Size of the item">@lang('Size')</th>
                                 <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
-                                <th class="min-width-80">@lang('Actions')</th>
+                                <th class="min-width-100">@lang('Actions')</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -206,7 +206,7 @@
                                                 @if($priceNow)
                                                     <button type="submit" class="btn btn-icon"><i
                                                             title="@lang('Add product to cart')" data-toggle="tooltip"
-                                                            data-placement="top"
+                                                            data-placement="left"
                                                             class="fas fa-plus-circle "></i>
                                                     </button>
                                                 @endif
