@@ -66,7 +66,7 @@ function getCubeSizeTax($size){
             $extraTax = 2;
         }
 
-        if($salesRepExtraa)
+        if($salesRepExtra)
             $tax = $tax + $extraTax;
     }
 
