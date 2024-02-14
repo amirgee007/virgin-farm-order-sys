@@ -208,10 +208,10 @@ class ProductsController extends Controller
         $total = $size = 0;
         $items = [];
         foreach ($carts as $id => $details){
-            $product = Product::where('id',$id)->first();
+            $productQty = ProductQuantity::where('id',$id)->first();
 
-            if($product)
-                $product->decrement('quantity', $details['quantity']); #TODO if we need STOCK history change
+            if($productQty)
+                $productQty->decrement('quantity', $details['quantity']); #TODO if we need STOCK history change
 
             $total += $details['price'] * $details['quantity'] * $details['stems'];
             $size += $details['size'] * $details['quantity'];
