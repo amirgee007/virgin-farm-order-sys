@@ -192,7 +192,7 @@
 
                                 <a href="{{ route('checkout.cart') }}"
                                    class="btn btn-primary"
-                                   title="@lang('Delete Box')"
+                                   title="@lang('Checkout and Confirm the Order')"
                                    data-toggle="tooltip"
                                    data-placement="top"
                                    data-method="GET"
@@ -274,7 +274,7 @@
             if(confirm("Are you sure want to remove?")) {
                 $.ajax({
                     url: '{{ route('remove.from.cart') }}',
-                    method: "DELETE",
+                    method: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
                         id: ele.parents("tr").attr("data-id")

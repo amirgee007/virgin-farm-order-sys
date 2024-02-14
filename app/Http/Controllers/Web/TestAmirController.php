@@ -16,7 +16,7 @@ class TestAmirController extends Controller
 
         $additional = 12.344;
         $tax = 12.344;
-        
+
         dd(round($additional + $tax , 2));
 
         dd($ok);
