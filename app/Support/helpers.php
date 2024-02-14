@@ -52,6 +52,9 @@ function getCubeSizeTax($size){
             $tax = 34;
         elseif($size > 45)
             $tax = 34;
+
+        if(auth()->user()->sales_rep)
+            $tax = $tax + 1;
     }
 
     if($size/45 > 1){
