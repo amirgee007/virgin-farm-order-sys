@@ -33,6 +33,7 @@ function getSalesReps(){
 function getCubeSizeTax($size){
 
     $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii
+    $salesRepExtra = in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']);
 
     $tax = $additional = $extraTax = 0;
     if($priceName == 2){
@@ -65,13 +66,18 @@ function getCubeSizeTax($size){
             $extraTax = 2;
         }
 
-        if(in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']))
+        if($salesRepExtraa)
             $tax = $tax + $extraTax;
     }
 
     if($size/45 > 1){
         $countMore45 = ((int)ceil($size/45) - 1);
         $additional = 32 * $countMore45;
+
+        if($salesRepExtra)
+            $additional = 33 * $countMore45;
+        else
+            $additional = 32 * $countMore45;
     }
 
     #return [$additional , $tax];

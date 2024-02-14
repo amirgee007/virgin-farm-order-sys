@@ -13,7 +13,7 @@ class TestAmirController extends Controller
         $rand = $value ? $value : rand(12 , 500);
 
         $ok = getCubeSizeTax($rand);
-        
+
         echo 'Estimated Fees for CUBE: '.$rand;
 
         echo '</br> ';
