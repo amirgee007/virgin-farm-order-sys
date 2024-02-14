@@ -34,31 +34,44 @@ function getCubeSizeTax($size){
 
     $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii
 
-    $tax = $additional = 0;
+    $tax = $additional = $extraTax = 0;
     if($priceName == 2){
         $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
     }
     #FedEx /HI&AK Fee Charges
     else{
-        if($size <= 15)
+        if($size <= 15){
             $tax = 31;
-        elseif($size >= 16 && $size <= 20)
+            $extraTax = 1;
+        }
+        elseif($size >= 16 && $size <= 20){
             $tax = 34;
-        elseif($size >= 21 && $size <= 25)
+            $extraTax = 1;
+        }
+        elseif($size >= 21 && $size <= 25) {
             $tax = 32;
-        elseif($size >= 28 && $size <= 31)
+            $extraTax = 1;
+        }
+        elseif($size >= 28 && $size <= 31) {
             $tax = 33;
-        elseif($size >= 40 && $size <= 45)
+            $extraTax = 1;
+        }
+        elseif($size >= 40 && $size <= 45) {
             $tax = 34;
-        elseif($size > 45)
+            $extraTax = 1.50;
+        }
+        elseif($size > 45) {
             $tax = 34;
+            $extraTax = 2;
+        }
 
-        if(auth()->user()->sales_rep)
-            $tax = $tax + 1;
+        if(in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']))
+            $tax = $tax + $extraTax;
     }
 
     if($size/45 > 1){
-        $additional = 32 * ((int)ceil($size/45) - 1);
+        $countMore45 = ((int)ceil($size/45) - 1);
+        $additional = 32 * $countMore45;
     }
 
     #return [$additional , $tax];
