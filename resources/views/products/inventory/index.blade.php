@@ -204,9 +204,10 @@
 
                                             <td class="align-middle">
                                                 @if($priceNow)
-                                                    <button type="submit" class="btn btn-icon"
+                                                    <button type="submit" class="btn btn-icon"><i
                                                             title="@lang('Add product to cart')" data-toggle="tooltip"
-                                                            data-placement="top"><i class="fas fa-plus-circle "></i>
+                                                            data-placement="top"
+                                                            class="fas fa-plus-circle "></i>
                                                     </button>
                                                 @endif
                                                 {{--<a href="" class="btn btn-icon add-to-cart"--}}
