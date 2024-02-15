@@ -48,7 +48,7 @@
                 <div class="card-body mt-0 p-3">
 
                     <div class="notes-success" style="">
-                        <p>Total products are in the system are.
+                        <p>Total Orders are in the system are.
                             <b>
                                 {{$count}}
                             </b>
