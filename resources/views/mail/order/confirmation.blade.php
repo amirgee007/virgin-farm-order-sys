@@ -28,7 +28,7 @@
 
 # Total Boxes: {{count($order->items)}}
 
-Your sales reperentative wil contact you to confirm your online order.
+Your sales reperentative will contact you to confirm your online order.
 
 If you have any questions, feel free to contact us.
 ##### sales@virginfarms.net
