@@ -163,6 +163,7 @@
 
                         @php
                             $cubeSize = getCubeSize($size);
+                            $total = number_format($total , 2);
                         @endphp
 
                         @if($cubeSize)
