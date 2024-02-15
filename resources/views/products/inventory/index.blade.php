@@ -152,7 +152,6 @@
                         {{--@endpermission--}}
 
                     </div>
-
                     <hr>
                     <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
@@ -232,6 +231,7 @@
                             </tbody>
                         </table>
                     </div>
+                    {!! $products->render() !!}
                 </div>
             </div>
         </div>
