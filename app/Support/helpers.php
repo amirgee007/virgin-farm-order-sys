@@ -8,6 +8,37 @@ function diff4Human($date ){
     return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
 }
 
+function myPriceColumn(){
+
+    $user = auth()->user();
+    $prices = getPrices();
+    $column = $prices[$user->price_list];
+
+    if($column == 2 && in_array($user->carrier_id , [17,23])) #if its FOB then check carrier FedEx OR DLV then use fedex price 23, 17 id
+        $column = 'price_fedex';
+
+    #So logic has to be IF an FOB customer is usually DLV (delivery) but chooses to use FedEx as delivery method, THEN price must change to FedEx
+    #Only that case does the price change =>   FOB customer DLV to FedEx or FedEx to DLV
+
+    return $column;
+}
+
+#For FOB Customers that choose Delivery (DLV) we need a note that states:
+# Delivery charges may apply. At the order summary page and also on the copy of the order total emailed to them.
+function isDeliveryChargesApply(){
+
+    $user = auth()->user();
+    $prices = getPrices();
+    $column = $prices[$user->price_list];
+
+    $note = null;
+    if($column == 2 && in_array($user->carrier_id , [17]))
+        $note = 'Delivery charges may apply';
+
+    return $note;
+}
+
+
 function getPrices(){
     #if any change plz check this too 1,2,3 getCubeSizeTax
     return [

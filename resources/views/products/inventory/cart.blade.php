@@ -185,7 +185,13 @@
 
                         <tr>
                             <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total+$totalCubeTax }}</strong></h3></td>
+
                         </tr>
+                        @if(isDeliveryChargesApply())
+                        <tr>
+                            <td colspan="5" class="text-center text-danger">**Delivery charges may apply</td>
+                        </tr>
+                        @endif
 
                         <tr>
                             <td colspan="5" class="text-right">

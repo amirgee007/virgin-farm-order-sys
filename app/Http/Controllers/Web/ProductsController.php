@@ -88,7 +88,7 @@ class ProductsController extends Controller
             ]);
         }
 
-        $priceCol = getPrices()[auth()->user()->price_list];
+        $priceCol = myPriceColumn();
 
         return view('products.inventory.index', compact(
             'products',
@@ -125,7 +125,7 @@ class ProductsController extends Controller
 
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
-        $priceCol = getPrices()[auth()->user()->price_list];
+        $priceCol = myPriceColumn();
 
         $cart = session()->get('cart', []);
 

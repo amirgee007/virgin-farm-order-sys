@@ -23,6 +23,9 @@
     |    |    |  <small>Service/Transportation:</small>| <small>${{$order->shipping_cost}}</small> |
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
     |    |    |     Total             | <small>${{$order->total }}</small> |
+    @if(isDeliveryChargesApply())
+    |    |    |      <small>**Delivery charges may apply</small> |     |
+    @endif
     @endif
 @endcomponent
 
