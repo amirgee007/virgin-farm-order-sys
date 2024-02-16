@@ -29,7 +29,7 @@
     @endif
 @endcomponent
 
-# Total Boxes: {{count($order->items)}}
+# Total Units: {{$order->countQty()}}
 
 Your sales reperentative will contact you to confirm your online order.
 

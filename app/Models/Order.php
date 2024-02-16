@@ -29,4 +29,9 @@ class Order extends Model
     {
         return $this->hasOne(Carrier::class , 'id' , 'carrier_id');
     }
+
+    public function countQty()
+    {
+        return $this->items()->sum('quantity');
+    }
 }
