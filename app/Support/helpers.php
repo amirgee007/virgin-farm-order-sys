@@ -72,25 +72,25 @@ function getCubeSizeTax($size){
     }
     #FedEx /HI&AK Fee Charges
     else{
-        if($size <= 15){
+        if($size >= 13 && $size <= 16){
             $tax = 31;
             $extraTax = 1;
         }
-        elseif($size >= 16 && $size <= 20){
+        elseif($size >= 18 && $size <= 21) {
             $tax = 34;
             $extraTax = 1;
         }
-        elseif($size >= 21 && $size <= 25) {
+        elseif($size >= 22 && $size <= 25) {
             $tax = 32;
             $extraTax = 1;
         }
-        elseif($size >= 28 && $size <= 31) {
+        elseif($size >= 27 && $size <= 30) {
             $tax = 33;
             $extraTax = 1;
         }
         elseif($size >= 40 && $size <= 45) {
             $tax = 34;
-            $extraTax = 1.50;
+            $extraTax = 2;
         }
         elseif($size > 45) {
             $tax = 34;
