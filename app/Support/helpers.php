@@ -14,10 +14,10 @@ function myPriceColumn(){
     $prices = getPrices();
     $column = $prices[$user->price_list];
 
-    if($column == 2 && in_array($user->carrier_id , [17,23])) #if its FOB then check carrier FedEx OR DLV then use fedex price 23, 17 id
+    if($column == 2 && in_array($user->carrier_id , [17])) #if its FOB then check carrier FedEx OR DLV then use fedex price 23, 17 id
         $column = 'price_fedex';
 
-    #So logic has to be IF an FOB customer is usually DLV (delivery) but chooses to use FedEx as delivery method, THEN price must change to FedEx
+    #So logic has to be IF an FOB customer is usually DLV (delivery) but if chooses to use FedEx as delivery method, THEN price must change to FedEx
     #Only that case does the price change =>   FOB customer DLV to FedEx or FedEx to DLV
 
     return $column;
