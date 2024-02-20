@@ -19,7 +19,7 @@
     | {{$item->name}}  |<small>{{$item->quantity}}</small> &nbsp;| <small>${{$item->price}}</small>|<small>{{$item->stems}}</small>|<small>${{$item->sub_total}}</small>|
     @endforeach
     | <strong>Summary</strong>   |    |  |  |
-    |    |    |  <small>Subtotal:</small>| <small>${{$order->total }}</small> |
+    |    |    |  <small>Subtotal:</small>| <small>${{$order->sub_total }}</small> |
     |    |    |  <small>Service/Transportation:</small>| <small>${{$order->shipping_cost}}</small> |
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
     |    |    |     Total             | <small>${{$order->total }}</small> |

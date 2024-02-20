@@ -232,19 +232,24 @@ class ProductsController extends Controller
             OrderItem::create($item);
         }
 
+
         $totalCubeTax = getCubeSizeTax($size);
+        $total = $total+$totalCubeTax;
+
         #sub_total	discount	tax		total
         $order->update([
             'sub_total' => $total,
             'discount' => 0,
             'tax' => 0,
             'shipping_cost' => $totalCubeTax,
-            'total' => ($total+$totalCubeTax),
+            'total' => $total,
         ]);
 
-        $order->fresh();
+        $order->refresh();
         #dd($order->items);
         #$content = "decreased otherwise increased."; E-Commerce Checkout - Virgin Farms Inc. / PB W831718
+
+        Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
         $subject = "E-Commerce Checkout - Virgin Farms Inc. / Order: WO".$order->id;
 
