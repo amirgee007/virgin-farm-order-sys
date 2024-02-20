@@ -96,6 +96,7 @@
                                 <div class="input-group custom-search-form">
 
                                     <input type="date"
+                                           min="<?php echo date("Y-m-d"); ?>"
                                            class="form-control rounded"
                                            id="date_shipped"
                                            name="date_shipped"
