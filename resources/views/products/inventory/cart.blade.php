@@ -162,13 +162,13 @@
                         <tfoot>
 
                         @php
-                            $cubeSize = getCubeSize($size);
+                            $cubeSizes = getCubeSize($size);
                             $total = number_format($total , 2);
                         @endphp
 
-                        @if($cubeSize)
+                        @if($cubeSizes)
                         <tr>
-                            <td colspan="5" class="text-center text-primary"><h4>Selected Cube is {{$cubeSize->description}} with size : {{$size}}</h4></td>
+                            <td colspan="5" class="text-center text-primary"><h4>Selected Cube  {{implode(', ' ,$cubeSizes)}} with size : {{$size}}</h4></td>
                         </tr>
 
                         <tr>
@@ -216,7 +216,6 @@
 
                                 <td colspan="5" class="text-center text-danger ">
                                     <h3><strong>You are not matching with cube size please select few more flowers i.e size now {{$size}}</strong></h3>
-
                                     <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
                                 </td>
                             </tr>

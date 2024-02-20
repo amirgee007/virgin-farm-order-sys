@@ -115,16 +115,36 @@ function getCubeSizeTax($size){
     return round($additional + $tax , 2);
 }
 
+function divideIntoGroupMax($number, $groupSize = 45) {
+    $result = [];
+
+    while ($number > 0) {
+        $group = min($number, $groupSize);
+        $result[] = $group;
+        $number -= $group;
+    }
+
+    return $result;
+}
+
 function getCubeSize($total)
 {
-    #check cube ranges if match then good otherwise check if its largest
-    $found = Box::where('min_value' , '<=' ,$total)->where('max_value' , '>=' , $total)->first();
-    if(is_null($found)){
-        $max = Box::orderBy('max_value' , 'desc')->first();
-        if($max && $max->max_value <= $total)
-            $found = $max;
+    $maxValue = 45;
+    $max = Box::orderBy('max_value' , 'desc')->first();
+    if($max && $max->max_value)
+        $maxValue = $max->max_value;
+
+    #logic is check if less than 45 then check the limit between all current boxes otherwise devide into 45, 45 and then check all.
+    $values = $total > $maxValue ? divideIntoGroupMax($total , $maxValue) : [$total];
+    $matched = [];
+
+    foreach ($values as $value){
+        $found = Box::where('min_value' , '<=' ,$value)->where('max_value' , '>=' , $value)->first();
+        if($found)
+            $matched[] = $found->description;
     }
-    return $found;
+
+    return count($values) == count($matched) ? $matched : null;
 }
 
 function getCarriers(){
