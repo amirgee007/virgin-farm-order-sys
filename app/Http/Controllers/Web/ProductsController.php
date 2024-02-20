@@ -242,10 +242,11 @@ class ProductsController extends Controller
             'total' => ($total+$totalCubeTax),
         ]);
 
+        $order->fresh();
         #dd($order->items);
         #$content = "decreased otherwise increased."; E-Commerce Checkout - Virgin Farms Inc. / PB W831718
 
-        $subject = "E-Commerce Checkout - Virgin Farms Inc. / Order: ".$order->id;
+        $subject = "E-Commerce Checkout - Virgin Farms Inc. / Order: WO".$order->id;
 
         \Mail::to($user->email)
             ->cc(['sales@virginfarms.net'])

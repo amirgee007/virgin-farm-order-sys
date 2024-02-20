@@ -1,5 +1,5 @@
 <tr data-toggle="collapse" data-target="#accordion{{$order->id}}" class="clickable">
-    <td class="align-middle">{{ $order->id }}</td>
+    <td class="align-middle">WO{{ $order->id }}</td>
 
     <td class="align-middle">{{ $order->name }}</td>
 

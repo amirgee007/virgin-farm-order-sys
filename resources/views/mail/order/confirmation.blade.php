@@ -16,7 +16,7 @@
     | :--------------- | :----------  | :---------- | :---------- | :---------- |
     @if(count($order->items))
     @foreach($order->items AS $item)
-    | {{$item->name}}  |<small>{{$item->quantity}}</small> &nbsp;| <small>${{$item->price}} * {{$item->quantity}}* {{$item->stems}}</small>|<small>{{$item->stems}}</small>|<small>${{$item->sub_total}}</small>|
+    | {{$item->name}}  |<small>{{$item->quantity}}</small> &nbsp;| <small>${{$item->price}}</small>|<small>{{$item->stems}}</small>|<small>${{$item->sub_total}}</small>|
     @endforeach
     | <strong>Summary</strong>   |    |  |  |
     |    |    |  <small>Subtotal:</small>| <small>${{$order->total }}</small> |
