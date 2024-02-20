@@ -104,7 +104,7 @@
                                            data-toggle="tooltip"
                                            value="{{ $date_shipped }}">
 
-                                    <select class="form-control rounded ml-3" name="category" id="category_id">
+                                    <select class="form-control rounded ml-3" name="category" id="category">
                                         <option selected value="">All Categories</option>
                                         @foreach($categories AS $key => $val)
                                             <option value="{{$key}}"
@@ -114,6 +114,7 @@
                                     </select>
 
                                     <input type="text"
+                                           id="searching"
                                            class="form-control rounded ml-2"
                                            placeholder="Search by name, item, variety, grade, color"
                                            name="searching"
@@ -224,7 +225,7 @@
                             @else
                                 <tr>
                                     <td colspan="12" style="text-align: center">
-                                        <b class="text-danger">@lang('Choose a Ship date to shop available inventory.')</b>
+                                        <b class="text-danger noRecordText">Choose a Ship date to shop available inventory.</b>
                                     </td>
                                 </tr>
                             @endif
@@ -266,7 +267,7 @@
             $('#largeImgModal').modal('show');
         });
 
-        $('#date_shipped, #category_id').change(function () {
+        $('#date_shipped, #category').change(function () {
             var date = $(this).val();
             $("#filters-form").submit();
         });
@@ -285,7 +286,6 @@
             });
 
         });
-
 
         $('#changeCarrier').on('change', function () {
             var carrier_id = this.value;
@@ -329,7 +329,7 @@
         });
 
 
-        //        #later when need to make it more accurate VIA AJAX
+        //#later when need to make it more accurate VIA AJAX
         {{--$(".add-to-cart").click(function (event) {--}}
 
         {{--var _this = $(this);--}}
@@ -355,5 +355,32 @@
         {{--});--}}
 
         {{--});--}}
+
+        $( document ).ready(function(){
+
+            const searchParams = new URLSearchParams(window.location.search);
+
+            ['date_shipped' , 'category' , 'searching'].forEach(function(item) {
+
+                var exist = searchParams.has(item);
+                if(exist){
+                    let param = searchParams.get(item);
+                    let id = '#'+item;
+
+                    if(param){
+                        var value = $(id).val();
+                        if(item == 'category')
+                            var value = $(id).find(":selected").text();
+
+                        if(item == 'date_shipped')
+                            item = 'date';
+                        var valueHere = 'Not available for '+ item +' '+ value;
+
+                        $('.noRecordText').text(valueHere);
+                    }
+                }
+            });
+        });
+
     </script>
 @endsection

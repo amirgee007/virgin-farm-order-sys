@@ -76,7 +76,7 @@ class ProductsController extends Controller
         }
 
         $carriers = getCarriers();
-        $categories = Category::pluck('description', 'category_id')->toArray();
+        $categories = Category::query()->orderBy('description')->pluck('description', 'category_id')->toArray();
         $products = (clone $query)->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,quantity,weight,size,price_fob,price_fedex,price_hawaii')
             ->paginate(150);
 
