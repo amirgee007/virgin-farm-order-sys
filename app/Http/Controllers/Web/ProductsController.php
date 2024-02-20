@@ -239,7 +239,7 @@ class ProductsController extends Controller
             'discount' => 0,
             'tax' => 0,
             'shipping_cost' => $totalCubeTax,
-            'total' => $total+$totalCubeTax,
+            'total' => ($total+$totalCubeTax),
         ]);
 
         #dd($order->items);
