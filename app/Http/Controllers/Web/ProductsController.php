@@ -234,7 +234,7 @@ class ProductsController extends Controller
 
 
         $totalCubeTax = getCubeSizeTax($size);
-        $total = $total+$totalCubeTax;
+        $totalWithTax = $total+$totalCubeTax;
 
         #sub_total	discount	tax		total
         $order->update([
@@ -242,7 +242,7 @@ class ProductsController extends Controller
             'discount' => 0,
             'tax' => 0,
             'shipping_cost' => $totalCubeTax,
-            'total' => $total,
+            'total' => $totalWithTax,
         ]);
 
         $order->refresh();
