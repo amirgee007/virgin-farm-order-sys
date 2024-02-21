@@ -144,7 +144,7 @@ function getCubeSize($total)
             $matched[] = $found->description;
     }
 
-    return count($values) == count($matched) ? $matched : null;
+    return (count($values) == count($matched)) ? $matched : null;
 }
 
 function getCarriers(){

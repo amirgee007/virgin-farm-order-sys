@@ -12,6 +12,7 @@ class TestAmirController extends Controller
 
         $result = getCubeSize($value);
 
+        dd($result);
         dd(implode(', ' ,$result));
         if ($result !== null) {
             echo "$valueToCheck is within the valid range.";
