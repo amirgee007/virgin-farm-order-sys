@@ -1,6 +1,8 @@
 <div class="card widget">
     <div class="card-body">
-        <div class="row">
+        <a href="{{route('users.index')}}" target="_blank"
+           title="@lang('Click to see new users')" data-toggle="tooltip" data-placement="bottom" >
+            <div class="row">
             <div class="p-3 text-success flex-1">
                 <i class="fa fa-user-plus fa-3x"></i>
             </div>
@@ -10,5 +12,6 @@
                 <div class="text-muted">@lang('New Users')</div>
             </div>
         </div>
+        </a>
     </div>
 </div>

@@ -163,8 +163,7 @@ class EloquentUser implements UserRepository
      */
     public function newUsersCount()
     {
-        return User::whereBetween('created_at', [Carbon::now()->firstOfMonth(), Carbon::now()])
-            ->count();
+        return User::whereBetween('created_at', [Carbon::now()->firstOfMonth(), Carbon::now()])->count();
     }
 
     /**
