@@ -105,6 +105,9 @@ class LoginController extends Controller
 
         event(new LoggedIn);
 
+        if($user->role_id == 2)
+            return redirect()->to(route('inventory.index'));
+
         if ($request->has('to')) {
             return redirect()->to($request->get('to'));
         }
