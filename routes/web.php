@@ -141,10 +141,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'OrdersController@index'
         ]);
 
-//        Route::post('/carriers-create-update', [
-//            'as' => 'carriers.create.update',
-//            'uses' => 'CarriersController@createAndUpdate'
-//        ]);
+        Route::get('/order-update/{id}/{type?}', [
+            'as' => 'orders.update',
+            'uses' => 'OrdersController@updateOrder'
+        ]);
     });
 
     Route::group(['prefix'=>'boxes'], function() {

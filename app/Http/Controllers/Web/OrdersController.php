@@ -4,6 +4,7 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Order;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Support\Enum\UserStatus;
@@ -53,5 +54,32 @@ class OrdersController extends Controller
 
         $orders = $query->paginate(100);
         return view('orders.index' , compact('orders','count' , 'user_id' , 'users'));
+    }
+
+    public function updateOrder($id, $type){
+        #markCompeted, #sendEmail, #delete
+
+        $order = Order::find($id);
+
+        if($type == 'markCompeted'){
+            $order->update([
+                'is_active' => 0
+            ]);
+        }
+        if($type == 'sendEmail'){
+            $user = User::where('id' , $order->user_id)->first();
+
+            \Mail::to($user->email)
+                ->cc(['sales@virginfarms.net'])
+                ->bcc(['amirseersol@gmail.com'])
+                ->send(new OrderConfirmationMail($order , $user));
+        }
+        if($type == 'delete'){
+            $order->delete();
+        }
+
+        session()->flash('app_message', 'The order has been updated successfully.');
+        return back();
+
     }
 }

@@ -254,12 +254,10 @@ class ProductsController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
-        $subject = "E-Commerce Checkout - Virgin Farms Inc. / Order: WO".$order->id;
-
         \Mail::to($user->email)
             ->cc(['sales@virginfarms.net'])
             ->bcc(['amirseersol@gmail.com'])
-            ->send(new OrderConfirmationMail($order , $subject , $user));
+            ->send(new OrderConfirmationMail($order , $user));
 
         session()->put('cart', []);
         session()->flash('success', 'Your order has been recived successfully. You will be notified soon.');

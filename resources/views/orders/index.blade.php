@@ -24,8 +24,8 @@
     }
     .orders-list-table {
         font-weight: 400 !important;
-        font-size: 14px !important;
-        line-height: 1.428571429 !important;
+        font-size: 12px !important;
+        line-height: 1.328571429 !important;
     }
     button {
         font-size: 12px !important;
@@ -100,6 +100,7 @@
                                 <th class="min-width-80">@lang('Size')</th>
                                 <th class="min-width-80">@lang('Status')</th>
                                 <th class="min-width-80">@lang('Created')</th>
+                                <th class="min-width-80">@lang('Action')</th>
 
                             </tr>
                             </thead>
