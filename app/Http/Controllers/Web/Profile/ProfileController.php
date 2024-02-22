@@ -40,7 +40,7 @@ class ProfileController extends Controller
         $prices = getPrices();
         $states= getStates();
         $terms = getTerms();
-
+        $salesRep = getSalesReps();
 
         return view('user.profile', [
             'user' => auth()->user(),
@@ -53,6 +53,7 @@ class ProfileController extends Controller
             'prices' => $prices,
             'states' => $states,
             'terms' => $terms,
+            'salesRep' => $salesRep,
         ]);
     }
 }

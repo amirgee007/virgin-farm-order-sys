@@ -167,33 +167,35 @@
                         @endphp
 
                         @if($cubeSizes)
-                        <tr>
-                            <td colspan="5" class="text-center text-primary"><h4>Selected Cube  {{implode(', ' ,$cubeSizes)}} with size : {{$size}}</h4></td>
-                        </tr>
+                            @if(is_array($cubeSizes))
+                                <tr>
+                                    <td colspan="5" class="text-center text-primary"><h4>Selected Cube  {{implode(', ' ,$cubeSizes)}} with size : {{$size}}</h4></td>
+                                </tr>
+                            @endif
 
-                        <tr>
-                            <td colspan="5" class="text-right"><h4><strong>Order Subtotal: ${{ $total }}</strong></h4></td>
-                        </tr>
-                        @php $totalCubeTax = getCubeSizeTax($size);  @endphp
-                        <tr>
-                            <td colspan="5" class="text-right"><h4><strong>Service/Transportation: ${{$totalCubeTax}}</strong></h4></td>
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-right"><h4><strong>Order Subtotal: ${{ $total }}</strong></h4></td>
+                            </tr>
+                            @php $totalCubeTax = getCubeSizeTax($size);  @endphp
+                            <tr>
+                                <td colspan="5" class="text-right"><h4><strong>Service/Transportation: ${{$totalCubeTax}}</strong></h4></td>
+                            </tr>
 
-                        <tr>
-                            <td colspan="5" class="text-right"><h4><strong>Tax $0</strong></h4></td>
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-right"><h4><strong>Tax $0</strong></h4></td>
+                            </tr>
 
-                        <tr>
-                            <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total+$totalCubeTax }}</strong></h3></td>
+                            <tr>
+                                <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $total + $totalCubeTax }}</strong></h3></td>
 
-                        </tr>
-                        @if(isDeliveryChargesApply())
-                        <tr>
-                            <td colspan="5" class="text-center text-danger">**Delivery charges may apply</td>
-                        </tr>
-                        @endif
+                            </tr>
+                            @if(isDeliveryChargesApply())
+                            <tr>
+                                <td colspan="5" class="text-center text-danger">**Delivery charges may apply</td>
+                            </tr>
+                            @endif
 
-                        <tr>
+                            <tr>
                             <td colspan="5" class="text-right">
                                 <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
 

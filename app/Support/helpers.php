@@ -12,9 +12,10 @@ function myPriceColumn(){
 
     $user = auth()->user();
     $prices = getPrices();
+
     $column = $prices[$user->price_list];
 
-    if($column == 2 && in_array($user->carrier_id , [17])) #if its FOB then check carrier FedEx OR DLV then use fedex price 23, 17 id
+    if($user->price_list == 2 && in_array($user->carrier_id , [17])) #if its FOB then check carrier FedEx OR DLV then use fedex price 23, 17 id
         $column = 'price_fedex';
 
     #So logic has to be IF an FOB customer is usually DLV (delivery) but if chooses to use FedEx as delivery method, THEN price must change to FedEx
@@ -26,13 +27,10 @@ function myPriceColumn(){
 #For FOB Customers that choose Delivery (DLV) we need a note that states:
 # Delivery charges may apply. At the order summary page and also on the copy of the order total emailed to them.
 function isDeliveryChargesApply(){
-
     $user = auth()->user();
-    $prices = getPrices();
-    $column = $prices[$user->price_list];
-
     $note = null;
-    if($column == 2 && in_array($user->carrier_id , [17]))
+
+    if($user->price_list == 2 && in_array($user->carrier_id , [17]))
         $note = 'Delivery charges may apply';
 
     return $note;
@@ -44,7 +42,7 @@ function getPrices(){
     return [
         0 => 'Select Price',
         1 => 'price_fedex',
-        2 => 'price_fob',
+        2 => 'price_fob', #dont change this ID as its using somewhere.
         3 => 'price_hawaii',
     ];
 }
@@ -62,6 +60,9 @@ function getSalesReps(){
 }
 
 function getCubeSizeTax($size){
+
+    if(checkIfSkipCubeCondition())
+        return 0.00;
 
     $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii
     $salesRepExtra = in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']);
@@ -129,6 +130,10 @@ function divideIntoGroupMax($number, $groupSize = 45) {
 
 function getCubeSize($total)
 {
+    if(checkIfSkipCubeCondition())
+        return true;
+
+    #if customer is Just for FOB when PU is carrier then no need to do the CUBE sizes
     $maxValue = 45;
     $max = Box::orderBy('max_value' , 'desc')->first();
     if($max && $max->max_value)
@@ -147,6 +152,12 @@ function getCubeSize($total)
     return (count($values) == count($matched)) ? $matched : null;
 }
 
+function checkIfSkipCubeCondition()
+{
+    #Just for FOB price when PU is carrier then no need to check cube limits
+    $user = auth()->user();
+    return  ($user->price_list == 2 && $user->carrier_id == 32);
+}
 function getCarriers(){
     return Carrier::pluck('c_code', 'id')->sortBy('c_code')->toArray();
 }
