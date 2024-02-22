@@ -90,6 +90,8 @@ class ProductsController extends Controller
 
         $priceCol = myPriceColumn();
 
+        $boxes = Box::all();
+
         return view('products.inventory.index', compact(
             'products',
             'carriers',
@@ -97,7 +99,8 @@ class ProductsController extends Controller
             'address',
             'priceCol',
             'date_shipped',
-            'user'
+            'user',
+            'boxes'
         ));
     }
 

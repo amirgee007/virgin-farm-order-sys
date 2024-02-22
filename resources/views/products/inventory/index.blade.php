@@ -4,8 +4,9 @@
 @section('page-heading', __('Client Inventory'))
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item text-muted">
-        @lang('Products')
+    <li class="breadcrumb-item text-muted" style="cursor: pointer;" data-toggle="modal" data-target="#boxesModal">
+        @lang('Click to see boxes detail')
+        <i class="fas fa-box"></i>
     </li>
 @stop
 
@@ -257,6 +258,43 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="boxesModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Boxes Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                        <tr>
+                            <th scope="col">Box</th>
+                            <th scope="col">Min</th>
+                            <th scope="col">Max</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($boxes as $box)
+                            <tr>
+                                <td>{{$box->description}}</td>
+                                <td>{{$box->min_value}}</td>
+                                <td>{{$box->max_value}}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('scripts')
