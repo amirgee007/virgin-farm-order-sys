@@ -22,7 +22,8 @@
     <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
     <td class="align-middle">
 
-        @if($order->is_active)
+        @if($isAdmin)
+            @if($order->is_active)
             <a href="{{ route('orders.update', [$order->id , 'markCompeted']) }}"
                class="btn btn-icon"
                title="@lang('Mark order as completed')"
@@ -35,7 +36,6 @@
                 <i class="fas fa-check-square text-primary"></i>
             </a>
         @endif
-
             <a href="{{ route('orders.update', [$order->id , 'sendEmail']) }}"
                class="btn btn-icon"
                title="@lang('Resend copy of the web order')"
@@ -59,6 +59,7 @@
                data-confirm-delete="@lang('Yes, delete it!')">
                 <i class="fas fa-trash text-danger"></i>
             </a>
+         @endif
     </td>
 </tr>
 

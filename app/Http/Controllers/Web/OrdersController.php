@@ -51,9 +51,10 @@ class OrdersController extends Controller
         }
 
         $count = (clone $query)->count();
-
         $orders = $query->paginate(100);
-        return view('orders.index' , compact('orders','count' , 'user_id' , 'users'));
+
+        $isAdmin = myRoleName() == 'Admin';
+        return view('orders.index' , compact('orders','count' , 'user_id' , 'users' , 'isAdmin'));
     }
 
     public function updateOrder($id, $type){

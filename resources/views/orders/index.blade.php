@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('page-title', __('All Orders'))
+@section('page-title', __('My Orders'))
 @section('page-heading', __('All Orders'))
 
 @section('breadcrumbs')
