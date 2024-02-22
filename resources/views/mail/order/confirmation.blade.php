@@ -5,6 +5,7 @@
 ### Customer Name: {{$user->name}}
 ##### Customer Account: {{$user->customer_number}}
 ##### Created On: {{now()->format('m/d/Y h:i:s A')}}
+##### Reference: WO#{{$order->id}}
 --------------------------------------
 ##### Ship Date: {{$order->date_shipped}}
 ##### Carrier: {{@$user->carrier->carrier_name}}
