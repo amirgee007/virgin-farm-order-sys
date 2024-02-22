@@ -149,7 +149,7 @@
                                     <td data-th="Price">${{ $details['price'] }} * {{$details['stems']}}</td>
 {{--                                    <td data-th="Price">{{ $details['size'] }}</td>--}}
                                     <td data-th="Quantity">
-                                        <input type="number" value="{{ $details['quantity'] }}" class="form-control quantity update-cart" />
+                                        <input type="number" max="{{@$details['max_qty']}}" onkeydown="return false" value="{{ $details['quantity'] }}" class="form-control quantity update-cart" />
                                     </td>
                                     <td data-th="Subtotal" class="text-center">${{ $details['price'] * $details['quantity'] * $details['stems'] }}</td>
                                     <td class="actions" data-th="" title="Remove from cat">
@@ -163,7 +163,7 @@
 
                         @php
                             $cubeSizes = getCubeSize($size);
-                            $total = number_format($total , 2);
+                            $total = round2Digit($total);
                         @endphp
 
                         @if($cubeSizes)

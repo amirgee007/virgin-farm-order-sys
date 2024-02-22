@@ -89,7 +89,7 @@
                             <tr>
                                 <th class="min-width-80">@lang('Id')</th>
                                 <th class="min-width-80">@lang('User')</th>
-                                <th class="min-width-80">@lang('Date Shipped')</th>
+                                <th class="min-width-80">@lang('Ship Date')</th>
                                 <th class="min-width-80">@lang('Name')</th>
                                 <th class="min-width-80">@lang('Company')</th>
                                 <th class="min-width-80">@lang('Phone')</th>

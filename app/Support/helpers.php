@@ -4,6 +4,9 @@ use Carbon\Carbon;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 
+function round2Digit($number){
+    return round($number , 2);
+}
 function diff4Human($date ){
     return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
 }
@@ -113,7 +116,7 @@ function getCubeSizeTax($size){
     }
 
     #return [$additional , $tax];
-    return round($additional + $tax , 2);
+    return round2Digit($additional + $tax);
 }
 
 function divideIntoGroupMax($number, $groupSize = 45) {

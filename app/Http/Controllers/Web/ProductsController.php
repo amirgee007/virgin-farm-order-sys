@@ -121,8 +121,7 @@ class ProductsController extends Controller
 
         $quantity = $request->quantity;
 
-        $product = Product::where('id',$id)->first();
-
+        $product = Product::where('id', $id)->first();
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = myPriceColumn();
@@ -142,10 +141,10 @@ class ProductsController extends Controller
                 "image" => $product->image_url,
                 "size" => $product->size,
                 "stems" => $product->stemsCount ? $product->stemsCount->total : 1,
+                "max_qty" => $productInfo->quantity,
                 "time" => now()->toDateTimeString(),
             ];
         }
-
 
         session()->put('cart', $cart);
 
@@ -157,8 +156,12 @@ class ProductsController extends Controller
 
     public function update(Request $request)
     {
+        #$product = Product::where('id', $id)->first();
+        #$productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
+
         if ($request->id && $request->quantity) {
             $cart = session()->get('cart');
+
             $cart[$request->id]["quantity"] = $request->quantity;
             session()->put('cart', $cart);
             session()->flash('success', 'Cart updated successfully');
