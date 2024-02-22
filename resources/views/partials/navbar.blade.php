@@ -62,11 +62,12 @@
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                             <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
                         </div>
-                        @php $total = 0;  $totalQty = 0; @endphp
+                        @php $total = 0;  $totalQty = 0; $size = 0;@endphp
                         @foreach((array) session('cart') as $id => $details)
                             @php
                                 $total += ($details['price'] * $details['quantity'] * $details['stems']);
                                 $totalQty =+ $totalQty + $details['quantity'];
+                                 $size += $details['size'] * $details['quantity'];
                             @endphp
 
                         @endforeach
@@ -88,6 +89,16 @@
                             </div>
                         @endforeach
                     @endif
+                    @php
+                        $cubeSizes = getCubeSize($size);
+                    @endphp
+
+                    @if(is_null($cubeSizes))
+                        <small class="text-danger"><b>Box Capacity Not Met </b></small>
+                    @else
+                        <small class="text-primary"><b>Box Capacity Met</b></small>
+                    @endif
+
                     <div class="row">
                         <div class="col checkout">
                             <a href="{{ route('cart') }}" class="btn btn-primary btn-block p-2">
@@ -96,7 +107,6 @@
                         </div>
 
                         <div class="col checkout">
-
                             <a href="{{ route('remove.from.cart') }}"
                                class="btn btn-danger btn-block p-2"
                                title="@lang('Delete all items from cart?')"

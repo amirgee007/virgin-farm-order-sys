@@ -99,11 +99,11 @@
         }
         .checkout .btn-primary{
             border-radius:35px;
-            height:42px;
+            height:36px;
         }
         .checkout .btn-danger{
             border-radius:35px;
-            height:42px;
+            height:36px;
         }
 
 
@@ -215,7 +215,6 @@
                         </tr>
                         @else
                             <tr>
-
                                 <td colspan="5" class="text-center text-danger ">
                                     <h3><strong>You are not matching with cube size please select few more flowers i.e size now {{$size}}</strong></h3>
                                     <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
