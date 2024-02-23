@@ -336,6 +336,7 @@
                 headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 success: function (response) {
                     toastr.success("Your career has been updated successfully.", "Success");
+                    location.reload();
                 }
             });
 
