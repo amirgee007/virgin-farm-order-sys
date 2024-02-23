@@ -300,6 +300,7 @@
 @section('scripts')
     @include('partials.toaster-js')
     <script>
+
         $('.img-thumbnail').click(function () {
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));
             $('#imagePreviewTitle').text($(this).data('info'));
@@ -326,8 +327,14 @@
 
         });
 
+        previousCarrier = $('#changeCarrier').val();
         $('#changeCarrier').on('change', function () {
-            var carrier_id = this.value;
+
+            var carrier_id = $(this).val();
+            if (!confirm("Are you sure you wish to change carrier?")) {
+                $(this).val(previousCarrier);
+                return;
+            }
 
             $.ajax({
                 url: '{{route('carriers.create.update')}}',
@@ -339,7 +346,6 @@
                     location.reload();
                 }
             });
-
         });
 
         $(".add-to-cart").click(function (event) {
