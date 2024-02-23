@@ -55,7 +55,7 @@
                         @foreach ($carriers as $index => $carrier)
                             <tr>
 
-                                <td class="align-middle">{{ ++$index }}</td>
+                                <td class="align-middle">{{ ++$index }} <small>({{$carrier->id}})</small></td>
 
                                 <td class="align-middle">
                                     <a class="editable"

@@ -34,7 +34,7 @@ function isDeliveryChargesApply(){
     $user = auth()->user();
     $note = null;
 
-    if($user->price_list == 2 && in_array($user->carrier_id , [17]))
+    if($user->price_list == 2 && in_array($user->carrier_id , [17])) #PU
         $note = 'Delivery charges may apply';
 
     return $note;
@@ -65,8 +65,8 @@ function getSalesReps(){
 
 function getCubeSizeTax($size){
 
-    if(checkIfSkipCubeCondition())
-        return 0.00;
+//    if(checkIfSkipCubeCondition())
+//        return 0.00;
 
     $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii
     $salesRepExtra = in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']);

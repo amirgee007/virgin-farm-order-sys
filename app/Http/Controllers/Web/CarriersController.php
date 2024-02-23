@@ -29,7 +29,7 @@ class CarriersController extends Controller
             return back();
         }
 
-        $carriers = Carrier::latest()->get();
+        $carriers = Carrier::orderBy('carrier_name')->get();
         return view('carriers.index' , compact('carriers'));
     }
 
