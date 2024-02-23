@@ -76,6 +76,7 @@ class OrdersController extends Controller
                 ->send(new OrderConfirmationMail($order , $user));
         }
         if($type == 'delete'){
+            $order->items()->delete();
             $order->delete();
         }
 
