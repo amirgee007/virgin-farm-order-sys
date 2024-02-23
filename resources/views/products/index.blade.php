@@ -195,7 +195,7 @@
                         </div>
 
                         <br>
-                        <input type="submit" value="Upload Inventory" class="btn btn-primary btn-sm float-right">
+                        <input type="submit" value="Delete/Reset Inventory" class="btn btn-primary btn-sm float-right">
                     </form>
                 </div>
 
