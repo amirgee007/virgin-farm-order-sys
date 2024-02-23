@@ -21,4 +21,20 @@ class ShippingAddress extends Model
     public function user() {
         return $this->hasOne(User::class , 'id' , 'user_id');
     }
+
+    public function usState() {
+        return $this->hasOne(UsState::class , 'id' , 'state_id');
+    }
+
+    public function usCity() {
+        return $this->hasOne(UsCity::class , 'id' , 'city_id');
+    }
+
+    public function getStateAttribute(){
+        return $this->usState->state_name;
+    }
+
+    public function getCityAttribute(){
+        return $this->usCity->city;
+    }
 }

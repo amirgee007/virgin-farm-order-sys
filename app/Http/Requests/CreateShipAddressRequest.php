@@ -28,7 +28,7 @@ class CreateShipAddressRequest extends FormRequest
             'address' => 'required|string',
             'state_id' => 'required',
             'city_id' => 'required',
-            'zip_code' => 'required',
+            'zip' => 'required',
         ];
     }
 }

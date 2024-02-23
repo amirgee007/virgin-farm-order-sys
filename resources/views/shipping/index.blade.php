@@ -199,8 +199,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="zip_code">@lang('Zip Code')</label>
-                                    <input type="text" class="form-control input-solid" id="zip_code" name="zip_code" placeholder="@lang('Zip Code')" required>
+                                    <label for="zip">@lang('Zip Code')</label>
+                                    <input type="text" class="form-control input-solid" id="zip" name="zip" placeholder="@lang('Zip Code')" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -266,7 +266,7 @@
 
             refreshCities(jsonDt.state_id , jsonDt.city_id);
             $("#state_id").val(jsonDt.state_id);
-            $("#zip_code").val(jsonDt.zip_code);
+            $("#zip").val(jsonDt.zip);
 
             $('#createAddressModal').modal('show');
         })

@@ -4,12 +4,18 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\ShippingAddress;
+use Vanguard\User;
 
 class TestAmirController extends Controller
 {
 
     public function index2($value = 0){
 
+
+        $ok = User::first();
+
+        dd($ok);
         $result = getCubeSize($value);
 
         dd($result);

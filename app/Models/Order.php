@@ -18,7 +18,7 @@ class Order extends Model
 
     public function getShipToAttribute()
     {
-        return $this->company.' '. $this->shipping_address;
+        return $this->company.' '. $this->shipping_address.' '. $this->address_2;
     }
 
     public function user() {

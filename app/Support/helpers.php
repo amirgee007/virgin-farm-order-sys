@@ -72,6 +72,8 @@ function getCubeSizeTax($size){
     $salesRepExtra = in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']);
 
     $tax = $additional = $extraTax = 0;
+
+    #if price is FOB then do this otherwise apply others
     if($priceName == 2){
         $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
     }
