@@ -237,7 +237,7 @@ class ProductsController extends Controller
                 'price' => $details['price'],
                 'size' => $details['size'],
                 'stems' => $details['stems'],
-                'sub_total' => $details['price'] * $details['quantity'] * $details['stems'],
+                'sub_total' => round2Digit($details['price'] * $details['quantity'] * $details['stems']),
             ];
 
             OrderItem::create($item);
@@ -245,15 +245,15 @@ class ProductsController extends Controller
 
 
         $totalCubeTax = getCubeSizeTax($size);
-        $totalWithTax = $total+$totalCubeTax;
+        $totalWithTax = $total + $totalCubeTax;
 
         #sub_total	discount	tax		total
         $order->update([
-            'sub_total' => $total,
+            'sub_total' => round2Digit($total),
             'discount' => 0,
             'tax' => 0,
             'shipping_cost' => $totalCubeTax,
-            'total' => $totalWithTax,
+            'total' => round2Digit($totalWithTax),
         ]);
 
         $order->refresh();

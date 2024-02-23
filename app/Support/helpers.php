@@ -5,7 +5,8 @@ use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 
 function round2Digit($number){
-    return round($number , 2);
+    $roundedValue = round(floatval($number), 2);
+    return number_format($roundedValue, 2);
 }
 function diff4Human($date ){
     return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
