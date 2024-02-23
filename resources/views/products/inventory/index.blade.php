@@ -122,15 +122,6 @@
                                            name="searching"
                                            value="{{\Request::get('searching')}}">
 
-                                    {{--                                    <input type="text"--}}
-                                    {{--                                           class="form-control rounded ml-2"--}}
-                                    {{--                                           name="po"--}}
-                                    {{--                                           placeholder="What is PO#?"--}}
-                                    {{--                                           title="What is your PO#? (optional)"--}}
-                                    {{--                                           data-trigger="hover"--}}
-                                    {{--                                           data-toggle="tooltip"--}}
-                                    {{--                                           value="{{ \Request::get('po') }}">--}}
-
                                     <span class="input-group-append">
                                         @if ($date_shipped || \Request::get('category') || \Request::get('searching'))
                                             <a href="{{ route('inventory.index') }}"
@@ -156,85 +147,95 @@
 
                     </div>
                     <hr>
-                    <div class="table-responsive mt-2" id="users-table-wrapper">
-                        <table class="table table-borderless table-striped products-list-table">
-                            <thead>
-                                <tr>
-                                <th class="min-width-200">@lang('Product Description')</th>
-                                <th class="min-width-80">@lang('Unit Price')</th>
-                                <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Stem/Bunch')</th>
-                                <th class="min-width-80">@lang('Quantity')</th>
-                                <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>
-                                <th class="min-width-80" title="Size of the item">@lang('Size')</th>
-                                <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
-                                <th class="min-width-100">@lang('Actions')</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @if (count($products))
-                                @foreach ($products as $index => $product)
+
+                    @if(!$user->last_ship_date && $user->carrier_id)
+                        <div class="table-responsive mt-2" id="users-table-wrapper">
+                            <table class="table table-borderless table-striped products-list-table">
+                                <thead>
                                     <tr>
-                                        <td class="align-middle">
-                                            <img style="max-width: 35px; cursor: pointer;"
-                                                 title="Click to show Larger image"
-                                                 data-info="{{$product->product_text}}"
-                                                 data-toggle="tooltip" data-placement="bottom"
-                                                 data-largeimg="{{$product->image_url}}"
-                                                 src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}"
-                                                 class="img-thumbnail" alt="Virgin Farm">
-                                            {{ $product->product_text }}
-
-                                            {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
-                                        </td>
-
-                                        @php $priceNow = $product->$priceCol; @endphp
-                                        <td class="align-middle" title="Per STEM flowers">${{ $priceNow }}/ST</td>
-                                            {{--ST stad for per STEM flowers --}}
-                                        <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
-                                        <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
-                                        <td class="align-middle" title="Weight">{{ $product->weight }}</td>
-                                        <td class="align-middle" title="Size">{{ $product->size }}</td>
-
-                                        <form action="{{route('add.to.cart')}}" method="POST"
-                                              enctype="multipart/form-data">
-                                            {{csrf_field()}}
-
-                                            <input type="hidden" name="id" value="{{$product->id}}">
-                                            <td class="align-middle">
-                                                <input required class="form-control form-control-sm width50" max="{{$product->quantity}}" name="quantity" type="number" min="0">
-                                            </td>
-
-                                            <td class="align-middle">
-                                                @if($priceNow)
-                                                    <button type="submit" class="btn btn-icon"><i
-                                                            title="@lang('Add product to cart')" data-toggle="tooltip"
-                                                            data-placement="left"
-                                                            class="fas fa-plus-circle "></i>
-                                                    </button>
-                                                @endif
-                                                {{--<a href="" class="btn btn-icon add-to-cart"--}}
-                                                {{--data-id="{{$product->id}}"--}}
-                                                {{--title="@lang('Add product to cart')"--}}
-                                                {{--data-toggle="tooltip"--}}
-                                                {{--data-placement="top">--}}
-                                                {{--<i class="fas fa-plus-circle "></i>--}}
-                                                {{--</a>--}}
-                                            </td>
-                                        </form>
-
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="12" style="text-align: center">
-                                        <b class="text-danger noRecordText">Choose a Ship date to shop available inventory.</b>
-                                    </td>
+                                    <th class="min-width-200">@lang('Product Description')</th>
+                                    <th class="min-width-80">@lang('Unit Price')</th>
+                                    <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Stem/Bunch')</th>
+                                    <th class="min-width-80">@lang('Quantity')</th>
+                                    <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>
+                                    <th class="min-width-80" title="Size of the item">@lang('Size')</th>
+                                    <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
+                                    <th class="min-width-100">@lang('Actions')</th>
                                 </tr>
-                            @endif
-                            </tbody>
-                        </table>
-                    </div>
-                    {!! $products->render() !!}
+                                </thead>
+                                <tbody>
+                                @if (count($products))
+                                    @foreach ($products as $index => $product)
+                                        <tr>
+                                            <td class="align-middle">
+                                                <img style="max-width: 35px; cursor: pointer;"
+                                                     title="Click to show Larger image"
+                                                     data-info="{{$product->product_text}}"
+                                                     data-toggle="tooltip" data-placement="bottom"
+                                                     data-largeimg="{{$product->image_url}}"
+                                                     src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}"
+                                                     class="img-thumbnail" alt="Virgin Farm">
+                                                {{ $product->product_text }}
+
+                                                {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
+                                            </td>
+
+                                            @php $priceNow = $product->$priceCol; @endphp
+                                            <td class="align-middle" title="Per STEM flowers">${{ $priceNow }}/ST</td>
+                                                {{--ST stad for per STEM flowers --}}
+                                            <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
+                                            <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
+                                            <td class="align-middle" title="Weight">{{ $product->weight }}</td>
+                                            <td class="align-middle" title="Size">{{ $product->size }}</td>
+
+                                            <form action="{{route('add.to.cart')}}" method="POST"
+                                                  enctype="multipart/form-data">
+                                                {{csrf_field()}}
+
+                                                <input type="hidden" name="id" value="{{$product->id}}">
+                                                <td class="align-middle">
+                                                    <input required class="form-control form-control-sm width50" max="{{$product->quantity}}" name="quantity" type="number" min="0">
+                                                </td>
+
+                                                <td class="align-middle">
+                                                    @if($priceNow)
+                                                        <button type="submit" class="btn btn-icon"><i
+                                                                title="@lang('Add product to cart')" data-toggle="tooltip"
+                                                                data-placement="left"
+                                                                class="fas fa-plus-circle "></i>
+                                                        </button>
+                                                    @endif
+                                                    {{--<a href="" class="btn btn-icon add-to-cart"--}}
+                                                    {{--data-id="{{$product->id}}"--}}
+                                                    {{--title="@lang('Add product to cart')"--}}
+                                                    {{--data-toggle="tooltip"--}}
+                                                    {{--data-placement="top">--}}
+                                                    {{--<i class="fas fa-plus-circle "></i>--}}
+                                                    {{--</a>--}}
+                                                </td>
+                                            </form>
+
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="12" style="text-align: center">
+                                            <b class="text-danger noRecordText">Choose a Ship date to shop available inventory.</b>
+                                        </td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
+                        {!! $products->render() !!}
+                    @else
+                        <tr>
+                            <div colspan="12" style="text-align: center">
+                                <b class="text-danger">Choose a Ship date and carrier to shop available inventory.</b>
+                            </div>
+                        </tr>
+                    @endif
+
                 </div>
             </div>
         </div>
