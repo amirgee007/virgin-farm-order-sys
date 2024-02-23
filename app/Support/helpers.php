@@ -165,7 +165,7 @@ function checkIfSkipCubeCondition()
     return  ($user->price_list == 2 && $user->carrier_id == 32);
 }
 function getCarriers(){
-    return Carrier::pluck('c_code', 'id')->sortBy('c_code')->toArray();
+    return Carrier::pluck('carrier_name', 'id')->sortBy('c_code')->toArray();
 }
 
 function getStates(){
