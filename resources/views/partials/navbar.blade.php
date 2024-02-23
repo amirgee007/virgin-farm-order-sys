@@ -111,12 +111,12 @@
                         </div>
 
                         <div class="col checkout">
-                            <a href="{{ route('remove.from.cart') }}"
+                            <a href="{{ route('empty.cart') }}"
                                class="btn btn-danger btn-block p-2"
                                title="@lang('Delete all items from cart?')"
                                data-toggle="tooltip"
                                data-placement="top"
-                               data-method="DELETE"
+                               data-method="GET"
                                data-confirm-title="@lang('Please Confirm')"
                                data-confirm-text="@lang('Are you sure that you want to remove all items from cart?')"
                                data-confirm-delete="@lang('Yes, delete all!')">

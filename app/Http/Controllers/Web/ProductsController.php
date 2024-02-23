@@ -180,10 +180,15 @@ class ProductsController extends Controller
                 session()->put('cart', $cart);
             }
         }
-        else{
-            session()->put('cart', []);
-        }
         session()->flash('success', 'Product removed successfully');
+
+        return back();
+    }
+
+    public function emptyCart(Request $request)
+    {
+        session()->put('cart', []);
+        session()->flash('success', 'Your all products removed from cart successfully.');
 
         return back();
     }
