@@ -97,6 +97,7 @@ class ShippingController extends Controller
                 }
                 else{
                     $data['user_id'] = auth()->id();
+                    unset($data['address_id']);
                     $address = ShippingAddress::create($data);
                 }
 
