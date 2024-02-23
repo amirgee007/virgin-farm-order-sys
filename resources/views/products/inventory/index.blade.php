@@ -188,7 +188,7 @@
                                         </td>
 
                                         @php $priceNow = $product->$priceCol; @endphp
-                                        <td class="align-middle" title="Per STEM flowers">${{ $priceNow }}/ST</td>
+                                        <td class="align-middle" title="Per STEM flowers">{{$priceCol}} - ${{ $priceNow }}/ST</td>
                                             {{--ST stad for per STEM flowers --}}
                                         <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
                                         <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
