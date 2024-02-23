@@ -158,7 +158,7 @@ function getCubeSize($total)
 
 function checkIfSkipCubeCondition()
 {
-    #Just for FOB price when PU is carrier then no need to check cube limits
+    #Just for FOB price when PU is carrier then no need to check cube limits and no fees
     $user = auth()->user();
     return  ($user->price_list == 2 && $user->carrier_id == 32);
 }
