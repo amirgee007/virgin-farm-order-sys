@@ -62,7 +62,7 @@
                                data-placement="top"
                                data-method="GET"
                                data-confirm-title="@lang('Please Confirm')"
-                               data-confirm-text="@lang('Are you sure that you want to delete this product?')"
+                               data-confirm-text="@lang('Are you sure that you want to Reset,Refresh or Clear the inventory availability?')"
                                data-confirm-delete="@lang('Yes, delete it!')"
                                title="Reset,Refresh or Clear the inventory availability."
                                class="btn btn-warning btn-sm float-right ml-2 mr-1">
