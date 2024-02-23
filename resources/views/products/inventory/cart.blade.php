@@ -191,7 +191,7 @@
                             </tr>
                             @if(isDeliveryChargesApply())
                             <tr>
-                                <td colspan="5" class="text-center text-danger">**Delivery charges may apply</td>
+                                <td colspan="5" class="text-right text-danger"><h5>**Delivery charges may apply</h5></td>
                             </tr>
                             @endif
 
