@@ -166,10 +166,12 @@
                             $total = round2Digit($total);
                         @endphp
 
+{{--                        Box Size(s): Medium   Weight: 30 cu.--}}
+
                         @if($cubeSizes)
                             @if(is_array($cubeSizes))
                                 <tr>
-                                    <td colspan="5" class="text-center text-primary"><h4>Box size: {{$size}}</h4></td>
+                                    <td colspan="5" class="text-center text-primary"><h4>Box Size(s): {{implode(', ' ,$cubeSizes)}} &nbsp; Weight:{{$size}}</h4></td>
                                 </tr>
                             @endif
 
