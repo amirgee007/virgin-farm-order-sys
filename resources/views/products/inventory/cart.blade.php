@@ -171,7 +171,7 @@
                         @if($cubeSizes)
                             @if(is_array($cubeSizes))
                                 <tr>
-                                    <td colspan="5" class="text-center text-primary"><h4>Box Size(s): {{implode(', ' ,$cubeSizes)}} &nbsp; Weight:{{$size}}</h4></td>
+                                    <td colspan="5" class="text-center text-primary"><h4>Box Size(s): {{implode(', ' ,$cubeSizes)}} &nbsp; Weight:{{$size}} cu.</h4></td>
                                 </tr>
                             @endif
 
