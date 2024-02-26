@@ -157,6 +157,39 @@ class ProductsController extends Controller
         return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
+    public function refreshPriceInCartIfCarrierChange()
+    {
+        try {
+            Log::info('refreshPriceInCartIfCarrierChange called and updated plz check it.');
+            $carts = session()->get('cart');
+            $cart2 = [];
+
+            foreach ($carts as $id => $details) {
+                $productQty = ProductQuantity::where('id', $id)->first();
+                $priceCol = myPriceColumn();
+
+                if ($productQty) {
+                    $cart2[$id] = [
+                        "name" => $details['name'],
+                        "item_no" => @$details['item_no'],
+                        "quantity" => $details['quantity'],
+                        "price" => $productInfo ? $productInfo->$priceCol : $details['price'],
+                        "image" => $product->image_url,
+                        "size" => $details['size'],
+                        "stems" => $details['stems'],
+                        "max_qty" => $productInfo->quantity,
+                        "time" => now()->toDateTimeString(),
+                    ];
+                }
+            }
+            session()->put('cart', []);
+            session()->put('cart', $cart2);
+
+        } catch (\Exception $exc) {
+            Log::error($exc->getMessage() . ' error in the refreshPriceInCartIfCarrierChange ' . $exc->getLine() . ' User:' . auth()->id());
+        }
+    }
+
     public function update(Request $request)
     {
         #$product = Product::where('id', $id)->first();
@@ -164,7 +197,6 @@ class ProductsController extends Controller
 
         if ($request->id && $request->quantity) {
             $cart = session()->get('cart');
-
             $cart[$request->id]["quantity"] = $request->quantity;
             session()->put('cart', $cart);
             session()->flash('success', 'Cart updated successfully');
@@ -243,7 +275,6 @@ class ProductsController extends Controller
 
             OrderItem::create($item);
         }
-
 
         $totalCubeTax = getCubeSizeTax($size);
         $totalWithTax = $total + $totalCubeTax;
