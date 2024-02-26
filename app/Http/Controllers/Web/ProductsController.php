@@ -160,15 +160,18 @@ class ProductsController extends Controller
     public function refreshPriceInCartIfCarrierChange()
     {
         try {
+
             Log::info('refreshPriceInCartIfCarrierChange called and updated plz check it.');
             $carts = session()->get('cart');
             $cart2 = [];
 
             foreach ($carts as $id => $details) {
-                $productQty = ProductQuantity::where('id', $id)->first();
+                $product = Product::where('id', $id)->first();
+                $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
+
                 $priceCol = myPriceColumn();
 
-                if ($productQty) {
+                if ($productInfo) {
                     $cart2[$id] = [
                         "name" => $details['name'],
                         "item_no" => @$details['item_no'],
@@ -182,6 +185,7 @@ class ProductsController extends Controller
                     ];
                 }
             }
+
             session()->put('cart', []);
             session()->put('cart', $cart2);
 

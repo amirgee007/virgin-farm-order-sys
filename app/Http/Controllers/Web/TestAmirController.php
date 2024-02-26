@@ -11,11 +11,7 @@ class TestAmirController extends Controller
 {
 
     public function index2($value = 0){
-
-
-        $ok = User::first();
-
-        dd($ok);
+        
         $result = getCubeSize($value);
 
         dd($result);
