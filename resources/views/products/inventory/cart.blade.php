@@ -192,16 +192,16 @@
 
                             <tr>
                                 <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $orderTotal }}</strong></h3></td>
+                            </tr>
 
-                            </tr>
                             @if(isDeliveryChargesApply())
-                            <tr>
-                                <td colspan="5" class="text-right text-danger"><h5>**Delivery charges may apply</h5></td>
-                            </tr>
+                                <tr>
+                                    <td colspan="5" class="text-right text-danger"><h5>**Delivery charges may apply</h5></td>
+                                </tr>
                             @endif
 
                             <tr>
-                            <td colspan="5" class="text-right">
+                                <td colspan="5" class="text-right">
                                 <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
 
                                 <a href="{{ route('checkout.cart') }}"
@@ -217,7 +217,7 @@
                                 </a>
 
                             </td>
-                        </tr>
+                            </tr>
                         @else
                             <tr>
                                 <td colspan="5" class="text-center text-danger ">
