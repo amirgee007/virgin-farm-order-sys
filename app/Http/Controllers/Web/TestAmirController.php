@@ -11,7 +11,7 @@ class TestAmirController extends Controller
 {
 
     public function index2($value = 0){
-        
+
         $result = getCubeSize($value);
 
         dd($result);
