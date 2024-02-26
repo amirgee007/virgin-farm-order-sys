@@ -148,7 +148,7 @@
                     </div>
                     <hr>
 
-                    @if(!$user->last_ship_date && $user->carrier_id)
+                    @if($user->last_ship_date && $user->carrier_id)
                         <div class="table-responsive mt-2" id="users-table-wrapper">
                             <table class="table table-borderless table-striped products-list-table">
                                 <thead>
