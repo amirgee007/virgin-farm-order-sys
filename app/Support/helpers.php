@@ -5,9 +5,9 @@ use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 
 function round2Digit($number){
-    \Illuminate\Support\Facades\Log::inf('round 2 digits before '.$number);
+    \Illuminate\Support\Facades\Log::info('round 2 digits before '.$number);
     $roundedValue = round(floatval($number), 2);
-    \Illuminate\Support\Facades\Log::inf('round 2 digits after '.$number);
+    \Illuminate\Support\Facades\Log::info('round 2 digits after '.$number);
     return number_format($roundedValue, 2);
 }
 function diff4Human($date ){
