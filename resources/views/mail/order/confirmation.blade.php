@@ -32,7 +32,7 @@
 
 # Total Units: {{$order->countQty()}}
 
-Your sales reperentative will contact you to confirm your online order.
+Your sales representative will contact you to confirm your online order.
 
 If you have any questions, feel free to contact us.
 ##### sales@virginfarms.net
