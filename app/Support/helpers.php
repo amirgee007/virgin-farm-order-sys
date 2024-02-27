@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
+use Vanguard\Models\UsState;
 
 function round2Digit($number){
     \Illuminate\Support\Facades\Log::info('round 2 digits before '.$number);
@@ -171,6 +172,15 @@ function getCarriers(){
 }
 
 function getStates(){
+
+    $states = UsState::orderby('state_name')
+        ->pluck('state_name', 'id')
+        ->toArray();
+
+    $states = [null => 'Select State'] + $states;
+
+    return  $states;
+
     return [
         'Alabama',
         'Alaska',

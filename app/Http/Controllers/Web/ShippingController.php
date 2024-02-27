@@ -57,12 +57,7 @@ class ShippingController extends Controller
         }
 
         $addresses = $query->paginate(100);
-
-        $states = UsState::orderby('state_name')
-            ->pluck('state_name', 'id')
-            ->toArray();
-
-        $states = [null => 'Select State']+$states;
+        $states = getStates();
 
         return view('shipping.index' , compact('addresses' , 'user_id' , 'users' , 'states'));
     }

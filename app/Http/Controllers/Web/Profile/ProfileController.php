@@ -38,7 +38,7 @@ class ProfileController extends Controller
 
         $carriers = getCarriers();
         $prices = getPrices();
-        $states= getStates();
+        $states = getStates();
         $terms = getTerms();
         $salesRep = getSalesReps();
 
