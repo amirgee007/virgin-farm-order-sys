@@ -5,7 +5,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted">
-        @lang('Order Summary')
+        @lang('Order Summary') Virgin Farm.
     </li>
 @stop
 
