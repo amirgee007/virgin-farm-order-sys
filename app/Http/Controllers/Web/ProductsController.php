@@ -251,7 +251,7 @@ class ProductsController extends Controller
             'company' => $shipAddress->company,
             'phone' => $shipAddress->phone,
             'shipping_address' => $shipAddress->address,
-            'address_2' => $shipAddress->city.' ,'.$shipAddress->state.' ,'.$shipAddress->zip, #all others stuff city, state, and zip
+            'address_2' => $shipAddress->city_name.' ,'.$shipAddress->state_name.' ,'.$shipAddress->zip, #all others stuff city, state, and zip
         ]);
 
         $total = $size = 0;

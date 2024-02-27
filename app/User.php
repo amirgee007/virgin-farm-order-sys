@@ -12,6 +12,8 @@ use Mail;
 use Vanguard\Events\User\RequestedPasswordResetEmail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\ShippingAddress;
+use Vanguard\Models\UsCity;
+use Vanguard\Models\UsState;
 use Vanguard\Presenters\Traits\Presentable;
 use Vanguard\Presenters\UserPresenter;
 use Vanguard\Services\Auth\TwoFactor\Authenticatable as TwoFactorAuthenticatable;
@@ -154,5 +156,17 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function carrier()
     {
         return $this->hasOne(Carrier::class , 'id' , 'carrier_id');
+    }
+
+    public function usState() {
+        return $this->hasOne(UsState::class , 'id' , 'state');
+    }
+
+    public function getStateNameAttribute(){
+        return $this->usState ? $this->usState->state_name : '';
+    }
+
+    public function getCityNameAttribute(){
+        return $this->city;
     }
 }

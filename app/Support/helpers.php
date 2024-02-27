@@ -76,49 +76,51 @@ function getCubeSizeTax($size){
 
     $tax = $additional = $extraTax = 0;
 
-    #if price is FOB then do this otherwise apply others
-    if($priceName == 2){
-        $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
-    }
-    #FedEx /HI&AK Fee Charges
-    else{
-        if($size >= 13 && $size <= 16){
-            $tax = 31;
-            $extraTax = 1;
-        }
-        elseif($size >= 18 && $size <= 21) {
-            $tax = 34;
-            $extraTax = 1;
-        }
-        elseif($size >= 22 && $size <= 25) {
+    #only fedex have box cube minumums now, and also standadt trans fees apply
+    #all other no limit but 0.24 apply and service trans fees may apply in email too
+    if($priceName == 1){ #only fedex have box cube minumums now
+        if($size >= 12 && $size <= 15){
             $tax = 32;
             $extraTax = 1;
         }
-        elseif($size >= 27 && $size <= 30) {
+        elseif($size >= 16 && $size <= 20) {
+            $tax = 35;
+            $extraTax = 1;
+        }
+        elseif($size >= 21 && $size <= 25) {
             $tax = 33;
             $extraTax = 1;
         }
+        elseif($size >= 28 && $size <= 31) {
+            $tax = 34.5;
+            $extraTax = 1;
+        }
         elseif($size >= 40 && $size <= 45) {
-            $tax = 34;
+            $tax = 36;
             $extraTax = 2;
         }
         elseif($size > 45) {
-            $tax = 34;
+            $tax = 36;
             $extraTax = 2;
         }
 
         if($salesRepExtra)
             $tax = $tax + $extraTax;
+
+        if($size/45 > 1){
+            $countMore45 = ((int)ceil($size/45) - 1);
+            $additional = 33 * $countMore45;
+
+//        if($salesRepExtra)
+//            $additional = 33 * $countMore45;
+//        else
+//            $additional = 32 * $countMore45;
+        }
     }
 
-    if($size/45 > 1){
-        $countMore45 = ((int)ceil($size/45) - 1);
-        $additional = 32 * $countMore45;
-
-        if($salesRepExtra)
-            $additional = 33 * $countMore45;
-        else
-            $additional = 32 * $countMore45;
+    #if price is FOB then do this
+    else{
+        $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
     }
 
     #return [$additional , $tax];

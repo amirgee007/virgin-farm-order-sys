@@ -12,6 +12,7 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+        $user = auth()->user();
         $result = getCubeSize($value);
 
         dd($result);

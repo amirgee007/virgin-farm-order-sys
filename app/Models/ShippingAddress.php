@@ -30,11 +30,11 @@ class ShippingAddress extends Model
         return $this->hasOne(UsCity::class , 'id' , 'city_id');
     }
 
-    public function getStateAttribute(){
+    public function getStateNameAttribute(){
         return $this->usState->state_name;
     }
 
-    public function getCityAttribute(){
+    public function getCityNameAttribute(){
         return $this->usCity->city;
     }
 }
