@@ -271,7 +271,7 @@ class ProductsController extends Controller
                 'item_no' => @$details['item_no'],
                 'name' => $details['name'],
                 'quantity' => $details['quantity'],
-                'price' => $details['price'],
+                'price' => round2Digit($details['price']),
                 'size' => $details['size'],
                 'stems' => $details['stems'],
                 'sub_total' => round2Digit($details['price'] * $details['quantity'] * $details['stems']),

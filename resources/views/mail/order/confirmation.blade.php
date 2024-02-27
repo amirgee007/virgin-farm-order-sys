@@ -17,13 +17,13 @@
     | :--------------- | :----------  | :---------- | :---------- | :---------- |
     @if(count($order->items))
     @foreach($order->items AS $item)
-    | {{$item->name}}  |<small>{{$item->quantity}}</small> &nbsp;| <small>${{$item->price}}</small>|<small>{{$item->stems}}</small>|<small>${{$item->sub_total}}</small>|
+    | {{$item->name}}  |<small>{{$item->quantity}}</small> &nbsp;| <small>${{round2Digit($item->price)}}</small>|<small>{{$item->stems}}</small>|<small>${{round2Digit($item->sub_total)}}</small>|
     @endforeach
     | <strong>Summary</strong>   |    |  |  |
-    |    |    |  <small>Subtotal:</small>| <small>${{$order->sub_total }}</small> |
-    |    |    |  <small>Service/Transportation:</small>| <small>${{$order->shipping_cost}}</small> |
+    |    |    |  <small>Subtotal:</small>| <small>${{round2Digit($order->sub_total) }}</small> |
+    |    |    |  <small>Service/Transportation:</small>| <small>${{round2Digit($order->shipping_cost)}}</small> |
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
-    |    |    |     Total             | <small>${{$order->total }}</small> |
+    |    |    |     Total             | <small>${{round2Digit($order->total) }}</small> |
     @if(isDeliveryChargesApply())
     |    |    |      <small>**Delivery charges may apply</small> |     |
     @endif
