@@ -161,7 +161,7 @@ class ProductsController extends Controller
     {
         try {
 
-            Log::info('refreshPriceInCartIfCarrierChange called and updated plz check it.');
+            Log::notice('refreshPriceInCartIfCarrierChange called and updated plz check it.');
             $carts = session()->get('cart');
             $cart2 = [];
 
@@ -186,9 +186,13 @@ class ProductsController extends Controller
                 }
             }
 
-            session()->put('cart', []);
-            session()->put('cart', $cart2);
-            session()->save();
+
+            session(['cart' => []]);
+            session(['cart' => $cart2]);
+
+//            session()->put('cart', []);
+//            session()->put('cart', $cart2);
+//            session()->save();
 
         } catch (\Exception $exc) {
             Log::error($exc->getMessage() . ' error in the refreshPriceInCartIfCarrierChange ' . $exc->getLine() . ' User:' . auth()->id());
