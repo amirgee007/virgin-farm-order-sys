@@ -38,10 +38,10 @@ class CarriersController extends Controller
         try{
 
             if ($request->carrier_id) {
-                (new ProductsController())->refreshPriceInCartIfCarrierChange();
                 User::where('id' , auth()->id())->update(['carrier_id' => $request->carrier_id]);
                 auth()->user()->fresh();
 
+                #(new ProductsController())->refreshPriceInCartIfCarrierChange();
                 return ['Done'];
             }
 
