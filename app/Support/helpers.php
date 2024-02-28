@@ -22,13 +22,11 @@ function myPriceColumn(){
 
     $column = $prices[$user->price_list];
 
-    if($user->price_list == 2 && in_array($user->carrier_id , [23])) #if its FOB then check carrier FedEx
+    #if price is FOB and carrier FedEx then use fedex, otherwise FOB
+    if($user->price_list == 2 && $user->carrier_id == 23)
         $column = 'price_fedex';
 
-    #So logic has to be IF an FOB customer is usually DLV (delivery) but if chooses to use FedEx as delivery method, THEN price must change to FedEx
-    #Only that case does the price change =>   FOB customer DLV to FedEx or FedEx to DLV
-
-    return $column;
+       return $column;
 }
 
 #For FOB Customers that choose Delivery (DLV) we need a note that states:
@@ -76,7 +74,7 @@ function getCubeSizeTax($size){
 
     $tax = $additional = $extraTax = 0;
 
-    #only fedex have box cube minumums now, and also standadt trans fees apply
+    #only fedex have box cube minumums now
     #all other no limit but 0.24 apply and service trans fees may apply in email too
     if($priceName == 1){ #only fedex have box cube minumums now
         if($size >= 12 && $size <= 15){
@@ -165,7 +163,7 @@ function getCubeSize($total)
 
 function checkIfSkipCubeCondition()
 {
-    #Just for FOB price when PU is carrier then no need to check cube limits and no fees
+    ##Just for FOB price when carrier is PU then no need to check cube limits and no fees
     $user = auth()->user();
     return  ($user->price_list == 2 && $user->carrier_id == 32);
 }
