@@ -15,7 +15,7 @@ function diff4Human($date ){
 
 function myPriceColumn(){
 
-    $user = auth()->user();
+    $user = itsMeUser();
     $prices = getPrices();
 
     $column = $prices[$user->price_list];
@@ -30,13 +30,17 @@ function myPriceColumn(){
 #For FOB Customers that choose Delivery (DLV) we need a note that states:
 # Delivery charges may apply. At the order summary page and also on the copy of the order total emailed to them.
 function isDeliveryChargesApply(){
-    $user = auth()->user();
+    $user = itsMeUser();
     $note = null;
 
     if($user->price_list == 2 && in_array($user->carrier_id , [17])) #PU
         $note = 'Delivery charges may apply';
 
     return $note;
+}
+
+function itsMeUser(){
+    return \Vanguard\User::find(auth()->id());
 }
 
 
@@ -67,8 +71,9 @@ function getCubeSizeTax($size){
 //    if(checkIfSkipCubeCondition())
 //        return 0.00;
 
-    $priceName = auth()->user()->price_list; #1,2,3 fedex,fob,hawaii
-    $salesRepExtra = in_array(auth()->user()->sales_rep , ['Robert', 'Mario', 'Joe']);
+    $user = itsMeUser();
+    $priceName = $user->price_list; #1,2,3 fedex,fob,hawaii
+    $salesRepExtra = in_array($user->sales_rep , ['Robert', 'Mario', 'Joe']);
 
     $tax = $additional = $extraTax = 0;
 
@@ -162,7 +167,7 @@ function getCubeSize($total)
 function checkIfSkipCubeCondition()
 {
     ##Just for FOB price when carrier is PU then no need to check cube limits and no fees
-    $user = auth()->user();
+    $user = itsMeUser();
     return  ($user->price_list == 2 && $user->carrier_id == 32);
 }
 function getCarriers(){

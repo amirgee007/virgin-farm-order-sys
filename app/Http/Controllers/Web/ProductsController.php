@@ -234,17 +234,17 @@ class ProductsController extends Controller
 
     public function checkOutCart()
     {
-        $user = $shipAddress = auth()->user();
+        $user = $shipAddress = itsMeUser();;
 
         $carts = session()->get('cart');
-        $address_id = auth()->user()->address_id; #if empty/ZERO then default address will be user not others.
+        $address_id = $user->address_id; #if empty/ZERO then default address will be user not others.
         if($address_id)
             $shipAddress = ShippingAddress::find($address_id);
 
         #"name" => #"company_name" #"phone"  #"address"
 
-        $date_shipped = auth()->user()->last_ship_date;
-        $carrier_id = auth()->user()->carrier_id;
+        $date_shipped = $user->last_ship_date;
+        $carrier_id = $user->carrier_id;
 
         $order = Order::create([
             'user_id' => $user->id,
