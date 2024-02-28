@@ -110,7 +110,7 @@ class ProductsController extends Controller
         $carts = session()->get('cart');
         #Similar to the Solé web shop, we would like a time-out session timer. After 1 hour, if the customer does not checkout, the items in the cart are emptied back to inventory.
 
-        return view('products.inventory.cart');
+        return view('products.inventory.cart' , compact('carts'));
     }
 
     public function addToCart(Request $request)

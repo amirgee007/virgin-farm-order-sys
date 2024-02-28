@@ -131,8 +131,8 @@
                         </thead>
                         <tbody>
                         @php $total = 0; $size = 0 @endphp
-                        @if(session('cart'))
-                            @foreach(session('cart') as $id => $details)
+                        @if($carts))
+                            @foreach($carts as $id => $details)
                                 @php
                                     $total += ($details['price'] * $details['quantity'] * $details['stems']);
                                     $size += $details['size'] * $details['quantity'];
