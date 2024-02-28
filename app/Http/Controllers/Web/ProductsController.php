@@ -188,6 +188,7 @@ class ProductsController extends Controller
 
             session()->put('cart', []);
             session()->put('cart', $cart2);
+            session()->save();
 
         } catch (\Exception $exc) {
             Log::error($exc->getMessage() . ' error in the refreshPriceInCartIfCarrierChange ' . $exc->getLine() . ' User:' . auth()->id());
