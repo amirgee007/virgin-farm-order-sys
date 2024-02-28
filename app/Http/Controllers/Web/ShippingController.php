@@ -102,6 +102,7 @@ class ShippingController extends Controller
 
             if ($request->address_id || $request->address_id == 0) {
                 User::where('id' , auth()->id())->update(['address_id' => $request->address_id]);
+                auth()->user()->fresh();
                 return ['Done'];
             }
 
