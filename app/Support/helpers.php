@@ -33,8 +33,8 @@ function isDeliveryChargesApply(){
     $user = itsMeUser();
     $note = null;
 
-    #Fob and carrier is DLV OR Fedex and carrier not PU, FEDEX
-    if(($user->price_list == 2 && $user->carrier_id == 17) ||  ($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23)))
+    #Fob and carrier not PU, FEDEX OR
+    if(($user->price_list == 2 && ($user->carrier_id != 32 || $user->carrier_id != 23)) ||  ($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23)))
         $note = 'Delivery charges may apply.';
 
     return $note;
@@ -54,7 +54,7 @@ function getCubeSizeTax($size){
         $boxChargesApply = true;
 
     #FOb and carrier is DLV, PU then apply transport tax 24%
-    if($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id == 17))
+    if($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id != 23))
         $serviceTransportFees24 = true;
 
     #Fedex and carrier is PU and not fedex then apply transport tax 24%
@@ -153,8 +153,8 @@ function checkIfSkipCubeRangeCondition()
     $user = itsMeUser();
     $response = false;
 
-    #FOb and carrier is PickUp,DLV then no need
-    if($user->price_list == 2 && ($user->carrier_id == 32 || $user->carrier_id == 17))
+    #FOb and carrier is PickUp, then no need  and apply for all except fedex
+    if($user->price_list == 2 && ($user->carrier_id == 32 || $user->carrier_id != 23))
         $response = true;
 
     #Fedex and carrier is PickUp, then no need  and apply for all except fedex
