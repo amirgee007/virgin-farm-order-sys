@@ -5,16 +5,8 @@ use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\UsState;
 
-function round2Digit($number){
-    $roundedValue = round(floatval($number), 2);
-    return number_format($roundedValue, 2);
-}
-function diff4Human($date ){
-    return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
-}
-
 function myPriceColumn(){
-
+    #OPTIMIZATION required plz keep in mind to reduce conditions
     $user = itsMeUser();
     $prices = getPrices();
 
@@ -25,11 +17,11 @@ function myPriceColumn(){
         $column = 'price_fob';
 
     #if price is FOB and carrier FedEx then use fedex price
-    if($user->price_list == 2 && $user->carrier_id == 23)
+    elseif($user->price_list == 2 && $user->carrier_id == 23)
         $column = 'price_fedex';
 
     #if price is Hawai and carrier other than FedEx then use fob
-    if($user->price_list == 3 && $user->carrier_id != 23)
+    elseif($user->price_list == 3 && $user->carrier_id != 23)
         $column = 'price_fob';
 
        return $column;
@@ -48,9 +40,6 @@ function isDeliveryChargesApply(){
 }
 
 function getCubeSizeTax($size){
-
-//    if(checkIfSkipCubeCondition())
-//        return 0.00;
 
     $user = itsMeUser();
     $priceName = $user->price_list; #1,2,3 fedex,fob,hawaii
@@ -121,9 +110,9 @@ function divideIntoGroupMax($number, $groupSize = 45) {
     return $result;
 }
 
-function getCubeSize($total)
+function getCubeRanges($total)
 {
-    if(checkIfSkipCubeCondition())
+    if(checkIfSkipCubeRangeCondition())
         return true;
 
     #if customer is Just for FOB when PU is carrier then no need to do the CUBE sizes
@@ -145,18 +134,39 @@ function getCubeSize($total)
     return (count($values) == count($matched)) ? $matched : null;
 }
 
-function checkIfSkipCubeCondition()
+function checkIfSkipCubeRangeCondition()
 {
-    ##Just for FOB price when carrier is PU then no need to check cube limits and no fees
     $user = itsMeUser();
-    return  ($user->price_list == 2 && $user->carrier_id == 32);
+    $response = false;
+
+    #FOb and carrier is PickUp,DLV then no need
+    if($user->price_list == 2 && ($user->carrier_id == 32 || $user->carrier_id == 17))
+        $response = true;
+
+    #Fedex and carrier is PickUp, then no need  and apply for all except fedex
+    elseif($user->price_list == 2 && ($user->carrier_id == 32 || $user->carrier_id != 23))
+        $response = true;
+
+    #hawai and carrier except  fedex then no cube required
+    elseif($user->price_list == 3 && ($user->carrier_id != 23))
+        $response = true;
+
+    return  $response;
 }
 
+function getPrices(){
+    #if any change plz check this too 1,2,3 getCubeSizeTax
+    return [
+        0 => 'Select Price',
+        1 => 'price_fedex',
+        2 => 'price_fob', #dont change this ID as its using somewhere.
+        3 => 'price_hawaii',
+    ];
+}
 
 function getCarriers(){
     return Carrier::pluck('carrier_name', 'id')->sortBy('c_code')->toArray();
 }
-
 function getStates(){
 
     $states = UsState::orderby('state_name')
@@ -224,30 +234,23 @@ function getStates(){
     ];
 }
 
-
+function round2Digit($number){
+    $roundedValue = round(floatval($number), 2);
+    return number_format($roundedValue, 2);
+}
+function diff4Human($date ){
+    return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
+}
 function getTerms(){
     return  [
         'N1', 'CC', 'Check by Phone'
     ];
 }
-
 function myRoleName(){
     return  auth()->user() ? auth()->user()->role->name : '';
 }
-
 function itsMeUser(){
     return \Vanguard\User::find(auth()->id());
-}
-
-
-function getPrices(){
-    #if any change plz check this too 1,2,3 getCubeSizeTax
-    return [
-        0 => 'Select Price',
-        1 => 'price_fedex',
-        2 => 'price_fob', #dont change this ID as its using somewhere.
-        3 => 'price_hawaii',
-    ];
 }
 
 function getSalesReps(){

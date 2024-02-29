@@ -162,7 +162,7 @@
                         <tfoot>
 
                         @php
-                            $cubeSizes = getCubeSize($size);
+                            $cubeSizes = getCubeRanges($size);
                             $total = round2Digit($total);
                         @endphp
 

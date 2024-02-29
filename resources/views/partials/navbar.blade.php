@@ -90,7 +90,7 @@
                         @endforeach
                     @endif
                     @php
-                        $cubeSizes = getCubeSize($size);
+                        $cubeSizes = getCubeRanges($size);
                     @endphp
 
                     <div class="row">
