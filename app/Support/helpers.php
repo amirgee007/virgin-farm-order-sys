@@ -46,7 +46,6 @@ function getCubeSizeTax($size){
 
     $tax = $boxChargesApply = $serviceTransportFees24 = $additional = $extraTax = 0;
 
-
     #All prices and carrier is fedex then apply BOX CHARGES
     if($user->carrier_id == 23)
         $boxChargesApply = true;
@@ -63,7 +62,7 @@ function getCubeSizeTax($size){
     elseif($user->price_list == 3  && $user->carrier_id != 23)
         $serviceTransportFees24 = true;
 
-    if($boxChargesApply){ #only fedex have box cube minumums now
+    if($boxChargesApply && $user->price_list != 1){ #only fedex, hawai have have box cube minumums now
         if($size >= 12 && $size <= 15){
             $tax = 32;
             $extraTax = 1;

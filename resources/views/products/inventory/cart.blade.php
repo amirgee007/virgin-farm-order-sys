@@ -180,7 +180,7 @@
                             </tr>
                             @php
                                  $totalCubeTax = getCubeSizeTax($size);
-                                 $orderTotal =  $total + $totalCubeTax;
+                                  $orderTotal =  round2Digit($total + $totalCubeTax);
                             @endphp
                             <tr>
                                 <td colspan="5" class="text-right"><h4><strong>Service/Transportation: ${{$totalCubeTax}}</strong></h4></td>
