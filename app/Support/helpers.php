@@ -33,8 +33,9 @@ function isDeliveryChargesApply(){
     $user = itsMeUser();
     $note = null;
 
-    if($user->price_list == 2 && in_array($user->carrier_id , [17])) #PU
-        $note = 'Delivery charges may apply';
+    #Fob and carrier is DLV OR Fedex and carrier not PU, FEDEX
+    if(($user->price_list == 2 && $user->carrier_id == 17) ||  ($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23)))
+        $note = 'Delivery charges may apply.';
 
     return $note;
 }
@@ -57,11 +58,11 @@ function getCubeSizeTax($size){
         $serviceTransportFees24 = true;
 
     #Fedex and carrier is PU and not fedex then apply transport tax 24%
-    elseif($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id != 23))
+    elseif($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23))
         $serviceTransportFees24 = true;
 
     #hawai and carrier is not fedex then apply transport tax 24%
-    elseif($user->price_list == 2  && $user->carrier_id != 23)
+    elseif($user->price_list == 3  && $user->carrier_id != 23)
         $serviceTransportFees24 = true;
 
     if($boxChargesApply){ #only fedex have box cube minumums now
@@ -157,7 +158,7 @@ function checkIfSkipCubeRangeCondition()
         $response = true;
 
     #Fedex and carrier is PickUp, then no need  and apply for all except fedex
-    elseif($user->price_list == 2 && ($user->carrier_id == 32 || $user->carrier_id != 23))
+    elseif($user->price_list == 1 && ($user->carrier_id == 32 || $user->carrier_id != 23))
         $response = true;
 
     #hawai and carrier except  fedex then no cube required

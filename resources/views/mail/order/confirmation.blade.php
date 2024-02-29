@@ -25,7 +25,7 @@
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
     |    |    |     Total             | <small>${{round2Digit($order->total) }}</small> |
     @if(isDeliveryChargesApply())
-    |    |    |      <small>**Delivery charges may apply</small> |     |
+    |    |    |      <small>**Delivery charges may apply.</small> |     |
     @endif
     @endif
 @endcomponent
