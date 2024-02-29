@@ -27,14 +27,12 @@ function myPriceColumn(){
        return $column;
 }
 
-#For FOB Customers that choose Delivery (DLV) we need a note that states:
-# Delivery charges may apply. At the order summary page and also on the copy of the order total emailed to them.
 function isDeliveryChargesApply(){
     $user = itsMeUser();
     $note = null;
 
-    #Fob and carrier not PU, FEDEX OR
-    if(($user->price_list == 2 && ($user->carrier_id != 32 || $user->carrier_id != 23)) ||  ($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23)))
+    #Price is FOB OR carrier not PU, not FEDEX  OR price is fedex and carrier is PU Or not fedex
+    if(($user->price_list == 2 && ($user->carrier_id != 32 && $user->carrier_id != 23)) ||  ($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23)))
         $note = 'Delivery charges may apply.';
 
     return $note;
