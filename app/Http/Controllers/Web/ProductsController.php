@@ -167,6 +167,8 @@ class ProductsController extends Controller
             $carts = session()->get('cart');
             $cart2 = [];
 
+            if(is_null($carts)) return '';
+
             foreach ($carts as $id => $details) {
                 $product = Product::where('id', $id)->first();
                 $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
