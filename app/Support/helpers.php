@@ -45,11 +45,26 @@ function getCubeSizeTax($size){
     $priceName = $user->price_list; #1,2,3 fedex,fob,hawaii
     $salesRepExtra = in_array($user->sales_rep , ['Robert', 'Mario', 'Joe']);
 
-    $tax = $additional = $extraTax = 0;
+    $tax = $boxChargesApply = $serviceTransportFees24 = $additional = $extraTax = 0;
 
-    #only fedex have box cube minumums now
-    #all other no limit but 0.24 apply and service trans fees may apply in email too
-    if($priceName == 1){ #only fedex have box cube minumums now
+
+    #All prices and carrier is fedex then apply BOX CHARGES
+    if($user->carrier_id == 23)
+        $boxChargesApply = true;
+
+    #FOb and carrier is DLV, PU then apply transport tax 24%
+    if($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id == 17))
+        $serviceTransportFees24 = true;
+
+    #Fedex and carrier is PU and not fedex then apply transport tax 24%
+    elseif($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id != 23))
+        $serviceTransportFees24 = true;
+
+    #hawai and carrier is not fedex then apply transport tax 24%
+    elseif($user->price_list == 2  && $user->carrier_id != 23)
+        $serviceTransportFees24 = true;
+
+    if($boxChargesApply){ #only fedex have box cube minumums now
         if($size >= 12 && $size <= 15){
             $tax = 32;
             $extraTax = 1;
@@ -89,10 +104,8 @@ function getCubeSizeTax($size){
         }
     }
 
-    #if price is FOB then do this
-    else{
+    if($serviceTransportFees24)
         $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
-    }
 
     #return [$additional , $tax];
     return round2Digit($additional + $tax);
