@@ -368,7 +368,7 @@ class ProductsController extends Controller
                 $query->orderBy('item_no', 'DESC');
             elseif($filter == 3) #with images
                 $query->whereNotNull('image_url');
-            elseif($filter == 3) #without images
+            elseif($filter == 4) #without images
                 $query->whereNull('image_url');
         }
         $products = (clone $query)->paginate(100);
