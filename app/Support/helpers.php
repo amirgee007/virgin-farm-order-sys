@@ -20,9 +20,17 @@ function myPriceColumn(){
 
     $column = $prices[$user->price_list];
 
-    #if price is FOB and carrier FedEx then use fedex, otherwise FOB
+    #if price is FEDEX and carrier  other than fedex then price fob
+    if($user->price_list == 1 && $user->carrier_id != 23)
+        $column = 'price_fob';
+
+    #if price is FOB and carrier FedEx then use fedex price
     if($user->price_list == 2 && $user->carrier_id == 23)
         $column = 'price_fedex';
+
+    #if price is Hawai and carrier other than FedEx then use fob
+    if($user->price_list == 3 && $user->carrier_id != 23)
+        $column = 'price_fob';
 
        return $column;
 }
@@ -37,33 +45,6 @@ function isDeliveryChargesApply(){
         $note = 'Delivery charges may apply';
 
     return $note;
-}
-
-function itsMeUser(){
-    return \Vanguard\User::find(auth()->id());
-}
-
-
-function getPrices(){
-    #if any change plz check this too 1,2,3 getCubeSizeTax
-    return [
-        0 => 'Select Price',
-        1 => 'price_fedex',
-        2 => 'price_fob', #dont change this ID as its using somewhere.
-        3 => 'price_hawaii',
-    ];
-}
-
-function getSalesReps(){
-    #if any change plz check this too 1,2,3 getCubeSizeTax
-    return [
-        '0' => 'Select',
-        'Mario' => 'Mario',
-        'Robert' => 'Robert',
-        'Joe' => 'Joe',
-        'Nestor' => 'Nestor',
-        'Peter' => 'Peter',
-    ];
 }
 
 function getCubeSizeTax($size){
@@ -170,6 +151,8 @@ function checkIfSkipCubeCondition()
     $user = itsMeUser();
     return  ($user->price_list == 2 && $user->carrier_id == 32);
 }
+
+
 function getCarriers(){
     return Carrier::pluck('carrier_name', 'id')->sortBy('c_code')->toArray();
 }
@@ -250,6 +233,33 @@ function getTerms(){
 
 function myRoleName(){
     return  auth()->user() ? auth()->user()->role->name : '';
+}
+
+function itsMeUser(){
+    return \Vanguard\User::find(auth()->id());
+}
+
+
+function getPrices(){
+    #if any change plz check this too 1,2,3 getCubeSizeTax
+    return [
+        0 => 'Select Price',
+        1 => 'price_fedex',
+        2 => 'price_fob', #dont change this ID as its using somewhere.
+        3 => 'price_hawaii',
+    ];
+}
+
+function getSalesReps(){
+    #if any change plz check this too 1,2,3 getCubeSizeTax
+    return [
+        '0' => 'Select',
+        'Mario' => 'Mario',
+        'Robert' => 'Robert',
+        'Joe' => 'Joe',
+        'Nestor' => 'Nestor',
+        'Peter' => 'Peter',
+    ];
 }
 
 function cleanArray($array)
