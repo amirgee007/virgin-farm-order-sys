@@ -51,7 +51,7 @@ function getCubeSizeTax($size){
     if($user->carrier_id == 23)
         $boxChargesApply = true;
 
-    #FOb and carrier is DLV, PU then apply transport tax 24%
+    #FOb and carrier is PU OR any other but not fedex then apply transport tax 24%
     if($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id != 23))
         $serviceTransportFees24 = true;
 
