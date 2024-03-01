@@ -88,42 +88,43 @@
                                 </div>
                             </div>
                         @endforeach
+
+                        @php
+                            $cubeSizes = getCubeRanges($size);
+                        @endphp
+
+                        <div class="row">
+                            <div class="col center-block text-center mb-2">
+                                @if(is_null($cubeSizes))
+                                    <small class="text-danger"><b>Box capacity not met. </b></small>
+                                @else
+                                    <small class="text-primary"><b>Box capacity met. Review my order!</b></small>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col checkout">
+                                <a href="{{ route('cart') }}" class="btn btn-primary btn-block p-2">
+                                    <i class="fas fa-shopping-cart"></i> &nbsp;View all
+                                </a>
+                            </div>
+
+                            <div class="col checkout">
+                                    <a href="{{ route('empty.cart') }}"
+                                       class="btn btn-danger btn-block p-2"
+                                       title="@lang('Delete all items from cart?')"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       data-method="GET"
+                                       data-confirm-title="@lang('Please Confirm')"
+                                       data-confirm-text="@lang('Are you sure that you want to remove all items from cart?')"
+                                       data-confirm-delete="@lang('Yes, delete all!')">
+                                        <i class="fas fa-shopping-cart"></i> &nbsp;Empty Cart
+                                    </a>
+                                </div>
+                        </div>
                     @endif
-                    @php
-                        $cubeSizes = getCubeRanges($size);
-                    @endphp
-
-                    <div class="row">
-                        <div class="col center-block text-center mb-2">
-                            @if(is_null($cubeSizes))
-                                <small class="text-danger"><b>Box capacity not met. </b></small>
-                            @else
-                                <small class="text-primary"><b>Box capacity met. Review my order!</b></small>
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col checkout">
-                            <a href="{{ route('cart') }}" class="btn btn-primary btn-block p-2">
-                                <i class="fas fa-shopping-cart"></i> &nbsp;View all
-                            </a>
-                        </div>
-
-                        <div class="col checkout">
-                            <a href="{{ route('empty.cart') }}"
-                               class="btn btn-danger btn-block p-2"
-                               title="@lang('Delete all items from cart?')"
-                               data-toggle="tooltip"
-                               data-placement="top"
-                               data-method="GET"
-                               data-confirm-title="@lang('Please Confirm')"
-                               data-confirm-text="@lang('Are you sure that you want to remove all items from cart?')"
-                               data-confirm-delete="@lang('Yes, delete all!')">
-                                <i class="fas fa-shopping-cart"></i> &nbsp;Empty Cart
-                            </a>
-                        </div>
-                    </div>
                 </div>
 
                 Order Total: <span class="text-danger"><b>${{$total}}</b></span>
