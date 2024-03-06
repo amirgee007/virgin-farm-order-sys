@@ -268,11 +268,12 @@ function getSalesReps(){
     #if any change plz check this too 1,2,3 getCubeSizeTax
     return [
         '0' => 'Select',
-        'Mario' => 'Mario',
-        'Robert' => 'Robert',
+        'Esteban' => 'Esteban',
         'Joe' => 'Joe',
+        'Mario' => 'Mario',
         'Nestor' => 'Nestor',
         'Peter' => 'Peter',
+        'Robert' => 'Robert',
     ];
 }
 
