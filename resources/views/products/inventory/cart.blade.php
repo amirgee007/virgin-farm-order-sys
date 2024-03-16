@@ -132,26 +132,27 @@
                         <tbody>
                         @php $total = 0; $size = 0 @endphp
                         @if($carts)
-                            @foreach($carts as $id => $details)
+                            @foreach($carts as $cartItem)
                                 @php
-                                    $total += ($details['price'] * $details['quantity'] * $details['stems']);
-                                    $size += $details['size'] * $details['quantity'];
+                                    $total += ($cartItem->price * $cartItem->quantity * $cartItem->stems);
+                                    $size += $cartItem->size * $cartItem->quantity;
                                 @endphp
-                                <tr data-id="{{ $id }}">
+
+                                <tr data-id="{{ $cartItem->id }}">
                                     <td data-th="Product">
                                         <div class="row">
-                                            <div class="col-sm-3 hidden-xs mt-2"><img src="{{ $details['image'] }}" style="max-width: 40px;" class="img-responsive"/></div>
+                                            <div class="col-sm-3 hidden-xs mt-2"><img src="{{ $cartItem->image }}" style="max-width: 40px;" class="img-responsive"/></div>
                                             <div class="col-sm-9 mt-2">
-                                                <h4 class="nomargin">{{ $details['name'] }} Pack {{ $details['stems'] }}</h4>
+                                                <h4 class="nomargin">{{ $cartItem->name }} Pack {{ $cartItem->stems }}</h4>
                                             </div>
                                         </div>
                                     </td>
-                                    <td data-th="Price">${{ $details['price'] }} * {{$details['stems']}}</td>
-{{--                                    <td data-th="Price">{{ $details['size'] }}</td>--}}
+                                    <td data-th="Price">${{ $cartItem->price }} * {{$cartItem->stems}}</td>
+{{--                                    <td data-th="Price">{{ $cartItem->size }}</td>--}}
                                     <td data-th="Quantity">
-                                        <input type="number" max="{{@$details['max_qty']}}" onkeydown="return false" value="{{ $details['quantity'] }}" class="form-control quantity update-cart" />
+                                        <input type="number" max="{{@$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
                                     </td>
-                                    <td data-th="Subtotal" class="text-center">${{ round2Digit($details['price'] * $details['quantity'] * $details['stems']) }}</td>
+                                    <td data-th="Subtotal" class="text-center">${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}</td>
                                     <td class="actions" data-th="" title="Remove from cat">
                                         <button class="btn btn-danger btn-sm remove-from-cart"><i class="fas fa-trash"></i></button>
                                     </td>
@@ -259,13 +260,13 @@
 
     <script type="text/javascript">
 
-        $(".update-cart").change(function (e) {
+        $(".change-cart-qty").change(function (e) {
             e.preventDefault();
 
             var ele = $(this);
 
             $.ajax({
-                url: '{{ route('update.cart') }}',
+                url: '{{ route('change.cart.qty') }}',
                 method: "patch",
                 data: {
                     _token: '{{ csrf_token() }}',

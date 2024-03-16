@@ -3,12 +3,12 @@
 use Carbon\Carbon;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
+use Vanguard\Models\Cart;
 use Vanguard\Models\UsState;
 
 function getMyCart()
 {
-    $carts = session()->get('cart', []);
-    return $carts;
+    return Cart::mineCart()->get();
 }
 function myPriceColumn(){
     #OPTIMIZATION required plz keep in mind to reduce conditions

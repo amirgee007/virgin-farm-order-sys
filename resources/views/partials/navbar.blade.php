@@ -105,7 +105,7 @@
 
                         <div class="row">
                             <div class="col checkout">
-                                <a href="{{ route('cart') }}" class="btn btn-primary btn-block p-2">
+                                <a href="{{ route('view.cart') }}" class="btn btn-primary btn-block p-2">
                                     <i class="fas fa-shopping-cart"></i> &nbsp;View all
                                 </a>
                             </div>

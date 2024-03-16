@@ -20,13 +20,11 @@ class CartController extends Controller
         $this->middleware('auth');
     }
 
-    public function cart()
+    public function viewCart()
     {
-
-        $carts = session()->get('cart');
+        $carts = getMyCart();
         #Similar to the Solé web shop, we would like a time-out session timer. After 1 hour,
         #if the customer does not checkout, the items in the cart are emptied back to inventory.
-
         return view('products.inventory.cart' , compact('carts'));
     }
 
@@ -112,8 +110,11 @@ class CartController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function updateCartQty(Request $request)
     {
+//        id: 1216
+//quantity: 3
+        dd($request->all());
         #$product = Product::where('id', $id)->first();
         #$productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
