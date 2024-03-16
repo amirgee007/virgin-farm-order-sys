@@ -48,20 +48,21 @@
         <div class="row">
             <div class="col-md-6">
                 @include('settings.partials.auth')
-                @include('settings.partials.two-factor')
+{{--                @include('settings.partials.two-factor')--}}
             </div>
             <div class="col-md-6">
                 @include('settings.partials.throttling')
+            </div>
+
+            <div class="col-md-6">
+                @include('settings.partials.recaptcha')
             </div>
         </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="registration">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 @include('settings.partials.registration')
-            </div>
-            <div class="col-md-6">
-                @include('settings.partials.recaptcha')
             </div>
         </div>
     </div>

@@ -2,6 +2,10 @@
 
 @section('page-title', trans('Login'))
 
+@if (setting('registration.captcha.enabled'))
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@endif
+
 @section('content')
 
 <div class="col-md-8 col-lg-6 col-xl-5 mx-auto my-5p" id="login">
@@ -47,6 +51,13 @@
                                placeholder="@lang('Password')">
                     </div>
 
+                    {{-- Only display captcha if it is enabled --}}
+                    @if (setting('registration.captcha.enabled'))
+                        <div class="form-group my-4">
+                            {!! app('captcha')->display() !!}
+                        </div>
+                    @endif
+                    {{-- end captcha --}}
 
                     @if (setting('remember_me'))
                         <div class="custom-control custom-checkbox">

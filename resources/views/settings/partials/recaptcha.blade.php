@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <h5 class="card-title mb-1">
-            @lang('Google reCAPTCHA')
+            @lang('Google reCAPTCHA') Login Page
         </h5>
 
         <small class="text-muted d-block mb-4">

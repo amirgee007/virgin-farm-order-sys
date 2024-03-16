@@ -14,10 +14,18 @@ class LoginRequest extends Request
      */
     public function rules()
     {
-        return [
+
+
+        $rules = [
             'username' => 'required',
             'password' => 'required'
         ];
+
+        if (setting('registration.captcha.enabled')) {
+            $rules['g-recaptcha-response'] = 'required|captcha';
+        }
+
+        return $rules;
     }
 
     /**
