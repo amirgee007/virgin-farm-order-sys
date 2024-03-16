@@ -31,7 +31,6 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
 
-
         $quantity = $request->quantity;
         $product_id = $request->id;
         $product = Product::where('id', $product_id)->first();
@@ -112,16 +111,12 @@ class CartController extends Controller
 
     public function updateCartQty(Request $request)
     {
-//        id: 1216
-//quantity: 3
-        dd($request->all());
-        #$product = Product::where('id', $id)->first();
-        #$productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         if ($request->id && $request->quantity) {
-            $cart = session()->get('cart');
-            $cart[$request->id]["quantity"] = $request->quantity;
-            session()->put('cart', $cart);
+            $cartExist = Cart::mineCart()->where('id' , $request->id)->first();
+            $cartExist->quantity = $request->quantity;
+            $cartExist->save();
+
             session()->flash('success', 'Cart updated successfully');
         }
     }
