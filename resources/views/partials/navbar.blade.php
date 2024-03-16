@@ -45,7 +45,7 @@
         <ul class="navbar-nav ml-auto pr-3 flex-row" >
 
             <div class="dropdown" style="padding-right: 40px; ">
-                @php $myCarts = getMyCart();@endphp
+                @php $myCarts = getMyCart(); @endphp
 
                 <button type="button" class="btn btn-light btnCart" data-toggle="dropdown">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp;Cart
@@ -108,18 +108,18 @@
                             </div>
 
                             <div class="col checkout">
-                                    <a href="{{ route('empty.cart') }}"
-                                       class="btn btn-danger btn-block p-2"
-                                       title="@lang('Delete all items from cart?')"
-                                       data-toggle="tooltip"
-                                       data-placement="top"
-                                       data-method="GET"
-                                       data-confirm-title="@lang('Please Confirm')"
-                                       data-confirm-text="@lang('Are you sure that you want to remove all items from cart?')"
-                                       data-confirm-delete="@lang('Yes, delete all!')">
-                                        <i class="fas fa-shopping-cart"></i> &nbsp;Empty Cart
-                                    </a>
-                                </div>
+                                <a href="{{ route('empty.cart') }}"
+                                   class="btn btn-danger btn-block p-2"
+                                   title="@lang('Delete all items from cart?')"
+                                   data-toggle="tooltip"
+                                   data-placement="top"
+                                   data-method="GET"
+                                   data-confirm-title="@lang('Please Confirm')"
+                                   data-confirm-text="@lang('Are you sure that you want to remove all items from cart?')"
+                                   data-confirm-delete="@lang('Yes, delete all!')">
+                                    <i class="fas fa-shopping-cart"></i> &nbsp;Empty Cart
+                                </a>
+                            </div>
                         </div>
                     @endif
                 </div>

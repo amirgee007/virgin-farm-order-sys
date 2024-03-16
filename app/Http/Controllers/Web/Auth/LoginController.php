@@ -12,6 +12,7 @@ use Vanguard\Events\User\LoggedIn;
 use Vanguard\Events\User\LoggedOut;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\Auth\LoginRequest;
+use Vanguard\Models\Cart;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Services\Auth\ThrottlesLogins;
 use Vanguard\Services\Auth\TwoFactor\Contracts\Authenticatable;
@@ -82,6 +83,20 @@ class LoginController extends Controller
         $user->update([
             'last_ship_date' => null
         ]);
+
+        try{
+            $currentTime = now()->toDateTimeString();
+            $cart = Cart::where('user_id', $user->id)->latest()->first();
+
+            if($cart && $cart->updated_at->diffInHours($currentTime) > 1){
+                \Log::info($user->username . ' users cart has been removed due to last hour, plz keep an eye on it. '.$cart->updated_at->toDateTimeString());
+                Cart::where('user_id', $user->id)->delete();
+            }
+        }
+        catch (\Exception $ex){
+            \Log::error($ex->getMessage().' something went wrong here plz check for this use,...! '.$user->id);
+        }
+
         return $this->authenticated($request, $throttles, $user);
     }
 
