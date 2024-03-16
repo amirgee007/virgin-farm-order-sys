@@ -124,20 +124,16 @@ class CartController extends Controller
     public function remove(Request $request)
     {
         if ($request->id) {
-            $cart = session()->get('cart');
-            if (isset($cart[$request->id])) {
-                unset($cart[$request->id]);
-                session()->put('cart', $cart);
-            }
+            Cart::mineCart()->where('id' , $request->id)->delete();
         }
-        session()->flash('success', 'Product removed successfully');
+        session()->flash('success', 'Product removed successfully from cart.');
 
         return back();
     }
 
     public function emptyCart(Request $request)
     {
-        session()->put('cart', []);
+        Cart::mineCart()->delete();
         session()->flash('success', 'Your all products removed from cart successfully.');
 
         return back();
@@ -147,12 +143,10 @@ class CartController extends Controller
     {
         $user = $shipAddress = itsMeUser();;
 
-        $carts = session()->get('cart');
+        $carts = getMyCart();
         $address_id = $user->address_id; #if empty/ZERO then default address will be user not others.
         if($address_id)
             $shipAddress = ShippingAddress::find($address_id);
-
-        #"name" => #"company_name" #"phone"  #"address"
 
         $date_shipped = $user->last_ship_date;
         $carrier_id = $user->carrier_id;
@@ -170,25 +164,25 @@ class CartController extends Controller
 
         $total = $size = 0;
         $items = [];
-        foreach ($carts as $id => $details){
-            $productQty = ProductQuantity::where('id',$id)->first();
+        foreach ($carts as $cart){
+            $productQty = ProductQuantity::where('id', $cart->product_id)->first();
 
             if($productQty)
-                $productQty->decrement('quantity', $details['quantity']); #TODO if we need STOCK history change
+                $productQty->decrement('quantity', $cart->quantity); #TODO if we need STOCK history change
 
-            $total += $details['price'] * $details['quantity'] * $details['stems'];
-            $size += $details['size'] * $details['quantity'];
+            $total += $cart->price * $cart->quantity * $cart->stems;
+            $size += $cart->size * $cart->quantity;
 
             $item = [
                 'order_id' => $order->id,
-                'product_id' => $id,
-                'item_no' => @$details['item_no'],
-                'name' => $details['name'],
-                'quantity' => $details['quantity'],
-                'price' => round2Digit($details['price']),
-                'size' => $details['size'],
-                'stems' => $details['stems'],
-                'sub_total' => round2Digit($details['price'] * $details['quantity'] * $details['stems']),
+                'product_id' => $cart->product_id,
+                'item_no' => @$cart->item_no,
+                'name' => $cart->name,
+                'quantity' => $cart->quantity,
+                'price' => round2Digit($cart->price),
+                'size' => $cart->size,
+                'stems' => $cart->stems,
+                'sub_total' => round2Digit($cart->price * $cart->quantity * $cart->stems),
             ];
 
             OrderItem::create($item);
@@ -207,19 +201,19 @@ class CartController extends Controller
         ]);
 
         $order->refresh();
-        #dd($order->items);
         #$content = "decreased otherwise increased."; E-Commerce Checkout - Virgin Farms Inc. / PB W831718
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
-        \Mail::to($user->email)
-            ->cc(['sales@virginfarms.net'])
-            ->bcc(['amirseersol@gmail.com'])
-            ->send(new OrderConfirmationMail($order , $user));
+        if(config('app.env') != 'local')
+            \Mail::to($user->email)
+                ->cc(['sales@virginfarms.net'])
+                ->bcc(['amirseersol@gmail.com'])
+                ->send(new OrderConfirmationMail($order , $user));
 
-        session()->put('cart', []);
+        Cart::mineCart()->delete();
+
         session()->flash('success', 'Your order has been recived successfully. You will be notified soon.');
-
 
         return \redirect(route('inventory.index'));
     }

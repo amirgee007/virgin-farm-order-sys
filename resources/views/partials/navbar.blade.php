@@ -8,12 +8,6 @@
     </div>
 
     <div>
-        @if (app('impersonate')->isImpersonating())
-            <a href="{{ route('impersonate.leave') }}" class="navbar-toggler text-danger hidden-md">
-                <i class="fas fa-user-secret"></i>
-            </a>
-        @endif
-
         <button class="navbar-toggler" type="button" id="sidebar-toggle">
             <i class="fas fa-align-right text-muted"></i>
         </button>
@@ -51,23 +45,26 @@
         <ul class="navbar-nav ml-auto pr-3 flex-row" >
 
             <div class="dropdown" style="padding-right: 40px; ">
+                @php $myCarts = getMyCart();@endphp
+
                 <button type="button" class="btn btn-light btnCart" data-toggle="dropdown">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp;Cart
-                    <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
+                    <span class="badge badge-pill badge-danger">{{ count($myCarts) }}</span>
                 </button>
 
                 <div class="dropdown-menu" style="max-height: 600px;   overflow:auto;">
                     <div class="row total-header-section">
                         <div class="col-lg-3 col-sm-6 col-6">
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                            <span class="badge badge-pill badge-danger">{{ count((array) session('cart')) }}</span>
+                            {{--<span class="badge badge-pill badge-danger">{{ count($myCarts)  }}</span>--}}
                         </div>
                         @php $total = 0;  $totalQty = 0; $size = 0;@endphp
-                        @foreach((array) session('cart') as $id => $details)
+                        @foreach($myCarts as $details)
+
                             @php
-                                $total += ($details['price'] * $details['quantity'] * $details['stems']);
-                                $totalQty =+ $totalQty + $details['quantity'];
-                                 $size += $details['size'] * $details['quantity'];
+                                $total += ($details->price * $details->quantity * $details->stems);
+                                $totalQty =+ $totalQty + $details->quantity;
+                                 $size += $details->size * $details->quantity;
                             @endphp
 
                         @endforeach
@@ -76,15 +73,15 @@
                             <p>Total Units:<b class="text-info"> {{$totalQty}}</b> &nbsp; Total: <span class="text-info"><b>${{$total}}</b></span></p>
                         </div>
                     </div>
-                    @if(session('cart'))
-                        @foreach(session('cart') as $id => $details)
+                    @if($myCarts)
+                        @foreach($myCarts as $details)
                             <div class="row cart-detail">
                                 <div class="col-lg-4 col-sm-4 col-4 cart-detail-img">
-                                    <img src="{{ $details['image'] }}" />
+                                    <img src="{{ $details->image }}" />
                                 </div>
                                 <div class="col-lg-8 col-sm-8 col-8 cart-detail-product">
-                                    <p>{{ $details['name'] }}  <small>({{$details['stems']}})</small></p>
-                                    <span class="price text-info"> ${{ $details['price']* $details['stems'] }}</span> <span class="count"> Quantity:{{ $details['quantity'] }}</span>
+                                    <p>{{ $details->name }}  <small>({{$details->stems}})</small></p>
+                                    <span class="price text-info"> ${{ $details->price * $details->stems }}</span> <span class="count"> Quantity:{{ $details->quantity }}</span>
                                 </div>
                             </div>
                         @endforeach
@@ -129,7 +126,6 @@
 
                 Order Total: <span class="text-danger"><b>${{$total}}</b></span>
             </div>
-
 
             @hook('navbar:items')
 

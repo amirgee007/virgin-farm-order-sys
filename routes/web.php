@@ -7,9 +7,9 @@ use Vanguard\Http\Controllers\Web\CartController;
 Route::get('cart', [CartController::class, 'viewCart'])->name('view.cart'); #done DB
 Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart'); #done DB
 Route::patch('update-cart-qty', [CartController::class, 'updateCartQty'])->name('change.cart.qty'); #done DB
-Route::post('remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
-Route::get('empty-cart', [CartController::class, 'emptyCart'])->name('empty.cart');
-Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name('checkout.cart');
+Route::post('remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart'); #done DB
+Route::get('empty-cart', [CartController::class, 'emptyCart'])->name('empty.cart');#done DB
+Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name('checkout.cart'); #done DB
 
 /**
  * Authentication
