@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\OrderConfirmationMail;
+use Vanguard\Models\Cart;
 use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
@@ -17,10 +18,6 @@ class CartController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-
-//        $this->middleware('permission:products.manage', ['only' => [
-//            'updatePurchasePrice',
-//        ]]);
     }
 
     public function cart()
@@ -36,40 +33,35 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
 
-        //  "id" => "1"
-        //  "mark_code" => null
-        //  "quantity" => "123"
-
-        $id = $request->id;
 
         $quantity = $request->quantity;
-
-        $product = Product::where('id', $id)->first();
+        $product_id = $request->id;
+        $product = Product::where('id', $product_id)->first();
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = myPriceColumn();
 
-        $cart = session()->get('cart', []);
-
+        $cartExist = Cart::mineCart()->where('item_no' , $product->item_no)->first();
         $stems = $product->stemsCount ? $product->stemsCount->total : 1;
 
-        if (isset($cart[$id])) {
-            $cart[$id]['quantity'] = $cart[$id]['quantity']+$quantity;
-        } else {
-            $cart[$id] = [
-                "name" => $product->product_text,
+        if($cartExist){
+            $cartExist->increment('quantity' , $quantity);
+        }
+        else
+        {
+            Cart::create([
+                "product_id" => $product_id,
                 "item_no" => $product->item_no,
+                "name" => $product->product_text,
                 "quantity" => $quantity,
                 "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
                 "size" => $product->size,
                 "stems" => $product->stemsCount ? $product->stemsCount->total : 1,
                 "max_qty" => $productInfo->quantity,
-                "time" => now()->toDateTimeString(),
-            ];
+                "user_id" => auth()->id(),
+            ]);
         }
-
-        session()->put('cart', $cart);
 
         #$response['result'] = true;
         #return response()->json($response);

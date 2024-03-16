@@ -13,22 +13,33 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
-            $table->string('item_no')->nullable();
-            $table->string('name');
+            $table->integer('product_id');
+            $table->string('item_no');
+            $table->string('name')->nullable();;
             $table->integer('quantity');
             $table->decimal('price', 10, 2)->default(0);
-            $table->string('image' , 350);
-            $table->string('size');
-            $table->string('stems');
-            $table->integer('max_qty');
+            $table->string('image' , 350)->nullable();
+            $table->string('size')->nullable();
+            $table->string('stems')->nullable();
+            $table->integer('max_qty')->nullable();
             $table->integer('user_id');
             $table->timestamps();
+
+            $table->unique(array('product_id', 'user_id'));
+
         });
 
         Schema::table('carts', function (Blueprint $table) {
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
+                ->onDelete('cascade');
+        });
+
+        Schema::table('carts', function (Blueprint $table) {
+            $table->foreign('product_id')
+                ->references('id')
+                ->on('products')
                 ->onDelete('cascade');
         });
     }
