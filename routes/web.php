@@ -2,15 +2,14 @@
 
 
 use Vanguard\Http\Controllers\Web\ProductsController;
+use Vanguard\Http\Controllers\Web\CartController;
 
-Route::get('/', [ProductsController::class, 'index']);
-Route::get('empty-cart', [ProductsController::class, 'emptyCart'])->name('empty.cart');
-Route::post('remove-from-cart', [ProductsController::class, 'remove'])->name('remove.from.cart');
-Route::get('cart', [ProductsController::class, 'cart'])->name('cart');
-Route::post('add-to-cart', [ProductsController::class, 'addToCart'])->name('add.to.cart');
-Route::patch('update-cart', [ProductsController::class, 'update'])->name('update.cart');
-Route::get('checkout-from-cart', [ProductsController::class, 'checkOutCart'])->name('checkout.cart');
-
+Route::get('cart', [CartController::class, 'cart'])->name('cart');
+Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart'); #done DB
+Route::patch('update-cart', [CartController::class, 'update'])->name('update.cart');
+Route::post('remove-from-cart', [CartController::class, 'remove'])->name('remove.from.cart');
+Route::get('empty-cart', [CartController::class, 'emptyCart'])->name('empty.cart');
+Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name('checkout.cart');
 
 /**
  * Authentication
@@ -68,15 +67,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'inventory.index',
             'uses' => 'ProductsController@inventoryIndex'
         ]);
-
-        Route::post('/add-to-cart', [
-            'as' => 'product.add.to.cart',
-            'uses' => 'ProductsController@addToCart'
-        ]);
         #client side ended here....!
-
-
-
 
         Route::get('/manage', [
             'as' => 'products.index.manage',
