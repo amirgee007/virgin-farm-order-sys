@@ -3,12 +3,14 @@
     <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
     <td class="align-middle">
         <img style="max-width: 35px; cursor: pointer;"
-             id="{{$product->id}}"
+             id="{{$product->id}}imgTD"
+             data-id="{{$product->id}}"
              title="Click to show Larger image OR Copy image from any other ITEM"
              data-info="{{$product->product_text}}"
              data-toggle="tooltip" data-placement="bottom"
              data-largeimg="{{$product->image_url}}"
-             src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="Virgin Farm">
+             src="{{ asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="Virgin Farm">
+
         {{ $product->product_text }}
 
         {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}

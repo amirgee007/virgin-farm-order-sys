@@ -115,6 +115,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@copyImageToOtherProduct'
         ]);
 
+        Route::post('/get-image-data-ajax', [
+            'as' => 'get.image.data.ajax',
+            'uses' => 'ProductsController@getIndexDetailsAjax'
+        ]);
+
         Route::post('/reset-specific-inventory', [
             'as' => 'reset.specific.inventory',
             'uses' => 'ProductsController@resetSpecificInventory'

@@ -582,5 +582,38 @@
                 }
             });
         });
+
+        $(window).on('load', function () {
+            $(function(){
+                setTimeout(function(){
+
+                    var selectedProductsIds = [];
+
+                    $(".img-thumbnail").each( function() {
+                        selectedProductsIds.push($(this).data('id'));
+                    });
+
+                    $.ajax({
+                        url: "{{ route('get.image.data.ajax') }}",
+                        method: 'post',
+                        data: {
+                            ids:selectedProductsIds.join(",")
+                        },
+                        success: function (response) {
+                            $.each(response,function(id, image) {
+                                var idImg = `#${id}imgTD`;
+                                if(image)
+                                    $(idImg).attr("src",image);
+                            });
+                        },
+                        error: function () {
+                            toastr.error('Something went wrong during loading images data.');
+                        }
+                    });
+
+                }, 250);
+            });
+        });
+
     </script>
 @endsection

@@ -403,6 +403,25 @@ class ProductsController extends Controller
         }
     }
 
+    public function getIndexDetailsAjax(Request $request)
+    {
+
+        try {
+
+            $array = explode(',', $request->ids);
+
+            $data = Product::whereIn('id', $array)->pluck('image_url' , 'id')->toArray();
+            $data['success'] = true;
+            return response()->json($data);
+
+        } catch (\Exception $exc) {
+            Log::error('getIndexDetailsAjax error plz check why .' . $exc->getMessage());
+
+            $data['success'] = false;
+            return response()->json($data);
+        }
+    }
+
     public function copyImageToOtherProduct(Request $request){
 
         #load_img_modal
