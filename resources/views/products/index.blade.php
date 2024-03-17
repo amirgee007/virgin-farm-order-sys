@@ -544,7 +544,7 @@
                 $('#largeImgModal').modal('show');
             }
             else{
-                $('#item_copy_too').val($(this).attr('id'));
+                $('#item_copy_too').val($(this).data('id'));
                 $('#copyPicModal').modal('show');
             }
         });
