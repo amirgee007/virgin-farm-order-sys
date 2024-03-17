@@ -375,13 +375,23 @@ class ProductsController extends Controller
                     $url = url("images/$token") . '/' . $file->getFilename();
 
                     $sku = $file->getFilenameWithoutExtension();
+                    $sku = trim($sku);
 
-                    $product = Product::where('item_no', trim($sku))->first();
+                    $product = Product::where('item_no', $sku)->first();
 
                     if ($product)
                         $product->update(['image_url' => $url]);
-                    else
-                        unlink($file->getRealPath());
+                    else {
+                        #check here if products have any other with descriton mathced then we can check and updated here.
+                        #i.e plz check with chritst here and then if all ok then make that logic as corrected.
+                        $products = Product::where('product_text', 'like', "%{$sku}%")->get();
+                        if (count($products)>0) {
+                            foreach ($products as $product) {
+                                $product->update(['image_url' => $url]);
+                            }
+                        } else
+                            unlink($file->getRealPath());
+                    }
                 }
             }
 
