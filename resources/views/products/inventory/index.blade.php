@@ -169,11 +169,13 @@
                                         <tr>
                                             <td class="align-middle">
                                                 <img style="max-width: 35px; cursor: pointer;"
+                                                     id="{{$product->id}}imgTD"
+                                                     data-id="{{$product->id}}"
                                                      title="Click to show Larger image"
                                                      data-info="{{$product->product_text}}"
                                                      data-toggle="tooltip" data-placement="bottom"
                                                      data-largeimg="{{$product->image_url}}"
-                                                     src="{{ $product->image_url ? $product->image_url : asset('assets\img\no-image.png') }}"
+                                                     src="{{ asset('assets\img\no-image.png') }}"
                                                      class="img-thumbnail" alt="Virgin Farm">
                                                 {{ $product->product_text }}
 
@@ -429,5 +431,36 @@
             });
         });
 
+        $(window).on('load', function () {
+            $(function(){
+                setTimeout(function(){
+
+                    var selectedProductsIds = [];
+
+                    $(".img-thumbnail").each( function() {
+                        selectedProductsIds.push($(this).data('id'));
+                    });
+
+                    $.ajax({
+                        url: "{{ route('get.image.data.ajax') }}",
+                        method: 'post',
+                        data: {
+                            ids:selectedProductsIds.join(",")
+                        },
+                        success: function (response) {
+                            $.each(response,function(id, image) {
+                                var idImg = `#${id}imgTD`;
+                                if(image)
+                                    $(idImg).attr("src",image);
+                            });
+                        },
+                        error: function () {
+                            toastr.error('Something went wrong during loading images data.');
+                        }
+                    });
+
+                }, 250);
+            });
+        });
     </script>
 @endsection
