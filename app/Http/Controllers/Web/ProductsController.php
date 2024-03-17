@@ -405,17 +405,43 @@ class ProductsController extends Controller
 
     public function copyImageToOtherProduct(Request $request){
 
-        $productToo = Product::where('id', $request->item_copy_too)->first();
-        $productFrom = Product::where('item_no', $request->item_copy_from)->first();
+        #load_img_modal
+        if($request->load_img_modal){
 
-        if($productFrom && $productToo && $productFrom->image_url){
-            $productToo->image_url = $productFrom->image_url;
-            $productToo->save();
+            $haveImages = Product::whereNotNull('image_url')->orderBy('item_no')->pluck('item_no' , 'id')->toArray();
+            $noImages = Product::whereNull('image_url')->orderBy('item_no')->pluck('item_no' , 'id')->toArray();
 
-            session()->flash('app_message', 'Product Image has been copied successfully.');
+            $view = view('products._partial._copy_img_modal' , compact('haveImages' , 'noImages'))->render();
+            $response['modal'] = $view;
+
+            return response()->json($response);
         }
+
+        elseif($request->source && $request->targets){
+            $productSource = Product::where('id', $request->source)->first();
+
+            if($productSource)
+                Product::whereIn('id', $request->targets)->update([
+                    'image_url' => $productSource->image_url
+                ]);
+
+            session()->flash('app_message', 'Multiple products image has been copied successfully.');
+        }
+
         else
-            session()->flash('app_error', 'Product not found in the system plz write correct and try again.');
+        {
+            $productToo = Product::where('id', $request->item_copy_too)->first();
+            $productFrom = Product::where('item_no', $request->item_copy_from)->first();
+
+            if($productFrom && $productToo && $productFrom->image_url){
+                $productToo->image_url = $productFrom->image_url;
+                $productToo->save();
+
+                session()->flash('app_message', 'Product Image has been copied successfully.');
+            }
+            else
+                session()->flash('app_error', 'Product not found in the system plz write correct and try again.');
+        }
 
         return back();
     }

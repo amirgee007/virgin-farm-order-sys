@@ -19,7 +19,6 @@
         .clickable {
             cursor: pointer;
         }
-
     </style>
 
 @endsection
@@ -72,6 +71,11 @@
                             <a href="javascript:void(0)" id="reset_delete_inventory" title="Reset/Delete a specified inventory" data-toggle="tooltip" data-placement="left"
                                class="btn btn-danger btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-trash"></i>
+                            </a>
+
+                            <a href="javascript:void(0)" id="copy_multiple_img" title="Bulk assign feature: copy to more than one image" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-primary btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-puzzle-piece"></i>
                             </a>
 
                         </p>
@@ -238,9 +242,6 @@
                                 &nbsp;<i class="fa fa-caret-down"></i>
                             </div>
 
-
-
-
 {{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>--}}
 {{--                            <div class="col-sm-8 mt-2">--}}
 {{--                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">--}}
@@ -326,7 +327,7 @@
                         </div>
 
                         <small>
-                            Only zip file is allowed here also image names are should be SKU
+                            Only zip file allowed & image names should be same as SKU OR match any part product text.
                         </small>
                         <br>
                         <br>
@@ -466,6 +467,24 @@
         </div>
     </div>
 
+    <div class="modal" id="copy_multiple_img_mod" role="dialog">
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Copy Multiple Images</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body" id="imagesModalBody"  style="overflow:hidden;">
+                    Please wait...!!
+                </div>
+
+            </div>
+        </div>
+
+    </div>
 @stop
 
 @section('scripts')
@@ -546,6 +565,22 @@
 
         $('#reset_delete_inventory').on('click', function () {
             $('#reset_delete_inventory_mod').modal('show');
+        });
+
+        $('#copy_multiple_img').on('click', function () {
+            $('#copy_multiple_img_mod').modal('show');
+
+            $.ajax({
+                url: '{{route('copy.image.product')}}',
+                data: {
+                    'load_img_modal': 1
+                },
+                type: 'POST',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function (response) {
+                    $('#imagesModalBody').html(response.modal);
+                }
+            });
         });
     </script>
 @endsection
