@@ -164,6 +164,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'unit_of_measures.update',
             'uses' => 'BoxesController@unitOfMeasuresUpdate'
         ]);
+
+        Route::post('update-extra-fees-date', [
+            'as' => 'update.extra.fees.date',
+            'uses' => 'BoxesController@updateExtraFeesDates'
+        ]);
     });
 
     Route::group(['prefix'=>'notifications'], function() {

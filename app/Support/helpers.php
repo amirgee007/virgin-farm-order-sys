@@ -110,7 +110,6 @@ function getCubeSizeTax($size){
     if($serviceTransportFees24)
         $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
 
-    #return [$additional , $tax];
     return round2Digit($additional + $tax);
 }
 

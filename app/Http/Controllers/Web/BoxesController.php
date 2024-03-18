@@ -2,9 +2,12 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Box;
+use Vanguard\Models\ProductQuantity;
+use Vanguard\Models\Setting;
 use Vanguard\Models\UnitOfMeasure;
 
 class BoxesController extends Controller
@@ -25,6 +28,25 @@ class BoxesController extends Controller
 
         $query = Box::query();
 
+        $start_date = Carbon::now();
+        $end_date = Carbon::now()->addDays(5);
+
+        $selected['start'] = $start_date->toDayDateTimeString();
+        $selected['end'] = $end_date->toDayDateTimeString();
+
+        $found = Setting::where('key' , 'extra-fees-date')->first();
+        if($found){
+            $dates = json_decode($found->label , true);
+
+            $selected = [
+                'start' => $dates['date_in'],
+                'end' => $dates['date_out'],
+            ];
+        }
+
+        $selected['start'] = $start_date->toDayDateTimeString();
+        $selected['end'] = $end_date->toDayDateTimeString();
+
         if($search){
             $query->where(function ($q) use ($search) {
                 $q->orWhere('description', 'like', "%{$search}%");
@@ -39,7 +61,7 @@ class BoxesController extends Controller
         $boxes = $query->paginate(100);
 
         $unitOfMeasure = UnitOfMeasure::all();
-        return view('boxes.index' , compact('boxes' , 'unitOfMeasure'));
+        return view('boxes.index' , compact('boxes' , 'unitOfMeasure' , 'selected' , 'found'));
     }
 
     public function deleteBox($id)
@@ -67,8 +89,6 @@ class BoxesController extends Controller
             return ['Done'];
 
         }catch (\Exception $ex){
-
-            dd($ex);
             session()->flash('app_error', 'Something went wrong plz try again later.');
             return back();
         }
@@ -83,5 +103,23 @@ class BoxesController extends Controller
         } catch (\Exception $ex) {
         }
 
+    }
+
+    public function updateExtraFeesDates(Request $request){
+
+        $dates =  dateRangeConverter($request->range);
+        $date_in = $dates['date_in'];
+        $date_out = $dates['date_out'];
+
+        $found = Setting::updateOrCreate([
+            'key' => 'extra-fees-date'
+        ] , [
+            'value' => $request->fees,
+            'label' => json_encode($dates),
+            'done_by' => auth()->id(),
+        ]);
+
+        session()->flash('app_message', 'Your dates for extra fees has been updated successfully.');
+        return back();
     }
 }

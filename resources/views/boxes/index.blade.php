@@ -11,6 +11,8 @@
 
 @section ('styles')
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/daterangepicker/daterangepicker.css') }}">
+
 @stop
 
 @section('content')
@@ -21,7 +23,7 @@
     <div class="card-body">
         <form action="" method="GET" id="users-form" class="pb-2 mb-3 border-bottom-light">
             <div class="row my-3 flex-md-row flex-column-reverse">
-                <div class="col-md-10 mt-md-0 mt-2">
+                <div class="col-md-8 mt-md-0 mt-2">
                     <div class="input-group custom-search-form">
                         <input type="text"
                                class="form-control input-solid"
@@ -44,13 +46,12 @@
                     </div>
                 </div>
 
+                <div class="col-md-4">
 
-                <div class="col-md-2">
-
-{{--                    <a class="float-right mb-2" href="#">--}}
-{{--                        <i title="Import BOX by EXCEL sheet"--}}
-{{--                           data-toggle="tooltip" data-placement="top" class="fas fa-upload fa-2x"></i>--}}
-{{--                    </a>--}}
+                    <a href="#" class="btn btn-danger btn-rounded float-right btn-sm ml-2" data-toggle="modal" data-target="#changeExtraFees">
+                        <i class="fas fa-plus mr-2"></i>
+                        @lang('Update Extra Fee Date')
+                    </a>
 
                     <a href="#" class="btn btn-primary btn-rounded float-right btn-sm" data-toggle="modal" data-target="#createBoxModal">
                         <i class="fas fa-plus mr-2"></i>
@@ -246,7 +247,7 @@
 {!! $boxes->render() !!}
 
 
-<!-- Create Address Modal -->
+<!-- Create boxes Modal -->
 <div class="modal fade" id="createBoxModal" tabindex="-1" role="dialog" aria-labelledby="createBoxModal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -260,13 +261,74 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="changeExtraFees" tabindex="-1" role="dialog" aria-labelledby="createBoxModal" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Extra Fee Dates</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{route('update.extra.fees.date')}}" method="POST" enctype="multipart/form-data">
+                    {{csrf_field()}}
+
+                    <div class="form-group">
+                        <input type="hidden" name="range" value="" class="dateRangeVal">
+                        <label for="dateRange" class="form-label mt-3">Date Range</label>
+                        <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
+                            <i class="fa fa-calendar"></i>&nbsp;
+                            <span></span>
+                            &nbsp;<i class="fa fa-caret-down"></i>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <br/>
+                    <div class="form-group">
+                        <label for="extraFees">Extra Fees %</label>
+                        <input type="number" name="fees" min="1" value="{{$found ? $found->value : ''}}"  max="100" class="form-control" id="extraFees" placeholder="1-100">
+                    </div>
+                    <br>
+                    <input type="submit" value="Update Dates" class="btn btn-primary btn-sm float-right">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @stop
 
 @section('scripts')
 
     @include('partials.toaster-js')
+    <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
+
     <script>
+
+        var start = moment('{{$selected['start']}}');
+        var end = moment('{{$selected['end']}}');
+
+        function cb(start, end) {
+            $('#dateRange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $('.dateRangeVal').val($("#dateRange span").html());
+        }
+
+        $('.dateRanges').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Next 6 Days': [moment(), moment().add(6, 'days')],
+                'Next 7 Days': [moment(),moment().add(7, 'days')],
+                'Next 15 Days': [moment(), moment().add(15, 'days'), moment()],
+                'Next 30 Days': [moment(), moment().add(30, 'days'), moment()]
+            }
+        }, cb);
+
+        cb(start, end);
+
         $.fn.editable.defaults.mode = 'inline';
         $.fn.editable.defaults.ajaxOptions = {
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }

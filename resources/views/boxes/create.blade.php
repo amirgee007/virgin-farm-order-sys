@@ -41,8 +41,6 @@
                                 <input required type="number" class="form-control input-solid" id="min_value"
                                        name="min_value" placeholder="@lang('Minimum Value')">
                             </div>
-
-
                         </div>
 
                         <div class="col-md-6">
@@ -58,14 +56,9 @@
                                 <input required type="number" class="form-control input-solid" id="max_value"
                                        name="max_value" placeholder="@lang('Minimum Value')">
                             </div>
-
-
-
-
                         </div>
 
                     </div>
-
 
                 </div>
             </div>
