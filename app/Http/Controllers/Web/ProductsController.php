@@ -46,25 +46,23 @@ class ProductsController extends Controller
 
         $address = $user->shipAddress;
 
-        if(!$date_shipped)
+        if (!$date_shipped)
             $date_shipped = $user->last_ship_date;
-        else
-        {
+        else {
             $user->update([
                 'last_ship_date' => $date_shipped
             ]);
         }
 
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
-        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')->where('quantity', '>' ,0);
-        if ($date_shipped){
-            $query->whereRaw('"'.$date_shipped.'" between `date_in` and `date_out`');
-        }
-        else
-            $query->where('quantity' , '<', 0); #just to ingnore will make it zero after testing
+        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')->where('quantity', '>', 0);
+        if ($date_shipped) {
+            $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');
+        } else
+            $query->where('quantity', '<', 0); #just to ingnore will make it zero after testing
 
-        if ($category_id){
-            $query->where('category_id' , $category_id);
+        if ($category_id) {
+            $query->where('category_id', $category_id);
         }
 
         if ($searching) {
@@ -80,7 +78,7 @@ class ProductsController extends Controller
         $products = (clone $query)->orderBy('product_text')->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,quantity,weight,size,price_fob,price_fedex,price_hawaii')
             ->paginate(150);
 
-        if ($date_shipped || $category_id || $searching ) {
+        if ($date_shipped || $category_id || $searching) {
             $products->appends([
                 'date_shipped' => $date_shipped,
                 'searching' => $searching,
@@ -103,7 +101,6 @@ class ProductsController extends Controller
             'boxes'
         ));
     }
-
 
 
     public function deleteProduct($id)
@@ -154,14 +151,14 @@ class ProductsController extends Controller
             });
         }
 
-        if($filter){
-            if($filter == 1) #a-z
+        if ($filter) {
+            if ($filter == 1) #a-z
                 $query->orderBy('item_no', 'ASC');
-            elseif($filter == 2) #z-a
+            elseif ($filter == 2) #z-a
                 $query->orderBy('item_no', 'DESC');
-            elseif($filter == 3) #with images
+            elseif ($filter == 3) #with images
                 $query->whereNotNull('image_url');
-            elseif($filter == 4) #without images
+            elseif ($filter == 4) #without images
                 $query->whereNull('image_url');
         }
         $products = (clone $query)->paginate(100);
@@ -186,20 +183,21 @@ class ProductsController extends Controller
         ));
     }
 
-    public function createNewProduct(Request $request){
+    public function createNewProduct(Request $request)
+    {
 
-        $product =  Product::where('item_no' , $request->item_no)->first();
+        $product = Product::where('item_no', $request->item_no)->first();
 
         $data = $request->except('_token');
-        if($product){
+        if ($product) {
             $product->update($data);
-        }
-        else
+        } else
             Product::create($data);
 
         session()->flash('app_message', 'Product has been created in the system.');
         return back();
     }
+
     public function uploadProducts(Request $request)
     {
 
@@ -232,13 +230,13 @@ class ProductsController extends Controller
                         'price_hawaii' => trim($row[6]), #price 5
                     ];
 
-                    $product =  Product::where('item_no' , trim($row[1]))->first();
+                    $product = Product::where('item_no', trim($row[1]))->first();
 
-                    if($product){
+                    if ($product) {
                         $product->update($data);
-                    }else{
+                    } else {
 //                        $data['product_id']  = rand(100, 999999);
-                        $product =  Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
+                        $product = Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
                     }
 
                     #need to check if here we can also need to put an extra inventory or not.
@@ -272,7 +270,7 @@ class ProductsController extends Controller
         #reset and delete zero qty products
         $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
 
-        $dates =  dateRangeConverter($request->range);
+        $dates = dateRangeConverter($request->range);
 
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
@@ -385,7 +383,7 @@ class ProductsController extends Controller
                         #check here if products have any other with descriton mathced then we can check and updated here.
                         #i.e plz check with chritst here and then if all ok then make that logic as corrected.
                         $products = Product::where('product_text', 'like', "%{$sku}%")->get();
-                        if (count($products)>0) {
+                        if (count($products) > 0) {
                             foreach ($products as $product) {
                                 $product->update(['image_url' => $url]);
                             }
@@ -410,7 +408,7 @@ class ProductsController extends Controller
 
             $array = explode(',', $request->ids);
 
-            $data = Product::whereIn('id', $array)->pluck('image_url' , 'id')->toArray();
+            $data = Product::whereIn('id', $array)->pluck('image_url', 'id')->toArray();
             $data['success'] = true;
             return response()->json($data);
 
@@ -422,51 +420,48 @@ class ProductsController extends Controller
         }
     }
 
-    public function copyImageToOtherProduct(Request $request){
+    public function copyImageToOtherProduct(Request $request)
+    {
 
         #load_img_modal
-        if($request->load_img_modal){
+        if ($request->load_img_modal) {
 
-            $haveImages = Product::whereNotNull('image_url')->orderBy('item_no')->pluck('item_no' , 'id')->toArray();
-            $noImages = Product::whereNull('image_url')->orderBy('item_no')->pluck('item_no' , 'id')->toArray();
+            $haveImages = Product::whereNotNull('image_url')->orderBy('item_no')->pluck('item_no', 'id')->toArray();
+            $noImages = Product::whereNull('image_url')->orderBy('item_no')->pluck('item_no', 'id')->toArray();
 
-            $view = view('products._partial._copy_img_modal' , compact('haveImages' , 'noImages'))->render();
+            $view = view('products._partial._copy_img_modal', compact('haveImages', 'noImages'))->render();
             $response['modal'] = $view;
 
             return response()->json($response);
-        }
-
-        elseif($request->source && $request->targets){
+        } elseif ($request->source && $request->targets) {
             $productSource = Product::where('id', $request->source)->first();
 
-            if($productSource)
+            if ($productSource)
                 Product::whereIn('id', $request->targets)->update([
                     'image_url' => $productSource->image_url
                 ]);
 
             session()->flash('app_message', 'Multiple products image has been copied successfully.');
-        }
-
-        else
-        {
+        } else {
             $productToo = Product::where('id', $request->item_copy_too)->first();
             $productFrom = Product::where('item_no', $request->item_copy_from)->first();
 
-            if($productFrom && $productToo && $productFrom->image_url){
+            if ($productFrom && $productToo && $productFrom->image_url) {
                 $productToo->image_url = $productFrom->image_url;
                 $productToo->save();
 
                 session()->flash('app_message', 'Product Image has been copied successfully.');
-            }
-            else
+            } else
                 session()->flash('app_error', 'Product not found in the system plz write correct and try again.');
         }
 
         return back();
     }
-    public function iventoryReset(){
 
-        ProductQuantity::query()->whereDate('date_out' , '<' , now()->toDateString())->update([
+    public function iventoryReset()
+    {
+
+        ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->update([
             'quantity' => 0,
             'date_in' => null,
             'date_out' => null,
@@ -476,17 +471,18 @@ class ProductsController extends Controller
         return back();
     }
 
-    public function resetSpecificInventory(Request $request){
+    public function resetSpecificInventory(Request $request)
+    {
 
-        $dates =  dateRangeConverter($request->range);
+        $dates = dateRangeConverter($request->range);
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
 
         $query = ProductQuantity::query()
-            ->whereDate('date_in' , $date_in)
-            ->whereDate('date_out' , $date_out);
+            ->whereDate('date_in', $date_in)
+            ->whereDate('date_out', $date_out);
 
-        if($request->flag == 'delete')
+        if ($request->flag == 'delete')
             $query->delete();
         else
             $query->update([
@@ -517,7 +513,6 @@ class ProductsController extends Controller
      */
 
 
-
     public function categoriesIndex()
     {
         $categories = Category::latest()->get();
@@ -530,9 +525,9 @@ class ProductsController extends Controller
 
     public function categoriesDelete($id = null)
     {
-        if($id){
+        if ($id) {
             #plz check we dont have any other links categories etc
-            Category::where('id' , $id)->delete();
+            Category::where('id', $id)->delete();
             session()->flash('app_message', 'Your Category has been deleted successfully.');
 
             return back();
@@ -544,12 +539,12 @@ class ProductsController extends Controller
         try {
             if ($request->category_name) {
                 $found = Category::where('description', $request->category_name)->first();
-                if (!$found){
-                    $last = Category::whereNotNull('category_id')->orderBy('category_id' , 'desc')->first();
+                if (!$found) {
+                    $last = Category::whereNotNull('category_id')->orderBy('category_id', 'desc')->first();
 
                     Category::create([
                         'description' => $request->category_name,
-                        'category_id' => $last->category_id+1,
+                        'category_id' => $last->category_id + 1,
                     ]);
                 }
                 session()->flash('app_message', 'Your Category has been added successfully.');
