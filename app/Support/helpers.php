@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Cart;
+use Vanguard\Models\Setting;
 use Vanguard\Models\UsState;
 
 function getMyCart()
@@ -110,7 +111,29 @@ function getCubeSizeTax($size){
     if($serviceTransportFees24)
         $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
 
-    return round2Digit($additional + $tax);
+    $total =  round2Digit($additional + $tax);
+    $extra = 0;
+
+    try{
+        #checked if week is during the PRICES then up it too.
+        $found = Setting::where('key' , 'extra-fees-date')->first();
+        if($found){
+            $dates = json_decode($found->label , true);
+
+            $start = Carbon::parse($dates['date_in']);
+            $end = Carbon::parse($dates['date_out']);
+
+            $today = Carbon::today();
+
+            if ($today->between($start, $end)) {
+                $extra = round2Digit(($found->value / 100) * $total);
+            }
+        }
+    }catch (\Exception $ex){
+        Log::error($ex->getMessage() . ' error calcualting extra percentage data/values etc during transportation. ');
+    }
+
+    return $total+$extra;
 }
 
 function divideIntoGroupMax($number, $groupSize = 45) {
