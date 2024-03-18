@@ -49,7 +49,7 @@ return [
     |
     */
     'json' => [
-        'path' => public_path() . '/settings.json',
+        'path' => storage_path() . '/settings.json',
     ],
 
     /*
