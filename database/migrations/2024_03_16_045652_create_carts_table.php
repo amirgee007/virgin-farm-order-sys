@@ -29,19 +29,19 @@ return new class extends Migration
 
         });
 
-        Schema::table('carts', function (Blueprint $table) {
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
-        });
-
-        Schema::table('carts', function (Blueprint $table) {
-            $table->foreign('product_id')
-                ->references('id')
-                ->on('products')
-                ->onDelete('cascade');
-        });
+//        Schema::table('carts', function (Blueprint $table) {
+//            $table->foreign('user_id')
+//                ->references('id')
+//                ->on('users')
+//                ->onDelete('cascade');
+//        });
+//
+//        Schema::table('carts', function (Blueprint $table) {
+//            $table->foreign('product_id')
+//                ->references('id')
+//                ->on('products')
+//                ->onDelete('cascade');
+//        });
     }
 
     /**
