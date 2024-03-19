@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         $orders = Order::where('is_active' , 1)->orderBy('date_shipped')->limit(10)->get();
         #$future_inventory = ProductQuantity::query()->groupBy(['date_in', 'date_out'])->get();
-        $future_inventory = \DB::SELECT('SELECT date_in, date_out FROM product_quantities WHERE date_in > now() group by date_in,date_out');
+        $future_inventory = \DB::SELECT('SELECT date_in, date_out FROM product_quantities WHERE date_out > now() group by date_in,date_out');
 
         return view('dashboard.index' , compact('orders' , 'future_inventory'));
     }
