@@ -109,15 +109,28 @@
 
             <div class="col-6">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive" id="users-table-wrapper">
-                            <table class="table table-borderless table-striped">
-                                <tr>
-                                    <td class="min-width-150"><b>Type:</b></td>
-                                    <td>
-                                        <div>Recent Future Inventory</div>
-                                    </td>
-                                </tr>
+                    <div class="card-body" style="padding: 5px">
+                        <h5 class="text-center">Recent Future Inventory</h5>
+                        <h6>Date Ranges</h6>
+                        <hr>
+                        <div class="table-responsive orders-list-table" id="users-table-wrapper">
+                            <table class="table table-borderless table-striped products-list-table">
+                                <thead></thead>
+                                <tbody>
+                                @if ($future_inventory)
+                                    @foreach ($future_inventory as $order)
+                                        <tr>
+                                            <th class="align-middle">{{ dateFormatRecent($order->date_in) }}  -  {{dateFormatRecent($order->date_out)}}</th>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="12">
+                                            No date range found
+                                        </td>
+                                    </tr>
+                                @endif
+                                </tbody>
                             </table>
                         </div>
                     </div>

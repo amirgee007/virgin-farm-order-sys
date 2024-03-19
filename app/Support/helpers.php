@@ -335,6 +335,10 @@ function dateFormatMy($date){
     return Carbon::parse($date)->format('m/d/Y');
 }
 
+function dateFormatRecent($date){
+    return Carbon::parse($date)->toFormattedDayDateString();
+}
+
 function dateRangeConverter($dateInOut){
 
     $date_range = explode("-", $dateInOut);
