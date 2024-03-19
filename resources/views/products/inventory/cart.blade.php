@@ -123,7 +123,7 @@
                         <tr>
                             <th style="width:50%">Product</th>
                             <th style="width:10%">Price</th>
-{{--                            <th style="width:4%">Size</th>--}}
+                            <th style="width:4%">Stems</th>
                             <th style="width:8%">Quantity</th>
                             <th style="width:22%" class="text-center">Subtotal</th>
                             <th style="width:10%">Action</th>
@@ -147,8 +147,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td data-th="Price">${{ $cartItem->price }} * {{$cartItem->stems}}</td>
-{{--                                    <td data-th="Price">{{ $cartItem->size }}</td>--}}
+                                    <td data-th="Price">${{ round2Digit($cartItem->price) }}</td>
+                                    <td data-th="Stems">{{$cartItem->stems}}</td>
                                     <td data-th="Quantity">
                                         <input type="number" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
                                     </td>

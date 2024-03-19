@@ -103,7 +103,7 @@
                         <div class="row">
                             <div class="col checkout">
                                 <a href="{{ route('view.cart') }}" class="btn btn-primary btn-block p-2">
-                                    <i class="fas fa-shopping-cart"></i> &nbsp;View all
+                                    <i class="fas fa-shopping-cart"></i> &nbsp;View Cart
                                 </a>
                             </div>
 
