@@ -213,4 +213,21 @@ class CartController extends Controller
         return \redirect(route('inventory.index'));
     }
 
+
+    public static function makeCartEmptyIfTimePassed()
+    {
+        try {
+
+            $currentTime = now()->toDateTimeString();
+            $cart = Cart::where('user_id', $user->id)->first();
+
+            if ($cart && $cart->updated_at->diffInHours($currentTime) > 1) {
+                \Log::info($user->username . ' users cart has been removed due to last hour, plz keep an eye on it. ' . $cart->updated_at->toDateTimeString());
+                Cart::where('user_id', $user->id)->delete();
+            }
+        } catch (\Exception $ex) {
+            \Log::error($ex->getMessage() . ' something went wrong here plz check for this use,...! ' . $user->id);
+        }
+    }
+
 }

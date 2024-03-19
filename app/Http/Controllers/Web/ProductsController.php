@@ -80,7 +80,7 @@ class ProductsController extends Controller
         $categories = Category::query()->orderBy('description')->pluck('description', 'category_id')->toArray();
         $products = (clone $query)->orderBy('product_text')
             ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
-            ->paginate(150);
+            ->paginate(100);
 
         if ($date_shipped || $category_id || $searching) {
             $products->appends([
@@ -93,6 +93,9 @@ class ProductsController extends Controller
         $priceCol = myPriceColumn();
 
         $boxes = Box::all();
+
+        #need to make it in auto job and show some counter + time etc
+        CartController::makeCartEmptyIfTimePassed();
 
         return view('products.inventory.index', compact(
             'products',
