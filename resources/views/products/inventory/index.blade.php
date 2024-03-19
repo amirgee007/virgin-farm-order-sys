@@ -191,8 +191,7 @@
                                             <td class="align-middle" title="Weight">{{ $product->weight }}</td>
                                             <td class="align-middle" title="Size">{{ $product->size }}</td>
 
-                                            <form action="{{route('add.to.cart')}}" method="POST"
-                                                  enctype="multipart/form-data">
+                                            <form action="{{route('add.to.cart')}}" method="POST" enctype="multipart/form-data">
                                                 {{csrf_field()}}
 
                                                 <input type="hidden" name="id" value="{{$product->id}}">

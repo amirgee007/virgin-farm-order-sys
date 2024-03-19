@@ -35,7 +35,7 @@ class CartController extends Controller
         $product_id = $request->id;
         $product = Product::where('id', $product_id)->first();
 
-        #need to chekc it should add the correct id that we select at main page. 
+        #need to chekc it should add the correct id that we select at main page.
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = myPriceColumn();
@@ -159,7 +159,8 @@ class CartController extends Controller
         $total = $size = 0;
         $items = [];
         foreach ($carts as $cart){
-            $productQty = ProductQuantity::where('id', $cart->product_id)->first();
+            $productQty = ProductQuantity::where('product_id', $cart->product_id)->first();
+            $product = Product::where('id', $cart->product_id)->first();
 
             if($productQty)
                 $productQty->decrement('quantity', $cart->quantity); #TODO if we need STOCK history change
@@ -175,7 +176,7 @@ class CartController extends Controller
                 'quantity' => $cart->quantity,
                 'price' => round2Digit($cart->price),
                 'size' => $cart->size,
-                'stems' => $cart->stems,
+                'stems' => $product->stemsCount ? $product->stemsCount->unit : 1,
                 'sub_total' => round2Digit($cart->price * $cart->quantity * $cart->stems),
             ];
 

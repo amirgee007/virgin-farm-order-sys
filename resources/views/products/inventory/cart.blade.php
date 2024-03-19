@@ -223,7 +223,7 @@
                         @else
                             <tr>
                                 <td colspan="5" class="text-center text-danger ">
-                                    <h3><strong>You are not matching with cube size please select few more flowers i.e size now {{$size}}</strong></h3>
+                                    <h3><strong>You are not matching with cube size please select more products to fill your box i.e size now {{$size}}</strong></h3>
                                     <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
                                 </td>
                             </tr>

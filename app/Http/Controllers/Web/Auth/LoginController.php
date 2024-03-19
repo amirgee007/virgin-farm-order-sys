@@ -86,7 +86,7 @@ class LoginController extends Controller
 
         try{
             $currentTime = now()->toDateTimeString();
-            $cart = Cart::where('user_id', $user->id)->latest()->first();
+            $cart = Cart::where('user_id', $user->id)->first();
 
             if($cart && $cart->updated_at->diffInHours($currentTime) > 1){
                 \Log::info($user->username . ' users cart has been removed due to last hour, plz keep an eye on it. '.$cart->updated_at->toDateTimeString());
