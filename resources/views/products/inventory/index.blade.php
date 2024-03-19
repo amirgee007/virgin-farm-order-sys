@@ -166,6 +166,7 @@
                                 <tbody>
                                 @if (count($products))
                                     @foreach ($products as $index => $product)
+
                                         <tr>
                                             <td class="align-middle">
                                                 <img style="max-width: 35px; cursor: pointer;"

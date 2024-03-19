@@ -150,8 +150,9 @@
                                     <td data-th="Price">${{ $cartItem->price }} * {{$cartItem->stems}}</td>
 {{--                                    <td data-th="Price">{{ $cartItem->size }}</td>--}}
                                     <td data-th="Quantity">
-                                        <input type="number" max="{{@$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
+                                        <input type="number" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
                                     </td>
+
                                     <td data-th="Subtotal" class="text-center">${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}</td>
                                     <td class="actions" data-th="" title="Remove from cat">
                                         <button class="btn btn-danger btn-sm remove-from-cart"><i class="fas fa-trash"></i></button>

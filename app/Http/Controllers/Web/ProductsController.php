@@ -55,7 +55,10 @@ class ProductsController extends Controller
         }
 
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
-        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')->where('quantity', '>', 0);
+        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
+            ->leftjoin('carts', 'carts.product_id', '=', 'products.id')
+            ->where('product_quantities.quantity', '>', 0);
+
         if ($date_shipped) {
             $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');
         } else
@@ -75,7 +78,8 @@ class ProductsController extends Controller
 
         $carriers = getCarriers();
         $categories = Category::query()->orderBy('description')->pluck('description', 'category_id')->toArray();
-        $products = (clone $query)->orderBy('product_text')->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,quantity,weight,size,price_fob,price_fedex,price_hawaii')
+        $products = (clone $query)->orderBy('product_text')
+            ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
             ->paginate(150);
 
         if ($date_shipped || $category_id || $searching) {

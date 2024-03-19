@@ -16,4 +16,8 @@ class Cart extends Model
     {
         return $query->where('user_id', auth()->id());
     }
+
+    public function product() {
+        return $this->hasOne(ProductQuantity::class , 'id' , 'product_id');
+    }
 }

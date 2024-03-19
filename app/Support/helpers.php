@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Cart;
+use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\Setting;
 use Vanguard\Models\UsState;
 
@@ -302,6 +303,18 @@ function getSalesReps(){
         'Peter' => 'Peter',
         'Robert' => 'Robert',
     ];
+}
+
+function checkAvailableQty($product_id){
+
+    $user = itsMeUser();
+    $date_shipped = $user->last_ship_date;
+
+    return ProductQuantity::where('product_quantities.product_id' , $product_id)
+        ->leftjoin('carts', 'carts.product_id', '=', 'product_quantities.id')
+        ->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`')
+        ->selectRaw('product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity')
+        ->first();
 }
 
 function cleanArray($array)

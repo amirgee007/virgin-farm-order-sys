@@ -34,6 +34,8 @@ class CartController extends Controller
         $quantity = $request->quantity;
         $product_id = $request->id;
         $product = Product::where('id', $product_id)->first();
+
+        #need to chekc it should add the correct id that we select at main page. 
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = myPriceColumn();
@@ -100,10 +102,16 @@ class CartController extends Controller
 
         if ($request->id && $request->quantity) {
             $cartExist = Cart::mineCart()->where('id' , $request->id)->first();
-            $cartExist->quantity = $request->quantity;
-            $cartExist->save();
 
-            session()->flash('success', 'Cart updated successfully');
+            $existProduct = checkAvailableQty($cartExist->product_id);
+
+            if($existProduct && $existProduct->quantity >= $request->quantity ){
+                $cartExist->quantity = $request->quantity;
+                $cartExist->save();
+                session()->flash('app_message', 'Your cart quantity updated successfully.');
+            }
+            else
+                session()->flash('app_error', 'Sorry, We dont have more available product quantity.');
         }
     }
 
