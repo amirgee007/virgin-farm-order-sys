@@ -12,27 +12,27 @@
 @section('styles')
 
     <style>
-        /*table {*/
-            /*border-collapse: separate;*/
-            /*border-spacing: 0 15px;*/
-        /*}*/
-
-        /*th {*/
-            /*background-color: #4287f5;*/
-            /*color: white;*/
-        /*}*/
-
-        /*th,*/
-        /*td {*/
-            /*width: 150px;*/
-            /*text-align: center;*/
-            /*border: 1px solid black;*/
-            /*padding: 5px;*/
-        /*}*/
-
-        /*h2 {*/
-            /*color: #4287f5;*/
-        /*}*/
+        .loader {
+            height: 70px !important;
+        }
+        .orders-list-table th, .orders-list-table td {
+            padding: 0.3rem !important;
+        }
+        .orders-list-table {
+            font-weight: 400 !important;
+            font-size: 10px !important;
+            line-height: 1.328571429 !important;
+        }
+        button {
+            font-size: 12px !important;
+            font-weight: 400 !important;
+        }
+        caption {
+            caption-side:top;
+        }
+        tr:hover > td {
+            cursor: pointer !important;
+        }
     </style>
 @endsection
 
@@ -54,42 +54,77 @@
 
     @if(myRoleName() == 'Admin')
         <div class="row">
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive" id="users-table-wrapper">
-                        <table class="table table-borderless table-striped table-sm">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body" style="padding: 5px">
+                        <h5 class="text-center">Recent Orders</h5>
+                        <hr>
+                        <div class="table-responsive orders-list-table" id="users-table-wrapper">
+                            <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
-                                <td class="min-width-150"><b>Type:</b></td>
-                                <td>
-                                    <div>Recent Orders will be here</div>
-                                </td>
+                                <th >@lang('Id')</th>
+                                <th >@lang('User')</th>
+                                <th >@lang('Ship Date')</th>
+                                <th >@lang('Carrier Name')</th>
+                                <th >@lang('SubTotal')</th>
+                                <th >@lang('Shipping Cost')</th>
+                                <th >@lang('Total')</th>
+                                <th >@lang('Size')</th>
+                                <th >@lang('Status')</th>
+                                <th >@lang('Created')</th>
                             </tr>
-                        </table>
+                            </thead>
+                            <tbody>
+                            @if ($orders)
+                                @foreach ($orders as $index => $order)
+                                    <tr>
+                                        <td class="align-middle">WO{{ $order->id }}</td>
+
+                                        <td class="align-middle">{{ $order->name }}</td>
+
+                                        <td class="align-middle">{{ $order->date_shipped }}</td>
+                                        <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
+                                        <td class="align-middle text-primary">${{ round2Digit($order->sub_total) }}</td>
+                                        <td class="align-middle">0</td>
+                                        <td class="align-middle text-danger">${{ round2Digit($order->total) }}</td>
+                                        <td class="align-middle">{{ $order->size }}</td>
+                                        <td><span class="badge badge-lg badge-danger"> Active </span></td>
+                                        <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="12">
+                                        No Orders found
+                                    </td>
+                                </tr>
+                            @endif
+                            </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="table-responsive" id="users-table-wrapper">
-                        <table class="table table-borderless table-striped">
-                            <tr>
-                                <td class="min-width-150"><b>Type:</b></td>
-                                <td>
-                                    <div>Recent Future Inventory</div>
-                                </td>
-                            </tr>
-                        </table>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive" id="users-table-wrapper">
+                            <table class="table table-borderless table-striped">
+                                <tr>
+                                    <td class="min-width-150"><b>Type:</b></td>
+                                    <td>
+                                        <div>Recent Future Inventory</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="col-12">
+            <div class="col-12">
             <div class="card">
                 <div class="card-body">
 
@@ -108,7 +143,7 @@
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     @endif
 @stop
 

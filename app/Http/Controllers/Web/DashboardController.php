@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\Order;
 
 class DashboardController extends Controller
 {
@@ -19,6 +20,8 @@ class DashboardController extends Controller
             session()->flash('success', __('E-Mail verified successfully.'));
         }
 
-        return view('dashboard.index');
+        $orders = Order::where('is_active' , 1)->orderBy('date_shipped')->limit(10)->get();
+
+        return view('dashboard.index' , compact('orders'));
     }
 }
