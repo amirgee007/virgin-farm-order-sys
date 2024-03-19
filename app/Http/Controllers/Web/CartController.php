@@ -73,36 +73,22 @@ class CartController extends Controller
             $priceCol = myPriceColumn();
 
             Log::notice('refreshPriceInCartIfCarrierChange called and updated plz check it. '.$priceCol);
-            $carts = session()->get('cart');
+            $carts = getMyCart();
             $cart2 = [];
 
-            if(is_null($carts)) return '';
+            foreach ($carts as $details) {
 
-            foreach ($carts as $id => $details) {
-                $product = Product::where('id', $id)->first();
+                $product = Product::where('id', $details->product_id)->first();
                 $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
                 if ($productInfo) {
-                    $cart2[$id] = [
-                        "name" => $details['name'],
-                        "item_no" => @$details['item_no'],
-                        "quantity" => $details['quantity'],
-                        "price" => $productInfo ? $productInfo->$priceCol :0, # $details['price']
+                    $details->update([
+                        "price" => $productInfo ? $productInfo->$priceCol : 0, # $details->price
                         "image" => $product->image_url,
-                        "size" => $details['size'],
-                        "stems" => $details['stems'],
                         "max_qty" => $productInfo->quantity,
-                        "time" => now()->toDateTimeString(),
-
-                    ];
+                    ]);
                 }
             }
-
-            session(['cart' => $cart2]);
-
-//            session()->put('cart', []);
-//            session()->put('cart', $cart2);
-//            session()->save();
 
         } catch (\Exception $exc) {
             Log::error($exc->getMessage() . ' error in the refreshPriceInCartIfCarrierChange ' . $exc->getLine() . ' User:' . auth()->id());

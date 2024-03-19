@@ -14,10 +14,7 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
-        $carts = session()->get('cart');
-        $cart2 = [];
-
-        dd(session('cart'));
+        (new CartController())->refreshPriceInCartIfCarrierChange();
 
         $user = auth()->user();
         dd($user->carrier_id);
