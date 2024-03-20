@@ -289,7 +289,7 @@
                     <br/>
                     <div class="form-group">
                         <label for="extraFees">Extra Fees %</label>
-                        <input type="number" name="fees" min="1" value="{{$found ? $found->value : ''}}"  max="100" class="form-control" id="extraFees" placeholder="1-100">
+                        <input type="number" name="fees" min="0" value="{{$found ? $found->value : ''}}"  max="100" class="form-control" id="extraFees" placeholder="1-100">
                     </div>
                     <br>
                     <input type="submit" value="Update Dates" class="btn btn-primary btn-sm float-right">
