@@ -67,12 +67,9 @@
                                 <th >@lang('User')</th>
                                 <th >@lang('Ship Date')</th>
                                 <th >@lang('Carrier Name')</th>
-                                <th >@lang('SubTotal')</th>
-                                <th >@lang('Shipping Cost')</th>
-                                <th >@lang('Total')</th>
-                                <th >@lang('Size')</th>
                                 <th >@lang('Status')</th>
                                 <th >@lang('Created')</th>
+
                             </tr>
                             </thead>
                             <tbody>
@@ -80,15 +77,9 @@
                                 @foreach ($orders as $index => $order)
                                     <tr>
                                         <td class="align-middle">WO{{ $order->id }}</td>
-
                                         <td class="align-middle">{{ $order->name }}</td>
-
                                         <td class="align-middle">{{ $order->date_shipped }}</td>
                                         <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
-                                        <td class="align-middle text-primary">${{ round2Digit($order->sub_total) }}</td>
-                                        <td class="align-middle">0</td>
-                                        <td class="align-middle text-danger">${{ round2Digit($order->total) }}</td>
-                                        <td class="align-middle">{{ $order->size }}</td>
                                         <td><span class="badge badge-lg badge-danger"> Active </span></td>
                                         <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
                                     </tr>

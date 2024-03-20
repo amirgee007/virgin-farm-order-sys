@@ -18,6 +18,8 @@ class OrdersController extends Controller
         $search = \request()->search;
         $user = \request()->user_id;
 
+        $yesId = str_starts_with($search, 'WO');
+
         $user_id = myRoleName() == 'Admin' ? null : auth()->id();
         #for clients show only client but for admin show ALL.
 
@@ -41,7 +43,14 @@ class OrdersController extends Controller
             $query->where('user_id' , $user);
         }
 
-        if($search){
+        if($yesId){
+            $id = str_replace("WO","",$search);;
+            $query->where(function ($q) use ($id) {
+                $q->orWhere('id', 'like', $id);
+            });
+        }
+
+        elseif($search){
             $query->where(function ($q) use ($search) {
                 $q->orWhere('name', 'like', "%{$search}%");
                 $q->orWhere('company', 'like', "%{$search}%");
@@ -49,6 +58,7 @@ class OrdersController extends Controller
                 $q->orWhere('shipping_address', 'like', "%{$search}%");
             });
         }
+
 
         $count = (clone $query)->count();
         $orders = $query->paginate(100);
