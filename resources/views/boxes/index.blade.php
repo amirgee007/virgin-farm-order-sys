@@ -290,9 +290,10 @@
                     <div class="form-group">
                         <label for="extraFees">Extra Fees %</label>
                         <input type="number" name="fees" min="0" value="{{$found ? $found->value : ''}}"  max="100" class="form-control" id="extraFees" placeholder="1-100">
+                        <small class="text-danger">If want to reset just put 0 fees here.</small>
                     </div>
                     <br>
-                    <input type="submit" value="Update Dates" class="btn btn-primary btn-sm float-right">
+                    <input type="submit" value="Update Dates Fees" class="btn btn-primary btn-sm float-right">
                 </form>
             </div>
         </div>

@@ -107,19 +107,23 @@ class BoxesController extends Controller
 
     public function updateExtraFeesDates(Request $request){
 
-        $dates =  dateRangeConverter($request->range);
+        $dates = dateRangeConverter($request->range);
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
 
-        $found = Setting::updateOrCreate([
-            'key' => 'extra-fees-date'
-        ] , [
-            'value' => $request->fees,
-            'label' => json_encode($dates),
-            'done_by' => auth()->id(),
-        ]);
+        if ($request->fees == 0) {
+            Setting::where('key', 'extra-fees-date')->delete();
+        } else {
+            $found = Setting::updateOrCreate([
+                'key' => 'extra-fees-date'
+            ], [
+                'value' => $request->fees,
+                'label' => json_encode($dates),
+                'done_by' => auth()->id(),
+            ]);
+        }
 
-        session()->flash('app_message', 'Your dates for extra fees has been updated successfully.');
+        session()->flash('app_message', 'Your value,date for extra fees has been updated successfully.');
         return back();
     }
 }
