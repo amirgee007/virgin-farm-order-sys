@@ -200,7 +200,7 @@ class CartController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
-        if(config('app.env') != 'local')
+        #if(config('app.env') != 'local')
             \Mail::to($user->email)
                 ->cc(['sales@virginfarms.net'])
                 ->bcc(['amirseersol@gmail.com'])
