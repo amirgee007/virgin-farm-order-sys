@@ -150,7 +150,7 @@
                                     <td data-th="Price">${{ round2Digit($cartItem->price) }}</td>
                                     <td data-th="Stems">{{$cartItem->stems}}</td>
                                     <td data-th="Quantity">
-                                        <input type="number" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
+                                        <input type="number" min="1" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
                                     </td>
 
                                     <td data-th="Subtotal" class="text-center">${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}</td>
