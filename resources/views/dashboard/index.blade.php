@@ -69,14 +69,19 @@
                                 <th >@lang('Carrier Name')</th>
                                 <th >@lang('Status')</th>
                                 <th >@lang('Created')</th>
-
                             </tr>
                             </thead>
                             <tbody>
                             @if ($orders)
                                 @foreach ($orders as $index => $order)
                                     <tr>
-                                        <td class="align-middle">WO{{ $order->id }}</td>
+                                        <td class="align-middle" title="@lang('Click to see order detail')"
+                                            data-toggle="tooltip"
+                                            data-placement="left">
+                                                <a target="_blank" href="{{route('orders.index')."?search=WO".$order->id}}">
+                                                    <span class="badge badge-lg badge-primary">WO{{ $order->id }}</span>
+                                                </a>
+                                        </td>
                                         <td class="align-middle">{{ $order->name }}</td>
                                         <td class="align-middle">{{ $order->date_shipped }}</td>
                                         <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
