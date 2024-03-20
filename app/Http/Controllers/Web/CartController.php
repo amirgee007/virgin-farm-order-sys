@@ -218,6 +218,7 @@ class CartController extends Controller
     {
         try {
 
+            $user = itsMeUser();
             $currentTime = now()->toDateTimeString();
             $cart = Cart::where('user_id', $user->id)->first();
 

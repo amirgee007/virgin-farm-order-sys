@@ -114,11 +114,11 @@
                         <h6>Date Ranges</h6>
                         <hr>
                         <div class="table-responsive orders-list-table" id="users-table-wrapper">
-                            <table class="table table-borderless table-striped products-list-table">
+                            <table class="table table-borderless table-striped">
                                 <thead></thead>
                                 <tbody>
-                                @if ($future_inventory)
-                                    @foreach ($future_inventory as $order)
+                                @if ($futureInventory)
+                                    @foreach ($futureInventory as $order)
                                         <tr>
                                             <th class="align-middle">{{ dateFormatRecent($order->date_in) }}  -  {{dateFormatRecent($order->date_out)}}</th>
                                         </tr>
@@ -138,24 +138,45 @@
             </div>
 
             <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-
-                    <div class="table-responsive" id="users-table-wrapper">
-                        <table class="table table-borderless table-striped">
-                            <thead>
-                            <th>
-                                Show Low Inventry Or Negative
-                            </th>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                <div class="card">
+                    <div class="card-body" style="padding: 5px">
+                        <h5 class="text-center">Show Low Inventry Or Negative</h5>
+                        <hr>
+                        <div class="table-responsive orders-list-table">
+                            <table class="table table-borderless table-striped products-list-table">
+                                <thead>
+                                <tr>
+                                    <th >@lang('Item')</th>
+                                    <th >@lang('Quantity')</th>
+                                    <th >@lang('Date In')</th>
+                                    <th >@lang('Date Out')</th>
+                                    <th >@lang('Last Updated')</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if ($lowInventory)
+                                    @foreach ($lowInventory as  $product)
+                                        <tr>
+                                            <td class="align-middle">{{ $product->item_no }}</td>
+                                            <td><span class="badge badge-lg badge-danger"> {{ $product->quantity }} </span></td>
+                                            <td class="align-middle">{{ $product->date_in }}</td>
+                                            <td class="align-middle">{{ $product->date_out }}</td>
+                                            <td class="align-middle">{{ diff4Human($product->updated_at) }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="12">
+                                            No Orders found
+                                        </td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-
                 </div>
             </div>
-        </div>
         </div>
     @endif
 @stop
