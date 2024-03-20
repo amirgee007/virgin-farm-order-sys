@@ -117,7 +117,7 @@ function getCubeSizeTax($size){
 
     try{
         #checked if week is during the PRICES then up it too.
-        $found = Setting::where('key' , 'extra-fees-date')->first();
+        $found = Setting::where('key' , 'extra-fees-date')->where('value' , '>' , 0)->first();
         if($found){
             $dates = json_decode($found->label , true);
 

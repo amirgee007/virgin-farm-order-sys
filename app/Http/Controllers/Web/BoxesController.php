@@ -29,7 +29,7 @@ class BoxesController extends Controller
         $query = Box::query();
 
         $start_date = Carbon::now();
-        $end_date = Carbon::now()->addDays(5);
+        $end_date = Carbon::now()->addDays(6);
 
         $selected['start'] = $start_date->toDayDateTimeString();
         $selected['end'] = $end_date->toDayDateTimeString();
@@ -39,13 +39,10 @@ class BoxesController extends Controller
             $dates = json_decode($found->label , true);
 
             $selected = [
-                'start' => $dates['date_in'],
-                'end' => $dates['date_out'],
+                'start' => Carbon::parse($dates['date_in'])->toDayDateTimeString(),
+                'end' => Carbon::parse($dates['date_out'])->toDayDateTimeString(),
             ];
         }
-
-        $selected['start'] = $start_date->toDayDateTimeString();
-        $selected['end'] = $end_date->toDayDateTimeString();
 
         if($search){
             $query->where(function ($q) use ($search) {
