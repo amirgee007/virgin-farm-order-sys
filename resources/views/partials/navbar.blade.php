@@ -86,16 +86,16 @@
                             </div>
                         @endforeach
 
-                        @php
-                            $cubeSizes = getCubeRanges($size);
-                        @endphp
+                            @php
+                                list($boxes , $skipped) = getCubeRanges($size);
+                            @endphp
 
                         <div class="row">
                             <div class="col center-block text-center mb-2">
-                                @if(is_null($cubeSizes))
-                                    <small class="text-danger"><b>Box capacity not met. </b></small>
-                                @else
+                                @if($skipped)
                                     <small class="text-primary"><b>Box capacity met. Review my order!</b></small>
+                                @else
+                                    <small class="text-danger"><b>Box capacity not met. </b></small>
                                 @endif
                             </div>
                         </div>

@@ -140,9 +140,6 @@ function divideIntoGroupMax($number, $groupSize = 45) {
 
 function getCubeRanges($total)
 {
-    if(checkIfSkipCubeRangeCondition())
-        return true;
-
     #if customer is Just for FOB when PU is carrier then no need to do the CUBE sizes
     $maxValue = 45;
     $max = Box::orderBy('max_value' , 'desc')->first();
@@ -159,7 +156,10 @@ function getCubeRanges($total)
             $matched[] = $found->description;
     }
 
-    return (count($values) == count($matched)) ? $matched : null;
+    if(checkIfSkipCubeRangeCondition())
+        return [$matched , true];
+
+    return (count($values) == count($matched)) ? [$matched , true] : [$matched , false];
 }
 
 function checkIfSkipCubeRangeCondition()
@@ -167,16 +167,8 @@ function checkIfSkipCubeRangeCondition()
     $user = itsMeUser();
     $response = false;
 
-    #FOb and carrier is PickUp, then no need  and apply for all except fedex
-    if($user->price_list == 2 && ($user->carrier_id == 32 || $user->carrier_id != 23))
-        $response = true;
-
-    #Fedex and carrier is PickUp, then no need  and apply for all except fedex
-    elseif($user->price_list == 1 && ($user->carrier_id == 32 || $user->carrier_id != 23))
-        $response = true;
-
-    #hawai and carrier except  fedex then no cube required
-    elseif($user->price_list == 3 && ($user->carrier_id != 23))
+    #Yes, cube range requirement applies only to fedex carrier method.
+    if($user->carrier_id != 23)
         $response = true;
 
     return  $response;

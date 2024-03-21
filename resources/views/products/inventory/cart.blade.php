@@ -164,16 +164,14 @@
                         <tfoot>
 
                         @php
-                            $cubeSizes = getCubeRanges($size);
+                            list($boxes , $skipped) = getCubeRanges($size);
                             $total = round2Digit($total);
                         @endphp
 
-{{--                        Box Size(s): Medium   Weight: 30 cu.--}}
-
-                        @if($cubeSizes)
+                        @if($skipped)
                             @if(true)
                                 <tr>
-                                    <td colspan="5" class="text-center text-primary"><h4>Box Size(s): {{is_array($cubeSizes) ? implode(', ' ,$cubeSizes) : ''}} &nbsp; Weight:{{$size}} cu.</h4></td>
+                                    <td colspan="5" class="text-center text-primary"><h4>Box Size(s): {{is_array($boxes) ? implode(', ' ,$boxes) : ''}} &nbsp; Weight:{{$size}} cu.</h4></td>
                                 </tr>
                             @endif
 
