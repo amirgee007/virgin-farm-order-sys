@@ -38,8 +38,8 @@ function isDeliveryChargesApply(){
     $user = itsMeUser();
     $note = null;
 
-    #Price is FOB OR carrier not PU, not FEDEX  OR price is fedex and carrier is PU Or not fedex
-    if(($user->price_list == 2 && ($user->carrier_id != 32 && $user->carrier_id != 23)) ||  ($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23)))
+    #Carrier not PU(32), Not Federal Express(23) New LOGIC
+    if(!in_array($user->carrier_id , [23,32]))
         $note = 'Delivery charges may apply.';
 
     return $note;
@@ -47,29 +47,23 @@ function isDeliveryChargesApply(){
 
 function getCubeSizeTax($size){
 
+    #PU(32), Federal Express(23) , DLV(17)
     $user = itsMeUser();
-    $priceName = $user->price_list; #1,2,3 fedex,fob,hawaii
+
     $salesRepExtra = in_array($user->sales_rep , ['Robert', 'Mario', 'Joe']);
 
     $tax = $boxChargesApply = $serviceTransportFees24 = $additional = $extraTax = 0;
 
-    #All prices and carrier is fedex then apply BOX CHARGES
+    #If carrier is not Federal Express then apply 24%
+    if($user->carrier_id != 23)
+        $serviceTransportFees24 = true;
+
+    #Carrier is fedex then apply BOX CHARGES ONLY one case
     if($user->carrier_id == 23)
         $boxChargesApply = true;
 
-    #FOb and carrier is PU OR any other but not fedex then apply transport tax 24%
-    if($user->price_list == 2  && ($user->carrier_id == 32 || $user->carrier_id != 23))
-        $serviceTransportFees24 = true;
 
-    #Fedex and carrier is PU and not fedex then apply transport tax 24%
-    elseif($user->price_list == 1  && ($user->carrier_id == 32 || $user->carrier_id != 23))
-        $serviceTransportFees24 = true;
-
-    #hawai and carrier is not fedex then apply transport tax 24%
-    elseif($user->price_list == 3  && $user->carrier_id != 23)
-        $serviceTransportFees24 = true;
-
-    if($boxChargesApply && $user->price_list != 2){ #only fedex, hawai have have box cube minumums now
+    if($boxChargesApply){
         if($size >= 12 && $size <= 16){
             $tax = 32;
             $extraTax = 1;
@@ -101,11 +95,6 @@ function getCubeSizeTax($size){
         if($size/45 > 1){
             $countMore45 = ((int)ceil($size/45) - 1);
             $additional = 33 * $countMore45;
-
-//        if($salesRepExtra)
-//            $additional = 33 * $countMore45;
-//        else
-//            $additional = 32 * $countMore45;
         }
     }
 

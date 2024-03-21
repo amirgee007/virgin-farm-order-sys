@@ -5,7 +5,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">
-        @lang('Shipping Addresses')
+        @lang('Notifications')
     </li>
 @stop
 
