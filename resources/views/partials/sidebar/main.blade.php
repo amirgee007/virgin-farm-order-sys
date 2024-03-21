@@ -68,7 +68,7 @@
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('products/manage') ? 'active' : ''  }}" href="{{ route('products.index.manage') }}">
                             <i class="fas fa-tag"></i>
-                            <span>@lang('All Products')</span>
+                            <span>@lang('Manage Products')</span>
                         </a>
                     </li>
                     @endpermission
