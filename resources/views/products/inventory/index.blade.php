@@ -65,7 +65,7 @@
                                  </a>
 
                                  <select class="form-control form-control-md" id="changeAddress"
-                                         title="When do you want your product to be shipped?"
+                                         title="Where do you want your product to be shipped?"
                                          data-trigger="hover"
                                          data-toggle="tooltip">
                                      <option selected value="0">My Default Address</option>
