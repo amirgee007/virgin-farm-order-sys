@@ -169,6 +169,14 @@ class ProductsController extends Controller
                 $query->whereNull('image_url');
         }
         $products = (clone $query)->paginate(100);
+        if ($filter || $search || $category) {
+            $products->appends([
+                'filter' => $filter,
+                'search' => $search,
+                'category' => $category,
+            ]);
+        }
+
         $categories = Category::pluck('description', 'category_id')->toArray();
 
         $count = (clone $query)->count();
