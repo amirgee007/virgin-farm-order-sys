@@ -127,7 +127,7 @@ class CartController extends Controller
 
     public function emptyCart(Request $request)
     {
-        
+
         Cart::mineCart()->delete();
 
         auth()->user()->update([

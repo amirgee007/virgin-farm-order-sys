@@ -346,7 +346,7 @@
                 type: 'POST',
                 headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 success: function (response) {
-                    toastr.success("Your add on order has been selected plz do add some items and then checkout to confirm..", "Success");
+                    toastr.success("Your add-on order has been chosen. Please add more items and proceed to checkout to confirm.", "Success");
                 }
             });
 
