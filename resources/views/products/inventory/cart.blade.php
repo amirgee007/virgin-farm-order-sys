@@ -303,5 +303,12 @@
             }
         });
 
+        // swal({
+        //     title: 'Login Success',
+        //     text: 'Redirecting...',
+        //     icon: 'success',
+        //     timer: 5000,
+        //     buttons: false,
+        // });
     </script>
 @endsection

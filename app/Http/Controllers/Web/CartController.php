@@ -230,9 +230,9 @@ class CartController extends Controller
 
         auth()->user()->fresh();
 
-        session()->flash('success', 'Your order has been received successfully. You will be notified soon.');
+        session()->flash('success', 'Your order has been successfully received. We will notify you shortly. Please check your email for the order summary.');
 
-        return \redirect(route('inventory.index'));
+        return \redirect(route('orders.index'));
     }
 
 
