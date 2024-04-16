@@ -128,6 +128,13 @@ class CartController extends Controller
     public function emptyCart(Request $request)
     {
         Cart::mineCart()->delete();
+
+        auth()->user()->update([
+            'edit_order_id' => null
+        ]);
+
+        auth()->user()->fresh();
+
         session()->flash('success', 'Your all products removed from cart successfully.');
 
         return back();
@@ -135,7 +142,7 @@ class CartController extends Controller
 
     public function checkOutCart()
     {
-        $user = $shipAddress = itsMeUser();;
+        $user = $shipAddress = itsMeUser();
 
         $carts = getMyCart();
         $address_id = $user->address_id; #if empty/ZERO then default address will be user not others.
@@ -145,16 +152,21 @@ class CartController extends Controller
         $date_shipped = $user->last_ship_date;
         $carrier_id = $user->carrier_id;
 
-        $order = Order::create([
-            'user_id' => $user->id,
-            'date_shipped' => $date_shipped,
-            'carrier_id' => $carrier_id,
-            'name' => $shipAddress->name,
-            'company' => $shipAddress->company,
-            'phone' => $shipAddress->phone,
-            'shipping_address' => $shipAddress->address,
-            'address_2' => $shipAddress->city_name.' ,'.$shipAddress->state_name.' ,'.$shipAddress->zip, #all others stuff city, state, and zip
-        ]);
+        if($user->edit_order_id)
+            $order = Order::find($user->edit_order_id);
+
+        else{
+            $order = Order::create([
+                'user_id' => $user->id,
+                'date_shipped' => $date_shipped,
+                'carrier_id' => $carrier_id,
+                'name' => $shipAddress->name,
+                'company' => $shipAddress->company,
+                'phone' => $shipAddress->phone,
+                'shipping_address' => $shipAddress->address,
+                'address_2' => $shipAddress->city_name.' ,'.$shipAddress->state_name.' ,'.$shipAddress->zip, #all others stuff city, state, and zip
+            ]);
+        }
 
         $total = $size = 0;
         $items = [];
@@ -200,15 +212,22 @@ class CartController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
+        #$salesRepExtra = in_array($user->sales_rep , ['Robert', 'Mario', 'Joe']);
         #if(config('app.env') != 'local')
             \Mail::to($user->email)
-                ->cc(['sales@virginfarms.net'])
+                ->cc(['sales@virginfarms.net' , 'shipping@virginfarms.com'])
                 ->bcc(['amirseersol@gmail.com'])
                 ->send(new OrderConfirmationMail($order , $user));
 
         Cart::mineCart()->delete();
 
-        session()->flash('success', 'Your order has been recived successfully. You will be notified soon.');
+        auth()->user()->update([
+            'edit_order_id' => null
+        ]);
+
+        auth()->user()->fresh();
+
+        session()->flash('success', 'Your order has been received successfully. You will be notified soon.');
 
         return \redirect(route('inventory.index'));
     }

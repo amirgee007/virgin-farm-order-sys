@@ -67,7 +67,8 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'carrier_id',
         'country_id',
         'address_id',
-        'last_ship_date'
+        'last_ship_date',
+        'edit_order_id'
     ];
 
     /**

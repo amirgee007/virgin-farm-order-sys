@@ -113,6 +113,9 @@
 @section('content')
 
     @include('partials.messages')
+    @if(auth()->user()->edit_order_id)
+        <img src="{{ url('assets/img/add-on.jpg') }}" class="rounded mx-auto d-block" height="50px" alt="Responsive image">
+    @endif
 
     <div class="row">
         <div class="col-md-12">

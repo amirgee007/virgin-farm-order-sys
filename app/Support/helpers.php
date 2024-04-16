@@ -62,7 +62,6 @@ function getCubeSizeTax($size){
     if($user->carrier_id == 23)
         $boxChargesApply = true;
 
-
     if($boxChargesApply){
         if($size >= 12 && $size <= 16){
             $tax = 32;
@@ -168,7 +167,7 @@ function checkIfSkipCubeRangeCondition()
     $response = false;
 
     #Yes, cube range requirement applies only to fedex carrier method.
-    if($user->carrier_id != 23)
+    if($user->carrier_id != 23 || $user->edit_order_id)
         $response = true;
 
     return  $response;
