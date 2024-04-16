@@ -11,7 +11,7 @@
     <td class="align-middle text-primary">${{ round2Digit($order->sub_total) }}</td>
     <td class="align-middle">0</td>
     <td class="align-middle text-danger">${{ round2Digit($order->total) }}</td>
-    <td class="align-middle">{{ $order->size }}</td>
+{{--    <td class="align-middle">{{ $order->size }}</td>--}}
     <td class="align-middle">
         @if($order->is_active)
            <span class="badge badge-lg badge-danger"> Active </span>
