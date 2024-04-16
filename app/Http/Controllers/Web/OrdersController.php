@@ -3,9 +3,12 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\OrderConfirmationMail;
+use Vanguard\Models\Carrier;
 use Vanguard\Models\Order;
+use Vanguard\Models\Product;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
@@ -93,5 +96,23 @@ class OrdersController extends Controller
         session()->flash('app_message', 'The order has been updated successfully.');
         return back();
 
+    }
+
+    public function addOnOrderUpdate(Request $request)
+    {
+        try {
+
+            User::where('id' , auth()->id())->update(['edit_order_id' => $request->order_id]);
+            auth()->user()->fresh();
+
+            $data['success'] = true;
+            return response()->json($data);
+
+        } catch (\Exception $exc) {
+            Log::error('addOnOrderUpdate error plz check why .' . $exc->getMessage());
+
+            $data['success'] = false;
+            return response()->json($data);
+        }
     }
 }

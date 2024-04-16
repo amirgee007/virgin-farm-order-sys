@@ -142,6 +142,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'orders.update',
             'uses' => 'OrdersController@updateOrder'
         ]);
+
+        Route::post('/edit-order-id', [
+            'as' => 'edit.order.user',
+            'uses' => 'OrdersController@addOnOrderUpdate'
+        ]);
     });
 
     Route::group(['prefix'=>'boxes'], function() {

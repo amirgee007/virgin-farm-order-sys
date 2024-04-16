@@ -68,7 +68,7 @@
                                          title="Where do you want your product to be shipped?"
                                          data-trigger="hover"
                                          data-toggle="tooltip">
-                                     <option selected value="0">My Default Address</option>
+                                     <option selected value="0">Default Address</option>
                                      @foreach($address as $add)
                                          <option
                                              {{$user->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
@@ -88,6 +88,7 @@
                                  </select>
 
                              </label>
+
                         </b>
                     </span>
 
@@ -95,6 +96,16 @@
                         <div class="col-md-12 col-sm-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
                                 <div class="input-group custom-search-form">
+{{--                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>--}}
+                                    <select class="form-control form-control-md mr-2" id="add-on-order" style="border:3px solid #cccccc; border-style:dashed"
+                                            title="Select which order to add to?"
+                                            data-trigger="hover"
+                                            data-toggle="tooltip">
+                                        <option hidden value="">Add-On Order</option>
+                                        @foreach($myOrders AS $key )
+                                            <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}> #W-{{$key}} </option>
+                                        @endforeach
+                                    </select>
 
                                     <input type="date"
                                            min="<?php echo date("Y-m-d"); ?>"
@@ -115,6 +126,7 @@
                                         @endforeach
                                     </select>
 
+
                                     <input type="text"
                                            id="searching"
                                            class="form-control rounded ml-2"
@@ -123,7 +135,7 @@
                                            value="{{\Request::get('searching')}}">
 
                                     <span class="input-group-append">
-                                        @if ($date_shipped || \Request::get('category') || \Request::get('searching'))
+                                        @if (\Request::get('category') || \Request::get('searching'))
                                             <a href="{{ route('inventory.index') }}"
                                                title="Reset Filters"
                                                data-trigger="hover"
@@ -140,10 +152,6 @@
                                 </div>
                             </form>
                         </div>
-
-                        {{--@permission('orders.filter')--}}
-                        @include('products._partial.filter')
-                        {{--@endpermission--}}
 
                     </div>
                     <hr>
@@ -325,6 +333,20 @@
                 headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 success: function (response) {
                     toastr.success("Your shiping address has been changed.", "Success");
+                }
+            });
+
+        });
+
+        $('#add-on-order').on('change', function () {
+            var order_id = this.value;
+            $.ajax({
+                url: '{{route('edit.order.user')}}',
+                data: {order_id},
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                success: function (response) {
+                    toastr.success("Your add on order has been selected plz do add some items and then checkout to confirm..", "Success");
                 }
             });
 
