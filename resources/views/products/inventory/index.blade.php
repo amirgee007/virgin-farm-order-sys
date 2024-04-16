@@ -4,9 +4,9 @@
 @section('page-heading', __('Client Inventory'))
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item text-muted" style="cursor: pointer;" data-toggle="modal" data-target="#boxesModal">
+    <li class="breadcrumb-item text-muted " style="cursor: pointer;" data-toggle="modal" data-target="#boxesModal">
         @lang('Click to see boxes detail')
-        <i class="fas fa-box"></i>
+        <i class="fas fa-box text-danger"></i>
     </li>
 @stop
 
@@ -284,20 +284,19 @@
                         <thead>
                         <tr>
                             <th scope="col">Box</th>
-                            <th scope="col">Min</th>
-                            <th scope="col">Max</th>
+                            <th scope="col">Approximate Capacity</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($boxes as $box)
                             <tr>
                                 <td>{{$box->description}}</td>
-                                <td>{{$box->min_value}}</td>
-                                <td>{{$box->max_value}}</td>
+                                <td>{{$box->min_value}} - {{$box->max_value}} bunches</td>
                             </tr>
                         @endforeach
                         </tbody>
                     </table>
+                    <div class="text-gray-500 float-right"> ***Roses used to calculate approximate box capacity.</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
