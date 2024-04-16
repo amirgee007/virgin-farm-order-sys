@@ -153,10 +153,13 @@ class CartController extends Controller
         $date_shipped = $user->last_ship_date;
         $carrier_id = $user->carrier_id;
 
-        if($user->edit_order_id)
+        $size = 0;
+        if($user->edit_order_id){
             $order = Order::find($user->edit_order_id);
-
+            $total = $order->total;
+        }
         else{
+            $total = 0;
             $order = Order::create([
                 'user_id' => $user->id,
                 'date_shipped' => $date_shipped,
@@ -169,8 +172,6 @@ class CartController extends Controller
             ]);
         }
 
-        $total = $size = 0;
-        $items = [];
         foreach ($carts as $cart){
             $productQty = ProductQuantity::where('product_id', $cart->product_id)->first();
             $product = Product::where('id', $cart->product_id)->first();
