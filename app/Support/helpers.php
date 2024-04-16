@@ -285,6 +285,20 @@ function getSalesReps(){
     ];
 }
 
+function getSalesRepsNameEmail($name)
+{
+    # Define the mapping of names to emails.
+    $emails = [
+        'Mario' => 'mariop@virginfarms.com',
+        'Robert' => 'robertm@virginfarms.com',
+        'Joe' => 'joep@virginfarms.com',
+        'Nestor' => 'nestorn@virginfarms.com',
+    ];
+
+    # Return the email associated with the name, or a default email if the name is not found.
+    return $emails[$name] ?? 'amirseersol@gmail.com';
+}
+
 function checkAvailableQty($product_id){
 
     $user = itsMeUser();

@@ -127,6 +127,7 @@ class CartController extends Controller
 
     public function emptyCart(Request $request)
     {
+        
         Cart::mineCart()->delete();
 
         auth()->user()->update([
@@ -212,10 +213,11 @@ class CartController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
-        #$salesRepExtra = in_array($user->sales_rep , ['Robert', 'Mario', 'Joe']);
+        #Mario
+        $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
         #if(config('app.env') != 'local')
             \Mail::to($user->email)
-                ->cc(['sales@virginfarms.net' , 'shipping@virginfarms.com'])
+                ->cc(['sales@virginfarms.net' , 'shipping@virginfarms.com' , $salesRepEmail])
                 ->bcc(['amirseersol@gmail.com'])
                 ->send(new OrderConfirmationMail($order , $user));
 
