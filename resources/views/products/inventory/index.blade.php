@@ -167,7 +167,7 @@
                                     <th class="min-width-80">@lang('Quantity')</th>
                                     <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>
                                     <th class="min-width-80" title="Size of the item">@lang('Size')</th>
-                                    <th class="min-width-80">@lang('Order Qty(Boxes)')</th>
+                                    <th class="min-width-80">@lang('Order Qty')</th>
                                     <th class="min-width-100">@lang('Actions')</th>
                                 </tr>
                                 </thead>
