@@ -178,7 +178,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Order Notes(Optional)</label>
-                                <textarea class="form-control" rows="6" placeholder="Enter order notes here...!"></textarea>
+
+                                <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()" placeholder="Enter order notes here...!"></textarea>
                             </div>
                             <div class="col-md-6">
                                 <table class="table table-bordered">
@@ -304,6 +305,25 @@
                 });
             }
         });
+
+        function saveOrderNote() {
+            var textValue = $('#order-notes').val().trim();
+            if (textValue !== '') {
+                $.ajax({
+                    url: '{{ route('cart.save.notes') }}',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ notes: textValue }),
+                    success: function() {
+                        console.log('Text sent successfully');
+                    },
+                    error: function() {
+                        console.log('Error sending text');
+                    }
+                });
+            }
+        }
+
 
         // swal({
         //     title: 'Login Success',

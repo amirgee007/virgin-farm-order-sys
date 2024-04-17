@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\OrderItem;
@@ -15,7 +16,11 @@ class TestAmirController extends Controller
 {
 
     public function index2($value = 0){
+        
+        $string = 'order_note_' .$id;
+        Cache::forget($string);
 
+        return Cache::get($string);
 
         $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
 

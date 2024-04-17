@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\OrderConfirmationMail;
@@ -20,8 +21,15 @@ class CartController extends Controller
         $this->middleware('auth');
     }
 
+    public function saveOrderNotes(Request $request){
+        $time = now()->addMinutes(10);
+        \Cache::put('order_note_' . auth()->id(), $request->notes, $time);
+    }
     public function viewCart()
     {
+        $string = 'order_note_' .auth()->id();
+        \Cache::forget($string);
+
         $carts = getMyCart();
         #Similar to the Solé web shop, we would like a time-out session timer. After 1 hour,
         #if the customer does not checkout, the items in the cart are emptied back to inventory.
@@ -126,7 +134,6 @@ class CartController extends Controller
 
     public function emptyCart(Request $request)
     {
-
         Cart::mineCart()->delete();
 
         auth()->user()->update([
@@ -142,6 +149,7 @@ class CartController extends Controller
 
     public function checkOutCart()
     {
+
         $user = $shipAddress = itsMeUser();
 
         $carts = getMyCart();
@@ -204,6 +212,10 @@ class CartController extends Controller
         $totalCubeTax = getCubeSizeTax($size);
         $totalWithTax = $total + $totalCubeTax;
 
+        $string = 'order_note_' .$user->id;
+        $notes = \Cache::get($string);
+        \Cache::forget($string);
+
         #sub_total	discount	tax		totalen
         $order->update([
             'sub_total' => round2Digit($total),
@@ -212,6 +224,7 @@ class CartController extends Controller
             'shipping_cost' => $totalCubeTax,
             'full_add_on' => $order->full_add_on == 0 ? $full_add_on : $order->full_add_on,
             'total' => round2Digit($totalWithTax),
+            'notes' => $notes,
         ]);
 
         $order->refresh();
