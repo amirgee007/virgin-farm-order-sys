@@ -153,10 +153,11 @@ class CartController extends Controller
         $date_shipped = $user->last_ship_date;
         $carrier_id = $user->carrier_id;
 
-        $size = 0;
+        $size = $is_add_on = 0; #just to show on edit page as its ADD ON not added first time.
         if($user->edit_order_id > 1){ #because 1 is add-on new order
             $order = Order::find($user->edit_order_id);
             $total = $order->total;
+            $is_add_on = 1;
         }
         else{
             $total = 0;
@@ -190,6 +191,7 @@ class CartController extends Controller
                 'quantity' => $cart->quantity,
                 'price' => round2Digit($cart->price),
                 'size' => $cart->size,
+                'is_add_on' => $cart->size,
                 'stems' => $product->stemsCount ? $product->stemsCount->unit : 1,
                 'sub_total' => round2Digit($cart->price * $cart->quantity * $cart->stems),
             ];

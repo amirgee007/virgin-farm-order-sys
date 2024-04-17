@@ -37,6 +37,9 @@
     tr:hover > td {
         cursor: pointer !important;
     }
+    .addON{
+        background-color: lightgrey !important;
+    }
 </style>
 @endsection
 

@@ -69,7 +69,7 @@
 
             <table class="table">
                 <thead>
-                <tr>
+                <tr >
                     <th class="min-width-80">@lang('#')</th>
                     <th class="min-width-80">@lang('Item')</th>
                     <th class="min-width-100">@lang('Product Name')</th>
@@ -84,7 +84,7 @@
 
                 @if ($order->items)
                     @foreach ($order->items as $index => $prod)
-                        <tr>
+                        <tr class="{{$prod->is_add_on ? 'addON' : ''}}" title="If its silver background it means its add on.">
                             <td scope="row">{{++$index}}</td>
                             <td scope="row">{{$prod->item_no}}</td>
                             <td class="align-middle">{{ $prod->name }}</td>
