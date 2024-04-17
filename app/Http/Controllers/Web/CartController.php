@@ -154,6 +154,8 @@ class CartController extends Controller
         $carrier_id = $user->carrier_id;
 
         $size = $is_add_on = 0; #just to show on edit page as its ADD ON not added first time.
+        $full_add_on = $user->edit_order_id > 0 ? min(2, $user->edit_order_id) : 0; #here we put 1 full OR 2 is half
+
         if($user->edit_order_id > 1){ #because 1 is add-on new order
             $order = Order::find($user->edit_order_id);
             $total = $order->total;
@@ -163,6 +165,7 @@ class CartController extends Controller
             $total = 0;
             $order = Order::create([
                 'user_id' => $user->id,
+                'full_add_on' => $full_add_on, #we will use it on cart and if needed will show on orders page later on.
                 'date_shipped' => $date_shipped,
                 'carrier_id' => $carrier_id,
                 'name' => $shipAddress->name,
@@ -191,7 +194,7 @@ class CartController extends Controller
                 'quantity' => $cart->quantity,
                 'price' => round2Digit($cart->price),
                 'size' => $cart->size,
-                'is_add_on' => $cart->size,
+                'is_add_on' => $is_add_on,
                 'stems' => $product->stemsCount ? $product->stemsCount->unit : 1,
                 'sub_total' => round2Digit($cart->price * $cart->quantity * $cart->stems),
             ];
@@ -208,6 +211,7 @@ class CartController extends Controller
             'discount' => 0,
             'tax' => 0,
             'shipping_cost' => $totalCubeTax,
+            'full_add_on' => $order->full_add_on == 0 ? $totalCubeTax : $order->full_add_on,
             'total' => round2Digit($totalWithTax),
         ]);
 

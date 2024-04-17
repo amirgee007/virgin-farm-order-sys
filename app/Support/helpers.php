@@ -348,6 +348,23 @@ function dateRangeConverter($dateInOut){
     return compact('date_in', 'date_out');
 }
 
+function getAddOnDetail($order)
+{
+
+    $text = '';
+    try{
+        if($order->full_add_on == 1)
+            $text = 'Add-On General';
+        if($order->full_add_on == 2)
+            $text = 'Add-On #W-'.$order->id;
+
+    }catch (\Exception $ex){
+        Log::error('something went wrong during get add on detail '.$ex->getMessage());
+    }
+
+    return $text;
+}
+
 
 function stripXSS($data)
 {

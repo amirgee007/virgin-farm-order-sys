@@ -11,7 +11,7 @@
 ##### Carrier: {{@$user->carrier->carrier_name}}
 ##### Ship To: {{$order->ship_to}}
 
-# Prebook
+# Prebook {{getAddOnDetail($order)}}
 @component('mail::table')
     |      Product     |  Quantity    | Unit Price  |   Pack     |   Total     |
     | :--------------- | :----------  | :---------- | :---------- | :---------- |
