@@ -25,6 +25,7 @@ use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\ShippingAddress;
+use Vanguard\Models\UnitOfMeasure;
 
 class ProductsController extends Controller
 {
@@ -225,19 +226,22 @@ class ProductsController extends Controller
 
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 600); //600 seconds = 10 minutes
+
+        $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
+
         #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
         if (isset($products[0]))
             foreach ($products[0] as $index => $row) {
-
                 try {
 
                     if ($index < 2) continue;
 
+                    $uomTrim = trim($row[3]);
                     $data = [
                         'item_no' => trim($row[1]),
                         'category_id' => trim($row[0]),
                         'product_text' => trim($row[2]),
-                        'unit_of_measure' => trim($row[3]),
+                        'unit_of_measure' => isset($UOM[$uomTrim]) ? $UOM[$uomTrim] : $uomTrim,
 
                         'weight' => trim($row[7]),
                         'size' => trim($row[8]),

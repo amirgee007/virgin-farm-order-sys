@@ -163,9 +163,9 @@
                                     <th class="min-width-200">@lang('Product Description')</th>
                                     <th class="min-width-80">@lang('Unit Price')</th>
                                     <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Stem/Bunch')</th>
-                                    <th class="min-width-80">@lang('Quantity')</th>
-                                    <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>
-                                    <th class="min-width-80" title="Size of the item">@lang('Size')</th>
+                                    <th class="min-width-80">@lang('Available Qty')</th>
+{{--                                    <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>--}}
+{{--                                    <th class="min-width-80" title="Size of the item">@lang('Size')</th>--}}
                                     <th class="min-width-80">@lang('Order Qty')</th>
                                     <th class="min-width-100">@lang('Actions')</th>
                                 </tr>
@@ -191,12 +191,12 @@
                                             </td>
 
                                             @php $priceNow = $product->$priceCol; @endphp
-                                            <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}/ST</td>
+                                            <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>
                                                 {{--ST stad for per STEM flowers --}}
                                             <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
-                                            <td class="align-middle" title="Bunch">{{ $product->quantity }} BU</td>
-                                            <td class="align-middle" title="Weight">{{ $product->weight }}</td>
-                                            <td class="align-middle" title="Size">{{ $product->size }}</td>
+                                            <td class="align-middle" title="Bunch">{{ $product->quantity }}</td>
+{{--                                            <td class="align-middle" title="Weight">{{ $product->weight }}</td>--}}
+{{--                                            <td class="align-middle" title="Size">{{ $product->size }}</td>--}}
 
                                             <form action="{{route('add.to.cart')}}" method="POST" enctype="multipart/form-data">
                                                 {{csrf_field()}}

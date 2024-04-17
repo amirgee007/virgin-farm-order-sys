@@ -81,6 +81,7 @@
                                     </button>
                                 </span>
                                 </div>
+                                <small class="text-danger"><b>Note:</b> Click on any order below to see more detailed view.</small>
                             </div>
 
                         </div>
