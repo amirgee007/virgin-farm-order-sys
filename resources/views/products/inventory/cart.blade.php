@@ -112,10 +112,12 @@
 
 @section('content')
 
+    @php $orderId = auth()->user()->edit_order_id; @endphp
+
     @include('partials.messages')
-    @if(auth()->user()->edit_order_id)
+    @if($orderId)
        <div class="text-center">
-           <h3>✅ Add-On Order</h3>
+           <h3>✅ Add-On Order (<small>{{$orderId > 1 ? '#W-'.$orderId : 'General'}}</small>)</h3>
        </div>
     @endif
 

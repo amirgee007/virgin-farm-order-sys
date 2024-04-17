@@ -102,8 +102,8 @@
                                             data-trigger="hover"
                                             data-toggle="tooltip">
                                         <option hidden value="">Add-On Order</option>
-                                        @foreach($myOrders AS $key )
-                                            <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}> #W-{{$key}} </option>
+                                        @foreach($myOrders AS $key => $value)
+                                            <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}>{{$key > 1 ? '#W-' : '' }} {{$value}} </option>
                                         @endforeach
                                     </select>
 

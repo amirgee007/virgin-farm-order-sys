@@ -154,7 +154,7 @@ class CartController extends Controller
         $carrier_id = $user->carrier_id;
 
         $size = 0;
-        if($user->edit_order_id){
+        if($user->edit_order_id > 1){ #because 1 is add-on new order
             $order = Order::find($user->edit_order_id);
             $total = $order->total;
         }
