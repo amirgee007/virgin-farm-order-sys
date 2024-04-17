@@ -352,16 +352,32 @@
 
         $('#add-on-order').on('change', function () {
             var order_id = this.value;
+            var _dateShip = $("#date_shipped");
+
             $.ajax({
                 url: '{{route('edit.order.user')}}',
                 data: {order_id},
                 type: 'POST',
                 headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 success: function (response) {
-                    if(order_id > 0)
+                    let currentDate = new Date().toJSON().slice(0, 10);
+                    if(order_id > 1){
                         toastr.success("Your add-on order has been chosen. Please add more items and proceed to checkout to confirm.", "Success");
-                    else
-                        toastr.success("Your have reset add-on. No you can add new order.", "Success");
+                        _dateShip.attr({
+                            min: response.date,
+                            value: response.date,
+                            disabled: true
+                        });
+                    }
+                    else{
+
+                        _dateShip.attr({
+                            'min': currentDate,
+                            'value': response.date
+                        }).removeAttr('disabled');
+
+                        toastr.success("Your add-on setting has been update. Now you can add new order.", "Success");
+                    }
                 }
             });
 

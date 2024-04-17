@@ -41,6 +41,7 @@ class ProductsController extends Controller
     public function inventoryIndex(Request $request)
     {
         $date_shipped = trim($request->date_shipped);
+
         $category_id = trim($request->category);
         $searching = trim($request->searching);
         $user = auth()->user();

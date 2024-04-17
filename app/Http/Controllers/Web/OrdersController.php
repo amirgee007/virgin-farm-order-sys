@@ -105,6 +105,10 @@ class OrdersController extends Controller
             User::where('id' , auth()->id())->update(['edit_order_id' => $request->order_id]);
             auth()->user()->fresh();
 
+            $user = auth()->user();
+
+            $order = Order::find($request->order_id);
+            $data['date'] = $request->order_id > 1 ? $order->date_shipped : $user->last_ship_date;
             $data['success'] = true;
             return response()->json($data);
 
