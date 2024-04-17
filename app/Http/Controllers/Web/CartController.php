@@ -211,7 +211,7 @@ class CartController extends Controller
             'discount' => 0,
             'tax' => 0,
             'shipping_cost' => $totalCubeTax,
-            'full_add_on' => $order->full_add_on == 0 ? $totalCubeTax : $order->full_add_on,
+            'full_add_on' => $order->full_add_on == 0 ? $full_add_on : $order->full_add_on,
             'total' => round2Digit($totalWithTax),
         ]);
 
