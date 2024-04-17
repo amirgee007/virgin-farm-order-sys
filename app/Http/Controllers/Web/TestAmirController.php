@@ -18,7 +18,7 @@ class TestAmirController extends Controller
 
 
         $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
-        
+
         $prods = OrderItem::all();
 
         foreach($prods as $prod){

@@ -55,7 +55,7 @@ class CartController extends Controller
                 "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
                 "size" => $product->size,
-                "stems" => $product->stem,
+                "stems" => $product->stems,
                 "max_qty" => $productInfo->quantity,
                 "user_id" => auth()->id(),
             ]);

@@ -46,7 +46,6 @@
 
             <div class="dropdown" style="padding-right: 40px; ">
                 @php $myCarts = getMyCart(); @endphp
-
                 <button type="button" class="btn btn-light btnCart" data-toggle="dropdown">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp;Cart
                     <span class="badge badge-pill badge-danger">{{ count($myCarts) }}</span>
@@ -64,7 +63,7 @@
                             @php
                                 $total += ($details->price * $details->quantity * $details->stems);
                                 $totalQty =+ $totalQty + $details->quantity;
-                                 $size += $details->size * $details->quantity;
+                                $size += $details->size * $details->quantity;
                             @endphp
 
                         @endforeach
