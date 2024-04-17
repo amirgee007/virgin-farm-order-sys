@@ -125,7 +125,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
-                    <table id="cart" class="table table-hover table-condensed">
+                    <table id="cart" class="table table-hover table-bordered border-success">
                         <thead>
                         <tr>
                             <th style="width:50%">Product</th>
@@ -144,7 +144,6 @@
                                     $total += ($cartItem->price * $cartItem->quantity * $cartItem->stems);
                                     $size += $cartItem->size * $cartItem->quantity;
                                 @endphp
-
                                 <tr data-id="{{ $cartItem->id }}">
                                     <td data-th="Product">
                                         <div class="row">
@@ -168,74 +167,75 @@
                             @endforeach
                         @endif
                         </tbody>
-                        <tfoot>
-
-                        @php
-                            list($boxes , $skipped) = getCubeRanges($size);
-                            $total = round2Digit($total);
-                        @endphp
-
-                        @if($skipped)
-                            @if(true)
-                                <tr>
-                                    <td colspan="5" class="text-center text-primary"><h4>Box Size(s): {{is_array($boxes) ? implode(', ' ,$boxes) : ''}} &nbsp; Weight:{{$size}} cu.</h4></td>
-                                </tr>
-                            @endif
-
-                            <tr>
-                                <td colspan="5" class="text-right"><h4><strong>Order Subtotal: ${{ $total }}</strong></h4></td>
-                            </tr>
-                            @php
-                                 $totalCubeTax = getCubeSizeTax($size);
-                                  $orderTotal =  round2Digit($total + $totalCubeTax);
-                            @endphp
-                            <tr>
-                                <td colspan="5" class="text-right"><h4><strong>Service/Transportation: ${{$totalCubeTax}}</strong></h4></td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="5" class="text-right"><h4><strong>Tax $0</strong></h4></td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="5" class="text-right"><h3><strong>Order Total: ${{ $orderTotal }}</strong></h3></td>
-                            </tr>
-
-                            @if(isDeliveryChargesApply())
-                                <tr>
-                                    <td colspan="5" class="text-right text-danger"><h5>**Delivery charges may apply.</h5></td>
-                                </tr>
-                            @endif
-
-                            <tr>
-                                <td colspan="5" class="text-right">
-                                <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
-
-                                <a href="{{ route('checkout.cart') }}"
-                                   class="btn btn-primary"
-                                   title="@lang('Checkout and Confirm the Order')"
-                                   data-toggle="tooltip"
-                                   data-placement="top"
-                                   data-method="GET"
-                                   data-confirm-title="@lang('Please Confirm To Proceed?')"
-                                   data-confirm-text="@lang('Once you checkout you can no longer change this order?')"
-                                   data-confirm-delete="@lang('Yes, Proceed!')">
-                                    Checkout &nbsp;<i class="fa fa-angle-right"></i>
-                                </a>
-
-                            </td>
-                            </tr>
-                        @else
-                            <tr>
-                                <td colspan="5" class="text-center text-danger ">
-                                    <h3><strong>You are not matching with cube size please select more products to fill your box i.e size now {{$size}}</strong></h3>
-                                    <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
-                                </td>
-                            </tr>
-
-                        @endif
-                        </tfoot>
                     </table>
+
+                    @php
+                        list($boxes, $skipped) = getCubeRanges($size);
+                        $total = round2Digit($total);
+                    @endphp
+
+                    @if($skipped)
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Order Notes(Optional)</label>
+                                <textarea class="form-control" rows="6" placeholder="Enter order notes here...!"></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-primary">
+                                            <h4>Box Size(s): {{ is_array($boxes) ? implode(', ', $boxes) : '' }} &nbsp; Weight: {{$size}} cu.</h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <h4><strong>Order Subtotal: ${{ $total }}</strong></h4>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $totalCubeTax = getCubeSizeTax($size);
+                                        $orderTotal =  round2Digit($total + $totalCubeTax);
+                                    @endphp
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <h4><strong>Service/Transportation: ${{ $totalCubeTax }}</strong></h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <h4><strong>Tax $0</strong></h4>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <h3><strong>Order Total: ${{ $orderTotal }}</strong></h3>
+                                        </td>
+                                    </tr>
+                                    @if(isDeliveryChargesApply())
+                                        <tr>
+                                            <td colspan="5" class="text-right text-danger">
+                                                <h5>**Delivery charges may apply.</h5>
+                                            </td>
+                                        </tr>
+                                    @endif
+                                    <tr>
+                                        <td colspan="5" class="text-right">
+                                            <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                                            <a href="{{ route('checkout.cart') }}" class="btn btn-primary" title="@lang('Checkout and Confirm the Order')" data-toggle="tooltip" data-placement="top" data-method="GET" data-confirm-title="@lang('Please Confirm To Proceed?')" data-confirm-text="@lang('Once you checkout you can no longer change this order?')" data-confirm-delete="@lang('Yes, Proceed!')">
+                                                Checkout &nbsp;<i class="fa fa-angle-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    @else
+                        <div class="text-center text-danger">
+                            <h3><strong>You are not matching with cube size please select more products to fill your box i.e size now {{$size}}</strong></h3>
+                            <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>
