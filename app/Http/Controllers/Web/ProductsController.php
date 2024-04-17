@@ -229,19 +229,20 @@ class ProductsController extends Controller
 
         $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
 
-        #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
+       #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
         if (isset($products[0]))
             foreach ($products[0] as $index => $row) {
+
                 try {
 
                     if ($index < 2) continue;
-
                     $uomTrim = trim($row[3]);
                     $data = [
                         'item_no' => trim($row[1]),
                         'category_id' => trim($row[0]),
                         'product_text' => trim($row[2]),
-                        'unit_of_measure' => isset($UOM[$uomTrim]) ? $UOM[$uomTrim] : $uomTrim,
+                        'unit_of_measure' => $uomTrim,
+                        'stems' => isset($UOM[$uomTrim]) ? $UOM[$uomTrim] : 1, #for our own purpose we are doing.
 
                         'weight' => trim($row[7]),
                         'size' => trim($row[8]),

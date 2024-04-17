@@ -16,12 +16,13 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+
         $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
 
         $prods = Product::all();
 
         foreach($prods as $prod){
-            $prod->unit_of_measure = $UOM[$prod->unit_of_measure];
+            $prod->stems = $UOM[$prod->unit_of_measure];
             $prod->save();
         }
 

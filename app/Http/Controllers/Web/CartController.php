@@ -41,7 +41,6 @@ class CartController extends Controller
         $priceCol = myPriceColumn();
 
         $cartExist = Cart::mineCart()->where('item_no' , $product->item_no)->first();
-        $stems = $product->stemsCount ? $product->stemsCount->total : 1;
 
         if($cartExist){
             $cartExist->increment('quantity' , $quantity);
@@ -56,7 +55,7 @@ class CartController extends Controller
                 "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
                 "size" => $product->size,
-                "stems" => $stems,
+                "stems" => $product->stem,
                 "max_qty" => $productInfo->quantity,
                 "user_id" => auth()->id(),
             ]);
@@ -195,7 +194,7 @@ class CartController extends Controller
                 'price' => round2Digit($cart->price),
                 'size' => $cart->size,
                 'is_add_on' => $is_add_on,
-                'stems' => $product->stemsCount ? $product->stemsCount->unit : 1,
+                'stems' => $product->stems,
                 'sub_total' => round2Digit($cart->price * $cart->quantity * $cart->stems),
             ];
 
