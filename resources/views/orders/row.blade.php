@@ -1,5 +1,11 @@
 <tr data-toggle="collapse" data-target="#accordion{{$order->id}}" class="clickable">
-    <td class="align-middle">WO{{ $order->id }}</td>
+    <td class="align-middle"
+        title="Click to view more details about the order."
+        data-toggle="tooltip"
+        data-placement="left">
+        <i class="fa fa-angle-double-down"></i>
+        WO{{ $order->id }}
+    </td>
 
     <td class="align-middle">{{ $order->name }}</td>
 
