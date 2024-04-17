@@ -94,7 +94,7 @@ class ProductsController extends Controller
 
         $priceCol = myPriceColumn();
 
-        $boxes = Box::all();
+        #$boxes = Box::all();
 
         #need to make it in auto job and show some counter + time etc
         CartController::makeCartEmptyIfTimePassed();
@@ -107,7 +107,6 @@ class ProductsController extends Controller
             'priceCol',
             'date_shipped',
             'user',
-            'boxes',
             'myOrders'
         ));
     }

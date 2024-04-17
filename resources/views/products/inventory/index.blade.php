@@ -288,12 +288,26 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($boxes as $box)
                             <tr>
-                                <td>{{$box->description}}</td>
-                                <td>{{$box->min_value}} - {{$box->max_value}} bunches</td>
+                                <td>Small</td>
+                                <td>5 - 6 bunches</td>
                             </tr>
-                        @endforeach
+                            <tr>
+                                <td>Medium</td>
+                                <td>6 - 8 bunches</td>
+                            </tr>
+                            <tr>
+                                <td>Medium Large</td>
+                                <td>8 - 9 bunches</td>
+                            </tr>
+                            <tr>
+                                <td>Large Box</td>
+                                <td>10 - 12 bunches</td>
+                            </tr>
+                            <tr>
+                                <td>Super</td>
+                                <td>15 - 17 bunches</td>
+                            </tr>
                         </tbody>
                     </table>
                     <div class="text-gray-500 float-right"> ***Roses used to calculate approximate box capacity.</div>
