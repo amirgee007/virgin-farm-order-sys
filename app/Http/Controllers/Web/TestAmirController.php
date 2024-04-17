@@ -18,22 +18,13 @@ class TestAmirController extends Controller
 
 
         $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
-
-        $prods = Product::all();
-
-        foreach($prods as $prod){
-            $prod->stems = $UOM[$prod->unit_of_measure];
-            $prod->save();
-        }
-
+        
         $prods = OrderItem::all();
 
         foreach($prods as $prod){
 
-            if(!is_int($prod->stems)){
-                $prod->stems = @$UOM[$prod->stems];
-                $prod->save();
-            }
+            $prod->stems = @$UOM[$prod->stems];
+            $prod->save();
 
         }
 
