@@ -56,7 +56,7 @@ class CartController extends Controller
                 "price" => $productInfo ? $productInfo->$priceCol : 0,
                 "image" => $product->image_url,
                 "size" => $product->size,
-                "stems" => $product->stemsCount ? $product->stemsCount->total : 1,
+                "stems" => $stems,
                 "max_qty" => $productInfo->quantity,
                 "user_id" => auth()->id(),
             ]);
@@ -205,7 +205,7 @@ class CartController extends Controller
         $totalCubeTax = getCubeSizeTax($size);
         $totalWithTax = $total + $totalCubeTax;
 
-        #sub_total	discount	tax		total
+        #sub_total	discount	tax		totalen
         $order->update([
             'sub_total' => round2Digit($total),
             'discount' => 0,

@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
@@ -22,6 +23,17 @@ class TestAmirController extends Controller
         foreach($prods as $prod){
             $prod->unit_of_measure = $UOM[$prod->unit_of_measure];
             $prod->save();
+        }
+
+        $prods = OrderItem::all();
+
+        foreach($prods as $prod){
+
+            if(!is_int($prod->stems)){
+                $prod->stems = @$UOM[$prod->stems];
+                $prod->save();
+            }
+
         }
 
         dd('ddd');
