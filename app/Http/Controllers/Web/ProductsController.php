@@ -81,7 +81,7 @@ class ProductsController extends Controller
         $carriers = getCarriers();
         $categories = Category::query()->orderBy('description')->pluck('description', 'category_id')->toArray();
         $products = (clone $query)->orderBy('product_text')
-            ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
+            ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,products.stems,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
             ->paginate(100);
 
         $fixed = [

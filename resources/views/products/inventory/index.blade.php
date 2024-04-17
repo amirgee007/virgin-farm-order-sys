@@ -193,7 +193,7 @@
                                             @php $priceNow = $product->$priceCol; @endphp
                                             <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>
                                                 {{--ST stad for per STEM flowers --}}
-                                            <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->unit_of_measure }}</td>
+                                            <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->stems }}</td>
                                             <td class="align-middle" title="Bunch">{{ $product->quantity }}</td>
 {{--                                            <td class="align-middle" title="Weight">{{ $product->weight }}</td>--}}
 {{--                                            <td class="align-middle" title="Size">{{ $product->size }}</td>--}}
