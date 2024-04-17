@@ -136,7 +136,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body" style="padding: 5px">
-                        <h5 class="text-center">Show Low Inventry Or Negative</h5>
+                        <h5 class="text-center">Show Low/Negative Inventory</h5>
                         <hr>
                         <div class="table-responsive orders-list-table">
                             <table class="table table-borderless table-striped products-list-table">
