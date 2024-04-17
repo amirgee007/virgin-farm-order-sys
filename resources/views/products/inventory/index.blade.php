@@ -98,12 +98,11 @@
                                 <div class="input-group custom-search-form">
 {{--                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>--}}
                                     <select class="form-control form-control-md mr-2" id="add-on-order" style="border:3px solid #cccccc; border-style:dashed"
-                                            title="Select which order to add to?"
+                                            title="Choose an order to edit, or select 'Add New Order' to proceed?"
                                             data-trigger="hover"
                                             data-toggle="tooltip">
-                                        <option hidden value="">Add-On Order</option>
                                         @foreach($myOrders AS $key => $value)
-                                            <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}>{{$key > 1 ? '#W-' : '' }} {{$value}} </option>
+                                            <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}>{{$key > 1 ? '#W - ' : '' }} {{$value}} </option>
                                         @endforeach
                                     </select>
 
@@ -359,7 +358,10 @@
                 type: 'POST',
                 headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                 success: function (response) {
-                    toastr.success("Your add-on order has been chosen. Please add more items and proceed to checkout to confirm.", "Success");
+                    if(order_id > 0)
+                        toastr.success("Your add-on order has been chosen. Please add more items and proceed to checkout to confirm.", "Success");
+                    else
+                        toastr.success("Your have reset add-on. No you can add new order.", "Success");
                 }
             });
 

@@ -350,7 +350,6 @@ function dateRangeConverter($dateInOut){
 
 function getAddOnDetail($order)
 {
-
     $text = '';
     try{
         if($order->full_add_on == 1)

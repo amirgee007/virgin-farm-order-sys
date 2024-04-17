@@ -82,7 +82,10 @@ class ProductsController extends Controller
             ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
             ->paginate(100);
 
-        $fixed = [1 => 'Add-On General'];
+        $fixed = [
+            0 => 'New Order',
+            1 => 'Add-On General',
+        ];
         $myOrders = $fixed + Order::where('user_id' , auth()->id())->latest()->pluck('id' , 'id')->toArray();
 
         if ($date_shipped || $category_id || $searching) {
@@ -94,8 +97,6 @@ class ProductsController extends Controller
         }
 
         $priceCol = myPriceColumn();
-
-        #$boxes = Box::all();
 
         #need to make it in auto job and show some counter + time etc
         CartController::makeCartEmptyIfTimePassed();
