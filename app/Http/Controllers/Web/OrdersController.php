@@ -94,16 +94,24 @@ class OrdersController extends Controller
         $user = User::where('id' , $order->user_id)->first();
 
         $emails = explode(',', $request->input('emails'));
-
-        foreach ($emails as $email) {
-            $email = trim($email);
-            \Mail::to($emails)->send(new OrderConfirmationMail($order , $user));
-        }
+        \Mail::to($emails)->send(new OrderConfirmationMail($order , $user));
 
         return response()->json(['message' => 'Emails sent successfully regarding Order ID ' . $orderId]);
-
-
     }
+
+    public function filterEmails()
+    {
+        $emails = collect(["test@example.com", "invalid-email", "another-valid-email@example.org", "one more@test.com"]);
+
+        // Filter the collection using the `filter` method and `filter_var`
+        $validEmails = $emails->filter(function ($email) {
+            return filter_var($email, FILTER_VALIDATE_EMAIL);
+        });
+
+        // Convert the collection back to an array if necessary
+        return response()->json($validEmails->all());
+    }
+
     public function addOnOrderUpdate(Request $request)
     {
         try {
