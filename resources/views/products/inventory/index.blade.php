@@ -161,8 +161,8 @@
                                 <thead>
                                     <tr>
                                     <th class="min-width-200">@lang('Product Description')</th>
-                                    <th class="min-width-80">@lang('Unit Price')</th>
-                                    <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Stem/Unit Price')</th>
+                                    <th class="min-width-80">@lang('Stem/Unit Price')</th>
+                                    <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Unit Pack')</th>
                                     <th class="min-width-80">@lang('Available Qty')</th>
 {{--                                    <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>--}}
 {{--                                    <th class="min-width-80" title="Size of the item">@lang('Size')</th>--}}
