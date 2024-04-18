@@ -129,8 +129,8 @@
                         <thead>
                         <tr>
                             <th style="width:50%">Product</th>
-                            <th style="width:10%">Price</th>
-                            <th style="width:4%">Unit</th>
+                            <th style="width:10%">Stem/Unit Price</th>
+                            <th style="width:4%">Unit Pack</th>
                             <th style="width:8%">Quantity</th>
                             <th style="width:22%" class="text-center">Subtotal</th>
                             <th style="width:10%">Action</th>
@@ -179,7 +179,7 @@
                             <div class="col-md-6">
                                 <label>Order Notes(Optional)</label>
 
-                                <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()" placeholder="Enter order notes here...!"></textarea>
+                                <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()" placeholder="leave comments or notes for your sales representative."></textarea>
                             </div>
                             <div class="col-md-6">
                                 <table class="table table-bordered">

@@ -13,7 +13,7 @@
 
 # Prebook {{getAddOnDetail($order)}}
 @component('mail::table')
-    |      Product     |  Quantity    | Unit Price  |   Pack     |   Total     |
+    |      Product     |  Quantity    | Unit Price  |   Unit Pack     |   Total     |
     | :--------------- | :----------  | :---------- | :---------- | :---------- |
     @if(count($order->items))
     @foreach($order->items AS $item)
