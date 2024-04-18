@@ -232,13 +232,18 @@ class CartController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
-        #Mario
+        #Mario  weborders@virginfarms.com will add later
         $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
         #if(config('app.env') != 'local')
             \Mail::to($user->email)
-                ->cc(['sales@virginfarms.net' , 'shipping@virginfarms.com' , $salesRepEmail])
-                ->bcc(['amirseersol@gmail.com'])
-                ->send(new OrderConfirmationMail($order , $user));
+                ->cc('weborders@virginfarms.com')
+                ->bcc([
+                    'info@virginfarms.com',
+                    'sales@virginfarms.com',
+                    'christinah@virginfarms.com',
+                    'esteban@virginfarms.com',
+                    'sales@virginfarms.net', $salesRepEmail
+                ])->send(new OrderConfirmationMail($order , $user));
 
         Cart::mineCart()->delete();
 
