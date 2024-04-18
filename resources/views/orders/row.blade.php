@@ -42,27 +42,31 @@
                 <i class="fas fa-check-square text-primary"></i>
             </a>
         @endif
-            <a href="{{ route('orders.update', [$order->id , 'sendEmail']) }}"
-               class="btn btn-icon"
-               title="@lang('Resend copy of the web order')"
-               data-toggle="tooltip"
-               data-placement="left"
-               data-method="GET"
-               data-confirm-title="@lang('Please Confirm')"
-               data-confirm-text="@lang('Are you sure that you want to resend email of this order ?')"
-               data-confirm-delete="@lang('Yes, send it!')">
-                <i class="fas fa-envelope text-warning"></i>
-            </a>
+{{--            <a href="{{ route('orders.update', [$order->id , 'sendEmail']) }}"--}}
+{{--               class="btn btn-icon"--}}
 
-            <a href="{{ route('orders.update', [$order->id , 'delete']) }}"
-               class="btn btn-icon"
-               title="@lang('Delete order')"
-               data-toggle="tooltip"
-               data-placement="left"
-               data-method="GET"
-               data-confirm-title="@lang('Please Confirm')"
-               data-confirm-text="@lang('Are you sure that you want to delete this order?')"
-               data-confirm-delete="@lang('Yes, delete it!')">
+{{--               data-method="GET"--}}
+{{--               data-confirm-title="@lang('Please Confirm')"--}}
+{{--               data-confirm-text="@lang('Are you sure that you want to resend email of this order ?')"--}}
+{{--               data-confirm-delete="@lang('Yes, send it!')">--}}
+{{--                <i class="fas fa-envelope text-warning"></i>--}}
+{{--            </a>--}}
+
+                <i class="fas fa-envelope text-warning" title="@lang('Resend copy of the web order')"
+                   data-toggle="tooltip"
+                   data-placement="left"
+                   data-orderid="{{$order->id}}"
+                   data-email="{{$order->email_address}}" style="cursor:pointer;"></i>
+
+                <a href="{{ route('orders.update', [$order->id , 'delete']) }}"
+                   class="btn btn-icon"
+                   title="@lang('Delete order')"
+                   data-toggle="tooltip"
+                   data-placement="left"
+                   data-method="GET"
+                   data-confirm-title="@lang('Please Confirm')"
+                   data-confirm-text="@lang('Are you sure that you want to delete this order?')"
+                   data-confirm-delete="@lang('Yes, delete it!')">
                 <i class="fas fa-trash text-danger"></i>
             </a>
          @endif

@@ -62,7 +62,6 @@ class OrdersController extends Controller
             });
         }
 
-
         $count = (clone $query)->count();
         $orders = $query->paginate(100);
 
@@ -71,22 +70,13 @@ class OrdersController extends Controller
     }
 
     public function updateOrder($id, $type){
-        #markCompeted, #sendEmail, #delete
-
+        #markCompeted, ##delete
         $order = Order::find($id);
 
         if($type == 'markCompeted'){
             $order->update([
                 'is_active' => 0
             ]);
-        }
-        if($type == 'sendEmail'){
-            $user = User::where('id' , $order->user_id)->first();
-
-            \Mail::to($user->email)
-                ->cc(['sales@virginfarms.net'])
-                ->bcc(['amirseersol@gmail.com'])
-                ->send(new OrderConfirmationMail($order , $user));
         }
         if($type == 'delete'){
             $order->items()->delete();
@@ -98,6 +88,22 @@ class OrdersController extends Controller
 
     }
 
+    public function sendEmailCopy(Request $request){
+
+        $order = Order::find($request->orderId);
+        $user = User::where('id' , $order->user_id)->first();
+
+        $emails = explode(',', $request->input('emails'));
+
+        foreach ($emails as $email) {
+            $email = trim($email);
+            \Mail::to($emails)->send(new OrderConfirmationMail($order , $user));
+        }
+
+        return response()->json(['message' => 'Emails sent successfully regarding Order ID ' . $orderId]);
+
+
+    }
     public function addOnOrderUpdate(Request $request)
     {
         try {

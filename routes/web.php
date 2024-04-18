@@ -149,6 +149,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'edit.order.user',
             'uses' => 'OrdersController@addOnOrderUpdate'
         ]);
+
+        Route::post('/send-email-copy', [
+            'as' => 'orders.send.email.copy',
+            'uses' => 'OrdersController@sendEmailCopy'
+        ]);
     });
 
     Route::group(['prefix'=>'boxes'], function() {

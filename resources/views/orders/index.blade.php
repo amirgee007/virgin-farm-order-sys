@@ -128,6 +128,26 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="emailModalLabel"><i class="fa fa-envelope"></i> Send Email Copy</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="emailInput" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="sendEmail">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {!! $orders->render() !!}
 
 @stop
@@ -139,6 +159,37 @@
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
 
     <script>
+        $(document).ready(function() {
+            var orderId; // Declare orderId variable in a scope accessible by both event handlers
 
+            $('.fa-envelope').click(function() {
+                var defaultEmail = $(this).data('email');
+                orderId = $(this).data('orderid'); // Retrieve and store orderId when the icon is clicked
+                $('#emailInput').val(defaultEmail); // Pre-fill textarea with default email
+                $('#emailModal').modal('show'); // Show the modal
+            });
+
+            $('#sendEmail').click(function() {
+                var emails = $('#emailInput').val();
+
+                $.ajax({
+                    url: '{{ route("orders.send.email.copy") }}', // Ensure the URL is generated correctly in Laravel Blade
+                    type: 'POST',
+                    data: {
+                        emails: emails,
+                        orderId: orderId, // Include orderId in the AJAX request
+                        _token: '{{ csrf_token() }}' // CSRF token for Laravel form protection
+                    },
+                    success: function(response) {
+                        toastr.info('Email copy has been send to selected email.');
+                        $('#emailModal').modal('hide'); // Hide modal after successful operation
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error('Something went wrong during sending emails, plz check support asap.');
+                    }
+                });
+            });
+        });
     </script>
+
 @endsection

@@ -176,6 +176,7 @@ class CartController extends Controller
                 'date_shipped' => $date_shipped,
                 'carrier_id' => $carrier_id,
                 'name' => $shipAddress->name,
+                'email_address' => $shipAddress->email,
                 'company' => $shipAddress->company,
                 'phone' => $shipAddress->phone,
                 'shipping_address' => $shipAddress->address,
