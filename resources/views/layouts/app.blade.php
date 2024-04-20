@@ -121,6 +121,34 @@
         })(jQuery);
     </script>
 
+
+    <script>
+        $(document).ready(function() {
+            var remainingSeconds = <?php echo cartTimeLeftSec(); ?>;
+
+            console.log(remainingSeconds);
+            function updateTimer() {
+                var minutes = Math.floor(remainingSeconds / 60);
+                var seconds = remainingSeconds % 60;
+
+                // Ensure both minutes and seconds are displayed with two digits
+                var displayMinutes = minutes.toString().padStart(2, '0');
+                var displaySeconds = seconds.toString().padStart(2, '0');
+
+                $('#carttimer').text('Checkout Timer: ' + displayMinutes + ':' + displaySeconds);
+
+                if (remainingSeconds > 0) {
+                    remainingSeconds -= 1;
+                    setTimeout(updateTimer, 1000);
+                } else {
+                    $('#carttimer').text(''); //Empty Cart. here we can add timer ETC
+                }
+            }
+
+            updateTimer();
+        });
+    </script>
+
     @stack('js')
     @yield('scripts')
 

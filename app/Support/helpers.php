@@ -12,6 +12,18 @@ function getMyCart()
 {
     return Cart::mineCart()->get();
 }
+
+function cartTimeLeftSec()
+{
+    $user = itsMeUser();
+    $currentTime = now()->toDateTimeString();
+    $cart = Cart::where('user_id', $user->id)->first();
+
+    Log::notice($cart && $cart->updated_at->diffInSeconds($currentTime));
+    #3500 its 1 hour
+    return $cart ?  3500 - $cart->updated_at->diffInSeconds($currentTime) : 0;
+
+}
 function myPriceColumn(){
     #OPTIMIZATION required plz keep in mind to reduce conditions
     $user = itsMeUser();

@@ -233,6 +233,7 @@ class CartController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
+
         #Mario  weborders@virginfarms.com will add later
         $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
         #if(config('app.env') != 'local')
@@ -264,16 +265,13 @@ class CartController extends Controller
     {
         try {
 
-            $user = itsMeUser();
-            $currentTime = now()->toDateTimeString();
-            $cart = Cart::where('user_id', $user->id)->first();
-
-            if ($cart && $cart->updated_at->diffInHours($currentTime) > 1) {
-                \Log::info($user->username . ' users cart has been removed due to last hour, plz keep an eye on it. ' . $cart->updated_at->toDateTimeString());
-                Cart::where('user_id', $user->id)->delete();
+            if (false && cartTimeLeftSec() > 3500) { #it means 1 hour left so remove all those
+                #\Log::info($user->username . ' users cart has been removed due to last hour, plz keep an eye on it. ' . $cart->updated_at->toDateTimeString());
+                Cart::where('user_id', auth()->id())->delete();
             }
+
         } catch (\Exception $ex) {
-            \Log::error($ex->getMessage() . ' something went wrong here plz check for this use,...! ' . $user->id);
+            \Log::error($ex->getMessage() . ' something went wrong here plz check for this use,...! ' . auth()->id());
         }
     }
 

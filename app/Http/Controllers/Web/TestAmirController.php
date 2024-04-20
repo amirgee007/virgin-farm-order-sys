@@ -16,7 +16,13 @@ class TestAmirController extends Controller
 {
 
     public function index2($value = 0){
-        
+
+
+        $time = now();
+        $timeBefore = now()->subHour();
+
+        dd($timeBefore->diffInSeconds($time));
+
         $string = 'order_note_' .$id;
         Cache::forget($string);
 

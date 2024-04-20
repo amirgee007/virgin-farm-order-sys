@@ -322,6 +322,7 @@
 
 @section('scripts')
     @include('partials.toaster-js')
+
     <script>
 
         $('.img-thumbnail').click(function () {
