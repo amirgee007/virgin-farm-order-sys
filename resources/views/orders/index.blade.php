@@ -140,7 +140,9 @@
                 </div>
                 <div class="modal-body">
                     <textarea id="emailInput" class="form-control" rows="3"></textarea>
+                    <small class="text-danger">Add as many emails seperated by comma i.e a@a.com, b@b.com etc </small>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="sendEmail">Send</button>
                 </div>
@@ -172,6 +174,9 @@
             $('#sendEmail').click(function() {
                 var emails = $('#emailInput').val();
 
+                var $button = $(this); // Cache the button element for use within the AJAX callbacks
+                $button.text('Sending...!'); // Change the button text to indicate loading
+
                 $.ajax({
                     url: '{{ route("orders.send.email.copy") }}', // Ensure the URL is generated correctly in Laravel Blade
                     type: 'POST',
@@ -181,11 +186,19 @@
                         _token: '{{ csrf_token() }}' // CSRF token for Laravel form protection
                     },
                     success: function(response) {
-                        toastr.info('Email copy has been send to selected email.');
-                        $('#emailModal').modal('hide'); // Hide modal after successful operation
+                        toastr.info('Email copy has been send to selected emails.');
+                        $('#emailModal').modal('hide');
+
+                        setTimeout(function() {
+                            $button.text('Send Data'); // Reset the button text back to original
+                        }, 2000);
                     },
                     error: function(xhr, status, error) {
                         toastr.error('Something went wrong during sending emails, plz check support asap.');
+
+                        setTimeout(function() {
+                            $button.text('Send Again'); // Reset the button text back to original
+                        }, 2000);
                     }
                 });
             });

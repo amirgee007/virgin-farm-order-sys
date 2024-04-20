@@ -88,28 +88,24 @@ class OrdersController extends Controller
 
     }
 
-    public function sendEmailCopy(Request $request){
-
-        $order = Order::find($request->orderId);
-        $user = User::where('id' , $order->user_id)->first();
-
-        $emails = explode(',', $request->input('emails'));
-        \Mail::to($emails)->send(new OrderConfirmationMail($order , $user));
-
-        return response()->json(['message' => 'Emails sent successfully regarding Order ID ' . $orderId]);
-    }
-
-    public function filterEmails()
+    public function sendEmailCopy(Request $request)
     {
-        $emails = collect(["test@example.com", "invalid-email", "another-valid-email@example.org", "one more@test.com"]);
+        try {
+            $order = Order::find($request->orderId);
+            $user = User::where('id', $order->user_id)->first();
 
-        // Filter the collection using the `filter` method and `filter_var`
-        $validEmails = $emails->filter(function ($email) {
-            return filter_var($email, FILTER_VALIDATE_EMAIL);
-        });
+            $emails = explode(',', $request->input('emails'));
 
-        // Convert the collection back to an array if necessary
-        return response()->json($validEmails->all());
+            $emails = array_filter($emails, function ($email) {
+                return filter_var($email, FILTER_VALIDATE_EMAIL);
+            });
+
+            \Mail::to($emails)->send(new OrderConfirmationMail($order, $user));
+
+            return response()->json(['message' => 'Emails sent successfully regarding Order ID ' . $order->user_id]);
+        } catch (\Exception $ex) {
+            Log::error('sendEmailCopy ' . $order->user_id . ' order id: ' . $request->input('emails'));
+        }
     }
 
     public function addOnOrderUpdate(Request $request)
