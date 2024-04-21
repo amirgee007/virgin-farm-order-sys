@@ -265,7 +265,7 @@ class CartController extends Controller
     {
         try {
 
-            if (false && cartTimeLeftSec() > 3500) { #it means 1 hour left so remove all those
+            if (cartTimeLeftSec() <= 0) { #it means 1 hour left so remove all those
                 #\Log::info($user->username . ' users cart has been removed due to last hour, plz keep an eye on it. ' . $cart->updated_at->toDateTimeString());
                 Cart::where('user_id', auth()->id())->delete();
             }

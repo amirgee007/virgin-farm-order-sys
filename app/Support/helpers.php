@@ -16,12 +16,19 @@ function getMyCart()
 function cartTimeLeftSec()
 {
     $user = itsMeUser();
-    $currentTime = now()->toDateTimeString();
-    $cart = Cart::where('user_id', $user->id)->first();
+    $cartUpdated = Cart::where('user_id', $user->id)->value('updated_at');
 
-    Log::notice($cart && $cart->updated_at->diffInSeconds($currentTime));
-    #3500 its 1 hour
-    return $cart ?  3500 - $cart->updated_at->diffInSeconds($currentTime) : 0;
+    $remainingSeconds = 0;
+
+    if ($cartUpdated) {
+        $lastAddedTime = new Carbon($cartUpdated);
+        $currentTime = Carbon::now();
+        $expirationTime = $lastAddedTime->copy()->addHour();
+
+        $remainingSeconds = $currentTime->diffInSeconds($expirationTime, false);  // 'false' to allow negative values
+    }
+
+    return $remainingSeconds > 0 ? $remainingSeconds : 0;
 
 }
 function myPriceColumn(){
