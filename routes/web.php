@@ -13,6 +13,9 @@ Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name(
 Route::post('update-cart-notes', [CartController::class, 'saveOrderNotes'])->name('cart.save.notes'); #done DB
 
 
+Route::post('/api/validate-cart-size', 'CartController@validateCartSelection');
+
+
 /**
  * Authentication
  */

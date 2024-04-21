@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\Box;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ShippingAddress;
@@ -17,34 +18,20 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+        $ranges = Box::pluck('max_value', 'min_value')->toArray();
 
-        $time = now();
-        $timeBefore = now()->subHour();
+        $adjustedRanges = [];
+        $startLimit = 1;
 
-        dd($timeBefore->diffInSeconds($time));
+        foreach ($ranges as $min => $max) {
 
-        $string = 'order_note_' .$id;
-        Cache::forget($string);
+            if ($startLimit > $min - 1) {
+                $startLimit = $max + 1;
+                continue;
+            }
 
-        return Cache::get($string);
-
-        $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
-
-        $prods = OrderItem::all();
-
-        foreach($prods as $prod){
-
-            $prod->stems = @$UOM[$prod->stems];
-            $prod->save();
-
+            $adjustedRanges[] = [ 'min' => $startLimit, 'max' => $min - 1 ]; // Add the adjusted range to the array
+            $startLimit = $max + 1;
         }
-
-        dd('ddd');
-        if ($result !== null) {
-            echo "$valueToCheck is within the valid range.";
-        } else {
-            echo "$valueToCheck is not within the valid range.";
-        }
-
     }
 }

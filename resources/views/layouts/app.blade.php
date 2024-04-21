@@ -110,6 +110,7 @@
     <script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
     <script src="{{ url('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
     <script src="{{ url('assets/js/as/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
 
     <script>
         (function($){
@@ -117,16 +118,61 @@
                 $(".custom-scroll-bar").mCustomScrollbar({
                     theme:"minimal"
                 });
+
+                const size = $("#itsSizeDynamic").val();
+                fetch('/api/validate-cart-size', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ selection: size })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.nextMax){
+                            // const messageElement = document.querySelector('#message');
+                            // messageElement.innerText = `Min size required: ${data.nextMax}`;
+                            updateProgressBar(size, data.nextMax);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+
+                function updateProgressBar(currentSize, maxLimit) {
+                    const percentage = currentSize / maxLimit;
+                    progressBar.animate(percentage); // Update progress bar based on the max of the current range
+                }
             });
         })(jQuery);
     </script>
 
+    <script>
+        const progressBar = new ProgressBar.Circle('#progress-container', {
+            strokeWidth: 12,
+            easing: 'easeInOut',
+            duration: 1400,
+            color: '#ED6A5A',
+            trailColor: '#5a5a54',
+            trailWidth: 5,
+            svgStyle: null,
+            text: {
+                autoStyleContainer: false
+            },
+            from: { color: '#ED6A5A', width: 6 },
+            to: { color: '#FFEA82', width: 6 },
+
+            // Set step function to display the percentage in the middle of the circle
+            step: function(state, bar) {
+                bar.setText((bar.value() * 100).toFixed(0) + '%');
+            }
+        });
+
+    </script>
 
     <script>
         $(document).ready(function() {
             var remainingSeconds = <?php echo cartTimeLeftSec(); ?>;
 
-            console.log(remainingSeconds);
             function updateTimer() {
                 var minutes = Math.floor(remainingSeconds / 60);
                 var seconds = remainingSeconds % 60;

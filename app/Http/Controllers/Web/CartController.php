@@ -275,4 +275,23 @@ class CartController extends Controller
         }
     }
 
+    public function validateCartSelection(Request $request)
+    {
+        $input = $request->input('selection');
+        $max = $currentSelection = $input > 45 ? 45 - $input : $input;
+
+        $ranges = getCubeRangesMinMax();
+        foreach ($ranges as $range) {
+            #not in current ranges
+            if ($currentSelection >= $range['min'] && $currentSelection <= $range['max']) {
+                $max = $range['max'] + 1;
+            }
+        }
+
+        return response()->json([
+            'valid' => true,
+            'nextMax' => $max
+        ]);
+    }
+
 }
