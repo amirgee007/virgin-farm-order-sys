@@ -110,7 +110,8 @@
     <script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
     <script src="{{ url('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
     <script src="{{ url('assets/js/as/app.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
+
+    <script src="{{ url('assets/plugins/progressbar/progressbar.js') }}"></script>
 
     <script>
         (function($){
