@@ -27,6 +27,9 @@ class CartController extends Controller
     }
     public function viewCart()
     {
+        #need to make it in auto job and show some counter + time etc
+        CartController::makeCartEmptyIfTimePassed();
+
         $string = 'order_note_' .auth()->id();
         \Cache::forget($string);
 
