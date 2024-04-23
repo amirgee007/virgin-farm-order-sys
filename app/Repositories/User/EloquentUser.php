@@ -142,10 +142,12 @@ class EloquentUser implements UserRepository
 
             $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
 
-            $content = 'User chnaged his shipping address please check asap i.e user is '.$user->first_name;
-            \Mail::to('christinah@virginfarms.com')
-                ->bcc('amir@infcompany.com')
-                ->send(new VirginFarmGlobalMail('Hi, plz check some user updated shipping address', $content));
+            $content = 'User Changed his shipping address under profile page please check asap i.e user is '.$user->first_name;
+
+            \Mail::raw($content, function ($message) use($salesRepEmail) {
+                $message->to('christinah@virginfarms.com')
+                    ->bcc(['amir@infcompany.com' , $salesRepEmail])
+                    ->subject('Hi, plz check some user updated shipping address');});
         }
 
         return $user;
