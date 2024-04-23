@@ -78,9 +78,10 @@
 
                         @endforeach
                         {{-- Just using for the cart size so we dont need many API calls here --}}
+{{--                        <i class="fas fa-shopping-cart"></i>--}}
                         <input type="hidden" id="itsSizeDynamic" value="{{$size}}">
                         <div class="col-lg-8 col-sm-6 col-6 total-section text-right">
-                            <p>Total Units:<b class="text-info"> {{$totalQty}}</b> &nbsp; Total: <span class="text-info"><b>${{$total}}</b></span></p>
+                            <p>Total Units:<b class="text-info"> {{$totalQty}}</b></p>
                         </div>
                     </div>
                     @if($myCarts)
