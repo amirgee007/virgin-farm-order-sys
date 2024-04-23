@@ -121,6 +121,9 @@
                 });
 
                 const size = $("#itsSizeDynamic").val();
+
+                console.log('its size now ' + size);
+
                 fetch('/api/validate-cart-size', {
                     method: 'POST',
                     headers: {
