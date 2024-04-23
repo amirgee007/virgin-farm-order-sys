@@ -122,8 +122,6 @@
 
                 const size = $("#itsSizeDynamic").val();
 
-                console.log('its size now ' + size);
-
                 fetch('/api/validate-cart-size', {
                     method: 'POST',
                     headers: {
@@ -143,7 +141,7 @@
                     .catch(error => console.error('Error:', error));
 
                 function updateProgressBar(currentSize, maxLimit) {
-                    console.log(currentSize, maxLimit);
+                    console.log('current size and next max limit is: '+currentSize, maxLimit);
                     const percentage = currentSize / maxLimit;
                     progressBar.animate(percentage); // Update progress bar based on the max of the current range
                 }

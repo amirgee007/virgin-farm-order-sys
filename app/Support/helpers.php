@@ -180,27 +180,6 @@ function getCubeRanges($total)
     return (count($values) == count($matched)) ? [$matched , true] : [$matched , false];
 }
 
-function getCubeRangesMinMax()
-{
-    $ranges = Box::pluck('max_value', 'min_value')->toArray();
-
-    $adjustedRanges = [];
-    $startLimit = 1;
-
-    foreach ($ranges as $min => $max) {
-
-        if ($startLimit > $min - 1) {
-            $startLimit = $max + 1;
-            continue;
-        }
-
-        $adjustedRanges[] = [ 'min' => $startLimit, 'max' => $min - 1 ]; // Add the adjusted range to the array
-        $startLimit = $max + 1;
-    }
-
-    return $adjustedRanges;
-}
-
 function checkIfSkipCubeRangeCondition()
 {
     $user = itsMeUser();

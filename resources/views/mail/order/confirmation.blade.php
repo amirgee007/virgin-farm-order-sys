@@ -31,7 +31,7 @@
 @endcomponent
 
 # Total Units: {{$order->countQty()}}
-
+##### Order Notes: {{$order->notes}}
 Your sales representative will contact you to confirm your online order.
 
 If you have any questions, feel free to contact us.

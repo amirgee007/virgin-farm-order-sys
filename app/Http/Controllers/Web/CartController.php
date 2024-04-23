@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\OrderConfirmationMail;
+use Vanguard\Models\Box;
 use Vanguard\Models\Cart;
 use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
@@ -281,20 +282,30 @@ class CartController extends Controller
     public function validateCartSelection(Request $request)
     {
         $input = $request->input('selection');
-        $max = $currentSelection = $input > 45 ? 45 - $input : $input;
+        $sizeHere = $currentSelection = $input > 45 ? 45 - $input : $input;
 
-        $ranges = getCubeRangesMinMax();
-        foreach ($ranges as $range) {
-            #not in current ranges
-            if ($currentSelection >= $range['min'] && $currentSelection <= $range['max']) {
-                $max = $range['max'] + 1;
+        $ranges = Box::pluck('max_value', 'min_value')->toArray();
+        $nextMinimumNeeded = null;
+
+        $response = [];
+        // Check if the quantity matches any of the current ranges
+        foreach ($ranges as $min => $max) {
+
+            if ($sizeHere >= $min && $sizeHere <= $max) {
+                // Quantity matches a range
+                $response =  ['valid' => true, 'size' => $sizeHere, 'nextMax' => null];
+            }
+
+            // Find the smallest 'next minimum' number that is larger than the quantity
+            if ($sizeHere < $min && ($nextMinimumNeeded === null || $min < $nextMinimumNeeded)) {
+                $nextMinimumNeeded = $min;
             }
         }
 
-        return response()->json([
-            'valid' => true,
-            'nextMax' => $max
-        ]);
+        // Return the result indicating no match and the next minimum number needed
+        $response =  ['valid' => false, 'size' => $sizeHere, 'nextMax' => $nextMinimumNeeded];
+
+        return response()->json($response);
     }
 
 }
