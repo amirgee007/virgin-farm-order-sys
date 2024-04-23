@@ -140,6 +140,7 @@
                     .catch(error => console.error('Error:', error));
 
                 function updateProgressBar(currentSize, maxLimit) {
+                    console.log(currentSize, maxLimit);
                     const percentage = currentSize / maxLimit;
                     progressBar.animate(percentage); // Update progress bar based on the max of the current range
                 }
