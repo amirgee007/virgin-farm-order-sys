@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Mail\VirginFarmGlobalMail;
+use Vanguard\Mail\VirginFarmsSystemMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
@@ -21,7 +23,13 @@ class TestAmirController extends Controller
         $quantity = 21.5;
 
 
+        $user = User::first();
+        $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
 
+        $content = 'User chnaged his shipping address please check asap i.e user is '.$user->first_name;
+        \Mail::to('christinah@virginfarms.com')
+            ->bcc('amir@infcompany.com')
+            ->send(new VirginFarmGlobalMail('Hi, plz check some user updated shipping address', $content));
 
         dd('dd');
 

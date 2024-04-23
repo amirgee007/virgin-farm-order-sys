@@ -3,10 +3,13 @@
 namespace Vanguard\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class VirginFarmsSystemMail extends Mailable
+class VirginFarmGlobalMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +33,7 @@ class VirginFarmsSystemMail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.system.index')->with([
+        return $this->markdown('mail.system.index')->with([
             'content' => $this->content
         ]);
     }
@@ -77,3 +80,4 @@ class VirginFarmsSystemMail extends Mailable
         return $this;
     }
 }
+
