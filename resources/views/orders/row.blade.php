@@ -15,7 +15,7 @@
     <td class="align-middle">{{ $order->phone }}</td>
     <td class="align-middle">{{ $order->shipping_address }}</td>
     <td class="align-middle text-danger">${{ round2Digit($order->sub_total) }}</td>
-    <td class="align-middle">0</td>
+{{--    <td class="align-middle">0</td>--}}
     <td class="align-middle text-primary">${{ round2Digit($order->total) }}</td>
 {{--    <td class="align-middle">{{ $order->size }}</td>--}}
     <td class="align-middle">
@@ -85,7 +85,7 @@
                     <th class="min-width-100">@lang('Product Name')</th>
                     <th class="min-width-100">@lang('Quantity')</th>
                     <th class="min-width-100">@lang('Price')</th>
-                    <th class="min-width-100">@lang('Size')</th>
+{{--                    <th class="min-width-100">@lang('Size')</th>--}}
                     <th class="min-width-100">@lang('Stem')</th>
                     <th class="min-width-100">@lang('SubTotal')</th>
                 </tr>
@@ -100,7 +100,7 @@
                             <td class="align-middle">{{ $prod->name }}</td>
                             <td class="align-middle">{{ $prod->quantity }}</td>
                             <td class="align-middle">${{ $prod->price }}</td>
-                            <td class="align-middle">{{ $prod->size }}</td>
+{{--                            <td class="align-middle">{{ $prod->size }}</td>--}}
                             <td class="align-middle">{{ $prod->stems }}</td>
                             <td class="align-middle">${{ $prod->sub_total }}</td>
                         </tr>
