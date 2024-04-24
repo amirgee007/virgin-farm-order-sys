@@ -281,27 +281,32 @@ class CartController extends Controller
 
     public function validateCartSelection(Request $request)
     {
+
+        $user = auth()->user(); // Assuming this fetches the current authenticated user
+
+        if ($user->edit_order_id) {
+            return response()->json(['valid' => true, 'size' => 1, 'nextMax' => 1]);
+        }
+
         $input = $request->input('selection');
-        $sizeHere = $currentSelection = $input > 45 ? 45 - $input : $input;
+        $sizeHere = $input > 45 ? 45 - $input : $input;
 
-        $ranges = Box::pluck('max_value', 'min_value')->toArray();
+        $ranges = Box::get(['min_value', 'max_value'])->pluck('max_value', 'min_value')->toArray();
         $nextMinimumNeeded = null;
+        $response = ['valid' => false, 'size' => $sizeHere, 'nextMax' => null];
 
-        $response = [];
-        // Check if the quantity matches any of the current ranges
         foreach ($ranges as $min => $max) {
             if ($sizeHere >= $min && $sizeHere <= $max) {
-                // Quantity matches a range
-                $response =  ['valid' => true, 'size' => $sizeHere, 'nextMax' => $sizeHere];
+                $response = ['valid' => true, 'size' => $sizeHere, 'nextMax' => $sizeHere];
                 break;
             }
-            // Find the smallest 'next minimum' number that is larger than the quantity
             if ($sizeHere < $min && ($nextMinimumNeeded === null || $min < $nextMinimumNeeded)) {
                 $nextMinimumNeeded = $min;
             }
+        }
 
-            // Return the result indicating no match and the next minimum number needed
-            $response =  ['valid' => false, 'size' => $sizeHere, 'nextMax' => $nextMinimumNeeded];
+        if (!$response['valid']) {
+            $response['nextMax'] = $nextMinimumNeeded;
         }
 
         return response()->json($response);

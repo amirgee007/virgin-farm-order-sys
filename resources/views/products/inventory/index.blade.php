@@ -379,6 +379,8 @@
                         }).removeAttr('disabled');
 
                         toastr.success("Your add-on setting has been update. Now you can add new order.", "Success");
+
+                        location.reload();
                     }
                 }
             });
