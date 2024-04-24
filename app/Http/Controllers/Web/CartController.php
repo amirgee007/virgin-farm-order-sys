@@ -292,7 +292,7 @@ class CartController extends Controller
         foreach ($ranges as $min => $max) {
             if ($sizeHere >= $min && $sizeHere <= $max) {
                 // Quantity matches a range
-                $response =  ['valid' => true, 'size' => $sizeHere, 'nextMax' => null];
+                $response =  ['valid' => true, 'size' => $sizeHere, 'nextMax' => $sizeHere];
                 break;
             }
             // Find the smallest 'next minimum' number that is larger than the quantity
