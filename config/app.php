@@ -19,7 +19,6 @@ return [
     */
 
     'name' => env('APP_NAME', 'Virgin Farm Order System'),
-    'name' => 'Virgin Farms Web Team',
 
     /*
     |--------------------------------------------------------------------------
