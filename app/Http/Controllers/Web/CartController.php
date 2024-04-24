@@ -290,20 +290,19 @@ class CartController extends Controller
         $response = [];
         // Check if the quantity matches any of the current ranges
         foreach ($ranges as $min => $max) {
-
             if ($sizeHere >= $min && $sizeHere <= $max) {
                 // Quantity matches a range
                 $response =  ['valid' => true, 'size' => $sizeHere, 'nextMax' => null];
+                break;
             }
-
             // Find the smallest 'next minimum' number that is larger than the quantity
             if ($sizeHere < $min && ($nextMinimumNeeded === null || $min < $nextMinimumNeeded)) {
                 $nextMinimumNeeded = $min;
             }
-        }
 
-        // Return the result indicating no match and the next minimum number needed
-        $response =  ['valid' => false, 'size' => $sizeHere, 'nextMax' => $nextMinimumNeeded];
+            // Return the result indicating no match and the next minimum number needed
+            $response =  ['valid' => false, 'size' => $sizeHere, 'nextMax' => $nextMinimumNeeded];
+        }
 
         return response()->json($response);
     }
