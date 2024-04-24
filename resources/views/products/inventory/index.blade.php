@@ -365,27 +365,28 @@
                     let currentDate = new Date().toJSON().slice(0, 10);
                     if(order_id > 1){
                         toastr.success("Your add-on order has been chosen. Please add more items and proceed to checkout to confirm.", "Success");
-                        _dateShip.attr({
-                            min: response.date,
-                            value: response.date,
-                            disabled: true
-                        });
                     }
                     else{
-
-                        _dateShip.attr({
-                            'min': currentDate,
-                            'value': response.date
-                        }).removeAttr('disabled');
-
                         toastr.success("Your add-on setting has been update. Now you can add new order.", "Success");
                     }
 
-                    location.reload();
+                    reloadPageWithParameter('date_shipped', response.date);
                 }
             });
-
         });
+
+        function reloadPageWithParameter(key, value) {
+            var baseUrl = window.location.href.split('?')[0]; // Get the base URL without query parameters
+            var newParam = key + "=" + encodeURIComponent(value); // Create the parameter string
+            var newUrl = baseUrl + "?" + newParam; // Construct the new URL
+
+            // If there are already query parameters, append the new one
+            if (window.location.search) {
+                newUrl = baseUrl + window.location.search + '&' + newParam;
+            }
+
+            window.location.href = newUrl; // Redirect to the new URL
+        }
 
         previousCarrier = $('#changeCarrier').val();
         $('#changeCarrier').on('change', function () {
