@@ -186,7 +186,7 @@
                         _token: '{{ csrf_token() }}' // CSRF token for Laravel form protection
                     },
                     success: function(response) {
-                        toastr.info('Email copy has been send to selected emails.');
+                        toastr.info('Email copy has been sent to selected emails.');
                         $('#emailModal').modal('hide');
 
                         setTimeout(function() {
