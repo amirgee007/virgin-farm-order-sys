@@ -52,9 +52,9 @@ class ProductsController extends Controller
             $date_shipped = $user->last_ship_date;
         else {
             if($date_shipped)
-            $user->update([
-                'last_ship_date' => $date_shipped
-            ]);
+                $user->update([
+                    'last_ship_date' => $date_shipped
+                ]);
         }
 
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
@@ -89,7 +89,7 @@ class ProductsController extends Controller
             0 => 'New Order',
             1 => 'Add-On General',
         ];
-        $myOrders = $fixed + Order::where('user_id' , auth()->id())->latest()->pluck('id' , 'id')->toArray();
+        $myOrders = $fixed + Order::where('user_id' , auth()->id())->where('date_shipped' , '>' , now()->toDateString())->latest()->pluck('id' , 'id')->toArray();
 
         if ($date_shipped || $category_id || $searching) {
             $products->appends([

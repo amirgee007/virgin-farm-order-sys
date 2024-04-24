@@ -108,7 +108,8 @@
                                     </select>
 
                                     <input type="date"
-                                           min="{{$user->edit_order_id ? $date_shipped : date('Y-m-d') }}"
+{{--                                      min="{{$user->edit_order_id ? $date_shipped : date('Y-m-d') }}"--}}
+                                           min="{{date('Y-m-d') }}"
                                            class="form-control rounded"
                                            id="date_shipped"
                                            name="date_shipped"
