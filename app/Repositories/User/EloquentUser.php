@@ -146,8 +146,8 @@ class EloquentUser implements UserRepository
 
             \Mail::raw($content, function ($message) use($salesRepEmail) {
                 $message->to('christinah@virginfarms.com')
-                    ->bcc(['amir@infcompany.com' , $salesRepEmail])
-                    ->subject('Hi, plz check some user updated shipping address');});
+                    ->bcc(['weborders@virginfarms.com', $salesRepEmail])
+                    ->subject('User Update: Shipping Address');});
         }
 
         return $user;
