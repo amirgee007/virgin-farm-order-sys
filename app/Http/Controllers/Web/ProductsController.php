@@ -486,11 +486,17 @@ class ProductsController extends Controller
     public function iventoryReset()
     {
 
-        ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->update([
+        ProductQuantity::query()->update([
             'quantity' => 0,
             'date_in' => null,
             'date_out' => null,
         ]);
+
+//        ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->update([
+//            'quantity' => 0,
+//            'date_in' => null,
+//            'date_out' => null,
+//        ]);
 
         session()->flash('app_message', 'Inventory has been reset successfully.');
         return back();
