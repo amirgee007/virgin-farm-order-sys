@@ -51,6 +51,7 @@ class ProductsController extends Controller
         if (!$date_shipped)
             $date_shipped = $user->last_ship_date;
         else {
+            if($date_shipped)
             $user->update([
                 'last_ship_date' => $date_shipped
             ]);
