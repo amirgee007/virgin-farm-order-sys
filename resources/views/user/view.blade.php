@@ -86,7 +86,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('State'):</strong>
-                        {{ $user->state }}
+                        {{ @$states[$user->state] }}
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Zip'):</strong>
@@ -95,7 +95,7 @@
 
                     <li class="list-group-item">
                         <strong>@lang('Price List'):</strong>
-                        {{ $user->price_list }}
+                        {{ $prices[$user->price_list] }}
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Contract Code'):</strong>
@@ -103,7 +103,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Terms'):</strong>
-                        {{ $user->terms }}
+                        {{  $terms[$user->terms]}}
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Credit limit'):</strong>
@@ -111,7 +111,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Carrier Id'):</strong>
-                        {{ $user->carrier_id }}
+                        {{ $carriers[$user->carrier_id] }}
                     </li>
                 </ul>
             </div>

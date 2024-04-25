@@ -52,7 +52,20 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
-        return view('user.view', compact('user'));
+        $states = getStates();
+        $carriers = getCarriers();
+        $prices = getPrices();
+
+        $terms = getTerms();
+        $salesRep = getSalesReps();
+        
+        return view('user.view', compact(
+            'user' ,
+            'states',
+            'prices',
+            'carriers',
+            'terms'
+        ));
     }
 
     /**
