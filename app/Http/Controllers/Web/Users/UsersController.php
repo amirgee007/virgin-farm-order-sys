@@ -58,7 +58,7 @@ class UsersController extends Controller
 
         $terms = getTerms();
         $salesRep = getSalesReps();
-        
+
         return view('user.view', compact(
             'user' ,
             'states',

@@ -2,13 +2,12 @@
 
     @php $isAdmin = myRoleName() == 'Admin'; @endphp
 
-
     @if($isAdmin)
         <div class="col-md-4">
             <div class="form-group">
                 <label for="first_name">@lang('Role')</label>
                 {!! Form::select('role_id', $roles, $edit ? $user->role->id : '',
-                    ['class' => 'form-control input-solid', 'id' => 'role_id', $profile ? 'disabled' : '']) !!}
+                    ['class' => 'form-control input-solid', 'id' => 'role_id', $profile ? '' : '']) !!}
             </div>
         </div>
 
@@ -16,7 +15,7 @@
             <div class="form-group">
                 <label for="status">@lang('Status')</label>
                 {!! Form::select('status', $statuses, $edit ? $user->status : '',
-                    ['class' => 'form-control input-solid', 'id' => 'status', $profile ? 'disabled' : '']) !!}
+                    ['class' => 'form-control input-solid', 'id' => 'status', $profile ? '' : '']) !!}
             </div>
         </div>
     @endif

@@ -43,6 +43,7 @@
                                 </button>
                             </span>
                     </div>
+                    <small>Admin can see all clients address here. </small>
                 </div>
 
                 <div class="col-md-2 mt-2 mt-md-0">
