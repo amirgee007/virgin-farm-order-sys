@@ -143,7 +143,7 @@
                 function updateProgressBar(currentSize, maxLimit) {
                     console.log('current size and next max limit is: '+currentSize, maxLimit);
                     const percentage = currentSize / maxLimit;
-                    progressBar.animate(percentage); // Update progress bar based on the max of the current range
+                    progressBar.animate(percentage > 100 ? 100 : percentage ); // Update progress bar based on the max of the current range
                 }
             });
         })(jQuery);
