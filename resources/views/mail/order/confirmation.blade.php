@@ -39,5 +39,5 @@ If you have any questions, feel free to contact us.
 1-888-548-7673
 
 Thanks,
-{{ config('app.name') }}
+Virgin Farms Order System
 @endcomponent
