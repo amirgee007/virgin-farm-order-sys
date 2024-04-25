@@ -135,7 +135,7 @@
                         if(data.nextMax){
                             // const messageElement = document.querySelector('#message');
                             // messageElement.innerText = `Min size required: ${data.nextMax}`;
-                            updateProgressBar(size, data.nextMax);
+                            updateProgressBar(data.size, data.nextMax);
                         }
                     })
                     .catch(error => console.error('Error:', error));
