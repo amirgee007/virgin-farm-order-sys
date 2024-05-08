@@ -259,6 +259,22 @@ class ProductsController extends Controller
                     $product = Product::where('item_no', trim($row[1]))->first();
 
                     if ($product) {
+                        #USED not this BUT save mater file price here in ths table and use default prices.
+//                        foreach ($prices as $key => $value){
+//                            if ((float)$value == 0) {
+//                                unset($prices[$key]);
+//                            }
+//                        }
+
+                        if($prices){
+                            ProductQuantity::where([
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                            ])->update($prices);
+
+                            # todo need to cehck this logic with christ otheriwse it may cause some issue later
+                        }
+
                         $product->update($data);
                     } else {
 //                        $data['product_id']  = rand(100, 999999);
@@ -317,14 +333,23 @@ class ProductsController extends Controller
                     $data = [
                         'product_id' => $product->id,
                         'item_no' => $product->item_no,
-                        'price_fedex' => trim($row[2]),
-                        'price_fob' => trim($row[3]),
-                        'price_hawaii' => trim($row[4]),
-
-                        'quantity' => $row[5] ? $row[5] : 0,
+                        'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
                         'date_in' => $date_in,
                         'date_out' => $date_out,
                     ];
+
+                    #here if any price is zero then get price from master file and use it.
+
+                    // Conditionally add prices to the data array if they are greater than zero
+                    if (floatval(trim($row[2])) > 0) {
+                        $data['price_fedex'] = trim($row[2]);
+                    }
+                    if (floatval(trim($row[3])) > 0) {
+                        $data['price_fob'] = trim($row[3]);
+                    }
+                    if (floatval(trim($row[4])) > 0) {
+                        $data['price_hawaii'] = trim($row[4]);
+                    }
 
                     if ($product) {
                         ProductQuantity::updateOrCreate([
