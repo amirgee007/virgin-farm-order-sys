@@ -77,6 +77,10 @@ class OrdersController extends Controller
             $order->update([
                 'is_active' => 0
             ]);
+
+            #admin notify about status.
+            $message = 'Your order status has been updated : Wo-'.$order->id;
+            addOwnNotification($message ,$order->id , $order->user_id);
         }
         if($type == 'delete'){
             $order->items()->delete();

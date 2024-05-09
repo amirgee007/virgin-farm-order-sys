@@ -18,6 +18,7 @@ class ClientNotification extends Model
     }
 
     public function scopeMine($query){
-        return $query->where('user_id' , auth()->id());
+        $user_id = myRoleName() == 'Admin' ? 0 : auth()->id();
+        return $query->where('user_id' , $user_id);
     }
 }

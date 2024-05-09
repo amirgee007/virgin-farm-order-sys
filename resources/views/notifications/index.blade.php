@@ -40,7 +40,7 @@
                                 <td class="align-middle">{{ ++$index }}</td>
                                 <td class="align-middle">
                                     <span class="badge badge-lg badge-warning">
-                                        {{ $notification->user->first_name ?: __('N/A') }}
+                                        {{ @$notification->user->first_name ?: __('N/A') }}
                                     </span>
                                 </td>
 
