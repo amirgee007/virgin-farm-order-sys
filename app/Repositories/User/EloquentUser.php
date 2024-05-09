@@ -148,6 +148,11 @@ class EloquentUser implements UserRepository
                 $message->to('christinah@virginfarms.com')
                     ->bcc(['weborders@virginfarms.com', $salesRepEmail])
                     ->subject('User Update: Shipping Address');});
+
+            #admin notify
+            $message = 'User updated his shipping address : '.strtoupper($user->username);
+            addOwnNotification($message);
+
         }
 
         return $user;

@@ -129,6 +129,10 @@ class UsersController extends Controller
 
         $this->users->create($data);
 
+        #admin notify
+        $message = 'New customer profile added : '.$data['first_name'];
+        addOwnNotification($message);
+
         return redirect()->route('users.index')
             ->withSuccess(__('User created successfully.'));
     }
@@ -188,13 +192,12 @@ class UsersController extends Controller
 
     #every user has its own page but if admin want to see all, he can see it.
     public function indexShippingAddress(){
-
         return 'plz wait for the front page';
-
     }
 
     public function indexNotifications(){
-        $notifications = ClientNotification::mine()->get();
+
+        $notifications = ClientNotification::mine()->limit(500)->latest()->get();
         return view('notifications.index' , compact('notifications'));
     }
 
@@ -203,7 +206,7 @@ class UsersController extends Controller
         $not = ClientNotification::find($id);
         $not->delete();
 
-        session()->flash('app_message', 'The Notification been deleted successfully.');
+        session()->flash('app_message', 'The Notification has been deleted successfully.');
         return back();
     }
 

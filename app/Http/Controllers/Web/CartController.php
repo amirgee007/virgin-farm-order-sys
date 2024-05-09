@@ -237,19 +237,26 @@ class CartController extends Controller
 
         Log::info($order->id . ' placed the order like this with total and sub total '.$order->total);
 
-
         #Mario  weborders@virginfarms.com will add later
         $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
         #if(config('app.env') != 'local')
-            \Mail::to($user->email)
-                ->cc('weborders@virginfarms.com')
-                ->bcc([
-                    'info@virginfarms.com',
-                    'sales@virginfarms.com',
-                    'christinah@virginfarms.com',
-                    'esteban@virginfarms.com',
-                    'sales@virginfarms.net', $salesRepEmail
-                ])->send(new OrderConfirmationMail($order , $user));
+        \Mail::to($user->email)
+            ->cc('weborders@virginfarms.com')
+            ->bcc([
+                'info@virginfarms.com',
+                'sales@virginfarms.com',
+                'christinah@virginfarms.com',
+                'esteban@virginfarms.com',
+                'sales@virginfarms.net', $salesRepEmail
+            ])->send(new OrderConfirmationMail($order , $user));
+
+        #client notify
+        $message = 'Your order has been successfully received.';
+        addOwnNotification($message , $order->id , $user->id);
+
+        #admin notify
+        $message = 'New Order Received: WO-'.$order->id;
+        addOwnNotification($message , $order->id);
 
         Cart::mineCart()->delete();
 

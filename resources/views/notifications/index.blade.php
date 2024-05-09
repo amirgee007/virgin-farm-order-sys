@@ -25,13 +25,12 @@
             <table class="table table-borderless table-striped">
                 <thead>
                 <tr>
-                    <th class="min-width-80">@lang('ID')</th>
-                    <th class="min-width-150">@lang('Client')</th>
-                    <th class="min-width-100">@lang('Order Id')</th>
+                    <th>@lang('ID')</th>
+                    <th>@lang('Client')</th>
+                    <th>@lang('Order Id')</th>
                     <th class="min-width-100">@lang('Message')</th>
-                    <th class="min-width-100">@lang('Created')</th>
-                    <th class="min-width-100">@lang('Updated')</th>
-                    <th class="min-width-100">@lang('Action')</th>
+                    <th>@lang('Created')</th>
+                    <th>@lang('Action')</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,14 +45,18 @@
                                 </td>
 
                                 <td class="align-middle">
-                                    <span class="badge badge-lg badge-primary">
-                                        {{ $notification->order_id }}
-                                    </span>
+                                    <a target="_blank" href="{{route('orders.index')."?search=WO".$notification->id}}"
+                                       title="@lang('View order detail')"
+                                       data-toggle="tooltip"
+                                       data-placement="top">
+                                        <span class="badge badge-lg badge-primary">
+                                            WO-{{ $notification->order_id }}
+                                        </span>
+                                    </a>
                                 </td>
 
                                 <td class="align-middle">{{ Str::limit($notification->message , 50) }}</td>
-                                <td class="align-middle">{{ dateFormatMy($notification->created_at) }}</td>
-                                <td class="align-middle">{{ diff4Human($notification->updated_at) }}</td>
+                                <td class="align-middle" title="{{dateFormatMy($notification->created_at)}}">{{ diff4Human($notification->updated_at) }}</td>
 
                                 <td class="align-middle">
                                     <a href="{{ route('notification.delete', $notification->id) }}"
@@ -91,7 +94,6 @@
 
     <script src="{{ url('assets/plugins/data-tables/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ url('assets/plugins/data-tables/jquery.dataTables.min.js') }}"></script>
-
 
     <script>
 

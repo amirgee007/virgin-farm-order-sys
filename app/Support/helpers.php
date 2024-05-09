@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Cart;
+use Vanguard\Models\ClientNotification;
 use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\Setting;
 use Vanguard\Models\UsState;
@@ -383,6 +384,17 @@ function getAddOnDetail($order)
     return $text;
 }
 
+#if user id is zero then it means its for ADMIN
+
+function addOwnNotification($message ,$order_id = 0, $user_id = 0 ){
+    $data = [
+        'message' => $message,
+        'order_id' => $order_id,
+        'user_id' => $user_id
+    ];
+
+    ClientNotification::updateOrcreate($data , $data);
+}
 
 function stripXSS($data)
 {

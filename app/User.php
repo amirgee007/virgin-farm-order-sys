@@ -145,7 +145,6 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function sendPasswordResetNotification($token)
     {
         Mail::to($this)->send(new \Vanguard\Mail\ResetPassword($token));
-
         event(new RequestedPasswordResetEmail($this));
     }
 

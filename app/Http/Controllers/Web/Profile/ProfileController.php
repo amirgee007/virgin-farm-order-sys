@@ -40,7 +40,6 @@ class ProfileController extends Controller
         $terms = getTerms();
         $salesRep = getSalesReps();
 
-
         return view('user.profile', [
             'user' => auth()->user(),
             'edit' => true,
