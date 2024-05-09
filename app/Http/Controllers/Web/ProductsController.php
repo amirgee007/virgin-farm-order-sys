@@ -330,6 +330,10 @@ class ProductsController extends Controller
                         'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
                         'date_in' => $date_in,
                         'date_out' => $date_out,
+
+                        'price_fedex' => $product->def_price_fedex,
+                        'price_fob' => $product->def_price_fob,
+                        'price_hawaii' => $product->def_price_hawaii,
                     ];
 
                     #here if any price is zero then get price from master file and use it.
