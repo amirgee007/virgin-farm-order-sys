@@ -20,7 +20,19 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+        $prices = [
+            'def_price_fob' => 30, #price 1
+            'def_price_fedex' => -10, #price 3
+            'def_price_hawaii' => 3, #price 5
+        ];
 
+        foreach ($prices as $key => $value){
+            if ((float)$value <= 0) {
+                unset($prices[$key]);
+            }
+        }
+
+        dd($prices);
 
         $size = 13.45;# 18
 
@@ -30,7 +42,6 @@ class TestAmirController extends Controller
 
         $ranges = Box::pluck('max_value', 'min_value')->toArray();
         $nextMinimumNeeded = null;
-
 
         $response = [];
         // Check if the quantity matches any of the current ranges

@@ -51,7 +51,7 @@ class ProductsController extends Controller
         if (!$date_shipped)
             $date_shipped = $user->last_ship_date;
         else {
-            if($date_shipped)
+            if ($date_shipped)
                 $user->update([
                     'last_ship_date' => $date_shipped
                 ]);
@@ -89,7 +89,7 @@ class ProductsController extends Controller
             0 => 'New Order',
             1 => 'Add-On General',
         ];
-        $myOrders = $fixed + Order::where('user_id' , auth()->id())->where('date_shipped' , '>' , now()->toDateString())->latest()->pluck('id' , 'id')->toArray();
+        $myOrders = $fixed + Order::where('user_id', auth()->id())->where('date_shipped', '>', now()->toDateString())->latest()->pluck('id', 'id')->toArray();
 
         if ($date_shipped || $category_id || $searching) {
             $products->appends([
@@ -229,9 +229,9 @@ class ProductsController extends Controller
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 600); //600 seconds = 10 minutes
 
-        $UOM = UnitOfMeasure::pluck('total' , 'unit')->toArray();
+        $UOM = UnitOfMeasure::pluck('total', 'unit')->toArray();
 
-       #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
+        #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
         if (isset($products[0]))
             foreach ($products[0] as $index => $row) {
 
@@ -251,29 +251,23 @@ class ProductsController extends Controller
                     ];
 
                     $prices = [
-                        'price_fob' => trim($row[4]), #price 1
-                        'price_fedex' => trim($row[5]), #price 3
-                        'price_hawaii' => trim($row[6]), #price 5
+                        'def_price_fob' => trim($row[4]), #price 1
+                        'def_price_fedex' => trim($row[5]), #price 3
+                        'def_price_hawaii' => trim($row[6]), #price 5
                     ];
 
                     $product = Product::where('item_no', trim($row[1]))->first();
 
                     if ($product) {
                         #USED not this BUT save mater file price here in ths table and use default prices.
-//                        foreach ($prices as $key => $value){
-//                            if ((float)$value == 0) {
-//                                unset($prices[$key]);
-//                            }
-//                        }
-
-                        if($prices){
-                            ProductQuantity::where([
-                                'product_id' => $product->id,
-                                'item_no' => $product->item_no,
-                            ])->update($prices);
-
-                            # todo need to cehck this logic with christ otheriwse it may cause some issue later
+                        foreach ($prices as $key => $value) {
+                            if ((float)$value <= 0) {
+                                unset($prices[$key]);
+                            }
                         }
+
+                        if ($prices)
+                            $product->update($prices);
 
                         $product->update($data);
                     } else {
@@ -350,6 +344,8 @@ class ProductsController extends Controller
                     if (floatval(trim($row[4])) > 0) {
                         $data['price_hawaii'] = trim($row[4]);
                     }
+
+                    #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
 
                     if ($product) {
                         ProductQuantity::updateOrCreate([
