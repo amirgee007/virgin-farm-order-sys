@@ -320,7 +320,7 @@ class ProductsController extends Controller
 
                 try {
 
-                    if ($index < 2) continue;
+                    if ($index == 0) continue; #skip headings
 
                     $product = Product::where('item_no', trim($row[0]))->first();
 
