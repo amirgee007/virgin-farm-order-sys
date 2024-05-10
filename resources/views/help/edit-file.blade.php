@@ -23,7 +23,6 @@
                         <div class="card-title font-weight-bold">
                             <h3>
                                 Edit {{strtoupper($text->label)}}
-
                                 <span style="font-size: 11px" class="badge badge-danger float-right">Last update by {{@$text->user->first_name}} at {{$text->updated_at}}</span>
                             </h3>
                             <hr>
@@ -36,7 +35,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary float-right btn-sm">
-                            Update Text
+                            Update Text/File
                         </button>
                     </div>
                 </form>
@@ -57,7 +56,7 @@
             plugins: "code, preview, lists, link , textcolor , imagetools,media",
             media_live_embeds: true, // Enable live embeds for real-time previews
             paste_as_text: true,
-            height : 730,
+            height : 530,
             toolbar: [
                 "media|bold underline aligncenter fontsizeselect fontselect forecolor backcolor | bullist numlist outdent indent | styleselect  link | code"
             ],

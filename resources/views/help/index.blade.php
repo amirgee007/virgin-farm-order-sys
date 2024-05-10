@@ -19,7 +19,7 @@
             text-align: center;
         }
         .search-bar {
-            max-width: 600px; /* Adjust width as needed */
+            max-width: 700px; /* Adjust width as needed */
             margin: auto;
         }
         .search-input {
@@ -46,7 +46,16 @@
 @include('partials.messages')
 
 <div class="card">
+
+    @if(myRoleName() == 'Admin')
+        <a target="_blank" href="{{route('help.faq.edit')}}" class="btn btn-icon"
+           title="@lang('Click To Edit Help and FAQs page')" data-toggle="tooltip" data-placement="top">
+            <i class="fas fa-edit text-danger fa-2x"></i>
+        </a>
+    @endif
+
     <div class="card-body">
+
         <div class="container-fluid help-search-container">
             <h1>Help & Frequently Asked Questions (FAQs) </h1>
             <div class="search-bar">

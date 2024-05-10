@@ -22,20 +22,6 @@ class HelpController extends Controller
     public function index()
     {
         $text = Setting::where('key' , 'help-faq')->first();
-
-//        $search = \request()->search;
-//
-//        $query = Box::query();
-//
-//        if($search){
-//            $query->where(function ($q) use ($search) {
-//                $q->orWhere('description', 'like', "%{$search}%");
-//                $q->orWhere('width', 'like', "%{$search}%");
-//            });
-//        }
-//
-//        $boxes = $query->paginate(100);
-
         return view('help.index' , compact('text'));
     }
 
@@ -55,7 +41,7 @@ class HelpController extends Controller
         $text->done_by = auth()->id();
         $text->save();
 
-        session()->flash('app_message', 'You page updated successfully.');
-        return back();
+        session()->flash('app_message', 'Your page has been updated successfully.');
+        return redirect(route('help.faq.index'));
     }
 }

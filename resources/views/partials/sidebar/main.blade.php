@@ -136,7 +136,7 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('help-faq*') ? 'active' : ''  }}" href="{{ route('help.faq.index') }}">
                     <i class="fas fa-question-circle"></i>
-                    <span>@lang('Help & FAQ')</span>
+                    <span>@lang('Help & FAQs')</span>
                 </a>
             </li>
             @endpermission
