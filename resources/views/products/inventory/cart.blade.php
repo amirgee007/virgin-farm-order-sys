@@ -222,7 +222,7 @@
                                     <tr>
                                         <td colspan="5" class="text-right">
                                             <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
-                                            <a href="{{ route('checkout.cart') }}" class="btn btn-primary" title="@lang('Checkout and Confirm the Order')" data-toggle="tooltip" data-placement="top" data-method="GET" data-confirm-title="@lang('Please Confirm To Proceed?')" data-confirm-text="@lang('Once you checkout you can no longer change this order?')" data-confirm-delete="@lang('Yes, Proceed!')">
+                                            <a href="{{ route('checkout.cart') }}" class="btn btn-primary" title="@lang('Checkout and Confirm the Order')" data-toggle="tooltip" data-placement="top" data-method="GET" data-confirm-title="@lang('Please Confirm To Proceed?')" data-confirm-text="@lang('Once you check out you can no longer change this order..!')" data-confirm-delete="@lang('Yes, Proceed!')">
                                                 Checkout &nbsp;<i class="fa fa-angle-right"></i>
                                             </a>
                                         </td>

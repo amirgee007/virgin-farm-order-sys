@@ -1,0 +1,61 @@
+<?php
+
+namespace Vanguard\Http\Controllers\Web;
+
+use Illuminate\Http\Request;
+use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\Setting;
+
+
+class HelpController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Display products page page.
+     *
+     * @return View
+     */
+    public function index()
+    {
+        $text = Setting::where('key' , 'help-faq')->first();
+
+//        $search = \request()->search;
+//
+//        $query = Box::query();
+//
+//        if($search){
+//            $query->where(function ($q) use ($search) {
+//                $q->orWhere('description', 'like', "%{$search}%");
+//                $q->orWhere('width', 'like', "%{$search}%");
+//            });
+//        }
+//
+//        $boxes = $query->paginate(100);
+
+        return view('help.index' , compact('text'));
+    }
+
+    public function edit(){
+        $text = Setting::where('key' , 'help-faq')->first();
+
+       return view('help.edit-file', compact(
+            'text'
+        ));
+    }
+
+    public function update(Request $request){
+
+        $text = Setting::where('id' , $request->file_type_amir)->first();
+
+        $text->value = $request->value;
+        $text->done_by = auth()->id();
+        $text->save();
+
+        session()->flash('app_message', 'You page updated successfully.');
+        return back();
+    }
+}

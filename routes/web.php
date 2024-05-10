@@ -212,6 +212,23 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         ]);
     });
 
+    Route::group(['prefix'=>'help-faq'], function() {
+        Route::get('/', [
+            'as' => 'help.faq.index',
+            'uses' => 'HelpController@index'
+        ]);
+
+        Route::get('/edit', [
+            'as' => 'help.faq.edit',
+            'uses' => 'HelpController@edit'
+        ]);
+
+        Route::post('/update-help-faq', [
+            'as' => 'help.faq.update',
+            'uses' => 'HelpController@update'
+        ]);
+    });
+
 
     Route::group(['prefix'=>'shipping-address'], function() {
         Route::get('/', [

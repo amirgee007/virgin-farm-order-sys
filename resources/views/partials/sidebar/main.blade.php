@@ -132,6 +132,15 @@
             </li>
             @endpermission
 
+            @permission('help.faq.index')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('help-faq*') ? 'active' : ''  }}" href="{{ route('help.faq.index') }}">
+                    <i class="fas fa-question-circle"></i>
+                    <span>@lang('Help & FAQ')</span>
+                </a>
+            </li>
+            @endpermission
+
             @permission('shipping.address.index')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('shipping-address*') ? 'active' : ''  }}" href="{{ route('shipping.address.index') }}">
