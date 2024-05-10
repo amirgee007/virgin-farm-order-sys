@@ -82,7 +82,16 @@ class OrdersController extends Controller
             $message = 'Your order status has been updated : Wo-'.$order->id;
             addOwnNotification($message ,$order->id , $order->user_id);
         }
-        if($type == 'delete'){
+        else if($type == 'markNotApproved'){
+            $order->update([
+                'is_active' => 2
+            ]);
+
+            #admin notify about status. and We are reviewing what to do in this case–as the product will be returned to the inventory pending
+            $message = 'Your order status has been updated : Wo-'.$order->id .' and our sales representative will contact you soon.';
+            addOwnNotification($message ,$order->id , $order->user_id);
+        }
+        else if($type == 'delete'){
             $order->items()->delete();
             $order->delete();
         }

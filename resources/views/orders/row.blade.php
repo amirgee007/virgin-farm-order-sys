@@ -19,8 +19,10 @@
     <td class="align-middle text-primary">${{ round2Digit($order->total) }}</td>
 {{--    <td class="align-middle">{{ $order->size }}</td>--}}
     <td class="align-middle">
-        @if($order->is_active)
+        @if($order->is_active == 1)
            <span class="badge badge-lg badge-danger"> Active </span>
+        @elseif($order->is_active == 2)
+            <span class="badge badge-lg badge-danger"> NotApproved </span>
         @else
             <span class="badge badge-lg badge-primary"> Completed </span>
         @endif
@@ -29,8 +31,8 @@
     <td class="align-middle">
 
         @if($isAdmin)
-            @if($order->is_active)
-            <a href="{{ route('orders.update', [$order->id , 'markCompeted']) }}"
+            @if($order->is_active == 1)
+                <a href="{{ route('orders.update', [$order->id , 'markCompeted']) }}"
                class="btn btn-icon"
                title="@lang('Mark order as completed')"
                data-toggle="tooltip"
@@ -41,17 +43,18 @@
                data-confirm-delete="@lang('Yes, complete it!')">
                 <i class="fas fa-check-square text-primary"></i>
             </a>
-        @endif
-{{--            <a href="{{ route('orders.update', [$order->id , 'sendEmail']) }}"--}}
-{{--               class="btn btn-icon"--}}
-
-{{--               data-method="GET"--}}
-{{--               data-confirm-title="@lang('Please Confirm')"--}}
-{{--               data-confirm-text="@lang('Are you sure that you want to resend email of this order ?')"--}}
-{{--               data-confirm-delete="@lang('Yes, send it!')">--}}
-{{--                <i class="fas fa-envelope text-warning"></i>--}}
-{{--            </a>--}}
-
+                <a href="{{ route('orders.update', [$order->id , 'markNotApproved']) }}"
+                   class="btn btn-icon"
+                   title="@lang('Mark order as not approved')"
+                   data-toggle="tooltip"
+                   data-placement="left"
+                   data-method="GET"
+                   data-confirm-title="@lang('Please Confirm')"
+                   data-confirm-text="@lang('Are you sure to mark this order as as not approved so sales representative will contact client?')"
+                   data-confirm-delete="@lang('Yes, confirmed!')">
+                    <i class="fas fa-ban text-danger"></i>
+                </a>
+            @endif
                 <i class="fas fa-envelope text-warning" title="@lang('Resend copy of the web order')"
                    data-toggle="tooltip"
                    data-placement="left"
@@ -67,8 +70,8 @@
                    data-confirm-title="@lang('Please Confirm')"
                    data-confirm-text="@lang('Are you sure that you want to delete this order?')"
                    data-confirm-delete="@lang('Yes, delete it!')">
-                <i class="fas fa-trash text-danger"></i>
-            </a>
+                    <i class="fas fa-trash text-danger"></i>
+                </a>
          @endif
     </td>
 </tr>
@@ -76,7 +79,6 @@
 <tr>
     <td colspan="13">
         <div id="accordion{{$order->id}}" class="collapse">
-
             <table class="table">
                 <thead>
                 <tr >
@@ -112,7 +114,6 @@
                 @endif
                 </tbody>
             </table>
-
         </div>
     </td>
 </tr>
