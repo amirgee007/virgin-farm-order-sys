@@ -32,10 +32,10 @@
         }
 
         .content-box {
-            margin-top: 50px;
+            margin-top: 17px;
             background: #ffffff; /* Background color */
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow for the box */
         }
     </style>
