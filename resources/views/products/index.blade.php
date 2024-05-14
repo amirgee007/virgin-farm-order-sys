@@ -14,6 +14,7 @@
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/daterangepicker/daterangepicker.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/select2/select2.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/plugins/dropzone/dist/min/dropzone.min.css')}}">
 
     <style>
         .clickable {
@@ -76,6 +77,11 @@
                             <a href="javascript:void(0)" id="copy_multiple_img" title="Bulk assign feature: copy to more than one image" data-toggle="tooltip" data-placement="left"
                                class="btn btn-primary btn-sm float-right ml-2 mr-1">
                                 <i class="fas fa-puzzle-piece"></i>
+                            </a>
+
+                            <a href="javascript:void(0)" id="import_excel_inventory_bulk" title="Upload BULK excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-secondary btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-upload"></i>
                             </a>
 
                         </p>
@@ -156,6 +162,30 @@
     </div>
 
     {!! $products->render() !!}
+
+    <div class="modal" id="upload_excel_inventory_bulk" type="">
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Bulk Inventory</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{route('upload.inventory.excel')}}" class='my-awesome-dropzone' >
+                        @csrf
+                    </form>
+
+                    <small>
+                        Only 6 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <div class="modal" id="reset_delete_inventory_mod" type="">
         <div class="modal-dialog">
@@ -492,9 +522,28 @@
     <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>
     <script src="{{ url('assets/plugins/select2/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
+    <script src="{{asset('assets/plugins/dropzone/dist/min/dropzone.min.js')}}" type="text/javascript"></script>
+
 
     <script>
         $(function() {
+
+            Dropzone.autoDiscover = false;
+            var myDropzone = new Dropzone(".my-awesome-dropzone",{
+                paramName: "bulk_file", // The name that will be used to transfer the file
+                maxFilesize: 10, // MB
+                acceptedFiles: ".xls,.xlsx",
+                addRemoveLinks: true,
+                timeout: 50000,
+                init: function() {
+                    this.on("error", function(file, response) {
+                        alert(response);
+                    });
+                    this.on("success", function(file, response) {
+                        console.log(response);
+                    });
+                }
+            });
 
             $("#category ,#filter").change(function () {
                 $("#product-form").submit();
@@ -561,6 +610,10 @@
 
         $('#import_excel_inventory').on('click', function () {
             $('#upload_excel_inventory').modal('show');
+        });
+
+        $('#import_excel_inventory_bulk').on('click', function () {
+            $('#upload_excel_inventory_bulk').modal('show');
         });
 
         $('#reset_delete_inventory').on('click', function () {

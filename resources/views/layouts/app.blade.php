@@ -8,6 +8,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
     <title>@yield('page-title') - {{ setting('app_name') }}</title>
 
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ url('assets/img/icons/apple-touch-icon-144x144.png') }}" />

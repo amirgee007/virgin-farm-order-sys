@@ -29,6 +29,8 @@ use Vanguard\Models\UnitOfMeasure;
 
 class ProductsController extends Controller
 {
+
+    public $dateIn = null,$dateOut = null;
     public function __construct()
     {
         $this->middleware('auth');
@@ -301,78 +303,162 @@ class ProductsController extends Controller
         }
     }
 
+    private function excelSerialDateToDate($serial)
+    {
+        $excelBaseDate = \DateTime::createFromFormat('Y-m-d', '1899-12-30');
+        return $excelBaseDate->add(new \DateInterval('P' . $serial . 'D'))->format('Y-m-d');
+    }
+
     public function uploadInventory(Request $request)
     {
+        ini_set('max_execution_time', 18000);
+
         #reset and delete zero qty products
         $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
 
-        $dates = dateRangeConverter($request->range);
+        if ($request->hasFile('bulk_file')) {
 
-        $date_in = $dates['date_in'];
-        $date_out = $dates['date_out'];
+            $request->validate([
+                'bulk_file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
+            ]);
 
-        Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
-        $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
+            $excel = $request->file('bulk_file');
 
-        #0 ITEM_ID #1 ITEM_DESC #2 PRICE_1  #3 PRICE_2	#4 PRICE_3	#5 QUANTITY
-        if (isset($products[0]))
-            foreach ($products[0] as $index => $row) {
+            $filename = $excel->getClientOriginalName();
+            $extension = $excel->getClientOriginalExtension();
 
-                try {
+            try {
 
-                    if ($index == 0) continue; #skip headings
+                $unique = uniqid();
+                $filenamePut = 'extra/'.$unique . '.' . $extension;
+                $filenameRead = 'app/extra/'.$unique . '.' . $extension;
 
-                    $product = Product::where('item_no', trim($row[0]))->first();
+                Storage::put($filenamePut, file_get_contents($excel->getRealPath()));
+                $products = Excel::toArray(new ImportExcelFiles(), storage_path($filenameRead));
 
-                    $data = [
-                        'product_id' => $product->id,
-                        'item_no' => $product->item_no,
-                        'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
-                        'date_in' => $date_in,
-                        'date_out' => $date_out,
+                foreach ($products[0] as $index => $row){
 
-                        'price_fedex' => $product->def_price_fedex,
-                        'price_fob' => $product->def_price_fob,
-                        'price_hawaii' => $product->def_price_hawaii,
-                    ];
-
-                    #here if any price is zero then get price from master file and use it.
-
-                    // Conditionally add prices to the data array if they are greater than zero
-                    if (floatval(trim($row[2])) > 0) {
-                        $data['price_fedex'] = trim($row[2]);
-                    }
-                    if (floatval(trim($row[3])) > 0) {
-                        $data['price_fob'] = trim($row[3]);
-                    }
-                    if (floatval(trim($row[4])) > 0) {
-                        $data['price_hawaii'] = trim($row[4]);
+                    if($index == 1){
+                        $this->dateIn = $this->excelSerialDateToDate($row['3']);
+                        $this->dateOut = $this->excelSerialDateToDate($row['5']);
                     }
 
-                    #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
+                    if($index > 5){
 
-                    if ($product) {
-                        ProductQuantity::updateOrCreate([
+                        $product = Product::where('item_no', trim($row[0]))->first();
+
+                        $data = [
                             'product_id' => $product->id,
                             'item_no' => $product->item_no,
+                            'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
+                            'date_in' => $this->dateIn,
+                            'date_out' => $this->dateOut,
+
+                            'price_fedex' => $product->def_price_fedex,
+                            'price_fob' => $product->def_price_fob,
+                            'price_hawaii' => $product->def_price_hawaii,
+                        ];
+
+                        // Conditionally add prices to the data array if they are greater than zero
+                        if (floatval(trim($row[2])) > 0) {
+                            $data['price_fedex'] = trim($row[2]);
+                        }
+                        if (floatval(trim($row[3])) > 0) {
+                            $data['price_fob'] = trim($row[3]);
+                        }
+                        if (floatval(trim($row[4])) > 0) {
+                            $data['price_hawaii'] = trim($row[4]);
+                        }
+
+                        if ($product) {
+                            ProductQuantity::updateOrCreate([
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                                'date_in' => $date_in,
+                                'date_out' => $date_out,
+                            ], $data);
+
+                        }
+                    }
+                }
+                return response()->json(['message' => 'File uploaded and imported successfully'], 200);
+
+            } catch (\Exception $ex) {
+                Log::warning(' error during bulk files upload plz check ' . $ex->getMessage());
+                return response()->json(['error' => 'Something went wrong.'], 500);
+            }
+        }
+
+        else{
+
+            $dates = dateRangeConverter($request->range);
+
+            $date_in = $dates['date_in'];
+            $date_out = $dates['date_out'];
+
+            Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
+            $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
+
+            #0 ITEM_ID #1 ITEM_DESC #2 PRICE_1  #3 PRICE_2	#4 PRICE_3	#5 QUANTITY
+            if (isset($products[0]))
+                foreach ($products[0] as $index => $row) {
+
+                    try {
+
+                        if ($index == 0) continue; #skip headings
+
+                        $product = Product::where('item_no', trim($row[0]))->first();
+
+                        $data = [
+                            'product_id' => $product->id,
+                            'item_no' => $product->item_no,
+                            'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
                             'date_in' => $date_in,
                             'date_out' => $date_out,
-                        ], $data);
 
-                    } else {
-                        $data['item_no'] = trim($row[0]);
-                        $data['product_text'] = trim($row[1]);
-                        #$data['product_id'] = rand(100, 999999);
-                        #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
+                            'price_fedex' => $product->def_price_fedex,
+                            'price_fob' => $product->def_price_fob,
+                            'price_hawaii' => $product->def_price_hawaii,
+                        ];
+
+                        #here if any price is zero then get price from master file and use it.
+
+                        // Conditionally add prices to the data array if they are greater than zero
+                        if (floatval(trim($row[2])) > 0) {
+                            $data['price_fedex'] = trim($row[2]);
+                        }
+                        if (floatval(trim($row[3])) > 0) {
+                            $data['price_fob'] = trim($row[3]);
+                        }
+                        if (floatval(trim($row[4])) > 0) {
+                            $data['price_hawaii'] = trim($row[4]);
+                        }
+
+                        #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
+
+                        if ($product) {
+                            ProductQuantity::updateOrCreate([
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                                'date_in' => $date_in,
+                                'date_out' => $date_out,
+                            ], $data);
+
+                        } else {
+                            $data['item_no'] = trim($row[0]);
+                            $data['product_text'] = trim($row[1]);
+                            #$data['product_id'] = rand(100, 999999);
+                            #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
+                        }
+
+                    } catch (\Exception $exception) {
+                        Log::error('Error during inventory import ' . $exception->getMessage());
                     }
-
-                } catch (\Exception $exception) {
-                    Log::error('Error during inventory import ' . $exception->getMessage());
                 }
-            }
 
-        session()->flash('app_message', 'Inventory file has been imported in the system.');
-        return back();
+            session()->flash('app_message', 'Inventory file has been imported in the system.');
+            return back();
+        }
     }
 
     public function uploadProductImages(Request $request)
