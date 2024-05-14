@@ -174,12 +174,12 @@
                 </div>
 
                 <div class="modal-body">
-                    <form action="{{route('upload.inventory.excel')}}" class='my-awesome-dropzone' >
+                    <form action="{{route('upload.inventory.excel')}}" class='dropzone' >
                         @csrf
                     </form>
 
                     <small>
-                        Only 6 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY
+                        Only 6 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY, First 5 rows empty with second should have date
                     </small>
                 </div>
 
@@ -528,9 +528,10 @@
     <script>
         $(function() {
 
+            var currentUrl = window.location;
+
             Dropzone.autoDiscover = false;
-            var myDropzone = new Dropzone(".my-awesome-dropzone",{
-                paramName: "bulk_file", // The name that will be used to transfer the file
+            var myDropzone = new Dropzone(".dropzone",{
                 maxFilesize: 10, // MB
                 acceptedFiles: ".xls,.xlsx",
                 addRemoveLinks: true,
@@ -544,6 +545,7 @@
                     });
                 }
             });
+
 
             $("#category ,#filter").change(function () {
                 $("#product-form").submit();

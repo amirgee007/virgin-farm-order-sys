@@ -30,7 +30,8 @@ use Vanguard\Models\UnitOfMeasure;
 class ProductsController extends Controller
 {
 
-    public $dateIn = null,$dateOut = null;
+    public $dateIn = null, $dateOut = null;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -316,13 +317,13 @@ class ProductsController extends Controller
         #reset and delete zero qty products
         $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
 
-        if ($request->hasFile('bulk_file')) {
+        if ($request->hasFile('file')) {
 
             $request->validate([
-                'bulk_file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
+                'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
 
-            $excel = $request->file('bulk_file');
+            $excel = $request->file('file');
 
             $filename = $excel->getClientOriginalName();
             $extension = $excel->getClientOriginalExtension();
@@ -330,52 +331,52 @@ class ProductsController extends Controller
             try {
 
                 $unique = uniqid();
-                $filenamePut = 'extra/'.$unique . '.' . $extension;
-                $filenameRead = 'app/extra/'.$unique . '.' . $extension;
+                $filenamePut = 'extra/' . $unique . '.' . $extension;
+                $filenameRead = 'app/extra/' . $unique . '.' . $extension;
 
                 Storage::put($filenamePut, file_get_contents($excel->getRealPath()));
                 $products = Excel::toArray(new ImportExcelFiles(), storage_path($filenameRead));
 
-                foreach ($products[0] as $index => $row){
+                foreach ($products[0] as $index => $row) {
 
-                    if($index == 1){
+                    if ($index == 1) {
                         $this->dateIn = $this->excelSerialDateToDate($row['3']);
                         $this->dateOut = $this->excelSerialDateToDate($row['5']);
                     }
 
-                    if($index > 5){
+                    if ($index > 5) {
 
                         $product = Product::where('item_no', trim($row[0]))->first();
 
-                        $data = [
-                            'product_id' => $product->id,
-                            'item_no' => $product->item_no,
-                            'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
-                            'date_in' => $this->dateIn,
-                            'date_out' => $this->dateOut,
-
-                            'price_fedex' => $product->def_price_fedex,
-                            'price_fob' => $product->def_price_fob,
-                            'price_hawaii' => $product->def_price_hawaii,
-                        ];
-
-                        // Conditionally add prices to the data array if they are greater than zero
-                        if (floatval(trim($row[2])) > 0) {
-                            $data['price_fedex'] = trim($row[2]);
-                        }
-                        if (floatval(trim($row[3])) > 0) {
-                            $data['price_fob'] = trim($row[3]);
-                        }
-                        if (floatval(trim($row[4])) > 0) {
-                            $data['price_hawaii'] = trim($row[4]);
-                        }
-
                         if ($product) {
+                            $data = [
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                                'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
+                                'date_in' => $this->dateIn,
+                                'date_out' => $this->dateOut,
+
+                                'price_fedex' => $product->def_price_fedex,
+                                'price_fob' => $product->def_price_fob,
+                                'price_hawaii' => $product->def_price_hawaii,
+                            ];
+
+                            // Conditionally add prices to the data array if they are greater than zero
+                            if (floatval(trim($row[2])) > 0) {
+                                $data['price_fedex'] = trim($row[2]);
+                            }
+                            if (floatval(trim($row[3])) > 0) {
+                                $data['price_fob'] = trim($row[3]);
+                            }
+                            if (floatval(trim($row[4])) > 0) {
+                                $data['price_hawaii'] = trim($row[4]);
+                            }
+
                             ProductQuantity::updateOrCreate([
                                 'product_id' => $product->id,
                                 'item_no' => $product->item_no,
-                                'date_in' => $date_in,
-                                'date_out' => $date_out,
+                                'date_in' => $this->dateIn,
+                                'date_out' => $this->dateOut,
                             ], $data);
 
                         }
@@ -384,12 +385,10 @@ class ProductsController extends Controller
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
             } catch (\Exception $ex) {
-                Log::warning(' error during bulk files upload plz check ' . $ex->getMessage());
-                return response()->json(['error' => 'Something went wrong.'], 500);
+                Log::warning(' error during bulk files upload plz check ' . $ex->getMessage() . ' line ' . $ex->getLine());
+                return response()->json(['error' => 'Invalid Format FIle.'], 500);
             }
-        }
-
-        else{
+        } else {
 
             $dates = dateRangeConverter($request->range);
 
