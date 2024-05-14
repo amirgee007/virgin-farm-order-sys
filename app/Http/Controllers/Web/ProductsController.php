@@ -382,6 +382,9 @@ class ProductsController extends Controller
                         }
                     }
                 }
+
+                Log::info($this->dateIn.' date in and date out BULK imported successfully '.$this->dateOut);
+
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
             } catch (\Exception $ex) {
