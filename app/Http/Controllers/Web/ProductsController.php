@@ -691,7 +691,7 @@ class ProductsController extends Controller
         if ($countBefore > 0) {
             $fileWord = $countBefore === 1 ? 'file' : 'files'; // Handle singular/plural
             $message =  "Total $countBefore $fileWord remaining to sync. All others done.";
-            Log::info("Sync status: $remainingFilesCount $fileWord remaining."); // Logging the information
+            Log::info("Sync status: $countBefore $fileWord remaining."); // Logging the information
         } else {
             $message = "All files have been successfully synced."; // Logging complete sync
             Log::info($message); // Logging the information

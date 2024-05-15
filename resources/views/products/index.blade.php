@@ -643,7 +643,7 @@
                     toastr.success(response.message);
                 },
                 error: function () {
-                    toastr.error('Something went wrong during syncinf.');
+                    toastr.error('Something went wrong during syncing.');
                 },
                 complete: function() {
                     $('.spinner-border').addClass('d-none');
