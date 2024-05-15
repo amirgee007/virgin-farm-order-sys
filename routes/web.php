@@ -115,6 +115,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@iventoryReset'
         ]);
 
+        Route::get('/inventory-sync-ftp', [
+            'as' => 'inventory.sync.ftp',
+            'uses' => 'ProductsController@iventorySyncFromFTP'
+        ]);
+
         Route::post('/copy-image', [
             'as' => 'copy.image.product',
             'uses' => 'ProductsController@copyImageToOtherProduct'

@@ -616,6 +616,90 @@ class ProductsController extends Controller
         return back();
     }
 
+    public function iventorySyncFromFTP()
+    {
+        #reset and delete zero qty products
+        $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
+
+        $files = Storage::disk('local')->files('extra');
+        $countBefore = count($files);
+
+        foreach ($files as $file) {
+            // Read each file as an Excel file
+            $path = storage_path('app\\'.$file);
+
+            try {
+                $products = \Excel::toArray(new ImportExcelFiles(), $path);
+
+                foreach ($products[0] as $index => $row) {
+
+                    if ($index == 1) {
+                        // Convert Excel serial dates to PHP dates
+                        $this->dateIn = $this->excelSerialDateToDate($row[3]);
+                        $this->dateOut = $this->excelSerialDateToDate($row[5]);
+                    }
+
+                    // Process each product row
+                    if ($index > 5) { // Assuming the first row is headers
+                        $product = Product::where('item_no', trim($row[0]))->first();
+
+                        if ($product) {
+
+                            $data = [
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                                'quantity' => $row[5] ? trim($row[5]) : 0,
+                                'date_in' => $this->dateIn,
+                                'date_out' => $this->dateOut,
+                                'price_fedex' => $product->def_price_fedex,
+                                'price_fob' => $product->def_price_fob,
+                                'price_hawaii' => $product->def_price_hawaii,
+                            ];
+
+                            // Update prices if provided in the file and greater than zero
+                            if (floatval(trim($row[2])) > 0) {
+                                $data['price_fedex'] = trim($row[2]);
+                            }
+                            if (floatval(trim($row[3])) > 0) {
+                                $data['price_fob'] = trim($row[3]);
+                            }
+                            if (floatval(trim($row[4])) > 0) {
+                                $data['price_hawaii'] = trim($row[4]);
+                            }
+
+                            // Create or update product quantities
+                            ProductQuantity::updateOrCreate([
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                                'date_in' => $this->dateIn,
+                                'date_out' => $this->dateOut,
+                            ], $data);
+
+                        }
+                    }
+                }
+            } catch (\Exception $e) {
+                Log::error('Failed to import data from Excel file: ' . $e->getMessage() .' file name is '.$file);
+                continue; // Continue processing the next file
+            }
+
+            // After processing the file, delete it
+            Storage::delete($file);
+            --$countBefore;
+        }
+
+        if ($countBefore > 0) {
+            $fileWord = $countBefore === 1 ? 'file' : 'files'; // Handle singular/plural
+            $message =  "Total $countBefore $fileWord remaining to sync. All others done.";
+            Log::info("Sync status: $remainingFilesCount $fileWord remaining."); // Logging the information
+        } else {
+            $message = "All files have been successfully synced."; // Logging complete sync
+            Log::info($message); // Logging the information
+        }
+
+        return response()->json(['message' => $message], 200);
+    }
+
     public function resetSpecificInventory(Request $request)
     {
 

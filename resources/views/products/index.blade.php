@@ -169,7 +169,14 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Upload Bulk Inventory</h5>
+                    <h5 class="modal-title">
+                        Upload Bulk Inventory
+                        <a href="javascript:void(0)" title="Sync Inventory From FTP" data-toggle="tooltip" data-placement="left" id="inventory_sync_ftp" >
+                            <i class="fas fa-sync text-primary"></i>
+                        </a>
+                        <span id="spinner" class="spinner-border spinner-border-sm text-danger d-none" role="status" aria-hidden="true"></span>
+                    </h5>
+
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -620,6 +627,29 @@
 
         $('#reset_delete_inventory').on('click', function () {
             $('#reset_delete_inventory_mod').modal('show');
+        });
+
+        $('#inventory_sync_ftp').on('click', function () {
+
+            var $button = $(this);
+            $('.spinner-border').removeClass('d-none');
+            $button.hide();
+
+            $.ajax({
+                url: '{{route('inventory.sync.ftp')}}',
+                type: 'GET',
+                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                success: function (response) {
+                    toastr.success(response.message);
+                },
+                error: function () {
+                    toastr.error('Something went wrong during syncinf.');
+                },
+                complete: function() {
+                    $('.spinner-border').addClass('d-none');
+                    $button.show();
+                }
+            });
         });
 
         $('#copy_multiple_img').on('click', function () {
