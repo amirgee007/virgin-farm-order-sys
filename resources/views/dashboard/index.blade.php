@@ -39,38 +39,18 @@
 @section('content')
     @include('partials.messages')
 
-<div class="row">
-    @foreach (\Vanguard\Plugins\Vanguard::availableWidgets(auth()->user()) as $widget)
-        @if ($widget->width)
-            <div class="col-md-{{ $widget->width }}">
-        @endif
-            {!! app()->call([$widget, 'render']) !!}
-        @if($widget->width)
-            </div>
-        @endif
-    @endforeach
-</div>
-
     <div class="row">
-        <div class="col-sm-6">
-            <div class="card text-white  mb-3">
-                <div class="card-body">
-                    <div class="text-center">
-                        <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
-                    </div>
+        @foreach (\Vanguard\Plugins\Vanguard::availableWidgets(auth()->user()) as $widget)
+            @if ($widget->width)
+                <div class="col-md-{{ $widget->width }}">
+                    @endif
+                    {!! app()->call([$widget, 'render']) !!}
+                    @if($widget->width)
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card text-white  mb-3">
-                <div class="card-body">
-                    <div class="text-center">
-                        <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
-                    </div>
-                </div>
-            </div>
-        </div>
+            @endif
+        @endforeach
     </div>
+
     @if(myRoleName() == 'Admin')
         <div class="row">
             <div class="col-6">
@@ -80,42 +60,42 @@
                         <hr>
                         <div class="table-responsive orders-list-table" id="users-table-wrapper">
                             <table class="table table-borderless table-striped products-list-table">
-                            <thead>
-                            <tr>
-                                <th >@lang('Id')</th>
-                                <th >@lang('User')</th>
-                                <th >@lang('Ship Date')</th>
-                                <th >@lang('Carrier Name')</th>
-                                <th >@lang('Status')</th>
-                                <th >@lang('Created')</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @if ($orders)
-                                @foreach ($orders as $index => $order)
-                                    <tr>
-                                        <td class="align-middle" title="@lang('Click to see order detail')"
-                                            data-toggle="tooltip"
-                                            data-placement="left">
+                                <thead>
+                                <tr>
+                                    <th >@lang('Id')</th>
+                                    <th >@lang('User')</th>
+                                    <th >@lang('Ship Date')</th>
+                                    <th >@lang('Carrier Name')</th>
+                                    <th >@lang('Status')</th>
+                                    <th >@lang('Created')</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @if ($orders)
+                                    @foreach ($orders as $index => $order)
+                                        <tr>
+                                            <td class="align-middle" title="@lang('Click to see order detail')"
+                                                data-toggle="tooltip"
+                                                data-placement="left">
                                                 <a target="_blank" href="{{route('orders.index')."?search=WO".$order->id}}">
                                                     <span class="badge badge-lg badge-primary">WO{{ $order->id }}</span>
                                                 </a>
+                                            </td>
+                                            <td class="align-middle">{{ $order->name }}</td>
+                                            <td class="align-middle">{{ $order->date_shipped }}</td>
+                                            <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
+                                            <td><span class="badge badge-lg badge-danger"> Active </span></td>
+                                            <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="12">
+                                            No Orders found
                                         </td>
-                                        <td class="align-middle">{{ $order->name }}</td>
-                                        <td class="align-middle">{{ $order->date_shipped }}</td>
-                                        <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
-                                        <td><span class="badge badge-lg badge-danger"> Active </span></td>
-                                        <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
                                     </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="12">
-                                        No Orders found
-                                    </td>
-                                </tr>
-                            @endif
-                            </tbody>
+                                @endif
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -193,6 +173,29 @@
                 </div>
             </div>
         </div>
+    @else
+
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card text-white  mb-3">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card text-white  mb-3">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @endif
 @stop
 
