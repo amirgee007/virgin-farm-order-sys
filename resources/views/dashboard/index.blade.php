@@ -49,9 +49,28 @@
             </div>
         @endif
     @endforeach
-
 </div>
 
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card text-white  mb-3">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card text-white  mb-3">
+                <div class="card-body">
+                    <div class="text-center">
+                        <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @if(myRoleName() == 'Admin')
         <div class="row">
             <div class="col-6">

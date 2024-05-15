@@ -1,6 +1,7 @@
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
     <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
     <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
+    <td class="align-middle" title="Show Dutch or our own products">{{ $product->supplier?? 'VF' }}</td>
     <td class="align-middle">
         <img style="max-width: 35px; cursor: pointer;"
              id="{{$product->id}}imgTD"
@@ -9,7 +10,7 @@
              data-info="{{$product->product_text}}"
              data-toggle="tooltip" data-placement="bottom"
              data-largeimg="{{$product->image_url}}"
-             src="{{ asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="Virgin Farm">
+             src="{{ asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="VF Farm">
 
         {{ $product->product_text }}
 

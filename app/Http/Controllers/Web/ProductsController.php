@@ -259,6 +259,9 @@ class ProductsController extends Controller
                         'def_price_hawaii' => trim($row[6]), #price 5
                     ];
 
+                    if($data['category_id'] == 81)
+                        $data['supplier'] = 'Dutch';
+
                     $product = Product::where('item_no', trim($row[1]))->first();
 
                     if ($product) {
