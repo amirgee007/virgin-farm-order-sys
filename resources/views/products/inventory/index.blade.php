@@ -192,7 +192,7 @@
                                                 {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
                                             </td>
 
-                                            @php $priceNow = $product->$priceCol; @endphp
+                                            @php $priceNow = round2Digit($product->$priceCol); @endphp
                                             <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>
                                                 {{--ST stad for per STEM flowers --}}
                                             <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->stems }}</td>

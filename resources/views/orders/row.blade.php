@@ -101,7 +101,7 @@
                             <td scope="row">{{$prod->item_no}}</td>
                             <td class="align-middle">{{ $prod->name }}</td>
                             <td class="align-middle">{{ $prod->quantity }}</td>
-                            <td class="align-middle">${{ $prod->price }}</td>
+                            <td class="align-middle">${{ round2Digit($prod->price) }}</td>
 {{--                            <td class="align-middle">{{ $prod->size }}</td>--}}
                             <td class="align-middle">{{ $prod->stems }}</td>
                             <td class="align-middle">${{ $prod->sub_total }}</td>
