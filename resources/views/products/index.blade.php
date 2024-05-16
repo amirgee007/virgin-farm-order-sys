@@ -132,7 +132,7 @@
                             <tr>
                                 <th class="min-width-80">@lang('Category')</th>
                                 <th class="min-width-80">@lang('item')</th>
-                                <th class="min-width-80">@lang('Supllier')</th>
+                                <th class="min-width-80">@lang('Supplier')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
                                 <th class="min-width-80" title="the UOM is how many stems per bunch">@lang('UOM')</th>
 
@@ -531,7 +531,6 @@
     <script src="{{ url('assets/plugins/select2/select2.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
     <script src="{{asset('assets/plugins/dropzone/dist/min/dropzone.min.js')}}" type="text/javascript"></script>
-
 
     <script>
         $(function() {

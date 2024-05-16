@@ -65,6 +65,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/', 'DashboardController@index')->name('dashboard');
 
+    Route::post('/update-supplier', [
+        'as' => 'update.supplier',
+        'uses' => 'DashboardController@updateSupplier'
+    ]);
+
     Route::group(['prefix'=>'products'], function() {
 
         #its for client ONLY

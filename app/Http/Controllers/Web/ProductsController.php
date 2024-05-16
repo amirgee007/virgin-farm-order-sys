@@ -63,7 +63,8 @@ class ProductsController extends Controller
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->leftjoin('carts', 'carts.product_id', '=', 'products.id')
-            ->where('product_quantities.quantity', '>', 0);
+            ->where('product_quantities.quantity', '>', 0)
+            ->where('products.supplier_id', $user->supplier_id);
 
         if ($date_shipped) {
             $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');

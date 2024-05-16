@@ -58,7 +58,7 @@
                 <div class="card-body mt-0 p-3">
                     <span>
                         <b>
-                            1. Enter your shipping information
+                            1. Enter your shipping information <small class="text-primary">(** You are browsing <b>{{$user->supplier_id == 1 ? 'Virgin Farms' : 'Dutch'}}</b> flowers)</small>
                              <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
                                  <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
                                     title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
@@ -156,7 +156,6 @@
 
                     </div>
                     <hr>
-
                     @if($user->last_ship_date && $user->carrier_id)
                         <div class="table-responsive mt-2" id="users-table-wrapper">
                             <table class="table table-borderless table-striped products-list-table">

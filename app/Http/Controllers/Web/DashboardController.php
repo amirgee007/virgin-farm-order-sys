@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Order;
@@ -27,5 +28,14 @@ class DashboardController extends Controller
         $lowInventory = ProductQuantity::where('quantity' , 0)->where('date_out' , '>' , now()->toDateString())->limit(100)->get();
 
         return view('dashboard.index' , compact('orders' , 'futureInventory' , 'lowInventory'));
+    }
+
+    public function updateSupplier(Request $request){
+        // Store the selected supplier in the user preferences
+        $user = auth()->user();
+        $user->supplier_id = $request->input('supplier');
+        $user->save();
+
+        return response()->json(['message' => 'Supplier updated successfully']);
     }
 }

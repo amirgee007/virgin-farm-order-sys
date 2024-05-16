@@ -34,6 +34,17 @@
             cursor: pointer !important;
         }
     </style>
+
+    <style>
+        .card {
+            cursor: pointer;
+            border: 3px dashed transparent;
+            border-width:3px !important;
+        }
+        .card.selected {
+            border-color: #748c41;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -175,27 +186,34 @@
         </div>
     @else
 
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="card text-white  mb-3">
-                <div class="card-body">
-                    <div class="text-center">
-                        <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
+    <div class="container mt-3">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 1 ? 'selected' :''}}" data-supplier="1" >
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
+                            </div>
+                            <div class="text-center mt-3 text-primary">
+                                Virgin Farms Inventory
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 2 ? 'selected' :''}}" data-supplier="2">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
+                            </div>
+                            <div class="text-center mt-3 text-danger">
+                                Dutch Flowers
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="card text-white  mb-3">
-                <div class="card-body">
-                    <div class="text-center">
-                        <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @endif
 @stop
 
@@ -205,4 +223,35 @@
             {{--{!! app()->call([$widget, 'scripts']) !!}--}}
         {{--@endif--}}
     {{--@endforeach--}}
+    @include('partials.toaster-js')
+    <script>
+        $(document).ready(function() {
+            $('.supplier-card').click(function() {
+                $('.supplier-card').removeClass('selected');
+                $(this).addClass('selected');
+
+                var selectedSupplier = $('.supplier-card.selected').data('supplier');
+
+                if (selectedSupplier) {
+                    $.ajax({
+                        url: '{{ route('update.supplier') }}',
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            supplier: selectedSupplier
+                        },
+                        success: function (response) {
+                            toastr.success(response.message);
+                        },
+                        error: function () {
+                            toastr.error('Something went wrong please check with admin.');
+                        },
+                    });
+                } else {
+                    alert('Please select a supplier.');
+                }
+
+            });
+        });
+    </script>
 @stop
