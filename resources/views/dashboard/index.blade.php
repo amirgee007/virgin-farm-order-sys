@@ -242,6 +242,7 @@
                         },
                         success: function (response) {
                             toastr.success(response.message);
+                            window.location.href = response.href;
                         },
                         error: function () {
                             toastr.error('Something went wrong please check with admin.');
