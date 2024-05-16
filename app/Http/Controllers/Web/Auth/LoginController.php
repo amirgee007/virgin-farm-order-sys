@@ -81,7 +81,8 @@ class LoginController extends Controller
         Auth::login($user, setting('remember_me') && $request->get('remember'));
 
         $user->update([
-            'last_ship_date' => null
+            'last_ship_date' => null,
+            'supplier_id' => 0,
         ]);
 
         return $this->authenticated($request, $throttles, $user);
