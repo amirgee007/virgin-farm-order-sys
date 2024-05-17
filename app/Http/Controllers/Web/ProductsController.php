@@ -261,7 +261,7 @@ class ProductsController extends Controller
                     ];
 
                     if($data['category_id'] == 81)
-                        $data['supplier'] = 'Dutch';
+                        $data['supplier_id'] = 'Dutch';
 
                     $product = Product::where('item_no', trim($row[1]))->first();
 
