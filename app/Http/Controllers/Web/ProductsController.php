@@ -335,8 +335,8 @@ class ProductsController extends Controller
             try {
 
                 $unique = uniqid();
-                $filenamePut = 'extra/' . $unique . '.' . $extension;
-                $filenameRead = 'app/extra/' . $unique . '.' . $extension;
+                $filenamePut = 'extraBulk/' . $unique . '.' . $extension;
+                $filenameRead = 'app/extraBulk/' . $unique . '.' . $extension;
 
                 Storage::put($filenamePut, file_get_contents($excel->getRealPath()));
                 $products = Excel::toArray(new ImportExcelFiles(), storage_path($filenameRead));
