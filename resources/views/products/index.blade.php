@@ -537,22 +537,22 @@
 
             var currentUrl = window.location;
 
-            Dropzone.autoDiscover = false;
-            var myDropzone = new Dropzone(".dropzone",{
-                maxFilesize: 10, // MB
-                acceptedFiles: ".xls,.xlsx",
-                addRemoveLinks: true,
-                timeout: 50000,
-                init: function() {
-                    this.on("error", function(file, response) {
-                        alert(response);
-                    });
-                    this.on("success", function(file, response) {
-                        console.log(response);
-                    });
-                }
-            });
+            // var myDropzone = new Dropzone(".dropzone",{
+            //     maxFilesize: 10, // MB
+            //     acceptedFiles: ".xls,.xlsx",
+            //     addRemoveLinks: true,
+            //     timeout: 50000,
+            //     init: function() {
+            //         this.on("error", function(file, response) {
+            //             alert(response);
+            //         });
+            //         this.on("success", function(file, response) {
+            //             console.log(response);
+            //         });
+            //     }
+            // });
 
+            // Dropzone.autoDiscover = false;
 
             $("#category ,#filter").change(function () {
                 $("#product-form").submit();
