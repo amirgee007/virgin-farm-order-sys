@@ -310,7 +310,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <form action="{{route('upload.products.excel')}}" method="POST" enctype="multipart/form-data">
+                    <form action="{{route('upload.create.products.excel')}}" method="POST" enctype="multipart/form-data">
                         {{csrf_field()}}
 
                         <div class="form-groups">

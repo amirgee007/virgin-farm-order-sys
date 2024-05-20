@@ -224,9 +224,9 @@ class ProductsController extends Controller
         return back();
     }
 
-    public function uploadProducts(Request $request)
+    public function uploadCreateProducts(Request $request)
     {
-
+        #products master file.
         Storage::put('temp/import_products.xlsx', file_get_contents($request->file('file_products')->getRealPath()));
         $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_products.xlsx'));
 
@@ -319,6 +319,7 @@ class ProductsController extends Controller
 
         #reset and delete zero qty products
         $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
+        $missing = [];
 
         if ($request->hasFile('file')) {
 
@@ -383,10 +384,16 @@ class ProductsController extends Controller
                             ], $data);
 
                         }
+                        else
+                            $missing[] = $row[0];
+
                     }
                 }
 
-                Log::info($this->dateIn.' date in and date out BULK imported successfully '.$this->dateOut);
+                if($missing)
+                    $this->sendMissingItemEmail($missing);
+
+                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut);
 
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
@@ -452,6 +459,8 @@ class ProductsController extends Controller
                         } else {
                             $data['item_no'] = trim($row[0]);
                             $data['product_text'] = trim($row[1]);
+
+                            $missing[] = $row[0];
                             #$data['product_id'] = rand(100, 999999);
                             #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
                         }
@@ -460,6 +469,9 @@ class ProductsController extends Controller
                         Log::error('Error during inventory import ' . $exception->getMessage());
                     }
                 }
+
+            if($missing)
+                $this->sendMissingItemEmail($missing);
 
             session()->flash('app_message', 'Inventory file has been imported in the system.');
             return back();
@@ -627,9 +639,10 @@ class ProductsController extends Controller
         $files = Storage::disk('local')->files('extra');
         $countBefore = count($files);
 
+        $missing = [];
         foreach ($files as $file) {
             // Read each file as an Excel file
-            $path = storage_path('app\\'.$file);
+            $path = storage_path('app\\' . $file);
 
             try {
                 $products = \Excel::toArray(new ImportExcelFiles(), $path);
@@ -679,10 +692,12 @@ class ProductsController extends Controller
                             ], $data);
 
                         }
+                        else
+                            $missing[] = $row[0];
                     }
                 }
             } catch (\Exception $e) {
-                Log::error('Failed to import data from Excel file: ' . $e->getMessage() .' file name is '.$file);
+                Log::error('Failed to import data from Excel file: ' . $e->getMessage() . ' file name is ' . $file);
                 continue; // Continue processing the next file
             }
 
@@ -693,12 +708,14 @@ class ProductsController extends Controller
 
         if ($countBefore > 0) {
             $fileWord = $countBefore === 1 ? 'file' : 'files'; // Handle singular/plural
-            $message =  "Total $countBefore $fileWord remaining to sync. All others done.";
+            $message = "Total $countBefore $fileWord remaining to sync. All others done.";
             Log::info("Sync status: $countBefore $fileWord remaining."); // Logging the information
         } else {
             $message = "All files have been successfully synced."; // Logging complete sync
-            Log::info($message); // Logging the information
         }
+
+        if($missing)
+            $this->sendMissingItemEmail($missing);
 
         return response()->json(['message' => $message], 200);
     }
@@ -789,5 +806,21 @@ class ProductsController extends Controller
         } catch (\Exception $ex) {
             Log::error('Edit category error.' . $ex->getMessage());
         }
+    }
+
+    public function sendMissingItemEmail($items)
+    {
+        try{
+            $content = "Items from inventory file are not present in the master file. Please update and reload the files." . implode(',', $items);
+
+            \Mail::raw($content, function ($message) {
+                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
+                ])->bcc(['amir@infcompany.com'])->subject('Items from inventory file are not present in the master file');
+            });
+
+        } catch (\Exception $ex) {
+            Log::error(implode(',', $items).' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
+        }
+
     }
 }
