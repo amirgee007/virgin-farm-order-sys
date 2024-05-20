@@ -62,8 +62,8 @@
         @endforeach
     </div>
 
-    @if(myRoleName() == 'Admin')
-        <div class="row">
+
+    <div class="row">
             <div class="col-6">
                 <div class="card">
                     <div class="card-body" style="padding: 5px">
@@ -184,7 +184,6 @@
                 </div>
             </div>
         </div>
-    @else
 
     <div class="container mt-3">
             <div class="row">
@@ -214,7 +213,7 @@
                 </div>
             </div>
         </div>
-    @endif
+
 @stop
 
 @section('scripts')
