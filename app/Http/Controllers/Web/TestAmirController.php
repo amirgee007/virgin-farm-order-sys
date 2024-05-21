@@ -36,11 +36,11 @@ class TestAmirController extends Controller
 
         \Mail::raw($content, function ($message) use($salesRepEmail) {
             $message->to('christinah@virginfarms.com')
-                ->bcc(['amir@infcompany.com' , $salesRepEmail])
+                ->bcc(['amirseersol@gmail.com' , $salesRepEmail])
                 ->subject('Hi, plz check some user updated shipping address');});
 
 //        \Mail::to('christinah@virginfarms.com')
-//            ->bcc('amir@infcompany.com')
+//            ->bcc('amirseersol@gmail.com')
 //            ->send(new VirginFarmGlobalMail('Hi, plz check some user updated shipping address', $content));
 
         dd('dd');

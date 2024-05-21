@@ -815,7 +815,7 @@ class ProductsController extends Controller
 
             \Mail::raw($content, function ($message) {
                 $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
-                ])->bcc(['amir@infcompany.com'])->subject('Items from inventory file are not present in the master file');
+                ])->bcc(['amirseersol@gmail.com'])->subject('Items from inventory file are not present in the master file');
             });
 
         } catch (\Exception $ex) {
