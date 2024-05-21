@@ -84,7 +84,18 @@ class ProductsController extends Controller
         }
 
         $carriers = getCarriers();
-        $categories = Category::query()->orderBy('description')->pluck('description', 'category_id')->toArray();
+        $categoriesQuery = Category::query();
+
+        $dutchCats = Category::dutchCategories();
+
+        #categories based on the SUPPLIER selected
+        if($user->supplier_id == 2)
+            $categoriesQuery->whereIn('category_id' , $dutchCats);
+        else
+            $categoriesQuery->whereNotIn('category_id' , $dutchCats);
+
+        $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
+
         $products = (clone $query)->orderBy('product_text')
             ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,products.stems,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
             ->paginate(100);
@@ -765,20 +776,27 @@ class ProductsController extends Controller
     public function categoriesIndex()
     {
         $categories = Category::latest()->get();
-        #->orderBy('description' , 'desc')
 
+        $dutchCats = Category::dutchCategories();
         return view('categories.index', compact(
-            'categories'
+            'categories',
+            'dutchCats'
         ));
     }
 
     public function categoriesDelete($id = null)
     {
         if ($id) {
+            $products = Product::where('category_id' , $id)->get();
+
+            if(count($products) > 0){
+                session()->flash('app_error', 'Sorry, you cannot delete this category because it is linked to some products.');
+                return back();
+            }
+
             #plz check we dont have any other links categories etc
             Category::where('id', $id)->delete();
             session()->flash('app_message', 'Your Category has been deleted successfully.');
-
             return back();
         }
     }

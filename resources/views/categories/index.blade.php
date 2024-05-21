@@ -11,6 +11,15 @@
 
 @section ('styles')
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
+
+    <style>
+        .dutch{
+            background: rgba(213, 25, 38, 0.78);
+        }
+        .virginFarm {
+            background: #5a7161;
+        }
+    </style>
 @stop
 
 @section('content')
@@ -39,13 +48,14 @@
             </form>
 
             <div class="table-responsive" id="users-table-wrapper">
-                <table class="table table-borderless table-striped">
+                <small><span class="dutch">Green</span> means its Virgin farms and <span class="virginFarm">Red</span> means its dutch category.</small>
+                <table class="table table-bordered ">
                     <thead>
                     <tr>
-                        <th class="min-width-80">@lang('#')</th>
-                        <th class="min-width-100">@lang('Item Id')</th>
+                        <th>@lang('#')</th>
+                        <th>@lang('Item Id')</th>
                         <th class="min-width-100">@lang('Name')</th>
-                        <th class="min-width-80">@lang('Created')</th>
+                        <th class="min-width-100">@lang('Created')</th>
                         <th class="min-width-80">@lang('Updated')</th>
                         <th class="min-width-80">@lang('Action')</th>
                     </tr>
@@ -53,8 +63,8 @@
                     <tbody>
                     @if (count($categories))
                         @foreach ($categories as $index => $category)
-                            <tr>
-                                <td class="align-middle">{{ ++$index }}</td>
+                            <tr class="">
+                                <td class="align-middle {{in_array($category->category_id , $dutchCats) ? 'dutch' : 'virginFarm'}}">{{ ++$index }}</td>
                                 <td class="align-middle">{{ $category->category_id }}</td>
                                 <td class="align-middle">
                                     <a class="editable"

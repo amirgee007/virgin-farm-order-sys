@@ -10,4 +10,11 @@ class Category extends Model
     use HasFactory;
     protected $table = 'categories';
     protected $guarded = [];
+
+    static function dutchCategories()
+    {
+        return [
+            81, 57, 61
+        ];
+    }
 }
