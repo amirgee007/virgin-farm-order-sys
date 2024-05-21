@@ -271,7 +271,8 @@ class ProductsController extends Controller
                         'def_price_hawaii' => trim($row[6]), #price 5
                     ];
 
-                    $data['supplier_id'] = $data['category_id'] == 81 ? 2 : 1;
+                    $catsDutch = Category::dutchCategories();
+                    $data['supplier_id'] = in_array($data['category_id'], $catsDutch) ? 2 : 1;
 
                     $product = Product::where('item_no', trim($row[1]))->first();
 
