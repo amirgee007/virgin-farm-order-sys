@@ -48,7 +48,7 @@
             </form>
 
             <div class="table-responsive" id="users-table-wrapper">
-                <small><span class="dutch">Green</span> means its Virgin farms and <span class="virginFarm">Red</span> means its dutch category.</small>
+                <small><span class="virginFarm">Green</span> means its Virgin farms and <span class="dutch">Red</span> means its dutch category.</small>
                 <table class="table table-bordered ">
                     <thead>
                     <tr>
