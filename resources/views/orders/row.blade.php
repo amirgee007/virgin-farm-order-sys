@@ -104,7 +104,7 @@
                             <td class="align-middle">${{ round2Digit($prod->price) }}</td>
 {{--                            <td class="align-middle">{{ $prod->size }}</td>--}}
                             <td class="align-middle">{{ $prod->stems }}</td>
-                            <td class="align-middle">${{ $prod->sub_total }}</td>
+                            <td class="align-middle">${{ round2Digit($prod->sub_total) }}</td>
                         </tr>
                     @endforeach
                 @else
