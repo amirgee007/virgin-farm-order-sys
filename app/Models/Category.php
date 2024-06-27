@@ -14,7 +14,7 @@ class Category extends Model
     static function dutchCategories()
     {
         return [
-            81, 57, 61, 82
+            81, 57, 61, 82, 35
         ];
     }
 }
