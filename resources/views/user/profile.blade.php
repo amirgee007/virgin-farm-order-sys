@@ -73,15 +73,13 @@
                          id="login-details"
                          role="tabpanel"
                          aria-labelledby="nav-profile-tab">
-                        @if(myRoleName() == 'Admin')
-                            <form action="{{ route('profile.update.login-details') }}"
-                                  method="POST"
-                                  id="login-details-form">
-                                @method('PUT')
-                                @csrf
-                                @include('user.partials.auth')
-                            </form>
-                        @endif
+                        <form action="{{ route('profile.update.login-details') }}"
+                              method="POST"
+                              id="login-details-form">
+                            @method('PUT')
+                            @csrf
+                            @include('user.partials.auth')
+                        </form>
                     </div>
 
 
