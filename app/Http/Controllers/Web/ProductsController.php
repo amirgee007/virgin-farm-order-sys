@@ -272,7 +272,16 @@ class ProductsController extends Controller
                     ];
 
                     $catsDutch = Category::dutchCategories();
-                    $data['supplier_id'] = in_array($data['category_id'], $catsDutch) ? 2 : 1;
+                    $specialOffers = Category::specialOfferCategories(); #todo
+
+                    $data['supplier_id'] = 1;
+
+                    if (in_array($data['category_id'], $catsDutch)) {
+                        $data['supplier_id'] = 2;
+                    } elseif (in_array($data['category_id'], $specialOffers)) {
+                        $data['supplier_id'] = 3;
+                    }
+
 
                     $product = Product::where('item_no', trim($row[1]))->first();
 

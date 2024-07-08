@@ -206,7 +206,18 @@
                         <thead>
                         @foreach($unitOfMeasure as $measure)
                             <tr>
-                                <th><b>{{$measure->unit}}</b></th>
+                                <th>
+{{--                               <b>{{$measure->unit}}</b>--}}
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="unit"
+                                       data-type="text"
+                                       data-emptytext="empty"
+                                       data-pk="{{$measure->id}}"
+                                       data-url="{{route('unit_of_measures.update')}}"
+                                       data-value=" {{$measure->unit}}">
+                                    </a>
+                                </th>
                                 <td>
                                 <td class="align-middle">
                                     <a class="editable"

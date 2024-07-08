@@ -36,6 +36,7 @@ class DashboardController extends Controller
         $user->supplier_id = $request->input('supplier');
         $user->save();
 
-        return response()->json(['message' => 'Supplier updated successfully, You will be redirected to inventory page.' , 'href' => route('inventory.index')]);
+        #, You will be redirected to inventory page.
+        return response()->json(['message' => 'Supplier updated successfully.' , 'href' => route('inventory.index')]);
     }
 }

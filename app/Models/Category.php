@@ -17,4 +17,11 @@ class Category extends Model
             81, 57, 61, 82, 35
         ];
     }
+
+    static function specialOfferCategories()
+    {
+        return [
+
+        ];
+    }
 }
