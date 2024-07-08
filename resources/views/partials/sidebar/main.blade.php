@@ -1,5 +1,5 @@
 <nav class="col-md-2 sidebar custom-scroll-bar">
-    <div class="user-box text-center pt-3 pb-3">
+    <div class="user-box text-center pt-2 pb-1">
         <div class="user-img">
             <img src="{{ auth()->user()->present()->avatar }}"
                  width="75"
@@ -8,11 +8,11 @@
                  class="rounded-circle img-thumbnail img-responsive">
         </div>
 
-        <h5 class="my-3">
+        <h5 class="my-2">
             <a href="{{ route('profile') }}">{{ auth()->user()->present()->nameOrEmail }}</a>
         </h5>
 
-        <ul class="list-inline mb-2">
+        <ul class="list-inline mb-1">
             <li class="list-inline-item">
                 <a href="{{ route('log-viewer::logs.list') }}" title="Logs Viewer">
                     <i class="fas fa-history"></i>

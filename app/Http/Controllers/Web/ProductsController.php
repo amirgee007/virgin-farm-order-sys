@@ -398,7 +398,6 @@ class ProductsController extends Controller
                         }
                         else
                             $missing[] = $row[0];
-
                     }
                 }
 
