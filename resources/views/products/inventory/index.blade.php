@@ -3,10 +3,44 @@
 @section('page-title', __('Client Inventory'))
 @section('page-heading', __('Client Inventory'))
 
+@section ('styles')
+
+    <style>
+        .radius{
+            border-radius: 2.5px;
+            border-style: outset;
+            cursor: pointer;
+            font-size: 9px;
+        }
+    </style>
+@stop
+
 @section('breadcrumbs')
-    <li class="breadcrumb-item text-muted " style="cursor: pointer;" data-toggle="modal" data-target="#boxesModal">
-        @lang('Click to see boxes detail')
-        <i class="fas fa-box text-danger"></i>
+    <li class="breadcrumb-item text-muted " style="cursor: pointer;" >
+        @lang('See Boxes detail') <i class="fas fa-box text-danger" data-toggle="modal" data-target="#boxesModal"></i>
+        &nbsp; &nbsp; &nbsp;
+        <div class="form-check form-check-inline"
+             title="Change Inventory to Virgin farms"
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="virgin" checked>
+            <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin F.</label>
+        </div>
+        <div class="form-check form-check-inline"
+             title="Switch Inventory to Dutch Flowers"
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radioDutch" value="dutch">
+            <label class="form-check-label bg-danger text-white p-2 radius" for="radioDutch">Dutch</label>
+        </div>
+        <div class="form-check form-check-inline"
+             title="Change Inventory to Special Offers"
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="special">
+            <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Special</label>
+        </div>
+
     </li>
 @stop
 
