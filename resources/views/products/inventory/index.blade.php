@@ -23,21 +23,21 @@
              title="Change Inventory to Virgin farms"
              data-trigger="hover"
              data-toggle="tooltip">
-            <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="virgin" checked>
+            <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="1" {{auth()->user()->supplier_id == 1 ? 'checked' :''}}>
             <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin F.</label>
         </div>
         <div class="form-check form-check-inline"
              title="Switch Inventory to Dutch Flowers"
              data-trigger="hover"
              data-toggle="tooltip">
-            <input class="form-check-input" type="radio" name="radioGroup" id="radioDutch" value="dutch">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radioDutch" value="2" {{auth()->user()->supplier_id == 2 ? 'checked' :''}}>
             <label class="form-check-label bg-danger text-white p-2 radius" for="radioDutch">Dutch</label>
         </div>
         <div class="form-check form-check-inline"
              title="Change Inventory to Special Offers"
              data-trigger="hover"
              data-toggle="tooltip">
-            <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="special">
+            <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="3" {{auth()->user()->supplier_id == 3 ? 'checked' :''}}>
             <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Special</label>
         </div>
 
@@ -364,6 +364,26 @@
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));
             $('#imagePreviewTitle').text($(this).data('info'));
             $('#largeImgModal').modal('show');
+        });
+
+        $(".form-check-input").change(function() {
+
+            var selectedSupplier = $(this).val();
+            $.ajax({
+                url: '{{ route('update.supplier') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    supplier: selectedSupplier
+                },
+                success: function (response) {
+                    toastr.success(response.message);
+                    window.location.href = response.href;
+                },
+                error: function () {
+                    toastr.error('Something went wrong please check with admin.');
+                },
+            });
         });
 
         $('#date_shipped, #category').change(function () {

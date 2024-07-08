@@ -262,7 +262,6 @@
                 } else {
                     alert('Please select a supplier.');
                 }
-
             });
         });
     </script>
