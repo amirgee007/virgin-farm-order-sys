@@ -187,26 +187,38 @@
 
     <div class="container mt-3">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 1 ? 'selected' :''}}" data-supplier="1" >
                         <div class="card-body">
                             <div class="text-center">
                                 <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
                             </div>
                             <div class="text-center mt-3 text-primary">
-                                Virgin Farms Inventory
+                                <b>Virgin Farms Inventory</b>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 2 ? 'selected' :''}}" data-supplier="2">
                         <div class="card-body">
                             <div class="text-center">
                                 <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
                             </div>
                             <div class="text-center mt-3 text-danger">
-                                Dutch Flowers
+                                <b>Dutch Flowers</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 3 ? 'selected' :''}}" data-supplier="3">
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="{{ url('assets/img/dashboard/special.png') }}" alt="{{ setting('app_name') }}" height="300">
+                            </div>
+                            <div class="text-center mt-3 text-warning">
+                                <b>Special Offers</b>
                             </div>
                         </div>
                     </div>
