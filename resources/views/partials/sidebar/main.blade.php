@@ -141,7 +141,7 @@
                        data-toggle="popover"
                        title="Checkout Out Help & FAQ Page"
                        data-html="true"
-                       data-content="<div>Watch tutorials to learn web shop navigation. Refer to FAQs and dashboard management here.<br><a href='#' id='hidePopover' class='popover-link'>Don’t show me again</a></div>">
+                       data-content="<div>Watch tutorials for web shop navigation. See FAQs and dashboard management here.<br><a href='#' id='hidePopover' class='popover-link'>Don’t show me again</a></div>">
                       <i class="fas fa-question-circle"></i>
                       <span>@lang('Help & FAQs')</span>
                     </a>
