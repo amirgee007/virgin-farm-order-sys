@@ -226,6 +226,19 @@
 
 <script>
     $(document).ready(function () {
+
+        // Capture scroll position before page refresh
+        $(window).on("beforeunload", function() {
+            localStorage.setItem("scrollPosition", $(window).scrollTop());
+        });
+
+        // Restore scroll position after page load
+        var scrollPosition = localStorage.getItem("scrollPosition");
+        if (scrollPosition) {
+            $(window).scrollTop(scrollPosition);
+            localStorage.removeItem("scrollPosition"); // Clean up after setting
+        }
+
         var remainingSeconds = <?php echo cartTimeLeftSec(); ?>;
 
         function updateTimer() {
