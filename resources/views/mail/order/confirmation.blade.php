@@ -2,7 +2,7 @@
 # Web Order Summary
 ## Hey "{{strtoupper($order->name)}}", thanks for your order! Here are the details.
 
-### Customer Name: {{$user->name}}
+### Company Name: {{$user->company_name}}
 ##### Customer Account: {{$user->customer_number}}
 ##### Created On: {{now()->format('m/d/Y h:i:s A')}}
 ##### Reference: WO{{$order->id}}
