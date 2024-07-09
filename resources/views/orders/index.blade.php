@@ -74,7 +74,7 @@
                                                class="btn btn-light d-flex align-items-center text-muted"
                                                role="button">
                                                 <i class="fas fa-times"></i>
-                                        </a>
+                                            </a>
                                    @endif
                                     <button class="btn btn-light" type="submit">
                                               <i class="fas fa-search text-muted"></i>
@@ -82,6 +82,16 @@
                                 </span>
                                 </div>
                                 <small class="text-danger"><b>Note:</b> Click on any order below to see more detailed view.</small>
+                            </div>
+                            <div class="col-md-2 mt-2 mt-md-0">
+                                {!!
+                                    Form::select(
+                                        'user_id',
+                                        $users,
+                                        Request::get('user_id'),
+                                        ['id' => 'user_id', 'class' => 'form-control input-solid']
+                                    )
+                                !!}
                             </div>
 
                         </div>
@@ -201,6 +211,10 @@
                         }, 2000);
                     }
                 });
+            });
+
+            $("#user_id").change(function () {
+                $("#orders-form").submit();
             });
         });
     </script>
