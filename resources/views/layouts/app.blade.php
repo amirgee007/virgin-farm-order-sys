@@ -11,82 +11,111 @@
 
     <title>@yield('page-title') - {{ setting('app_name') }}</title>
 
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ url('assets/img/icons/apple-touch-icon-144x144.png') }}" />
-    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ url('assets/img/icons/apple-touch-icon-152x152.png') }}" />
-    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-32x32.png') }}" sizes="32x32" />
-    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-16x16.png') }}" sizes="16x16" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144"
+          href="{{ url('assets/img/icons/apple-touch-icon-144x144.png') }}"/>
+    <link rel="apple-touch-icon-precomposed" sizes="152x152"
+          href="{{ url('assets/img/icons/apple-touch-icon-152x152.png') }}"/>
+    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-32x32.png') }}" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="{{ url('assets/img/icons/favicon-16x16.png') }}" sizes="16x16"/>
     <meta name="application-name" content="{{ setting('app_name') }}"/>
-    <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta name="msapplication-TileImage" content="{{ url('assets/img/icons/mstile-144x144.png') }}" />
+    <meta name="msapplication-TileColor" content="#FFFFFF"/>
+    <meta name="msapplication-TileImage" content="{{ url('assets/img/icons/mstile-144x144.png') }}"/>
 
     <link media="all" type="text/css" rel="stylesheet" href="{{ url(mix('assets/css/vendor.css')) }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url(mix('assets/css/app.css')) }}">
 
     <style>
 
-        .main-section{
+        .main-section {
             background-color: #F8F8F8;
         }
-        .btnCart{
-            border:0px;
-            margin:10px 0px;
-            box-shadow:none !important;
-        }
-        .dropdown .dropdown-menu{
-            padding:20px;
-            top:30px !important;
-            width:350px !important;
-            left:-110px !important;
-            box-shadow:0px 5px 30px black;
-        }
-        .total-header-section{
-            border-bottom:1px solid #d2d2d2;
-        }
-        .total-section p{
-            margin-bottom:20px;
-        }
-        .cart-detail{
-            padding:15px 0px;
-        }
-        .cart-detail-img img{
-            width:100%;
-            height:100%;
-            padding-left:15px;
-        }
-        .cart-detail-product p{
-            margin:0px;
-            color:#000;
-            font-weight:500;
-        }
-        .cart-detail .price{
-            font-size:12px;
-            margin-right:10px;
-            font-weight:500;
-        }
-        .cart-detail .count{
-            color:#C2C2DC;
-        }
-        .checkout{
-            border-top:1px solid #d2d2d2;
-            padding-top: 10px;
-        }
-        .checkout .btn-primary{
-            border-radius:35px;
-            height:36px;
-        }
-        .checkout .btn-danger{
-            border-radius:35px;
-            height:36px;
-        }
-        .dropdown-menu:before{
-            content: " ";
-            position:absolute;
-            top:-20px;
-            right:50px;
-            border:10px solid transparent;
-            border-bottom-color:#fff;
+
+        .btnCart {
+            border: 0px;
+            margin: 10px 0px;
+            box-shadow: none !important;
         }
 
+        .dropdown .dropdown-menu {
+            padding: 20px;
+            top: 30px !important;
+            width: 350px !important;
+            left: -110px !important;
+            box-shadow: 0px 5px 30px black;
+        }
+
+        .total-header-section {
+            border-bottom: 1px solid #d2d2d2;
+        }
+
+        .total-section p {
+            margin-bottom: 20px;
+        }
+
+        .cart-detail {
+            padding: 15px 0px;
+        }
+
+        .cart-detail-img img {
+            width: 100%;
+            height: 100%;
+            padding-left: 15px;
+        }
+
+        .cart-detail-product p {
+            margin: 0px;
+            color: #000;
+            font-weight: 500;
+        }
+
+        .cart-detail .price {
+            font-size: 12px;
+            margin-right: 10px;
+            font-weight: 500;
+        }
+
+        .cart-detail .count {
+            color: #C2C2DC;
+        }
+
+        .checkout {
+            border-top: 1px solid #d2d2d2;
+            padding-top: 10px;
+        }
+
+        .checkout .btn-primary {
+            border-radius: 35px;
+            height: 36px;
+        }
+
+        .checkout .btn-danger {
+            border-radius: 35px;
+            height: 36px;
+        }
+
+        .dropdown-menu:before {
+            content: " ";
+            position: absolute;
+            top: -20px;
+            right: 50px;
+            border: 10px solid transparent;
+            border-bottom-color: #fff;
+        }
+
+        .popover-header {
+            background-color: #e6000f;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .popover-link {
+            display: block;
+            margin-top: 10px;
+            color: #e6000f;
+            text-align: center;
+            text-decoration: none;
+        }
     </style>
 
     @yield('styles')
@@ -94,114 +123,136 @@
     @hook('app:styles')
 </head>
 <body>
-    @include('partials.navbar')
+@include('partials.navbar')
 
-    <div class="container-fluid">
-        <div class="row">
-            @include('partials.sidebar.main')
+<div class="container-fluid">
+    <div class="row">
+        @include('partials.sidebar.main')
 
-            <div class="content-page">
-                <main role="main" class="px-4">
-                    @yield('content')
-                </main>
-            </div>
+        <div class="content-page">
+            <main role="main" class="px-4">
+                @yield('content')
+            </main>
         </div>
     </div>
+</div>
 
-    <script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
-    <script src="{{ url('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
-    <script src="{{ url('assets/js/as/app.js') }}"></script>
+<script src="{{ url(mix('assets/js/vendor.js')) }}"></script>
+<script src="{{ url('assets/js/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+<script src="{{ url('assets/js/as/app.js') }}"></script>
 
-    <script src="{{ url('assets/plugins/progressbar/progressbar.js') }}"></script>
+<script src="{{ url('assets/plugins/progressbar/progressbar.js') }}"></script>
 
-    <script>
-        (function($){
-            $(window).on("load",function(){
-                $(".custom-scroll-bar").mCustomScrollbar({
-                    theme:"minimal"
+<script>
+    (function ($) {
+        $(window).on("load", function () {
+
+            var isRead = "{{!isReadFAQ()}}";
+            if(isRead){
+                // Show the popover initially
+                $('#popoverButton').popover('show');
+
+                // Add hover event to hide the popover
+                $('#popoverButton').hover(function () {
+                    $('[data-toggle="popover"]').popover('show');
                 });
+            }
 
-                const size = $("#itsSizeDynamic").val();
+            $('#hidePopover').click(function() {
+                $('[data-toggle="popover"]').popover('hide');
 
-                fetch('/api/validate-cart-size', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    body: JSON.stringify({ selection: size })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.nextMax){
-                            // const messageElement = document.querySelector('#message');
-                            // messageElement.innerText = `Min size required: ${data.nextMax}`;
-                            updateProgressBar(data.size, data.nextMax);
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-
-                function updateProgressBar(currentSize, maxLimit) {
-                    console.log('current size and next max limit is: '+currentSize, maxLimit);
-                    const percentage = currentSize / maxLimit;
-                    progressBar.animate(percentage > 100 ? 100 : percentage ); // Update progress bar based on the max of the current range
-                }
+                $.ajax({
+                    url: '{{ route('update.faq.read.status') }}',
+                    method: "get",
+                    success: function (response) {}
+                });
             });
-        })(jQuery);
-    </script>
 
-    <script>
-        const progressBar = new ProgressBar.Circle('#progress-container', {
-            strokeWidth: 12,
-            easing: 'easeInOut',
-            duration: 1400,
-            color: '#ED6A5A',
-            trailColor: '#5a5a54',
-            trailWidth: 5,
-            svgStyle: null,
-            text: {
-                autoStyleContainer: false
-            },
-            from: { color: '#ED6A5A', width: 6 },
-            to: { color: '#FFEA82', width: 6 },
+            $(".custom-scroll-bar").mCustomScrollbar({
+                theme: "minimal"
+            });
 
-            // Set step function to display the percentage in the middle of the circle
-            step: function(state, bar) {
-                bar.setText((bar.value() * 100).toFixed(0) + '%');
+            const size = $("#itsSizeDynamic").val();
+
+            fetch('/api/validate-cart-size', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({selection: size})
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.nextMax) {
+                        // const messageElement = document.querySelector('#message');
+                        // messageElement.innerText = `Min size required: ${data.nextMax}`;
+                        updateProgressBar(data.size, data.nextMax);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+
+            function updateProgressBar(currentSize, maxLimit) {
+                console.log('current size and next max limit is: ' + currentSize, maxLimit);
+                const percentage = currentSize / maxLimit;
+                progressBar.animate(percentage > 100 ? 100 : percentage); // Update progress bar based on the max of the current range
             }
         });
+    })(jQuery);
+</script>
 
-    </script>
+<script>
+    const progressBar = new ProgressBar.Circle('#progress-container', {
+        strokeWidth: 12,
+        easing: 'easeInOut',
+        duration: 1400,
+        color: '#ED6A5A',
+        trailColor: '#5a5a54',
+        trailWidth: 5,
+        svgStyle: null,
+        text: {
+            autoStyleContainer: false
+        },
+        from: {color: '#ED6A5A', width: 6},
+        to: {color: '#FFEA82', width: 6},
 
-    <script>
-        $(document).ready(function() {
-            var remainingSeconds = <?php echo cartTimeLeftSec(); ?>;
+        // Set step function to display the percentage in the middle of the circle
+        step: function (state, bar) {
+            bar.setText((bar.value() * 100).toFixed(0) + '%');
+        }
+    });
 
-            function updateTimer() {
-                var minutes = Math.floor(remainingSeconds / 60);
-                var seconds = remainingSeconds % 60;
+</script>
 
-                // Ensure both minutes and seconds are displayed with two digits
-                var displayMinutes = minutes.toString().padStart(2, '0');
-                var displaySeconds = seconds.toString().padStart(2, '0');
+<script>
+    $(document).ready(function () {
+        var remainingSeconds = <?php echo cartTimeLeftSec(); ?>;
 
-                $('#carttimer').text('Checkout Timer: ' + displayMinutes + ':' + displaySeconds);
+        function updateTimer() {
+            var minutes = Math.floor(remainingSeconds / 60);
+            var seconds = remainingSeconds % 60;
 
-                if (remainingSeconds > 0) {
-                    remainingSeconds -= 1;
-                    setTimeout(updateTimer, 1000);
-                } else {
-                    $('#carttimer').text(''); //Empty Cart. here we can add timer ETC
-                }
+            // Ensure both minutes and seconds are displayed with two digits
+            var displayMinutes = minutes.toString().padStart(2, '0');
+            var displaySeconds = seconds.toString().padStart(2, '0');
+
+            $('#carttimer').text('Checkout Timer: ' + displayMinutes + ':' + displaySeconds);
+
+            if (remainingSeconds > 0) {
+                remainingSeconds -= 1;
+                setTimeout(updateTimer, 1000);
+            } else {
+                $('#carttimer').text(''); //Empty Cart. here we can add timer ETC
             }
+        }
 
-            updateTimer();
-        });
-    </script>
+        updateTimer();
+    });
+</script>
 
-    @stack('js')
-    @yield('scripts')
+@stack('js')
+@yield('scripts')
 
-    @hook('app:scripts')
+@hook('app:scripts')
 </body>
 </html>

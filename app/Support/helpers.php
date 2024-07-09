@@ -396,6 +396,14 @@ function addOwnNotification($message ,$order_id = 0, $user_id = 0 ){
     ClientNotification::updateOrcreate($data , $data);
 }
 
+function isReadFAQ(){
+    return auth()->user()->announcements_last_read_at;
+
+//    auth()->user()->forceFill([
+//        'announcements_last_read_at' => now()
+//    ])->save();
+}
+
 function stripXSS($data)
 {
     $sanitized = cleanArray($data);

@@ -133,12 +133,19 @@
             @endpermission
 
             @permission('help.faq.index')
-            <li class="nav-item">
-                <a class="nav-link {{ Request::is('help-faq*') ? 'active' : ''  }}" href="{{ route('help.faq.index') }}">
-                    <i class="fas fa-question-circle"></i>
-                    <span>@lang('Help & FAQs')</span>
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a id="popoverButton"
+                       class="nav-link {{ Request::is('help-faq*') ? 'active' : ''  }}"
+                       href="{{ route('help.faq.index') }}"
+                       data-placement="right"
+                       data-toggle="popover"
+                       title="Checkout Out Help & FAQ Page"
+                       data-html="true"
+                       data-content="<div>Refer to Frequently Asked Questions and dashboard management in this tab.<br><a href='#' id='hidePopover' class='popover-link'>Don’t show me again</a></div>">
+                      <i class="fas fa-question-circle"></i>
+                      <span>@lang('Help & FAQs')</span>
+                    </a>
+                </li>
             @endpermission
 
             @permission('shipping.address.index')

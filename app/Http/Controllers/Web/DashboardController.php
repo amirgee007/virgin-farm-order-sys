@@ -39,4 +39,15 @@ class DashboardController extends Controller
         #, You will be redirected to inventory page.
         return response()->json(['message' => 'Supplier updated successfully.' , 'href' => route('inventory.index')]);
     }
+
+    public function updateFaqRead(Request $request){
+
+        // Store the selected supplier in the user preferences
+        auth()->user()->forceFill([
+            'announcements_last_read_at' => now()
+        ])->save();
+
+        #, You will be redirected to inventory page.
+        return response()->json(['message' => 'Settings updated successfully.']);
+    }
 }

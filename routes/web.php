@@ -70,6 +70,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'uses' => 'DashboardController@updateSupplier'
     ]);
 
+    Route::get('/update-faq-status', [
+        'as' => 'update.faq.read.status',
+        'uses' => 'DashboardController@updateFaqRead'
+    ]);
+
     Route::group(['prefix'=>'products'], function() {
 
         #its for client ONLY
