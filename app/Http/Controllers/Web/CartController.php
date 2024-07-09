@@ -181,7 +181,7 @@ class CartController extends Controller
                 'carrier_id' => $carrier_id,
                 'name' => $shipAddress->name,
                 'email_address' => $shipAddress->email,
-                'company' => $shipAddress->company,
+                'company' => $shipAddress->company_name,
                 'phone' => $shipAddress->phone,
                 'shipping_address' => $shipAddress->address,
                 'address_2' => $shipAddress->city_name.' ,'.$shipAddress->state_name.' ,'.$shipAddress->zip, #all others stuff city, state, and zip
