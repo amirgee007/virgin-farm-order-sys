@@ -64,126 +64,137 @@
 
 
     <div class="row">
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body" style="padding: 5px">
-                        <h5 class="text-center">Recent Orders</h5>
-                        <hr>
-                        <div class="table-responsive orders-list-table" id="users-table-wrapper">
-                            <table class="table table-borderless table-striped products-list-table">
-                                <thead>
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body" style="padding: 5px">
+                    <h5 class="text-center">Recent Orders</h5>
+                    <hr>
+                    <div class="table-responsive orders-list-table" id="users-table-wrapper">
+                        <table class="table table-borderless table-striped products-list-table">
+                            <thead>
+                            <tr>
+                                <th >@lang('Id')</th>
+                                <th >@lang('User')</th>
+                                <th >@lang('Ship Date')</th>
+                                <th >@lang('Carrier Name')</th>
+                                <th >@lang('Status')</th>
+                                <th >@lang('Created')</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if ($orders)
+                                @foreach ($orders as $index => $order)
+                                    <tr>
+                                        <td class="align-middle" title="@lang('Click to see order detail')"
+                                            data-toggle="tooltip"
+                                            data-placement="left">
+                                            <a target="_blank" href="{{route('orders.index')."?search=WO".$order->id}}">
+                                                <span class="badge badge-lg badge-primary">WO{{ $order->id }}</span>
+                                            </a>
+                                        </td>
+                                        <td class="align-middle">{{ $order->name }}</td>
+                                        <td class="align-middle">{{ $order->date_shipped }}</td>
+                                        <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
+                                        <td><span class="badge badge-lg badge-danger"> Active </span></td>
+                                        <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
                                 <tr>
-                                    <th >@lang('Id')</th>
-                                    <th >@lang('User')</th>
-                                    <th >@lang('Ship Date')</th>
-                                    <th >@lang('Carrier Name')</th>
-                                    <th >@lang('Status')</th>
-                                    <th >@lang('Created')</th>
+                                    <td colspan="12">
+                                        No Orders found
+                                    </td>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                @if ($orders)
-                                    @foreach ($orders as $index => $order)
-                                        <tr>
-                                            <td class="align-middle" title="@lang('Click to see order detail')"
-                                                data-toggle="tooltip"
-                                                data-placement="left">
-                                                <a target="_blank" href="{{route('orders.index')."?search=WO".$order->id}}">
-                                                    <span class="badge badge-lg badge-primary">WO{{ $order->id }}</span>
-                                                </a>
-                                            </td>
-                                            <td class="align-middle">{{ $order->name }}</td>
-                                            <td class="align-middle">{{ $order->date_shipped }}</td>
-                                            <td class="align-middle">{{ @$order->carrier->carrier_name }}</td>
-                                            <td><span class="badge badge-lg badge-danger"> Active </span></td>
-                                            <td class="align-middle">{{ diff4Human($order->created_at) }}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="12">
-                                            No Orders found
-                                        </td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-6">
-                <div class="card">
-                    <div class="card-body" style="padding: 5px">
-                        <h5 class="text-center">Recent Future Inventory</h5>
-                        <h6>Date Ranges</h6>
-                        <hr>
-                        <div class="table-responsive orders-list-table" id="users-table-wrapper">
-                            <table class="table table-borderless table-striped">
-                                <thead></thead>
-                                <tbody>
-                                @if ($futureInventory)
-                                    @foreach ($futureInventory as $order)
-                                        <tr>
-                                            <th class="align-middle">{{ dateFormatRecent($order->date_in) }}  -  {{dateFormatRecent($order->date_out)}}</th>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="12">
-                                            No date range found
-                                        </td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body" style="padding: 5px">
-                        <h5 class="text-center">Show Low Inventory</h5>
-                        <hr>
-                        <div class="table-responsive orders-list-table">
-                            <table class="table table-borderless table-striped products-list-table">
-                                <thead>
-                                <tr>
-                                    <th >@lang('Item')</th>
-                                    <th >@lang('Quantity')</th>
-                                    <th >@lang('Date In')</th>
-                                    <th >@lang('Date Out')</th>
-                                    <th >@lang('Last Updated')</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @if ($lowInventory)
-                                    @foreach ($lowInventory as  $product)
-                                        <tr>
-                                            <td class="align-middle">{{ $product->item_no }}</td>
-                                            <td><span class="badge badge-lg badge-danger"> {{ $product->quantity }} </span></td>
-                                            <td class="align-middle">{{ $product->date_in }}</td>
-                                            <td class="align-middle">{{ $product->date_out }}</td>
-                                            <td class="align-middle">{{ diff4Human($product->updated_at) }}</td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td colspan="12">
-                                            No Orders found
-                                        </td>
-                                    </tr>
-                                @endif
-                                </tbody>
-                            </table>
-                        </div>
+                            @endif
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body" style="padding: 5px">
+                    <h5 class="text-center">Recent Future Inventory</h5>
+                    <hr>
+                    <div class="table-responsive orders-list-table" id="users-table-wrapper">
+                        <table class="table table-borderless table-striped">
+                            <thead>
+                            <tr>
+                                <th colspan=2>Date Ranges</th>
+                                <th colspan=2>Last Updated</th>
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            @if ($futureInventory)
+                                @foreach ($futureInventory as $inventory)
+                                    <tr>
+                                        <td class="align-middle" colspan=2>
+                                            {{ dateFormatRecent($inventory->date_in) }}  -  {{dateFormatRecent($inventory->date_out)}}
+                                        </td>
+
+                                        <td class="align-middle" colspan=2>
+                                            {{ $inventory->updated_at }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="12">
+                                        No date range found
+                                    </td>
+                                </tr>
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{{--        <div class="col-12">--}}
+{{--            <div class="card">--}}
+{{--                    <div class="card-body" style="padding: 5px">--}}
+{{--                        <h5 class="text-center">Show Low Inventory</h5>--}}
+{{--                        <hr>--}}
+{{--                        <div class="table-responsive orders-list-table">--}}
+{{--                            <table class="table table-borderless table-striped products-list-table">--}}
+{{--                                <thead>--}}
+{{--                                <tr>--}}
+{{--                                    <th >@lang('Item')</th>--}}
+{{--                                    <th >@lang('Quantity')</th>--}}
+{{--                                    <th >@lang('Date In')</th>--}}
+{{--                                    <th >@lang('Date Out')</th>--}}
+{{--                                    <th >@lang('Last Updated')</th>--}}
+{{--                                </tr>--}}
+{{--                                </thead>--}}
+{{--                                <tbody>--}}
+{{--                                @if ($lowInventory)--}}
+{{--                                    @foreach ($lowInventory as  $product)--}}
+{{--                                        <tr>--}}
+{{--                                            <td class="align-middle">{{ $product->item_no }}</td>--}}
+{{--                                            <td><span class="badge badge-lg badge-danger"> {{ $product->quantity }} </span></td>--}}
+{{--                                            <td class="align-middle">{{ $product->date_in }}</td>--}}
+{{--                                            <td class="align-middle">{{ $product->date_out }}</td>--}}
+{{--                                            <td class="align-middle">{{ diff4Human($product->updated_at) }}</td>--}}
+{{--                                        </tr>--}}
+{{--                                    @endforeach--}}
+{{--                                @else--}}
+{{--                                    <tr>--}}
+{{--                                        <td colspan="12">--}}
+{{--                                            No Orders found--}}
+{{--                                        </td>--}}
+{{--                                    </tr>--}}
+{{--                                @endif--}}
+{{--                                </tbody>--}}
+{{--                            </table>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--        </div>--}}
+    </div>
 
     <div class="container mt-3">
             <div class="row">
@@ -191,7 +202,7 @@
                     <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 1 ? 'selected' :''}}" data-supplier="1" >
                         <div class="card-body">
                             <div class="text-center">
-                                <img src="{{ url('assets/img/dashboard/vf.png') }}" alt="{{ setting('app_name') }}" height="300">
+                                <img src="{{ url('assets/img/dashboard/vf.png') }}" class="img-fluid" alt="{{ setting('app_name') }}" height="300">
                             </div>
                             <div class="text-center mt-3 text-primary">
                                 <b>Virgin Farms Inventory</b>
@@ -203,7 +214,7 @@
                     <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 2 ? 'selected' :''}}" data-supplier="2">
                         <div class="card-body">
                             <div class="text-center">
-                                <img src="{{ url('assets/img/dashboard/dutch.png') }}" alt="{{ setting('app_name') }}" height="300">
+                                <img src="{{ url('assets/img/dashboard/dutch.png') }}" class="img-fluid" alt="{{ setting('app_name') }}" height="300">
                             </div>
                             <div class="text-center mt-3 text-danger">
                                 <b>Dutch Flowers</b>
@@ -215,7 +226,7 @@
                     <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 3 ? 'selected' :''}}" data-supplier="3">
                         <div class="card-body">
                             <div class="text-center">
-                                <img src="{{ url('assets/img/dashboard/special.png') }}" alt="{{ setting('app_name') }}" height="300">
+                                <img src="{{ url('assets/img/dashboard/special.png') }}" class="img-fluid" alt="{{ setting('app_name') }}" height="300">
                             </div>
                             <div class="text-center mt-3 text-warning">
                                 <b>Special Offers</b>
