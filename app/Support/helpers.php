@@ -295,7 +295,7 @@ function itsMeUser(){
 function getSalesReps(){
     #if any change plz check this too 1,2,3 getCubeSizeTax
     return [
-        '0' => 'Select',
+        '0' => 'Select Sales Rep',
         'Esteban' => 'Esteban',
         'Joe' => 'Joe',
         'Mario' => 'Mario',

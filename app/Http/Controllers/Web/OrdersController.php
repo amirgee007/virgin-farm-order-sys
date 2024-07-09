@@ -16,10 +16,12 @@ use Vanguard\User;
 class OrdersController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
 
         $search = \request()->search;
         $user = \request()->user_id;
+        $sales_rep = \request()->sales_rep;
 
         $yesId = str_starts_with($search, 'WO');
 
@@ -31,29 +33,31 @@ class OrdersController extends Controller
         $users = [$user_id => auth()->user()->first_name];
 
         #client showing and else is in ADMIN.
-        if($user_id)
-            $query->where('user_id' , $user_id);
-        else{
-            $users = User::where('status' , UserStatus::ACTIVE)
-                ->orderby('first_name')
-                ->pluck('first_name', 'id')
-                ->toArray();
+//        if($user_id)
+//            $query->where('user_id' , $user_id);
+//        else{
+//            $users = User::where('status' , UserStatus::ACTIVE)
+//                ->orderby('first_name')
+//                ->pluck('first_name', 'id')
+//                ->toArray();
+//
+//            $users = [0 => 'Show All']+$users;
+//        }
 
-            $users = [0 => 'Show All']+$users;
+//        if($user){
+//            $query->where('user_id' , $user);
+//        }
+
+        if ($sales_rep) {
+            $query->where('sales_rep', $sales_rep);
         }
 
-        if($user){
-            $query->where('user_id' , $user);
-        }
-
-        if($yesId){
-            $id = str_replace("WO","",$search);;
+        if ($yesId) {
+            $id = str_replace("WO", "", $search);;
             $query->where(function ($q) use ($id) {
                 $q->orWhere('id', 'like', $id);
             });
-        }
-
-        elseif($search){
+        } elseif ($search) {
             $query->where(function ($q) use ($search) {
                 $q->orWhere('name', 'like', "%{$search}%");
                 $q->orWhere('company', 'like', "%{$search}%");
@@ -66,32 +70,32 @@ class OrdersController extends Controller
         $orders = $query->paginate(100);
 
         $isAdmin = myRoleName() == 'Admin';
-        return view('orders.index' , compact('orders','count' , 'user_id' , 'users' , 'isAdmin'));
+        $salesRep = getSalesReps();
+        return view('orders.index', compact('orders', 'count', 'user_id', 'users', 'isAdmin', 'salesRep'));
     }
 
-    public function updateOrder($id, $type){
+    public function updateOrder($id, $type)
+    {
         #markCompeted, ##delete
         $order = Order::find($id);
 
-        if($type == 'markCompeted'){
+        if ($type == 'markCompeted') {
             $order->update([
                 'is_active' => 0
             ]);
 
             #admin notify about status.
-            $message = 'Your order status has been updated : Wo-'.$order->id;
-            addOwnNotification($message ,$order->id , $order->user_id);
-        }
-        else if($type == 'markNotApproved'){
+            $message = 'Your order status has been updated : Wo-' . $order->id;
+            addOwnNotification($message, $order->id, $order->user_id);
+        } else if ($type == 'markNotApproved') {
             $order->update([
                 'is_active' => 2
             ]);
 
             #admin notify about status. and We are reviewing what to do in this case–as the product will be returned to the inventory pending
-            $message = 'Your order status has been updated : Wo-'.$order->id .' and our sales representative will contact you soon.';
-            addOwnNotification($message ,$order->id , $order->user_id);
-        }
-        else if($type == 'delete'){
+            $message = 'Your order status has been updated : Wo-' . $order->id . ' and our sales representative will contact you soon.';
+            addOwnNotification($message, $order->id, $order->user_id);
+        } else if ($type == 'delete') {
             $order->items()->delete();
             $order->delete();
         }
@@ -125,7 +129,7 @@ class OrdersController extends Controller
     {
         try {
 
-            User::where('id' , auth()->id())->update(['edit_order_id' => $request->order_id]);
+            User::where('id', auth()->id())->update(['edit_order_id' => $request->order_id]);
             auth()->user()->fresh();
 
             $user = auth()->user();

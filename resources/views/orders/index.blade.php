@@ -86,10 +86,10 @@
                             <div class="col-md-2 mt-2 mt-md-0">
                                 {!!
                                     Form::select(
-                                        'user_id',
-                                        $users,
-                                        Request::get('user_id'),
-                                        ['id' => 'user_id', 'class' => 'form-control input-solid']
+                                        'sales_rep',
+                                        $salesRep,
+                                        Request::get('sales_rep'),
+                                        ['id' => 'sales_rep', 'class' => 'form-control input-solid']
                                     )
                                 !!}
                             </div>
@@ -213,7 +213,7 @@
                 });
             });
 
-            $("#user_id").change(function () {
+            $("#sales_rep").change(function () {
                 $("#orders-form").submit();
             });
         });

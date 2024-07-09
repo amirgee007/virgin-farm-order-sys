@@ -176,6 +176,7 @@ class CartController extends Controller
             $total = 0;
             $order = Order::create([
                 'user_id' => $user->id,
+                'sales_rep' => $user->sales_rep,
                 'full_add_on' => $full_add_on, #we will use it on cart and if needed will show on orders page later on.
                 'date_shipped' => $date_shipped,
                 'carrier_id' => $carrier_id,
