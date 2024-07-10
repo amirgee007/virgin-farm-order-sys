@@ -367,7 +367,7 @@
                 e.preventDefault();
 
                 $.ajax({
-                    url: '{{ route("unit_of_measures.store") }}',
+                    url: '{{ route("unit_of_measures.update") }}',
                     method: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
