@@ -197,17 +197,27 @@
                 </tbody>
             </table>
         </div>
-
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Unit Of Measures (Detail + Total Bunches)</h5>
+                <h5 class="card-title">Unit Of Measures (Detail + Total Bunches)
+                    <a href="#" class="btn btn-primary btn-rounded float-right btn-sm" data-toggle="modal" data-target="#createUOMModal">
+                        <i class="fas fa-plus mr-2"></i>
+                        @lang('Add New UOM')
+                    </a>
+                </h5>
                 <div class="table-responsive" id="users-table-wrapper">
                     <table class="table table-borderless table-striped table-sm">
                         <thead>
+                            <tr>
+                                <th>Unit</th>
+                                <th>Detail</th>
+                                <th>Total</th>
+                                <th class="float-right">Last Update</th>
+                            </tr>
+                        </thead>
                         @foreach($unitOfMeasure as $measure)
                             <tr>
-                                <th>
-{{--                               <b>{{$measure->unit}}</b>--}}
+                                <td>
                                     <a class="editable"
                                        style="cursor:pointer;"
                                        data-name="unit"
@@ -217,8 +227,7 @@
                                        data-url="{{route('unit_of_measures.update')}}"
                                        data-value=" {{$measure->unit}}">
                                     </a>
-                                </th>
-                                <td>
+                                </td>
                                 <td class="align-middle">
                                     <a class="editable"
                                        style="cursor:pointer;"
@@ -257,8 +266,6 @@
 
 {!! $boxes->render() !!}
 
-
-<!-- Create boxes Modal -->
 <div class="modal fade" id="createBoxModal" tabindex="-1" role="dialog" aria-labelledby="createBoxModal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -269,6 +276,42 @@
                 </button>
             </div>
             @include('boxes.create')
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createUOMModal" tabindex="-1" aria-labelledby="createUOMModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createModalLabel">Create/Update Unit of Measure</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="createForm">
+                    @csrf
+                    <input type="hidden" name="is_adding_new" value="1">
+                    <div class="form-group">
+                        <label for="unit">Unit</label>
+                        <input type="text" class="form-control" id="unit" name="unit" placeholder="Unit i.e U123" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="detail">Detail</label>
+                        <input type="text" class="form-control" id="detail" name="detail" placeholder="Pack 3 Stems" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="total">Total</label>
+                        <input type="number" class="form-control" id="total" name="total" placeholder="10,20 etc" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary float-right ">Create UOM</button>
+{{--                    <button type="button" class="btn btn-secondary float-right pr-2" data-dismiss="modal">Close</button>--}}
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -317,6 +360,29 @@
     @include('partials.toaster-js')
     <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#createForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '{{ route("unit_of_measures.store") }}',
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        $('#createModal').modal('hide');
+                        toastr.success('New UOM added succesfully.');
+                        location.reload();
+                    },
+                    error: function(response) {
+                        toastr.error('Something went wrong plz check with admin.');
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
 
     <script>
 

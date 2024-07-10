@@ -15,7 +15,6 @@ Route::post('update-cart-notes', [CartController::class, 'saveOrderNotes'])->nam
 
 Route::post('/api/validate-cart-size', 'CartController@validateCartSelection');
 
-
 /**
  * Authentication
  */

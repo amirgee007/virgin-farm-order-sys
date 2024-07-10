@@ -17,6 +17,7 @@ class BoxesController extends Controller
         $this->middleware('auth');
     }
 
+
     /**
      * Display products page page.
      *
@@ -94,10 +95,30 @@ class BoxesController extends Controller
     public function unitOfMeasuresUpdate(Request $request)
     {
         try {
-            UnitOfMeasure::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
-            return ['Done'];
+
+            if($request->is_adding_new){
+                $request->validate([
+                    'unit' => 'required|string|max:255',
+                    'detail' => 'required|string|max:255',
+                    'total' => 'required|integer',
+                ]);
+
+                UnitOfMeasure::create([
+                    'unit' => $request->unit,
+                    'detail' => $request->detail,
+                    'total' => $request->total,
+                ]);
+
+                return response()->json(['success' => true]);
+
+            }
+            else{
+                UnitOfMeasure::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
+                return ['Done'];
+            }
 
         } catch (\Exception $ex) {
+            \Log::error($ex->getMessage() . ' error message during updation of message.');
         }
 
     }
