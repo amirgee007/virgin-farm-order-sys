@@ -2,67 +2,185 @@
 
 @section('page-title', __('Sign Up'))
 
-
 @section('content')
 
-    <div class="col-md-8 col-lg-6 col-xl-5 mx-auto my-10p">
+    <div class="col-md-8 col-lg-8 col-xl-6 mx-auto my-5p">
         <div class="text-center">
-            <img src="{{ url('assets/img/vanguard-logo.png') }}" alt="{{ setting('app_name') }}" height="50">
+            <img src="{{ url('assets/img/vanguard-logo.png') }}" alt="{{ setting('app_name') }}" height="100">
         </div>
 
-        <div class="card mt-5">
+        <div class="card mt-4">
             <div class="card-body">
-                <h5 class="card-title text-center mt-4 text-uppercase">
+                <h5 class="card-title text-center text-uppercase">
                     @lang('Register')
                 </h5>
 
-                <div class="p-4">
-{{--                    @include('auth.social.buttons')--}}
-
+                <div class="p-3">
                     @include('partials/messages')
 
-                    <form role="form" action="<?= url('register') ?>" method="post" id="registration-form" autocomplete="off" class="mt-3">
+                    <form role="form" action="<?= url('register') ?>" method="post" id="registration-form"
+                          autocomplete="off" class="mt-3">
                         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
-                        <div class="form-group">
-                            <input type="email"
-                                   name="email"
-                                   id="email"
-                                   class="form-control input-solid"
-                                   placeholder="@lang('Email')"
-                                   value="{{ old('email') }}">
-                        </div>
-                        <div class="form-group">
-                            <input type="text"
-                                   name="username"
-                                   id="username"
-                                   class="form-control input-solid"
-                                   placeholder="@lang('Username')"
-                                   value="{{ old('username') }}">
-                        </div>
-                        <div class="form-group">
-                            <input type="password"
-                                   name="password"
-                                   id="password"
-                                   class="form-control input-solid"
-                                   placeholder="@lang('Password')">
-                        </div>
-                         <div class="form-group">
-                            <input type="password"
-                                   name="password_confirmation"
-                                   id="password_confirmation"
-                                   class="form-control input-solid"
-                                   placeholder="@lang('Confirm Password')">
+
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="first_name"
+                                       id="first_name"
+                                       class="form-control input-solid"
+                                       placeholder="First Name"
+                                       value="{{ old('first_name') }}"
+                                       required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="last_name"
+                                       id="last_name"
+                                       class="form-control input-solid"
+                                       placeholder="Last Name"
+                                       value="{{ old('last_name') }}"
+                                       required>
+                            </div>
                         </div>
 
-{{--                        @if (setting('tos'))--}}
-{{--                            <div class="custom-control custom-checkbox">--}}
-{{--                                <input type="checkbox" class="custom-control-input" name="tos" id="tos" value="1"/>--}}
-{{--                                <label class="custom-control-label font-weight-normal" for="tos">--}}
-{{--                                    @lang('I accept')--}}
-{{--                                    <a href="#tos-modal" data-toggle="modal">@lang('Terms of Service')</a>--}}
-{{--                                </label>--}}
-{{--                            </div>--}}
-{{--                        @endif--}}
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="company_name"
+                                       id="company_name"
+                                       class="form-control input-solid"
+                                       placeholder="Company Name"
+                                       value="{{ old('company_name') }}"
+                                       required>
+                            </div>
+                            <div class="form-group col-6">
+                                <input type="tel"
+                                       name="phone"
+                                       id="phone"
+                                       class="form-control input-solid"
+                                       placeholder="Phone No"
+                                       value="{{ old('phone') }}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <input type="email"
+                                       name="email"
+                                       id="email"
+                                       class="form-control input-solid"
+                                       placeholder="Email"
+                                       value="{{ old('email') }}">
+                            </div>
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="username"
+                                       id="username"
+                                       class="form-control input-solid"
+                                       placeholder="Username"
+                                       value="{{ old('username') }}">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <input type="password"
+                                       name="password"
+                                       id="password"
+                                       class="form-control input-solid"
+                                       placeholder="Password">
+                            </div>
+                            <div class="form-group col-6">
+                                <input type="password"
+                                       name="password_confirmation"
+                                       id="password_confirmation"
+                                       class="form-control input-solid"
+                                       placeholder="Confirm Password">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <select name="sales_rep"
+                                        id="sales_rep"
+                                        class="form-control input-solid"
+                                        required>
+                                    <option value="">If you are an older customer, please select here</option>
+                                    <option value="Mario">Mario</option>
+                                    <option value="Robert">Robert</option>
+                                    <option value="Joe">Joe</option>
+                                    <option value="Nestor">Nestor</option>
+                                    <option value="Peter">Peter</option>
+                                    <option value="Esteban">Esteban</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-12">
+            <textarea name="address"
+                      id="address"
+                      class="form-control input-solid"
+                      placeholder="Shipping Address"
+                      rows="3"
+                      required>{{ old('address') }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <input type="text"
+                                       name="apt_suit"
+                                       id="apt_suit"
+                                       class="form-control input-solid"
+                                       placeholder="Appt/Suite"
+                                       value="{{ old('apt_suit') }}"
+                                       required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="city"
+                                       id="city"
+                                       class="form-control input-solid"
+                                       placeholder="City"
+                                       value="{{ old('city') }}"
+                                       required>
+                            </div>
+
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="state"
+                                       id="state"
+                                       class="form-control input-solid"
+                                       placeholder="State"
+                                       value="{{ old('state') }}"
+                                       required>
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="zip"
+                                       id="zip"
+                                       class="form-control input-solid"
+                                       placeholder="Zip"
+                                       value="{{ old('zip') }}"
+                                       required>
+                            </div>
+
+                            <div class="form-group col-6">
+                                <input type="text"
+                                       name="ship_method"
+                                       id="ship_method"
+                                       class="form-control input-solid"
+                                       placeholder="Shipping Method"
+                                       value="{{ old('ship_method') }}"
+                                       required>
+                            </div>
+                        </div>
 
                         <div class="form-group mt-4">
                             <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-login">
@@ -70,6 +188,8 @@
                             </button>
                         </div>
                     </form>
+
+
                 </div>
             </div>
         </div>

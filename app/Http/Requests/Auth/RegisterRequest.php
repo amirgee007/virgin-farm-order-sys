@@ -15,9 +15,19 @@ class RegisterRequest extends Request
     public function rules()
     {
         $rules = [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'company_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:50',
             'email' => 'required|email|unique:users,email',
             'username' => 'required|unique:users,username',
             'password' => 'required|confirmed|min:8',
+            'address' => 'required|string|max:500',
+            'apt_suit' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'state' => 'required|string|max:255',
+            'zip' => 'required|string|max:10',
+            'ship_method' => 'required|string|max:255',
         ];
 
 //        if (setting('registration.captcha.enabled')) {
@@ -56,7 +66,9 @@ class RegisterRequest extends Request
             ? UserStatus::UNCONFIRMED
             : UserStatus::ACTIVE;
 
-        return array_merge($this->only('email', 'username', 'password'), [
+        #ship_method remaning here yet.
+        return array_merge($this->only('email', 'username', 'password' ,'first_name', 'last_name',
+            'company_name', 'phone', 'sales_rep', 'address', 'apt_suit', 'city', 'state', 'zip'), [
             'status' => $status,
             'email_verified_at' => setting('reg_email_confirmation') ? null : now()
         ]);
