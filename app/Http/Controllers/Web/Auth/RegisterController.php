@@ -14,7 +14,7 @@ class RegisterController extends Controller
     public function __construct(private UserRepository $users)
     {
         $this->middleware('registration')->only('show', 'register');
-        
+
     }
 
     /**

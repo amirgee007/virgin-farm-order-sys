@@ -557,7 +557,7 @@ class ProductsController extends Controller
                         #check here if products have any other with descriton mathced then we can check and updated here.
                         #i.e plz check with chritst here and then if all ok then make that logic as corrected.
                         $products = Product::where('product_text', 'like', "%{$sku}%")->get();
-                        if (count($products) > 0 && trlen($sku) >= 4) {
+                        if (count($products) > 0 && strlen($sku) >= 4) {
                             foreach ($products as $product) {
                                 $product->update(['image_url' => $url]);
                             }
