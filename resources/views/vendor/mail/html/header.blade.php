@@ -1,7 +1,5 @@
 <tr>
     <td class="header">
-        <a href="{{ $url }}">
-            {{ $slot }}
-        </a>
+        <img class="rounded-circle img-thumbnail" src="{{ asset('assets/img/inf_logo.jpg') }}" alt="INF" >
     </td>
 </tr>

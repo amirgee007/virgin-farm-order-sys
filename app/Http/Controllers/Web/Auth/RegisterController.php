@@ -5,6 +5,7 @@ namespace Vanguard\Http\Controllers\Web\Auth;
 use Illuminate\Auth\Events\Registered;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
+use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
 use Vanguard\Support\Enum\UserStatus;
@@ -49,6 +50,18 @@ class RegisterController extends Controller
             : __('Your account is created successfully!');
 
         \Auth::login($user);
+
+        $userFullName = $user->name;
+        $userEmailAddress = $user->email;
+        $content = '<p>New user has been successfully registered on Virgin farms order system. Here are the details of the new user:</p>'
+            . '<ul>'
+            . '<li><strong>Full Name:</strong> ' . $userFullName . '</li>'
+            . '<li><strong>Email Address:</strong> ' . $userEmailAddress . '</li>'
+            . '</ul>';
+
+        \Mail::to('weborders@virginfarms.com')
+            ->cc('amirseersol@gmail.com')
+            ->send(new VirginFarmGlobalMail('New User Registration Notification', $content));
 
         return redirect('/')->with('success', $message);
     }

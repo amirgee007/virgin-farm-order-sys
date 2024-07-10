@@ -6,6 +6,17 @@
 </head>
 <body>
     <style>
+        .table-content {
+            font-size: 12px !important;
+            font-weight: bold; !important;
+        }
+        .inner-body {
+            font-size: 12px !important;
+            width: 700px !important;
+        }
+        .im {
+            color: #000000 !important;
+        }
         @media only screen and (max-width: 600px) {
             .inner-body {
                 width: 100% !important;
@@ -14,25 +25,34 @@
             .footer {
                 width: 100% !important;
             }
+            .table-content {
+                font-weight: bold; !important;
+            }
         }
 
         @media only screen and (max-width: 500px) {
             .button {
                 width: 100% !important;
+            },
+            .inner-body {
+                width: 100% !important;
+        }
+            .table-content {
+                font-weight: bold; !important;
             }
         }
     </style>
 
-    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+    <table class="wrapper" width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td align="center">
-                <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <table class="content" width="100%" cellpadding="0" cellspacing="0">
                     {{ $header ?? '' }}
 
                     <!-- Email Body -->
                     <tr>
                         <td class="body" width="100%" cellpadding="0" cellspacing="0">
-                            <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                            <table class="inner-body" align="center"  cellpadding="0" cellspacing="0">
                                 <!-- Body content -->
                                 <tr>
                                     <td class="content-cell">
