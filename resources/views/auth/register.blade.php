@@ -17,7 +17,7 @@
                 </h5>
 
                 <div class="p-4">
-                    @include('auth.social.buttons')
+{{--                    @include('auth.social.buttons')--}}
 
                     @include('partials/messages')
 
@@ -54,15 +54,15 @@
                                    placeholder="@lang('Confirm Password')">
                         </div>
 
-                        @if (setting('tos'))
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" name="tos" id="tos" value="1"/>
-                                <label class="custom-control-label font-weight-normal" for="tos">
-                                    @lang('I accept')
-                                    <a href="#tos-modal" data-toggle="modal">@lang('Terms of Service')</a>
-                                </label>
-                            </div>
-                        @endif
+{{--                        @if (setting('tos'))--}}
+{{--                            <div class="custom-control custom-checkbox">--}}
+{{--                                <input type="checkbox" class="custom-control-input" name="tos" id="tos" value="1"/>--}}
+{{--                                <label class="custom-control-label font-weight-normal" for="tos">--}}
+{{--                                    @lang('I accept')--}}
+{{--                                    <a href="#tos-modal" data-toggle="modal">@lang('Terms of Service')</a>--}}
+{{--                                </label>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
 
                         <div class="form-group mt-4">
                             <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-login">

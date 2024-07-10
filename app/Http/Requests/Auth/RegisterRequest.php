@@ -20,9 +20,9 @@ class RegisterRequest extends Request
             'password' => 'required|confirmed|min:8',
         ];
 
-        if (setting('registration.captcha.enabled')) {
-            $rules['g-recaptcha-response'] = 'required|captcha';
-        }
+//        if (setting('registration.captcha.enabled')) {
+//            $rules['g-recaptcha-response'] = 'required|captcha';
+//        }
 
         if (setting('tos')) {
             $rules['tos'] = 'accepted';
