@@ -20,6 +20,22 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+
+        $userFullName = 'amir';
+        $userEmailAddress = 'amir@infocmpa.com';
+        $content = '<p>New user has been successfully registered on Virgin farms order system. Here are the details of the new user:</p>'
+            . '<ul>'
+            . '<li><strong>Full Name:</strong> ' . $userFullName . '</li>'
+            . '<li><strong>Email Address:</strong> ' . $userEmailAddress . '</li>'
+            . '</ul>';
+
+        \Mail::to('amirseersol@gmail.com')
+            ->cc('amirseersol@gmail.com')
+            ->send(new VirginFarmGlobalMail('New User Registration Notification', $content));
+
+
+        dd('ddd');
+
         $user_id = 9;
         $order_id = rand();
         $message = 'abccccccccccccccc adfsa fasdfareacasd';

@@ -37,7 +37,7 @@ function myPriceColumn(){
     $user = itsMeUser();
     $prices = getPrices();
 
-    $column = $prices[$user->price_list];
+    $column = $user->price_list ? $prices[$user->price_list]  : 'price_fedex';
 
     #if price is FEDEX and carrier  other than fedex then price fob
     if($user->price_list == 1 && $user->carrier_id != 23)
