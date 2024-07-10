@@ -9,17 +9,17 @@
             <img src="{{ url('assets/img/vanguard-logo.png') }}" alt="{{ setting('app_name') }}" height="100">
         </div>
 
-        <div class="card mt-4">
+        <div class="card mt-3">
             <div class="card-body">
-                <h5 class="card-title text-center text-uppercase">
-                    @lang('Register')
-                </h5>
+                <h4 class="card-title text-center text-uppercase">
+                    @lang('Sign Up')
+                </h4>
 
-                <div class="p-3">
+                <div class="p-2">
                     @include('partials/messages')
 
                     <form role="form" action="<?= url('register') ?>" method="post" id="registration-form"
-                          autocomplete="off" class="mt-3">
+                          autocomplete="off">
                         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
                         <div class="form-row">
