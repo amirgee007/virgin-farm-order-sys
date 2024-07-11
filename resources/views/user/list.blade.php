@@ -94,7 +94,10 @@
                 <tr>
                     <th></th>
                     <th class="min-width-80">@lang('Username')</th>
-                    <th class="min-width-80">@lang('Approved')</th>
+                    <th class="min-width-80"
+                        title="Once admin confirm the account is ok to use then click here to approve client to be login and use."
+                        data-toggle="tooltip" data-placement="top"
+                    >@lang('Approved')</th>
                     <th class="min-width-150">@lang('Full Name')</th>
                     <th class="min-width-100">@lang('Email')</th>
                     <th class="min-width-100">@lang('Address')</th>
