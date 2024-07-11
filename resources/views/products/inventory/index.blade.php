@@ -384,6 +384,27 @@
             });
         });
 
+        previousCarrier = $('#changeCarrier').val();
+        $('#changeCarrier').on('change', function () {
+
+            var carrier_id = $(this).val();
+            if (!confirm("Are you sure you wish to change carrier?")) {
+                $(this).val(previousCarrier);
+                return;
+            }
+
+            $.ajax({
+                url: '{{route('carriers.create.update')}}',
+                data: {carrier_id},
+                type: 'POST',
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                success: function (response) {
+                    toastr.success("Your career has been updated successfully.", "Success");
+                    location.reload();
+                }
+            });
+        });
+
         $('#date_shipped, #category').change(function () {
 
             if ($(this).attr('id') === 'date_shipped'){
@@ -466,81 +487,6 @@
             window.location.href = newUrl; // Redirect to the new URL
         }
 
-        previousCarrier = $('#changeCarrier').val();
-        $('#changeCarrier').on('change', function () {
-
-            var carrier_id = $(this).val();
-            if (!confirm("Are you sure you wish to change carrier?")) {
-                $(this).val(previousCarrier);
-                return;
-            }
-
-            $.ajax({
-                url: '{{route('carriers.create.update')}}',
-                data: {carrier_id},
-                type: 'POST',
-                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                success: function (response) {
-                    toastr.success("Your career has been updated successfully.", "Success");
-                    location.reload();
-                }
-            });
-        });
-
-        $(".add-to-cart").click(function (event) {
-
-            {{--var _this = $(this);--}}
-            {{--var product_id = _this.data("id");--}}
-
-            {{--$.ajax({--}}
-            {{--url: "{{ route('product.add.to.cart') }}",--}}
-            {{--method: 'post',--}}
-            {{--data: {--}}
-            {{--product_id: product_id--}}
-            {{--},--}}
-            {{--success: function (data) {--}}
-            {{--if (data.result) {--}}
-            {{--toastr.success("Product added to cart successfully.", "Success");--}}
-            {{--//reload if needed--}}
-            {{--//window.location.href = window.location.href + "#myItems";--}}
-            {{--//location.reload();--}}
-            {{--}--}}
-            {{--else {--}}
-            {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
-            {{--}--}}
-            {{--}--}}
-            {{--});--}}
-
-        });
-
-
-        //#later when need to make it more accurate VIA AJAX
-        {{--$(".add-to-cart").click(function (event) {--}}
-
-        {{--var _this = $(this);--}}
-        {{--var product_id = _this.data("id");--}}
-
-        {{--$.ajax({--}}
-        {{--url: "{{ route('product.add.to.cart') }}",--}}
-        {{--method: 'post',--}}
-        {{--data: {--}}
-        {{--product_id: product_id--}}
-        {{--},--}}
-        {{--success: function (data) {--}}
-        {{--if (data.result) {--}}
-        {{--toastr.success("Product added to cart successfully.", "Success");--}}
-        {{--//reload if needed--}}
-        {{--//window.location.href = window.location.href + "#myItems";--}}
-        {{--//location.reload();--}}
-        {{--}--}}
-        {{--else {--}}
-        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
-        {{--}--}}
-        {{--}--}}
-        {{--});--}}
-
-        {{--});--}}
-
         $( document ).ready(function(){
 
             const searchParams = new URLSearchParams(window.location.search);
@@ -598,5 +544,58 @@
                 }, 250);
             });
         });
+
+        $(".add-to-cart").click(function (event) {
+
+            {{--var _this = $(this);--}}
+            {{--var product_id = _this.data("id");--}}
+
+            {{--$.ajax({--}}
+            {{--url: "{{ route('product.add.to.cart') }}",--}}
+            {{--method: 'post',--}}
+            {{--data: {--}}
+            {{--product_id: product_id--}}
+            {{--},--}}
+            {{--success: function (data) {--}}
+            {{--if (data.result) {--}}
+            {{--toastr.success("Product added to cart successfully.", "Success");--}}
+            {{--//reload if needed--}}
+            {{--//window.location.href = window.location.href + "#myItems";--}}
+            {{--//location.reload();--}}
+            {{--}--}}
+            {{--else {--}}
+            {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+            {{--}--}}
+            {{--}--}}
+            {{--});--}}
+
+        });
+
+        //#later when need to make it more accurate VIA AJAX
+        {{--$(".add-to-cart").click(function (event) {--}}
+
+        {{--var _this = $(this);--}}
+        {{--var product_id = _this.data("id");--}}
+
+        {{--$.ajax({--}}
+        {{--url: "{{ route('product.add.to.cart') }}",--}}
+        {{--method: 'post',--}}
+        {{--data: {--}}
+        {{--product_id: product_id--}}
+        {{--},--}}
+        {{--success: function (data) {--}}
+        {{--if (data.result) {--}}
+        {{--toastr.success("Product added to cart successfully.", "Success");--}}
+        {{--//reload if needed--}}
+        {{--//window.location.href = window.location.href + "#myItems";--}}
+        {{--//location.reload();--}}
+        {{--}--}}
+        {{--else {--}}
+        {{--toastr.error("Something went wrong please contact admin.", "Error");--}}
+        {{--}--}}
+        {{--}--}}
+        {{--});--}}
+
+        {{--});--}}
     </script>
 @endsection
