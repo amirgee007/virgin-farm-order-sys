@@ -98,7 +98,7 @@ class UsersController extends Controller
 
         if (false && $request->is_approved) {
             // Send email notification
-            \Mail::raw('Your account has been approved. Please login to the website.', function ($message) use ($user) {
+            \Mail::raw('Your account has been approved. Please login to the website. https://virginfarms.net/', function ($message) use ($user) {
                 $message->to($user->email)
                     ->subject('Virgin farms Account Approved');
             });

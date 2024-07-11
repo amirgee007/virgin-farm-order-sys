@@ -126,8 +126,7 @@
 @stop
 
 @section('scripts')
-    <!-- Include Bootstrap Switch JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
+    @include('partials.toaster-js')
     <script>
         $(document).ready(function() {
 
