@@ -28,9 +28,15 @@ Route::group(['middleware' => ['registration', 'guest']], function () {
 
 Route::emailVerification();
 
+#few routes need to do without login, and other middlewares.
 Route::get('/help-faq', [
     'as' => 'help.faq.index',
     'uses' => 'HelpController@index'
+]);
+
+Route::get('/update-faq-status', [
+    'as' => 'update.faq.read.status',
+    'uses' => 'DashboardController@updateFaqRead'
 ]);
 
 
@@ -61,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::impersonate();
 });
 
-Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
+Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
 
     /**
      * Dashboard
@@ -74,12 +80,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
         'uses' => 'DashboardController@updateSupplier'
     ]);
 
-    Route::get('/update-faq-status', [
-        'as' => 'update.faq.read.status',
-        'uses' => 'DashboardController@updateFaqRead'
-    ]);
-
-    Route::group(['prefix'=>'products'], function() {
+    Route::group(['prefix' => 'products'], function () {
 
         #its for client ONLY
         Route::get('/inventory', [
@@ -156,7 +157,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
 
     });
 
-    Route::group(['prefix'=>'orders'], function() {
+    Route::group(['prefix' => 'orders'], function () {
 
         Route::post('/date-carrier-validation', [
             'as' => 'date-carrier-validation',
@@ -184,7 +185,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
         ]);
     });
 
-    Route::group(['prefix'=>'boxes'], function() {
+    Route::group(['prefix' => 'boxes'], function () {
         Route::get('/', [
             'as' => 'boxes.index',
             'uses' => 'BoxesController@index'
@@ -211,7 +212,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
         ]);
     });
 
-    Route::group(['prefix'=>'notifications'], function() {
+    Route::group(['prefix' => 'notifications'], function () {
 
         Route::get('/', [
             'as' => 'notifications.index',
@@ -225,7 +226,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
     });
 
 
-    Route::group(['prefix'=>'carriers'], function() {
+    Route::group(['prefix' => 'carriers'], function () {
         Route::get('/{id?}', [
             'as' => 'carriers.index',
             'uses' => 'CarriersController@index'
@@ -237,7 +238,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
         ]);
     });
 
-    Route::group(['prefix'=>'help-faq'], function() {
+    Route::group(['prefix' => 'help-faq'], function () {
         Route::get('/edit', [
             'as' => 'help.faq.edit',
             'uses' => 'HelpController@edit'
@@ -250,7 +251,7 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
     });
 
 
-    Route::group(['prefix'=>'shipping-address'], function() {
+    Route::group(['prefix' => 'shipping-address'], function () {
         Route::get('/', [
             'as' => 'shipping.address.index',
             'uses' => 'ShippingController@index'
@@ -292,9 +293,6 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
         'as' => 'categories.update',
         'uses' => 'ProductsController@updateCategory'
     ]);
-
-
-
 
 
     /**
