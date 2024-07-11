@@ -12,7 +12,6 @@ Route::get('empty-cart', [CartController::class, 'emptyCart'])->name('empty.cart
 Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name('checkout.cart'); #done DB
 Route::post('update-cart-notes', [CartController::class, 'saveOrderNotes'])->name('cart.save.notes'); #done DB
 
-
 Route::post('/api/validate-cart-size', 'CartController@validateCartSelection');
 
 /**
@@ -28,6 +27,12 @@ Route::group(['middleware' => ['registration', 'guest']], function () {
 });
 
 Route::emailVerification();
+
+Route::get('/help-faq', [
+    'as' => 'help.faq.index',
+    'uses' => 'HelpController@index'
+]);
+
 
 Route::group(['middleware' => ['password-reset', 'guest']], function () {
     Route::resetPassword();
@@ -233,11 +238,6 @@ Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
     });
 
     Route::group(['prefix'=>'help-faq'], function() {
-        Route::get('/', [
-            'as' => 'help.faq.index',
-            'uses' => 'HelpController@index'
-        ]);
-
         Route::get('/edit', [
             'as' => 'help.faq.edit',
             'uses' => 'HelpController@edit'

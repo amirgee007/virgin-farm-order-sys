@@ -19,9 +19,14 @@
                         <form action="{{ route('verification.resend') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="d-inline btn btn-link p-0">
-                                {{ __('click here to request another') }}
+                                {{ __('click here to request another email') }}
                             </button>.
                         </form>
+
+                        <br><br><hr>
+
+                        <h5 class="fas fa-info-circle"> Meanwhile Check out our help and FAQs Page by <a href="{{ route('help.faq.index') }}">Clicking Here</a>.</h5>
+
                     </div>
                 </div>
             </div>

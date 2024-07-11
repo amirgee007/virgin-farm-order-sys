@@ -54,7 +54,6 @@ class RegisterController extends Controller
         $content = '<p>New user has been successfully registered on Virgin farms order system. Here are the details of the new user:</p>'
             . '<ul>'
             . '<li><strong>Full Name:</strong> ' . $user->name . '</li>'
-            . '<li><strong>Last Name:</strong> ' . $user->last_name . '</li>'
             . '<li><strong>Company Name:</strong> ' . $user->company_name . '</li>'
             . '<li><strong>Phone No:</strong> ' . $user->phone . '</li>'
             . '<li><strong>Email:</strong> ' . $user->email . '</li>'
@@ -63,7 +62,7 @@ class RegisterController extends Controller
             . '<li><strong>Shipping Address:</strong> ' . $user->address . '</li>'
             . '<li><strong>Appt/Suite:</strong> ' . $user->apt_suit . '</li>'
             . '<li><strong>City:</strong> ' . $user->city . '</li>'
-            . '<li><strong>State:</strong> ' . $user->state . '</li>'
+            . '<li><strong>State:</strong> ' . @$user->usState->state_name . '</li>'
             . '<li><strong>Zip:</strong> ' . $user->zip . '</li>'
             . '<li><strong>Shipping Method:</strong> ' . @$user->carrier->carrier_name . '</li>'
             . '</ul>';
