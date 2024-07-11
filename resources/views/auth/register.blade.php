@@ -255,6 +255,7 @@
                     $('#new_customer_message').hide();
                 } else if ($('#new_customer').is(':checked')) {
                     $('#sales_rep').hide();
+                    $('#sales_rep-error').hide();
                     $('#new_customer_message').show();
                 }
             });
