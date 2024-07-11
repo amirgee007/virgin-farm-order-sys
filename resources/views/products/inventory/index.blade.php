@@ -399,7 +399,7 @@
                     success: function(response) {
                         if (response.error) {
                             swal("Unavailable for Ship Date & Carrier.", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
-                            $('#date_shipped').val('');
+                            $('#date_shipped').val(response.old_ship_date);
                             return '';
                         }
                         else

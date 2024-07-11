@@ -152,6 +152,7 @@ class OrdersController extends Controller
     {
         $dateShipped = $request->input('date_shipped');
         $usersCarrierId = auth()->user()->carrier_id;
+        $lastShipDate = auth()->user()->last_ship_date;
 
         if ($dateShipped == date('Y-m-d')) {
             $currentTime = Carbon::now();
@@ -161,7 +162,7 @@ class OrdersController extends Controller
 
             // Check if current time is past 3:30 PM and carrir is fedex and PU only.
             if ($currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $carrierMatch)) {
-                return response()->json(['error' => true, 'message' => '']);
+                return response()->json(['error' => true, 'old_ship_date' => $lastShipDate]);
             }
         }
 
