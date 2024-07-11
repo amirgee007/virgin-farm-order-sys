@@ -56,7 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::impersonate();
 });
 
-Route::group(['middleware' => ['auth', 'verified']], function () {
+Route::group(['middleware' => ['auth', 'verified' , 'approved']], function () {
 
     /**
      * Dashboard

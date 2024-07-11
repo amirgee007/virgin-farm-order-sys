@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">{{ __('Verify Your Email Address') }}</h5>
+                        <h5 class="card-title">{{ __('Verify Your Email Address & Wait for Pending Account Approval By Admin.') }}</h5>
 
                         @if (session('resent'))
                             <div class="alert alert-success" role="alert">

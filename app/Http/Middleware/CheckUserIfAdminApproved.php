@@ -16,6 +16,7 @@ class CheckUserIfAdminApproved
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check() && !auth()->user()->is_approved) {
+            auth()->logout();
             return redirect('/')->with('error', 'Your account is not approved yet.');
         }
 
