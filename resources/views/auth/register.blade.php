@@ -17,7 +17,6 @@
 
                 <div class="p-2">
                     @include('partials/messages')
-
                     <form role="form" action="<?= url('register') ?>" method="post" id="registration-form"
                           autocomplete="off">
                         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
@@ -100,13 +99,26 @@
                             </div>
                         </div>
 
+                        <!-- Add the new radio buttons -->
+                        <div class="form-row">
+                            <div class="form-group col-12">
+                                <label>
+                                    <input type="radio" name="customer_type" checked value="current" id="current_customer"> Current Customer
+                                </label>
+                                &nbsp;
+                                <label>
+                                    <input type="radio" name="customer_type" value="new" id="new_customer"> New Customer
+                                </label>
+                            </div>
+                        </div>
+
                         <div class="form-row">
                             <div class="form-group col-12">
                                 <select name="sales_rep"
                                         id="sales_rep"
                                         class="form-control input-solid"
                                         required>
-                                    <option value="">If you are an older customer, please select here</option>
+                                    <option value="">Who sales representative is.</option>
                                     <option value="Mario">Mario</option>
                                     <option value="Robert">Robert</option>
                                     <option value="Joe">Joe</option>
@@ -114,9 +126,10 @@
                                     <option value="Peter">Peter</option>
                                     <option value="Esteban">Esteban</option>
                                 </select>
+                                <p id="new_customer_message" class="text-danger" style="display: none;"><b>Sales Representative will be assigned later.</b></p>
                             </div>
                             <div class="form-group col-12">
-            <textarea name="address"
+                <textarea name="address"
                       id="address"
                       class="form-control input-solid"
                       placeholder="Shipping Address"
@@ -172,13 +185,18 @@
                             </div>
 
                             <div class="form-group col-6">
-                                <input type="text"
-                                       name="ship_method"
-                                       id="ship_method"
-                                       class="form-control input-solid"
-                                       placeholder="Shipping Method"
-                                       value="{{ old('ship_method') }}"
-                                       required>
+                                <select class="form-control form-control-md"
+                                        name="ship_method"
+                                        id="ship_method"
+                                        title="Select Shipping Method how you want to ship the items?"
+                                        data-trigger="hover"
+                                        data-toggle="tooltip">
+                                    <option hidden value="">Select Shipping Method</option>
+                                    @foreach(getCarriers() AS $key => $name)
+                                        <option value="{{$key}}" > {{$name}} </option>
+                                    @endforeach
+                                </select>
+
                             </div>
                         </div>
 
@@ -188,8 +206,6 @@
                             </button>
                         </div>
                     </form>
-
-
                 </div>
             </div>
         </div>
@@ -230,4 +246,18 @@
 
 @section('scripts')
     {!! JsValidator::formRequest('Vanguard\Http\Requests\Auth\RegisterRequest', '#registration-form') !!}
+
+    <script>
+        $(document).ready(function() {
+            $('input[name="customer_type"]').change(function() {
+                if ($('#current_customer').is(':checked')) {
+                    $('#sales_rep').show();
+                    $('#new_customer_message').hide();
+                } else if ($('#new_customer').is(':checked')) {
+                    $('#sales_rep').hide();
+                    $('#new_customer_message').show();
+                }
+            });
+        });
+    </script>
 @stop

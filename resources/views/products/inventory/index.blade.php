@@ -121,7 +121,6 @@
                                          <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
                                      @endforeach
                                  </select>
-
                              </label>
 
                         </b>

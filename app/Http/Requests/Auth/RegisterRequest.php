@@ -22,6 +22,7 @@ class RegisterRequest extends Request
             'email' => 'required|email|unique:users,email',
             'username' => 'required|unique:users,username',
             'password' => 'required|confirmed|min:8',
+            'sales_rep' => 'required|string|max:100',
             'address' => 'required|string|max:500',
             'apt_suit' => 'required|string|max:255',
             'city' => 'required|string|max:255',
@@ -29,6 +30,10 @@ class RegisterRequest extends Request
             'zip' => 'required|string|max:10',
             'ship_method' => 'required|string|max:255',
         ];
+
+        if ($this->input('customer_type') === 'current') {
+            $rules['sales_rep'] = 'required|string|max:255';
+        }
 
 //        if (setting('registration.captcha.enabled')) {
 //            $rules['g-recaptcha-response'] = 'required|captcha';

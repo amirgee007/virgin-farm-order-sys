@@ -20,13 +20,22 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
-
-        $userFullName = 'amir';
-        $userEmailAddress = 'amir@infocmpa.com';
+        $user = User::first();
         $content = '<p>New user has been successfully registered on Virgin farms order system. Here are the details of the new user:</p>'
             . '<ul>'
-            . '<li><strong>Full Name:</strong> ' . $userFullName . '</li>'
-            . '<li><strong>Email Address:</strong> ' . $userEmailAddress . '</li>'
+            . '<li><strong>Full Name:</strong> ' . $user->first_name.' '.$user->last_name . '</li>'
+            . '<li><strong>Last Name:</strong> ' . $user->last_name . '</li>'
+            . '<li><strong>Company Name:</strong> ' . $user->company_name . '</li>'
+            . '<li><strong>Phone No:</strong> ' . $user->phone . '</li>'
+            . '<li><strong>Email:</strong> ' . $user->email . '</li>'
+            . '<li><strong>Username:</strong> ' . $user->username . '</li>'
+            . '<li><strong>Sales Representative:</strong> ' . $user->sales_rep . '</li>'
+            . '<li><strong>Shipping Address:</strong> ' . $user->address . '</li>'
+            . '<li><strong>Appt/Suite:</strong> ' . $user->apt_suit . '</li>'
+            . '<li><strong>City:</strong> ' . $user->city . '</li>'
+            . '<li><strong>State:</strong> ' . $user->state . '</li>'
+            . '<li><strong>Zip:</strong> ' . $user->zip . '</li>'
+            . '<li><strong>Shipping Method:</strong> ' . $user->ship_method . '</li>'
             . '</ul>';
 
         \Mail::to('amirseersol@gmail.com')
