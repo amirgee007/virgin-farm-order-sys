@@ -13,7 +13,7 @@
 
         <div class="col-md-4">
             <div class="form-group">
-                <label for="status">@lang('Status')</label>
+                <label for="status">@lang('Email Status')</label>
                 {!! Form::select('status', $statuses, $edit ? $user->status : '',
                     ['class' => 'form-control input-solid', 'id' => 'status', $profile ? '' : '']) !!}
             </div>
