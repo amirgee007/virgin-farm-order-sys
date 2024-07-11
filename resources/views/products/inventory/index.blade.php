@@ -393,14 +393,35 @@
                 return;
             }
 
+            var date_shipped = $("#date_shipped").val();
             $.ajax({
-                url: '{{route('carriers.create.update')}}',
-                data: {carrier_id},
-                type: 'POST',
-                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                success: function (response) {
-                    toastr.success("Your career has been updated successfully.", "Success");
-                    location.reload();
+                url: '{{ route("date-carrier-validation") }}',
+                method: 'POST',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    date_shipped,carrier_id
+                },
+                success: function(response) {
+                    if (response.error) {
+                        swal("Unavailable for Ship Date & Carrier.", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
+                        $('#changeCarrier').val(previousCarrier);
+                        return '';
+                    }
+                    else{
+                        $.ajax({
+                            url: '{{route('carriers.create.update')}}',
+                            data: {carrier_id},
+                            type: 'POST',
+                            headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                            success: function (response) {
+                                toastr.success("Your career has been updated successfully.", "Success");
+                                location.reload();
+                            }
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
                 }
             });
         });
@@ -409,7 +430,6 @@
 
             if ($(this).attr('id') === 'date_shipped'){
                 var dateShipped = $(this).val();
-
                 $.ajax({
                     url: '{{ route("date-carrier-validation") }}',
                     method: 'POST',

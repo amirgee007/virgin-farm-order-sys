@@ -150,10 +150,15 @@ class OrdersController extends Controller
 
     public function dateCarrierValidation(Request $request)
     {
-        $dateShipped = $request->input('date_shipped');
-        $usersCarrierId = auth()->user()->carrier_id;
+        $dateShipped = $request->input('date_shipped') ?? auth()->user()->last_ship_date;
+        $usersCarrierId = $request->input('carrier_id') ?? auth()->user()->carrier_id;
         $lastShipDate = auth()->user()->last_ship_date;
 
+        $data = [
+            'error' => false
+        ];
+
+        #this one we called when date change.
         if ($dateShipped == date('Y-m-d')) {
             $currentTime = Carbon::now();
             $cutoffTime = Carbon::createFromTimeString('14:30:00'); // 2:30 PM will make later 3:30
@@ -162,11 +167,12 @@ class OrdersController extends Controller
 
             // Check if current time is past 3:30 PM and carrir is fedex and PU only.
             if ($currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $carrierMatch)) {
-                return response()->json(['error' => true, 'old_ship_date' => $lastShipDate]);
+                $data['error'] = true;
+                $data['old_ship_date'] = $lastShipDate;
             }
         }
 
-        return response()->json(['error' => false]);
+        return response()->json($data);
     }
 
 
