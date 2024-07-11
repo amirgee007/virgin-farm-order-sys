@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
@@ -146,4 +147,26 @@ class OrdersController extends Controller
             return response()->json($data);
         }
     }
+
+    public function dateCarrierValidation(Request $request)
+    {
+        $dateShipped = $request->input('date_shipped');
+        $usersCarrierId = auth()->user()->carrier_id;
+
+        if ($dateShipped == date('Y-m-d')) {
+            $currentTime = Carbon::now();
+            $cutoffTime = Carbon::createFromTimeString('14:30:00'); // 2:30 PM will make later 3:30
+
+            $carrierMatch = [23, 32]; #PU and Fedex
+
+            // Check if current time is past 3:30 PM and carrir is fedex and PU only.
+            if ($currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $carrierMatch)) {
+                return response()->json(['error' => true, 'message' => '']);
+            }
+        }
+
+        return response()->json(['error' => false]);
+    }
+
+
 }

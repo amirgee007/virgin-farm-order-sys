@@ -385,8 +385,34 @@
         });
 
         $('#date_shipped, #category').change(function () {
-            var date = $(this).val();
-            $("#filters-form").submit();
+
+            if ($(this).attr('id') === 'date_shipped'){
+                var dateShipped = $(this).val();
+
+                $.ajax({
+                    url: '{{ route("date-carrier-validation") }}',
+                    method: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        date_shipped: dateShipped
+                    },
+                    success: function(response) {
+                        if (response.error) {
+                            swal("Unavailable for Ship Date & Carrier.", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
+                            $('#date_shipped').val('');
+                            return '';
+                        }
+                        else
+                            $("#filters-form").submit();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', status, error);
+                    }
+                });
+            }
+            else{
+                $("#filters-form").submit();
+            }
         });
 
         $('#changeAddress').on('change', function () {

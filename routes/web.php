@@ -152,6 +152,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     });
 
     Route::group(['prefix'=>'orders'], function() {
+
+        Route::post('/date-carrier-validation', [
+            'as' => 'date-carrier-validation',
+            'uses' => 'OrdersController@dateCarrierValidation'
+        ]);
+
         Route::get('/', [
             'as' => 'orders.index',
             'uses' => 'OrdersController@index'
