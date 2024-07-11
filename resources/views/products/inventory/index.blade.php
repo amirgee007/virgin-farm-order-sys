@@ -4,7 +4,6 @@
 @section('page-heading', __('Client Inventory'))
 
 @section ('styles')
-
     <style>
         .radius{
             border-radius: 2.5px;

@@ -90,6 +90,23 @@ class UsersController extends Controller
         ]);
     }
 
+    public function approve(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_approved = $request->is_approved;
+        $user->save();
+
+        if (false && $request->is_approved) {
+            // Send email notification
+            \Mail::raw('Your account has been approved. Please login to the website.', function ($message) use ($user) {
+                $message->to($user->email)
+                    ->subject('Virgin farms Account Approved');
+            });
+        }
+
+        return response()->json(['success' => true]);
+    }
+
     /**
      * Parse countries into an array that also has a blank
      * item as first element, which will allow users to

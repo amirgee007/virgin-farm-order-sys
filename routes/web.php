@@ -326,6 +326,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'uses' => 'Users\UsersController@adminLogin'
     ]);
 
+    Route::post('/users/approve/{id}', [
+        'as' => 'users.approve',
+        'uses' => 'Users\UsersController@approve'
+    ]);
+
     Route::group(['prefix' => 'users/{user}', 'middleware' => 'permission:users.manage'], function () {
         Route::put('update/details', 'Users\DetailsController@update')->name('users.update.details');
         Route::put('update/login-details', 'Users\LoginDetailsController@update')

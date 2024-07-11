@@ -7,6 +7,33 @@
     <li class="breadcrumb-item active">
         @lang('Clients & Admins')
     </li>
+
+@stop
+
+@section ('styles')
+    <style>
+        .loader {
+            height: 60px !important;
+        }
+        .users-list-table th, .users-list-table td {
+            padding: 0.25rem !important;
+        }
+        .users-list-table {
+            font-weight: 400 !important;
+            font-size: 13px !important;
+            line-height: 1.228571429 !important;
+        }
+        button {
+            font-size: 11px !important;
+            font-weight: 400 !important;
+        }
+        caption {
+            caption-side:top;
+        }
+        tr:hover > td {
+            cursor: pointer !important;
+        }
+    </style>
 @stop
 
 @section('content')
@@ -62,11 +89,12 @@
         </form>
 
         <div class="table-responsive" id="users-table-wrapper">
-            <table class="table table-borderless table-striped">
+            <table class="table table-borderless table-striped users-list-table">
                 <thead>
                 <tr>
                     <th></th>
                     <th class="min-width-80">@lang('Username')</th>
+                    <th class="min-width-80">@lang('Approved')</th>
                     <th class="min-width-150">@lang('Full Name')</th>
                     <th class="min-width-100">@lang('Email')</th>
                     <th class="min-width-100">@lang('Address')</th>
@@ -98,9 +126,35 @@
 @stop
 
 @section('scripts')
+    <!-- Include Bootstrap Switch JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js"></script>
     <script>
-        $("#status").change(function () {
-            $("#users-form").submit();
+        $(document).ready(function() {
+
+            $("#status").change(function () {
+                $("#users-form").submit();
+            });
+
+            $('.approved-toggle').change(function() {
+                var userId = $(this).data('id');
+                var isApproved = $(this).is(':checked') ? 1 : 0;
+
+                $.ajax({
+                    url: '{{ route('users.approve', '') }}/' + userId,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        is_approved: isApproved
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success("User approval status updated successfully.", "Message");
+                        } else {
+                            toastr.error("An error occurred. Please try again.", "Error");
+                        }
+                    }
+                });
+            });
         });
     </script>
 @stop

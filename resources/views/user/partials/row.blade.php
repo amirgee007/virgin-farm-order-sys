@@ -8,11 +8,27 @@
                 alt="{{ $user->present()->name }}">
         </a>
     </td>
+
     <td class="align-middle">
         <a href="{{ route('users.show', $user) }}">
             {{ $user->username ?: __('N/A') }}
         </a>
     </td>
+
+    <td>
+        <div class="switch switch-sm mt-3">
+            <input
+                class="switch approved-toggle"
+                role="switch"
+                data-id="{{ $user->id }}"
+                id="is_approved_{{$user->id}}"
+                name="is_approved"
+                {{ $user->is_approved ? 'checked' : '' }}
+                type="checkbox" />
+            <label for="is_approved_{{$user->id}}"></label>
+        </div>
+    </td>
+
     <td class="align-middle">{{ $user->first_name . ' ' . $user->last_name . '('.$user->customer_number.')'}}</td>
     <td class="align-middle">{{ $user->email }}</td>
     <td class="align-middle">{{ $user->address }}</td>
