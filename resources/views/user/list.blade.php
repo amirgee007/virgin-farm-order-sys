@@ -70,10 +70,10 @@
                     <th class="min-width-150">@lang('Full Name')</th>
                     <th class="min-width-100">@lang('Email')</th>
                     <th class="min-width-100">@lang('Address')</th>
-                    <th class="min-width-80">@lang('Registration Date')</th>
+                    <th class="min-width-80">@lang('Signup Date')</th>
                     <th class="min-width-80">@lang('Company')</th>
                     <th class="min-width-80">@lang('Role')</th>
-                    <th class="min-width-80">@lang('Status')</th>
+                    <th class="min-width-80">@lang('Email Status')</th>
                     <th class="text-center min-width-150">@lang('Action')</th>
                 </tr>
                 </thead>
