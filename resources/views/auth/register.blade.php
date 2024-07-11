@@ -186,8 +186,8 @@
 
                             <div class="form-group col-6">
                                 <select class="form-control form-control-md"
-                                        name="ship_method"
-                                        id="ship_method"
+                                        name="carrier_id"
+                                        id="carrier_id"
                                         title="Select Shipping Method how you want to ship the items?"
                                         data-trigger="hover"
                                         data-toggle="tooltip">

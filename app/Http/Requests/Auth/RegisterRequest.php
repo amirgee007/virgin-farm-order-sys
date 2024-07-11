@@ -28,7 +28,7 @@ class RegisterRequest extends Request
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'ship_method' => 'required|string|max:255',
+            'carrier_id' => 'required|string|max:255',
         ];
 
         if ($this->input('customer_type') === 'current') {
@@ -73,7 +73,7 @@ class RegisterRequest extends Request
 
         #ship_method remaning here yet.
         return array_merge($this->only('email', 'username', 'password' ,'first_name', 'last_name',
-            'company_name', 'phone', 'sales_rep', 'address', 'apt_suit', 'city', 'state', 'zip'), [
+            'company_name', 'phone', 'sales_rep', 'address', 'apt_suit', 'city', 'state', 'zip' , 'carrier_id'), [
             'status' => $status,
             'email_verified_at' => setting('reg_email_confirmation') ? null : now()
         ]);

@@ -65,7 +65,7 @@ class RegisterController extends Controller
             . '<li><strong>City:</strong> ' . $user->city . '</li>'
             . '<li><strong>State:</strong> ' . $user->state . '</li>'
             . '<li><strong>Zip:</strong> ' . $user->zip . '</li>'
-            . '<li><strong>Shipping Method:</strong> ' . $user->ship_method . '</li>'
+            . '<li><strong>Shipping Method:</strong> ' . @$user->carrier->carrier_name . '</li>'
             . '</ul>';
 
         \Mail::to('weborders@virginfarms.com')
