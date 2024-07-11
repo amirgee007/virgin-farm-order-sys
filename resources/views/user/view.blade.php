@@ -103,7 +103,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Terms'):</strong>
-                        {{  $terms[$user->terms]}}
+                        {{  @$terms[$user->terms]}}
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Credit limit'):</strong>
