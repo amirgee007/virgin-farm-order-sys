@@ -22,7 +22,6 @@ class RegisterRequest extends Request
             'email' => 'required|email|unique:users,email',
             'username' => 'required|unique:users,username',
             'password' => 'required|confirmed|min:8',
-            'sales_rep' => 'required|string|max:100',
             'address' => 'required|string|max:500',
             'apt_suit' => 'nullable|string|max:255',
             'city' => 'required|string|max:255',

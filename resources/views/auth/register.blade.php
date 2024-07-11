@@ -116,8 +116,7 @@
                             <div class="form-group col-12">
                                 <select name="sales_rep"
                                         id="sales_rep"
-                                        class="form-control input-solid"
-                                        required>
+                                        class="form-control input-solid">
                                     <option value="">Indicate Sales Representative</option>
                                     <option value="Mario">Mario</option>
                                     <option value="Robert">Robert</option>
