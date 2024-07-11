@@ -161,13 +161,7 @@
                             </div>
 
                             <div class="form-group col-6">
-                                <input type="text"
-                                       name="state"
-                                       id="state"
-                                       class="form-control input-solid"
-                                       placeholder="State"
-                                       value="{{ old('state') }}"
-                                       required>
+                                {!! Form::select('state', getStates(), '', ['class' => 'form-control input-solid']) !!}
                             </div>
 
                         </div>
