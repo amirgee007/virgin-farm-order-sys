@@ -393,6 +393,10 @@
                 return;
             }
 
+            if(carrier_id != 23 && carrier_id != 32){
+                swal("Reminder", " Refer to your trucking line's ship date schedule. Please place orders 1 DAY PRIOR before 4 p.m. EST.", "info");
+            }
+
             var date_shipped = $("#date_shipped").val();
             $.ajax({
                 url: '{{ route("date-carrier-validation") }}',
@@ -415,7 +419,9 @@
                             headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                             success: function (response) {
                                 toastr.success("Your career has been updated successfully.", "Success");
-                                location.reload();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 3000); // 3000 milliseconds = 5 seconds
                             }
                         });
                     }
