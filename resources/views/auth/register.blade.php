@@ -118,7 +118,7 @@
                                         id="sales_rep"
                                         class="form-control input-solid"
                                         required>
-                                    <option value="">Who sales representative is.</option>
+                                    <option value="">Indicate Sales Representative</option>
                                     <option value="Mario">Mario</option>
                                     <option value="Robert">Robert</option>
                                     <option value="Joe">Joe</option>
@@ -126,7 +126,7 @@
                                     <option value="Peter">Peter</option>
                                     <option value="Esteban">Esteban</option>
                                 </select>
-                                <p id="new_customer_message" class="text-danger" style="display: none;"><b>Sales Representative will be assigned later.</b></p>
+                                <p id="new_customer_message" class="text-danger" style="display: none;"><b>Sales Representative will be assigned upon confirmation.</b></p>
                             </div>
                             <div class="form-group col-12">
                 <textarea name="address"
