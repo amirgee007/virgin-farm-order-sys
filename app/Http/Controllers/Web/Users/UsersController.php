@@ -96,11 +96,11 @@ class UsersController extends Controller
         $user->is_approved = $request->is_approved;
         $user->save();
 
-        if (false && $request->is_approved) {
+        if ($request->is_approved) {
             // Send email notification
-            \Mail::raw('Your account has been approved. Please login to the website. https://virginfarms.net/', function ($message) use ($user) {
+            \Mail::raw('We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.', function ($message) use ($user) {
                 $message->to($user->email)
-                    ->subject('Virgin farms Account Approved');
+                    ->subject('Your Account is Approved - Start Shopping Today!');
             });
         }
 
