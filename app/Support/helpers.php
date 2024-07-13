@@ -275,7 +275,7 @@ function getStates(){
 
 function round2Digit($number){
     $roundedValue = round(floatval($number), 2);
-    return number_format($roundedValue, 2);
+    return number_format($roundedValue, 2, '.', '');
 }
 function diff4Human($date ){
     return is_null($date) ? 'n/a' : Carbon::parse($date)->diffForHumans();
