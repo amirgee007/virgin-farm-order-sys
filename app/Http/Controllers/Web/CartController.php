@@ -297,7 +297,8 @@ class CartController extends Controller
         }
 
         $input = $request->input('selection');
-        $sizeHere = $input > 45 ? 45 - $input : $input;
+
+        $sizeHere = $input > 45 ? $input % 45 : $input;
 
         $ranges = Box::get(['min_value', 'max_value'])->pluck('max_value', 'min_value')->toArray();
         $nextMinimumNeeded = null;

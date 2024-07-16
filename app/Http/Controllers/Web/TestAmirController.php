@@ -20,6 +20,16 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+        #current size before method callings is: 111.41
+        # cart:931 current size and next max limit is: -66.41 18
+
+
+        $request = Request::create('/', 'GET', ['selection' => 135 ]);
+
+        $ok = (new CartController())->validateCartSelection($request);
+
+
+        dd($ok);
         $user = User::first();
         $content = '<p>New user has been successfully registered on Virgin farms order system. Here are the details of the new user:</p>'
             . '<ul>'
