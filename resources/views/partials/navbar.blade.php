@@ -59,11 +59,11 @@
 
 {{--                            <div id="message"></div>--}}
 
-                            <div id="progress-container"
-                                 title="You are closed to meet the size criteria."
-                                 data-toggle="tooltip"
-                                 data-placement="top"
-                                 style="position: relative; width: 50px; height: 50px;"></div>
+{{--                            <div id="progress-container"--}}
+{{--                                 title="You are closed to meet the size criteria."--}}
+{{--                                 data-toggle="tooltip"--}}
+{{--                                 data-placement="top"--}}
+{{--                                 style="position: relative; width: 50px; height: 50px;"></div>--}}
 
                             {{--<span class="badge badge-pill badge-danger">{{ count($myCarts)  }}</span>--}}
                         </div>
