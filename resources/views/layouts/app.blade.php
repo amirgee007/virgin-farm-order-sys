@@ -174,6 +174,8 @@
 
             const size = $("#itsSizeDynamic").val();
 
+            console.log('current size before method callings is: ' + size);
+
             fetch('/api/validate-cart-size', {
                 method: 'POST',
                 headers: {
