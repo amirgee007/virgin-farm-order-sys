@@ -43,6 +43,7 @@ class RegisterController extends Controller
             array_merge($request->validFormData(), ['role_id' => $roles->findByName('Client')->id])
         );
 
+
         event(new Registered($user));
 
         $message = setting('reg_email_confirmation')

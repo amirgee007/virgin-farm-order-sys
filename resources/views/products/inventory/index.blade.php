@@ -320,10 +320,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Small</td>
-                                <td>5-6 bunches</td>
-                            </tr>
+
                             <tr>
                                 <td>Medium</td>
                                 <td>6-8 bunches</td>
