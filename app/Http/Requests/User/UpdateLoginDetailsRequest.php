@@ -17,7 +17,12 @@ class UpdateLoginDetailsRequest extends Request
         $user = $this->getUserForUpdate();
 
         return [
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email,' . $user->id,
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+            ],
             'username' => 'nullable|unique:users,username,' . $user->id,
             'password' => 'nullable|min:8|confirmed'
         ];
