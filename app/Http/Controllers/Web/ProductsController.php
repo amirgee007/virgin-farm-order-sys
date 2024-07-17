@@ -339,7 +339,7 @@ class ProductsController extends Controller
         ini_set('max_execution_time', 18000);
 
         #reset and delete zero qty products
-        $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0 ORDER BY `quantity` ASC");
+        $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0");
         $missing = [];
 
         if ($request->hasFile('file')) {
@@ -348,11 +348,7 @@ class ProductsController extends Controller
                 'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
 
-            ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->update([
-                'quantity' => 0,
-                'date_in' => null,
-                'date_out' => null,
-            ]);
+            ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->delete();
 
             $excel = $request->file('file');
 
