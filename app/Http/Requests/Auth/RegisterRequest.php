@@ -19,7 +19,12 @@ class RegisterRequest extends Request
             'last_name' => 'required|string|max:255',
             'company_name' => 'required|string|max:255',
             'phone' => 'required|string|max:50',
-            'email' => 'required|email|unique:users,email',
+            'email' => [
+                'required',
+                'email',
+                'unique:users,email',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
+            ],
             'username' => 'required|unique:users,username',
             'password' => 'required|confirmed|min:8',
             'address' => 'required|string|max:500',
