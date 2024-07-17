@@ -348,6 +348,12 @@ class ProductsController extends Controller
                 'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
 
+            ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->update([
+                'quantity' => 0,
+                'date_in' => null,
+                'date_out' => null,
+            ]);
+
             $excel = $request->file('file');
 
             $filename = $excel->getClientOriginalName();
@@ -640,12 +646,6 @@ class ProductsController extends Controller
             'date_in' => null,
             'date_out' => null,
         ]);
-
-//        ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->update([
-//            'quantity' => 0,
-//            'date_in' => null,
-//            'date_out' => null,
-//        ]);
 
         session()->flash('app_message', 'Inventory has been reset successfully.');
         return back();

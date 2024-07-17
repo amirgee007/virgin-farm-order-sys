@@ -23,11 +23,9 @@ class TestAmirController extends Controller
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18
 
-
         $request = Request::create('/', 'GET', ['selection' => 90.73+18 ]);
 
         $ok = (new CartController())->validateCartSelection($request);
-
 
         dd($ok);
         $user = User::first();
@@ -51,7 +49,6 @@ class TestAmirController extends Controller
         \Mail::to('amirseersol@gmail.com')
             ->cc('amirseersol@gmail.com')
             ->send(new VirginFarmGlobalMail('New User Registration Notification', $content));
-
 
         dd('ddd');
 
