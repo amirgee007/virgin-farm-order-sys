@@ -415,7 +415,7 @@
                             type: 'POST',
                             headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
                             success: function (response) {
-                                toastr.success("Your career has been updated successfully.", "Success");
+                                toastr.success("Your carrier has been updated successfully.", "Success");
                                 setTimeout(function() {
                                     location.reload();
                                 }, 3000); // 3000 milliseconds = 5 seconds

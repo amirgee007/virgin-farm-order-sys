@@ -24,7 +24,7 @@ class TestAmirController extends Controller
         # cart:931 current size and next max limit is: -66.41 18
 
 
-        $request = Request::create('/', 'GET', ['selection' => 135 ]);
+        $request = Request::create('/', 'GET', ['selection' => 90.73+18 ]);
 
         $ok = (new CartController())->validateCartSelection($request);
 
