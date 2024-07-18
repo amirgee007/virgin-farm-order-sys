@@ -443,34 +443,36 @@ class ProductsController extends Controller
 
                         $product = Product::where('item_no', trim($row[0]))->first();
 
-                        $data = [
-                            'product_id' => $product->id,
-                            'item_no' => $product->item_no,
-                            'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
-                            'date_in' => $date_in,
-                            'date_out' => $date_out,
-
-                            'price_fedex' => $product->def_price_fedex,
-                            'price_fob' => $product->def_price_fob,
-                            'price_hawaii' => $product->def_price_hawaii,
-                        ];
-
-                        #here if any price is zero then get price from master file and use it.
-
-                        // Conditionally add prices to the data array if they are greater than zero
-                        if (floatval(trim($row[2])) > 0) {
-                            $data['price_fedex'] = trim($row[2]);
-                        }
-                        if (floatval(trim($row[3])) > 0) {
-                            $data['price_fob'] = trim($row[3]);
-                        }
-                        if (floatval(trim($row[4])) > 0) {
-                            $data['price_hawaii'] = trim($row[4]);
-                        }
-
-                        #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
-
                         if ($product) {
+
+                            $data = [
+                                'product_id' => $product->id,
+                                'item_no' => $product->item_no,
+                                'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
+                                'date_in' => $date_in,
+                                'date_out' => $date_out,
+
+                                'price_fedex' => $product->def_price_fedex,
+                                'price_fob' => $product->def_price_fob,
+                                'price_hawaii' => $product->def_price_hawaii,
+                            ];
+
+                            #here if any price is zero then get price from master file and use it.
+
+                            // Conditionally add prices to the data array if they are greater than zero
+                            if (floatval(trim($row[2])) > 0) {
+                                $data['price_fedex'] = trim($row[2]);
+                            }
+                            if (floatval(trim($row[3])) > 0) {
+                                $data['price_fob'] = trim($row[3]);
+                            }
+                            if (floatval(trim($row[4])) > 0) {
+                                $data['price_hawaii'] = trim($row[4]);
+                            }
+
+                            #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
+
+
                             ProductQuantity::updateOrCreate([
                                 'product_id' => $product->id,
                                 'item_no' => $product->item_no,
@@ -488,7 +490,7 @@ class ProductsController extends Controller
                         }
 
                     } catch (\Exception $exception) {
-                        Log::error('Error during inventory import ' . $exception->getMessage());
+                        Log::error('Error during inventory import plz check ' . $exception->getMessage());
                     }
                 }
 
