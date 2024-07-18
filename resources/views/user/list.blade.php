@@ -22,6 +22,7 @@
             font-weight: 400 !important;
             font-size: 13px !important;
             line-height: 1.228571429 !important;
+            margin-bottom: 75px;
         }
         button {
             font-size: 11px !important;

@@ -50,13 +50,7 @@
                 <i class="fas fa-ellipsis-h"></i>
             </a>
 
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                @if (config('session.driver') == 'database')
-                    <a href="{{ route('user.sessions', $user) }}" class="dropdown-item text-gray-500">
-                        <i class="fas fa-list mr-2"></i>
-                        @lang('User Sessions')
-                    </a>
-                @endif
+            <div class="dropdown-menu dropdown-menu-sm-left" aria-labelledby="dropdownMenuLink">
                 <a href="{{ route('users.show', $user) }}" class="dropdown-item text-gray-500">
                     <i class="fas fa-eye mr-2"></i>
                     @lang('View User')
@@ -66,6 +60,13 @@
                     <i class="fas fa-arrow-right mr-2"></i>
                     @lang('Login By This User')
                 </a>
+
+{{--                @if (config('session.driver') == 'database')--}}
+{{--                    <a href="{{ route('user.sessions', $user) }}" class="dropdown-item text-gray-500">--}}
+{{--                        <i class="fas fa-list mr-2"></i>--}}
+{{--                        @lang('User Sessions')--}}
+{{--                    </a>--}}
+{{--                @endif--}}
 
                 {{--@canBeImpersonated($user)--}}
                     {{--<a href="{{ route('impersonate', $user) }}" class="dropdown-item text-gray-500 impersonate">--}}
