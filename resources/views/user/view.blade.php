@@ -95,7 +95,7 @@
 
                     <li class="list-group-item">
                         <strong>@lang('Price List'):</strong>
-                        {{ $prices[$user->price_list] }}
+                        {{ @$prices[$user->price_list] }}
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Contract Code'):</strong>
