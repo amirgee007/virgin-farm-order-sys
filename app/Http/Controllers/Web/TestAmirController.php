@@ -33,57 +33,106 @@ class TestAmirController extends Controller
 
     public function findBoxes($size)
     {
-        $boxes = $this->findBoxCombination($size, $this->boxes);
+        list($boxes, $nextSize, $percentage) = $this->findBoxCombination($size, $this->boxes);
 
         return response()->json([
             'size' => $size,
-            'boxes' => $boxes
+            'boxes' => $boxes,
+            'next_size' => $nextSize,
+            'percentage' => $percentage
         ]);
     }
 
     private function findBoxCombination($size, $boxes)
     {
-        // Sort boxes by MIN_CUBE for better combination searching
+        // Sort boxes by MIN_CUBE in descending order to prioritize larger boxes
         usort($boxes, function($a, $b) {
-            return $a['MIN_CUBE'] <=> $b['MIN_CUBE'];
+            return $b['MIN_CUBE'] <=> $a['MIN_CUBE'];
         });
 
-        // Check if size fits in any single box
-        foreach ($boxes as $box) {
-            if ($size >= $box['MIN_CUBE'] && $size <= $box['MAX_CUBE']) {
-                return [$box];
-            }
-        }
-
-        // Try to find the smallest combination of boxes
         $result = [];
-        while ($size > 0) {
+        $remainingSize = $size;
+
+        // Try to find the largest combination of boxes
+        while ($remainingSize > 0) {
             $found = false;
+
+            // Check for pairs of the largest boxes first to prevent using smaller boxes unnecessarily
             foreach ($boxes as $box) {
-                if ($size >= $box['MIN_CUBE'] && $size <= $box['MAX_CUBE']) {
-                    $result[] = $box;
-                    $size -= $box['MIN_CUBE'];
+                while ($remainingSize >= $box['MIN_CUBE'] * 2) {
+                    $result[] = $box['BOXES'];
+                    $result[] = $box['BOXES'];
+                    $remainingSize -= $box['MIN_CUBE'] * 2;
+                    $found = true;
+                }
+                if ($found) {
+                    break;
+                }
+            }
+
+            if ($found) {
+                continue;
+            }
+
+            // Check for the largest single box that can fit
+            foreach ($boxes as $box) {
+                if ($remainingSize >= $box['MIN_CUBE']) {
+                    $result[] = $box['BOXES'];
+                    $remainingSize -= $box['MIN_CUBE'];
                     $found = true;
                     break;
                 }
             }
+
             if (!$found) {
-                // If no exact fit, find the closest smaller box
-                foreach (array_reverse($boxes) as $box) {
-                    if ($size >= $box['MIN_CUBE']) {
-                        $result[] = $box;
-                        $size -= $box['MIN_CUBE'];
-                        break;
-                    }
-                }
+                // If no suitable box found, break to avoid infinite loop
+                break;
             }
         }
-        return $result;
+
+        $nextSize = $this->calculateNextSize($remainingSize, $size);
+        $percentage = $this->calculatePercentage($size, $nextSize);
+
+        return [$result, $nextSize, $percentage];
     }
 
+    private function calculateNextSize($remainingSize, $size)
+    {
+        // Find the next minimum size required to reach a valid box size
+        foreach ($this->boxes as $box) {
+            if ($remainingSize < $box['MIN_CUBE']) {
+                return $box['MIN_CUBE'] - $remainingSize;
+            }
+        }
+
+        // If the size is larger than the largest box, suggest adding more to reach the largest box size
+        foreach ($this->boxes as $box) {
+            if ($size < $box['MIN_CUBE']) {
+                return $box['MIN_CUBE'] - $size;
+            }
+        }
+
+        return null;
+    }
+
+    private function calculatePercentage($currentSize, $nextSize)
+    {
+        if ($nextSize == 0) {
+            return 100;
+        }
+
+        $totalSize = $currentSize + $nextSize;
+        $percentage = ($currentSize / $totalSize) * 100;
+
+        return round($percentage, 2);
+    }
     public function index2($value = 0){
-        
-        dd($this->findBoxes(47));
+
+        ini_set('max_execution_time', 300000); //300 seconds = 5 minutes
+        ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
+        ini_set('memory_limit', '4096M');
+
+        dd($this->findBoxes(122));
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18
 
