@@ -18,22 +18,72 @@ use Vanguard\User;
 class TestAmirController extends Controller
 {
 
+    private $boxes = [
+        ["BOXES" => "MEDIUM", "MIN_CUBE" => 18, "MAX_CUBE" => 21],
+        ["BOXES" => "MEDIUM L", "MIN_CUBE" => 22, "MAX_CUBE" => 25],
+        ["BOXES" => "LARGE", "MIN_CUBE" => 27, "MAX_CUBE" => 30],
+        ["BOXES" => "SUPER", "MIN_CUBE" => 40, "MAX_CUBE" => 45],
+        ["BOXES" => "2 MED L", "MIN_CUBE" => 49, "MAX_CUBE" => 52],
+        ["BOXES" => "1 MED L + 1 LARGE", "MIN_CUBE" => 53, "MAX_CUBE" => 56],
+        ["BOXES" => "2 LARGE", "MIN_CUBE" => 58, "MAX_CUBE" => 60],
+        ["BOXES" => "1 SUPER + 1 MED L", "MIN_CUBE" => 68, "MAX_CUBE" => 70],
+        ["BOXES" => "1 SUPER + 1 LARGE", "MIN_CUBE" => 72, "MAX_CUBE" => 75],
+        ["BOXES" => "2 SUPER", "MIN_CUBE" => 80, "MAX_CUBE" => 90]
+    ];
+
+    public function findBoxes($size)
+    {
+        $boxes = $this->findBoxCombination($size, $this->boxes);
+
+        return response()->json([
+            'size' => $size,
+            'boxes' => $boxes
+        ]);
+    }
+
+    private function findBoxCombination($size, $boxes)
+    {
+        // Sort boxes by MIN_CUBE for better combination searching
+        usort($boxes, function($a, $b) {
+            return $a['MIN_CUBE'] <=> $b['MIN_CUBE'];
+        });
+
+        // Check if size fits in any single box
+        foreach ($boxes as $box) {
+            if ($size >= $box['MIN_CUBE'] && $size <= $box['MAX_CUBE']) {
+                return [$box];
+            }
+        }
+
+        // Try to find the smallest combination of boxes
+        $result = [];
+        while ($size > 0) {
+            $found = false;
+            foreach ($boxes as $box) {
+                if ($size >= $box['MIN_CUBE'] && $size <= $box['MAX_CUBE']) {
+                    $result[] = $box;
+                    $size -= $box['MIN_CUBE'];
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                // If no exact fit, find the closest smaller box
+                foreach (array_reverse($boxes) as $box) {
+                    if ($size >= $box['MIN_CUBE']) {
+                        $result[] = $box;
+                        $size -= $box['MIN_CUBE'];
+                        break;
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
     public function index2($value = 0){
-
-        $boxes = [
-            ["BOXES" => "MEDIUM", "MIN_CUBE" => 18, "MAX_CUBE" => 21],
-            ["BOXES" => "MEDIUM L", "MIN_CUBE" => 22, "MAX_CUBE" => 25],
-            ["BOXES" => "LARGE", "MIN_CUBE" => 27, "MAX_CUBE" => 30],
-            ["BOXES" => "SUPER", "MIN_CUBE" => 40, "MAX_CUBE" => 45],
-            ["BOXES" => "2 MED L", "MIN_CUBE" => 49, "MAX_CUBE" => 52],
-            ["BOXES" => "1 MED L + 1 LARGE", "MIN_CUBE" => 53, "MAX_CUBE" => 56],
-            ["BOXES" => "2 LARGE", "MIN_CUBE" => 58, "MAX_CUBE" => 60],
-            ["BOXES" => "1 SUPER + 1 MED L", "MIN_CUBE" => 68, "MAX_CUBE" => 70],
-            ["BOXES" => "1 SUPER + 1 LARGE", "MIN_CUBE" => 72, "MAX_CUBE" => 75],
-            ["BOXES" => "2 SUPER", "MIN_CUBE" => 80, "MAX_CUBE" => 90]
-        ];
-
-
+        
+        dd($this->findBoxes(47));
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18
 
