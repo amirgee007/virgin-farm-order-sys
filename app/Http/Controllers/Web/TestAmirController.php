@@ -20,6 +20,20 @@ class TestAmirController extends Controller
 
     public function index2($value = 0){
 
+        $boxes = [
+            ["BOXES" => "MEDIUM", "MIN_CUBE" => 18, "MAX_CUBE" => 21],
+            ["BOXES" => "MEDIUM L", "MIN_CUBE" => 22, "MAX_CUBE" => 25],
+            ["BOXES" => "LARGE", "MIN_CUBE" => 27, "MAX_CUBE" => 30],
+            ["BOXES" => "SUPER", "MIN_CUBE" => 40, "MAX_CUBE" => 45],
+            ["BOXES" => "2 MED L", "MIN_CUBE" => 49, "MAX_CUBE" => 52],
+            ["BOXES" => "1 MED L + 1 LARGE", "MIN_CUBE" => 53, "MAX_CUBE" => 56],
+            ["BOXES" => "2 LARGE", "MIN_CUBE" => 58, "MAX_CUBE" => 60],
+            ["BOXES" => "1 SUPER + 1 MED L", "MIN_CUBE" => 68, "MAX_CUBE" => 70],
+            ["BOXES" => "1 SUPER + 1 LARGE", "MIN_CUBE" => 72, "MAX_CUBE" => 75],
+            ["BOXES" => "2 SUPER", "MIN_CUBE" => 80, "MAX_CUBE" => 90]
+        ];
+
+
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18
 
