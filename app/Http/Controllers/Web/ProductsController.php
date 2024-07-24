@@ -44,32 +44,33 @@ class ProductsController extends Controller
     public function inventoryIndex(Request $request)
     {
         $date_shipped = trim($request->date_shipped);
-
         $category_id = trim($request->category);
         $searching = trim($request->searching);
         $user = auth()->user();
-
         $address = $user->shipAddress;
 
-        if (!$date_shipped)
+        if (!$date_shipped) {
             $date_shipped = $user->last_ship_date;
-        else {
-            if ($date_shipped)
+        } else {
+            if ($date_shipped) {
                 $user->update([
                     'last_ship_date' => $date_shipped
                 ]);
+            }
         }
 
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
-            ->leftjoin('carts', 'carts.product_id', '=', 'products.id')
+            ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
             ->where('product_quantities.quantity', '>', 0)
-            ->where('products.supplier_id', $user->supplier_id);
+            ->where('products.supplier_id', $user->supplier_id)
+            ->distinct('products.id');
 
         if ($date_shipped) {
             $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');
-        } else
-            $query->where('product_quantities.quantity', '<', 0); #just to ingnore will make it zero after testing
+        } else {
+            $query->where('product_quantities.quantity', '<', 0); #just to ignore will make it zero after testing
+        }
 
         if ($category_id) {
             $query->where('category_id', $category_id);
@@ -85,19 +86,20 @@ class ProductsController extends Controller
 
         $carriers = getCarriers();
         $categoriesQuery = Category::query();
-
         $dutchCats = Category::dutchCategories();
 
         #categories based on the SUPPLIER selected
-        if($user->supplier_id == 2)
-            $categoriesQuery->whereIn('category_id' , $dutchCats);
-        else
-            $categoriesQuery->whereNotIn('category_id' , $dutchCats);
+        if ($user->supplier_id == 2) {
+            $categoriesQuery->whereIn('category_id', $dutchCats);
+        } else {
+            $categoriesQuery->whereNotIn('category_id', $dutchCats);
+        }
 
         $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
 
-        $products = (clone $query)->orderBy('product_text')
-            ->selectRaw('product_quantities.product_id as product_id , products.id as id,product_text,image_url,is_deal,unit_of_measure,products.stems,product_quantities.quantity-COALESCE(carts.quantity, 0) as quantity,weight,products.size,price_fob,price_fedex,price_hawaii')
+        $products = $query->groupBy('products.id')
+            ->orderBy('product_text')
+            ->selectRaw('product_quantities.product_id as product_id, products.id as id, product_text, image_url, is_deal, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
             ->paginate(100);
 
         $fixed = [
