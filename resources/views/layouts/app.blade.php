@@ -275,21 +275,21 @@
 
 @hook('app:scripts')
 
-<!-- begin olark code -->
-<script type="text/javascript" async>
-    ;(function(o,l,a,r,k,y){if(o.olark)return;
-        r="script";y=l.createElement(r);r=l.getElementsByTagName(r)[0];
-        y.async=1;y.src="//"+a;r.parentNode.insertBefore(y,r);
-        y=o.olark=function(){k.s.push(arguments);k.t.push(+new Date)};
-        y.extend=function(i,j){y("extend",i,j)};
-        y.identify=function(i){y("identify",k.i=i)};
-        y.configure=function(i,j){y("configure",i,j);k.c[i]=j};
-        k=y._={s:[],t:[+new Date],c:{},l:a};
-    })(window,document,"static.olark.com/jsclient/loader.js");
-    /* custom configuration goes here (www.olark.com/documentation) */
-    olark.identify('6407-867-10-4707');
-</script>
-<!-- end olark code -->
+@env('production')
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+            var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+            s1.async=true;
+            s1.src='https://embed.tawk.to/66a290a9becc2fed692b23e7/1i3lga6ak';
+            s1.charset='UTF-8';
+            s1.setAttribute('crossorigin','*');
+            s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+@endenv
 
 </body>
 </html>
