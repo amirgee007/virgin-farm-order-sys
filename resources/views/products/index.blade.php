@@ -333,7 +333,7 @@
 {{--                        </div>--}}
 
                         <small>
-                            Only 9 columns include i.e Item Class,	Item No., Description,	UOM	Price 1, Price 3,Price 5, Weight, Size
+                            Only 9 columns include i.e Item Class,	Item No, Description, UOM Price 1, Price 3,Price 5, Weight, Size, Type
                         </small>
                         <br>
                         <br>

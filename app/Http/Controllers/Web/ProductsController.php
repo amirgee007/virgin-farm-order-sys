@@ -362,6 +362,7 @@ class ProductsController extends Controller
                 $filenamePut = 'extraBulk/' . $unique . '.' . $extension;
                 $filenameRead = 'app/extraBulk/' . $unique . '.' . $extension;
 
+
                 Storage::put($filenamePut, file_get_contents($excel->getRealPath()));
                 $products = Excel::toArray(new ImportExcelFiles(), storage_path($filenameRead));
 
@@ -408,7 +409,7 @@ class ProductsController extends Controller
                             ], $data);
 
                         }
-                        else
+                        else if(trim($row[0]))
                             $missing[] = $row[0];
                     }
                 }
