@@ -409,7 +409,6 @@ class ProductsController extends Controller
                             ], $data);
 
 
-
                         }
                         else if(trim($row[0]))
                             $missing[] = $row[0];
