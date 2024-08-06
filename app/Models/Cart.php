@@ -14,7 +14,7 @@ class Cart extends Model
 
     public function scopeMineCart($query)
     {
-        return $query->where('user_id', auth()->id());
+        return $query->where('user_id', auth()->id())->where('quantity' ,'>', 0);
     }
 
     public function product() {

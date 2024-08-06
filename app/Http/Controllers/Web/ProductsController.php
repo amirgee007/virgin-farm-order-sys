@@ -284,7 +284,6 @@ class ProductsController extends Controller
                         $data['supplier_id'] = 3;
                     }
 
-
                     $product = Product::where('item_no', trim($row[1]))->first();
 
                     if ($product) {
@@ -417,7 +416,8 @@ class ProductsController extends Controller
                 if($missing)
                     $this->sendMissingItemEmail($missing);
 
-                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut);
+                $user = '-by-' . auth()->user()->first_name;
+                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY '.$user);
 
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
