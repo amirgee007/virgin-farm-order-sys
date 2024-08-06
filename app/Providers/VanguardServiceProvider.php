@@ -36,8 +36,7 @@ class VanguardServiceProvider extends BaseVanguardServiceProvider
      *
      * @return array
      */
-    protected function widgets()
-    {
+    public function widgets(): array {
         return [
             UserActions::class,
             TotalUsers::class,
