@@ -187,7 +187,7 @@
                     </form>
 
                     <small>
-                        Only 6 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY, First 5 rows empty with second should have date
+                        7 Columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY, AA if Special also First 5 rows empty with second should have date
                     </small>
                 </div>
 
@@ -287,7 +287,7 @@
                         </div>
 
                         <small>
-                            Only 6 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY
+                            7 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY, AA if Special
                         </small>
                         <br>
                         <br>

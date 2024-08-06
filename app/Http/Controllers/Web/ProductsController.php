@@ -335,8 +335,8 @@ class ProductsController extends Controller
         return $excelBaseDate->add(new \DateInterval('P' . $serial . 'D'))->format('Y-m-d');
     }
 
-    public function uploadInventory(Request $request)
-    {
+    public function uploadInventory(Request $request){
+
         ini_set('max_execution_time', 18000);
 
         #reset and delete zero qty products
@@ -408,6 +408,8 @@ class ProductsController extends Controller
                                 'date_out' => $this->dateOut,
                             ], $data);
 
+
+
                         }
                         else if(trim($row[0]))
                             $missing[] = $row[0];
@@ -436,7 +438,7 @@ class ProductsController extends Controller
             Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
             $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
 
-            #0 ITEM_ID #1 ITEM_DESC #2 PRICE_1  #3 PRICE_2	#4 PRICE_3	#5 QUANTITY
+            #0 ITEM_ID #1 ITEM_DESC #2 PRICE_1  #3 PRICE_2	#4 PRICE_3	#5 QUANTITY, #6Type
             if (isset($products[0]))
                 foreach ($products[0] as $index => $row) {
 
