@@ -280,8 +280,6 @@ class ProductsController extends Controller
 
                     if (in_array($data['category_id'], $catsDutch)) {
                         $data['supplier_id'] = 2;
-                    } elseif (in_array($data['category_id'], $specialOffers)) {
-                        $data['supplier_id'] = 3;
                     }
 
                     $product = Product::where('item_no', trim($row[1]))->first();
@@ -343,13 +341,12 @@ class ProductsController extends Controller
         $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0");
         $missing = [];
 
+       #seems direct file upload from drag and drop etc
         if ($request->hasFile('file')) {
 
             $request->validate([
                 'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
-
-            ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->delete();
 
             $excel = $request->file('file');
 
@@ -361,7 +358,6 @@ class ProductsController extends Controller
                 $unique = uniqid();
                 $filenamePut = 'extraBulk/' . $unique . '.' . $extension;
                 $filenameRead = 'app/extraBulk/' . $unique . '.' . $extension;
-
 
                 Storage::put($filenamePut, file_get_contents($excel->getRealPath()));
                 $products = Excel::toArray(new ImportExcelFiles(), storage_path($filenameRead));
@@ -428,7 +424,7 @@ class ProductsController extends Controller
                 return response()->json(['error' => 'Invalid Format FIle.'], 500);
             }
         } else {
-
+            #single file upload from the products page.
             $dates = dateRangeConverter($request->range);
 
             $date_in = $dates['date_in'];
@@ -484,11 +480,14 @@ class ProductsController extends Controller
                                 'date_out' => $date_out,
                             ], $data);
 
+                            if($request->is_special)
+                                $product->update([ 'supplier_id' => 3 ]); #maybe later need to use the is_deal column to make this feature as live.
                         } else {
                             $data['item_no'] = trim($row[0]);
                             $data['product_text'] = trim($row[1]);
 
-                            $missing[] = $row[0];
+                            if($row[0])
+                                $missing[] = $row[0];
                             #$data['product_id'] = rand(100, 999999);
                             #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
                         }

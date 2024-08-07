@@ -187,7 +187,7 @@
                     </form>
 
                     <small>
-                        7 Columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY, AA if Special also First 5 rows empty with second should have date
+                        6 Columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY
                     </small>
                 </div>
 
@@ -263,6 +263,9 @@
                             <label for="file_inventory" class="form-label">Click to Upload Inventory File</label>
                             <input class="form-control" type="file" id="file_inventory" name="file_inventory">
                         </div>
+                        <small>
+                            ITEM#, DESCRIPTION, PRICE 1, PRICE 2,PRICE 3,QUANTITY
+                        </small>
 
 {{--                        <div class="form-group row">--}}
 {{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>--}}
@@ -273,23 +276,21 @@
 
                         <div class="form-group">
                             <input type="hidden" name="range" value="" class="dateRangeVal">
-                            <label for="dateRange" class="form-label mt-3">Date in/out</label>
+                            <label for="dateRange" class="form-label mt-3">Date IN/OUT</label>
                             <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
                                 <i class="fa fa-calendar"></i>&nbsp;
                                 <span></span>
                                 &nbsp;<i class="fa fa-caret-down"></i>
                             </div>
-
-{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date Out</label>--}}
-{{--                            <div class="col-sm-8 mt-2">--}}
-{{--                                <input required type="text" name="date_out"  class="form-control-sm datepicker" id="dateInput" placeholder="Date Out">--}}
-{{--                            </div>--}}
                         </div>
-
-                        <small>
-                            7 columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY, AA if Special
-                        </small>
                         <br>
+                        <br>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="1" id="is_special" name="is_special">
+                            <label class="form-check-label" for="is_special">
+                                Is Special Inventory(AA)?
+                            </label>
+                        </div>
                         <br>
                         <input type="submit" value="Upload Inventory" class="btn btn-primary btn-sm float-right">
                     </form>

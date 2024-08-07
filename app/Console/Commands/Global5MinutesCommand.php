@@ -4,6 +4,7 @@ namespace Vanguard\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Vanguard\Models\ProductQuantity;
 
 class Global5MinutesCommand extends Command
 {
@@ -26,6 +27,8 @@ class Global5MinutesCommand extends Command
      */
     public function handle()
     {
+        ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->delete();
+
         Log::info('Job running every 5 minutes plz double check and then make code here.');
     }
 }
