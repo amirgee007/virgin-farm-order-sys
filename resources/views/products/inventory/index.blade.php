@@ -67,6 +67,22 @@
         .width50 {
             width: 60px !important;
         }
+        .blink {
+            animation: blink-animation 0.75s steps(5, start) infinite;
+            -webkit-animation: blink-animation 0.75s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        @-webkit-keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
 
         /*button {*/
         /*font-size: 11px !important;*/
@@ -220,7 +236,7 @@
                                                      class="img-thumbnail" alt="Virgin Farm">
                                                 {{ $product->product_text }}
 
-                                                {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
+                                                {!!  $product->supplier_id ==3 ? '<i class="fas fa-bolt text-danger blink" title="Special and Discount offers"></i>' :'' !!}
                                             </td>
 
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp
