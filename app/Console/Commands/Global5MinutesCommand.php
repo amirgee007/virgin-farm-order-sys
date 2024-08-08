@@ -2,6 +2,7 @@
 
 namespace Vanguard\Console\Commands;
 
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Models\Cart;
@@ -58,6 +59,7 @@ class Global5MinutesCommand extends Command
                 // Delete all cart items for the current user
                 Cart::where('user_id', $userId)->delete();
             }
+
         }
 
         Log::info('Deleted cart items for users whose first cart item was created more than an hour ago.');
