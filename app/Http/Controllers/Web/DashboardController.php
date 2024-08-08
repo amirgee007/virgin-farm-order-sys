@@ -26,7 +26,7 @@ class DashboardController extends Controller
         #$future_inventory = ProductQuantity::query()->groupBy(['date_in', 'date_out'])->get();
         $futureInventory = \DB::SELECT('SELECT date_in, date_out, max(updated_at) as updated_at
 FROM product_quantities WHERE DATE(date_out) >= CURDATE() GROUP BY date_in, date_out;');
-        
+
         #$lowInventory = ProductQuantity::where('quantity' , 0)->where('date_out' , '>' , now()->toDateString())->limit(100)->get();
         $lowInventory = [];
 

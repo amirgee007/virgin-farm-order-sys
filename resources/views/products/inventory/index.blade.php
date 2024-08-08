@@ -37,7 +37,7 @@
              data-trigger="hover"
              data-toggle="tooltip">
             <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="3" {{auth()->user()->supplier_id == 3 ? 'checked' :''}}>
-            <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Special</label>
+            <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Seasonal</label>
         </div>
 
     </li>
