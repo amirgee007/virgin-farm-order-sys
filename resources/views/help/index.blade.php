@@ -73,19 +73,20 @@
             <!-- Buttons to Open Tabs -->
             <div class="btn-group" role="group">
                 @foreach($tutorials as $index => $tutorial)
-                    <button type="button" class="btn btn-danger p-3 rounded btn-md mt-3 @if($index === 0) active-btn @endif" data-tab-index="{{ $index }}">
+                    <button type="button" class="btn btn-danger ml-1 p-3 rounded btn-md mt-3 @if($index === 0) active-btn @endif" data-tab-index="{{ $index }}">
                         {{ $tutorial['title'] }}
                     </button>
                 @endforeach
             </div>
         </div>
-        
+
 
         <div class="container mt-5">
             <!-- Tab Content -->
             <div class="tab-content mt-3" id="myTabContent">
                 @foreach($tutorials as $index => $tutorial)
                     <div class="tab-pane fade @if($index === 0) show active @endif" id="content-{{ $index }}" role="tabpanel">
+                        <h3>{{ $tutorial['title'] }}</h3>
                         {!! $tutorial['content'] !!}
                     </div>
                 @endforeach
@@ -120,7 +121,6 @@
             // Search functionality
             $('#searchInput').on('input', function() {
                 const searchTerm = $(this).val().toLowerCase();
-                let found = false;
 
                 $('.tab-pane').each(function(index) {
                     if ($(this).text().toLowerCase().includes(searchTerm)) {
@@ -129,8 +129,6 @@
 
                         // Activate the corresponding tab if found
                         $(`#content-${index}`).addClass('show active');
-
-                        found = true;
                     }
                 });
             });
