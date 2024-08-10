@@ -1,7 +1,10 @@
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
     <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
     <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
-    <td class="align-middle" title="Show Dutch or our own products">{{ $product->supplier?? 'VF' }}</td>
+    <td class="align-middle" title="Show Dutch or our own products">
+        {{ $product->supplier?? 'VF' }}
+    </td>
+
     <td class="align-middle">
         <img style="max-width: 35px; cursor: pointer;"
              id="{{$product->id}}imgTD"
@@ -72,7 +75,10 @@
                     @foreach ($product->prodQty as $index => $prod)
                         <tr>
                             <td scope="row">{{++$index}}</td>
-                            <td scope="row">{{$prod->item_no}}</td>
+                            <td scope="row">
+                                {{$prod->item_no}}
+                                {!!  $prod->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
+                            </td>
                             <td class="align-middle">
                                 <a class="editable"
                                    style="cursor:pointer;"
