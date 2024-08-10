@@ -132,6 +132,17 @@ class TestAmirController extends Controller
         ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
         ini_set('memory_limit', '4096M');
 
+        $content = "<h4>We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.</h4>";
+        $content = $content.view('mail.info-email')->render();
+
+        \Mail::to('amirseersol@gmail.com')
+            ->bcc('amirseersol@gmail.com')
+            ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
+
+        dd('ddd');
+
+
+
         dd($this->findBoxes(122));
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18

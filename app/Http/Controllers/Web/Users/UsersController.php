@@ -9,6 +9,7 @@ use Vanguard\Events\User\Deleted;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\User\CreateUserRequest;
 //use Vanguard\Repositories\Activity\ActivityRepository;
+use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\ClientNotification;
 use Vanguard\Repositories\Country\CountryRepository;
@@ -98,10 +99,12 @@ class UsersController extends Controller
 
         if ($request->is_approved) {
             // Send email notification
-            \Mail::raw('We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.', function ($message) use ($user) {
-                $message->to($user->email)
-                    ->subject('Your Account is Approved - Start Shopping Today!');
-            });
+            $content = "<h4>We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.</h4>";
+            $content = $content.view('mail.info-email')->render();
+
+            \Mail::to($user->email)
+                ->bcc('amirseersol@gmail.com')
+                ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
         }
 
         return response()->json(['success' => true]);

@@ -38,11 +38,11 @@ class ActivateUser
                 . '<li><strong>Username:</strong> ' . $user->username . '</li>'
                 . '</ul>';
 
-            \Log::info($user->name . ' New Virgin Farms User Verified Email.');
+            \Log::info($user->name . ' New User Email Verification Completed on Virgin Farms.');
 
             \Mail::to('weborders@virginfarms.com')
                 ->cc('amirseersol@gmail.com')
-                ->send(new VirginFarmGlobalMail('New Virgin Farms User Verified Email', $content));
+                ->send(new VirginFarmGlobalMail('Virgin Farms: New User Email Successfully Verified', $content));
         }
     }
 }
