@@ -201,7 +201,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Reset a specified inventory By Date</h5>
+                    <h5 class="modal-title">Reset/Delete a specified inventory by date</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -222,20 +222,49 @@
                         <br/>
                         <br/>
                         <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" value="reset" name="flag" id="flexRadioDefault1" checked>
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                    Reset Selected Date Inventory
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="reset" name="inventory_action" id="resetInventory" checked>
+                                <label class="form-check-label" for="resetInventory">
+                                    Reset this date inventory
                                 </label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" value="delete" name="flag" id="flexRadioDefault2" >
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    Delete Selected Date Inventory
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="delete" name="inventory_action" id="deleteInventory">
+                                <label class="form-check-label" for="deleteInventory">
+                                    Delete this date inventory
                                 </label>
                             </div>
                         </div>
+                        <hr>
 
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="0" name="flower_type" id="allType" checked>
+                                <label class="form-check-label" for="allType">
+                                   All
+                                </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="1" name="flower_type" id="onlyVirgin">
+                                <label class="form-check-label" for="onlyVirgin">
+                                    Only Virgin Farms
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="2" name="flower_type" id="dutchFlowers">
+                                <label class="form-check-label" for="dutchFlowers">
+                                    Dutch Flowers
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="3" name="flower_type" id="specialSeasonal">
+                                <label class="form-check-label" for="specialSeasonal">
+                                    Special Seasonal
+                                </label>
+                            </div>
+                        </div>
+                        <hr>
                         <br>
                         <input type="submit" value="Delete/Reset Inventory" class="btn btn-primary btn-sm float-right">
                     </form>

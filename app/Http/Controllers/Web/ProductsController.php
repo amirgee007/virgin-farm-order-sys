@@ -281,7 +281,6 @@ class ProductsController extends Controller
                     ];
 
                     $catsDutch = Category::dutchCategories();
-                    $specialOffers = Category::specialOfferCategories(); #todo
 
                     $data['supplier_id'] = 1;
 
@@ -340,7 +339,8 @@ class ProductsController extends Controller
         return $excelBaseDate->add(new \DateInterval('P' . $serial . 'D'))->format('Y-m-d');
     }
 
-    public function uploadInventory(Request $request){
+    public function uploadInventory(Request $request)
+    {
 
         ini_set('max_execution_time', 18000);
 
@@ -348,7 +348,7 @@ class ProductsController extends Controller
         $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0");
         $missing = [];
 
-       #seems direct file upload from drag and drop etc
+        #seems direct file upload from drag and drop etc
         if ($request->hasFile('file')) {
 
             $request->validate([
@@ -412,17 +412,16 @@ class ProductsController extends Controller
                             ], $data);
 
 
-                        }
-                        else if(trim($row[0]))
+                        } else if (trim($row[0]))
                             $missing[] = $row[0];
                     }
                 }
 
-                if($missing)
+                if ($missing)
                     $this->sendMissingItemEmail($missing);
 
                 $user = '-by-' . auth()->user()->first_name;
-                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY '.$user);
+                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY ' . $user);
 
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
@@ -493,7 +492,7 @@ class ProductsController extends Controller
                             $data['item_no'] = trim($row[0]);
                             $data['product_text'] = trim($row[1]);
 
-                            if($row[0])
+                            if ($row[0])
                                 $missing[] = $row[0];
                             #$data['product_id'] = rand(100, 999999);
                             #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
@@ -504,7 +503,7 @@ class ProductsController extends Controller
                     }
                 }
 
-            if($missing)
+            if ($missing)
                 $this->sendMissingItemEmail($missing);
 
             session()->flash('app_message', 'Inventory file has been imported in the system.');
@@ -720,8 +719,7 @@ class ProductsController extends Controller
                                 'date_out' => $this->dateOut,
                             ], $data);
 
-                        }
-                        else
+                        } else
                             $missing[] = $row[0];
                     }
                 }
@@ -743,7 +741,7 @@ class ProductsController extends Controller
             $message = "All files have been successfully synced."; // Logging complete sync
         }
 
-        if($missing)
+        if ($missing)
             $this->sendMissingItemEmail($missing);
 
         return response()->json(['message' => $message], 200);
@@ -760,6 +758,29 @@ class ProductsController extends Controller
             ->whereDate('date_in', $date_in)
             ->whereDate('date_out', $date_out);
 
+        #1 = only virgin, 2= dutch and 3 = special
+        if (in_array($request->flower_type, [1, 2, 3])) {
+
+            if($request->flower_type == 3)
+                $query->where('product_quantities.is_special', 1);
+            else
+                $query->whereHas('product', function ($subQuery) use ($request) {
+                    $subQuery->where('products.supplier_id', $request->flower_type);
+                });
+        }
+
+        if ($request->flag == 'delete') {
+            $query->delete();
+        } else {
+            $query->update([
+                'quantity' => 0,
+                'date_in' => null,
+                'date_out' => null,
+                'is_special' => 0,
+            ]);
+        }
+
+
         if ($request->flag == 'delete')
             $query->delete();
         else
@@ -770,7 +791,7 @@ class ProductsController extends Controller
                 'is_special' => 0,
             ]);
 
-        session()->flash('app_message', 'Your selected inventory has been reset successfully.');
+        session()->flash('app_message', 'Your selected inventory has been reset/deleted successfully.');
         return back();
     }
 
@@ -806,9 +827,9 @@ class ProductsController extends Controller
     public function categoriesDelete($id = null)
     {
         if ($id) {
-            $products = Product::where('category_id' , $id)->get();
+            $products = Product::where('category_id', $id)->get();
 
-            if(count($products) > 0){
+            if (count($products) > 0) {
                 session()->flash('app_error', 'Sorry, you cannot delete this category because it is linked to some products.');
                 return back();
             }
@@ -847,7 +868,7 @@ class ProductsController extends Controller
 
     public function sendMissingItemEmail($items)
     {
-        try{
+        try {
             $content = "Items from inventory file are not present in the master file. Please update and reload the files." . implode(',', $items);
 
             \Mail::raw($content, function ($message) {
@@ -856,7 +877,7 @@ class ProductsController extends Controller
             });
 
         } catch (\Exception $ex) {
-            Log::error(implode(',', $items).' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
+            Log::error(implode(',', $items) . ' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
         }
 
     }
