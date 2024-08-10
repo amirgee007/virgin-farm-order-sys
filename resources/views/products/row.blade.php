@@ -1,5 +1,13 @@
+@php $prodQty = $product->prodQty; @endphp
+
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
-    <td class="align-middle">{{ @$categories[$product->category_id] }}</td>
+    <td class="align-middle">
+        <span class="badge badge-lg badge-danger" title="Tota Rows found for the Inventory bellow">
+            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+            {{$prodQty ? count($prodQty) : 0}}
+        </span>
+        {{ @$categories[$product->category_id] }}
+    </td>
     <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
     <td class="align-middle" title="Show Dutch or our own products">
         {{ $product->supplier?? 'VF' }}
@@ -16,8 +24,6 @@
              src="{{ asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="VF Farm">
 
         {{ $product->product_text }}
-
-{{--        {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}--}}
     </td>
 
     <td class="align-middle">{{ $product->unit_of_measure }}</td>
@@ -57,17 +63,17 @@
 
             <table class="table">
                 <thead>
-                <tr>
-                    <th class="min-width-80">@lang('#')</th>
-                    <th class="min-width-80">@lang('Item')</th>
-                    <th class="min-width-80">@lang('Price-FOB $')</th>
-                    <th class="min-width-80">@lang('FedEx $')</th>
-                    <th class="min-width-80">@lang('HI & AK $')</th>
-                    <th class="min-width-80">@lang('Quantity')</th>
-                    <th class="min-width-80">@lang('Date In')</th>
-                    <th class="min-width-80">@lang('Date Out')</th>
-                    {{--<th scope="col">#</th>--}}
-                </tr>
+                    <tr>
+                        <th class="min-width-80">@lang('#')</th>
+                        <th class="min-width-80">@lang('Item')</th>
+                        <th class="min-width-80">@lang('Price-FOB $')</th>
+                        <th class="min-width-80">@lang('FedEx $')</th>
+                        <th class="min-width-80">@lang('HI & AK $')</th>
+                        <th class="min-width-80">@lang('Quantity')</th>
+                        <th class="min-width-80">@lang('Date In')</th>
+                        <th class="min-width-80">@lang('Date Out')</th>
+                        <th class="min-width-80">@lang('Expire Time')</th>
+                    </tr>
                 </thead>
                 <tbody>
 
@@ -121,6 +127,7 @@
                             <td class="align-middle">{{ $prod->quantity }}</td>
                             <td class="align-middle">{{ $prod->date_in }}</td>
                             <td class="align-middle">{{ $prod->date_out }}</td>
+                            <td class="align-middle">{{ $prod->expired_at }}</td>
                         </tr>
                     @endforeach
                 @else

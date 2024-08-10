@@ -375,13 +375,7 @@ class ProductsController extends Controller
                     if ($index == 1) {
                         $this->dateIn = $this->excelSerialDateToDate($row['3']);
                         $this->dateOut = $this->excelSerialDateToDate($row['5']);
-
-                        $expiredtime = trim($row['5']);
-                        if (!empty($expiredtime) && Carbon::hasFormat($expiredtime, 'g:i A')) {
-                            $expiredtime = Carbon::createFromFormat('g:i A', $expiredtime)->format('H:i');
-                        } else {
-                            $expiredtime = null;
-                        }
+                        $expiredtime = trim($row['5']) ?? null;
                     }
 
                     if ($index > 5) {
