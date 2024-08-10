@@ -118,19 +118,33 @@
                 $(this).addClass('active-btn');
             });
 
-            // Search functionality
+            // Search functionality with button activation
             $('#searchInput').on('input', function() {
-                const searchTerm = $(this).val().toLowerCase();
+                const searchTerm = $(this).val().toLowerCase().trim();
+                let found = false;
 
-                $('.tab-pane').each(function(index) {
-                    if ($(this).text().toLowerCase().includes(searchTerm)) {
-                        // Deactivate all tabs
-                        $('.tab-pane').removeClass('show active');
+                // Remove previous highlights and active states
+                $('.btn[data-tab-index]').removeClass('active-btn');
+                $('.tab-pane').removeClass('show active');
 
-                        // Activate the corresponding tab if found
-                        $(`#content-${index}`).addClass('show active');
-                    }
-                });
+                if (searchTerm) {
+                    $('.tab-pane').each(function(index) {
+                        const contentText = $(this).text().toLowerCase();
+
+                        if (contentText.includes(searchTerm)) {
+                            // Activate the corresponding tab and button if found
+                            $(`#content-${index}`).addClass('show active');
+                            $(`.btn[data-tab-index="${index}"]`).addClass('active-btn');
+
+                            found = true;
+                            return false; // Exit loop after first match
+                        }
+                    });
+                } else {
+                    // If search is cleared, reset the first tab and button to active
+                    $('.btn[data-tab-index="0"]').addClass('active-btn');
+                    $('#content-0').addClass('show active');
+                }
             });
         });
     </script>
