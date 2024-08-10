@@ -102,7 +102,7 @@ class ProductsController extends Controller
 
         $carriers = getCarriers();
         $categoriesQuery = Category::query();
-        $dutchCats = Category::dutchCategories();
+        $dutchCats = Category::dutchCategories(); #ok new logic
 
         #categories based on the SUPPLIER selected
         if ($user->supplier_id == 2) {
@@ -309,7 +309,7 @@ class ProductsController extends Controller
                         'def_price_hawaii' => trim($row[6]), #price 5
                     ];
 
-                    $catsDutch = Category::dutchCategories();
+                    $catsDutch = Category::dutchCategories(); #ok new logic
 
                     $data['supplier_id'] = 1;
 
@@ -854,10 +854,8 @@ class ProductsController extends Controller
     {
         $categories = Category::latest()->get();
 
-        $dutchCats = Category::dutchCategories();
         return view('categories.index', compact(
             'categories',
-            'dutchCats'
         ));
     }
 

@@ -13,8 +13,9 @@ class Category extends Model
 
     static function dutchCategories()
     {
-        return [
-            81, 57, 61, 82, 35
-        ];
+        return  Category::where('product_type' , 'dutch')->pluck('category_id')->toArray();
+//        return [
+//            81, 57, 61, 82, 35
+//        ];
     }
 }

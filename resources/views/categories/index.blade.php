@@ -53,10 +53,11 @@
                     <thead>
                     <tr>
                         <th>@lang('#')</th>
-                        <th>@lang('Item Id')</th>
+                        <th>@lang('Item Id')(Unique)</th>
                         <th class="min-width-100">@lang('Name')</th>
                         <th class="min-width-100">@lang('Created')</th>
                         <th class="min-width-80">@lang('Updated')</th>
+                        <th class="min-width-80">@lang('Type')</th>
                         <th class="min-width-80">@lang('Action')</th>
                     </tr>
                     </thead>
@@ -64,7 +65,7 @@
                     @if (count($categories))
                         @foreach ($categories as $index => $category)
                             <tr class="">
-                                <td class="align-middle {{in_array($category->category_id , $dutchCats) ? 'dutch' : 'virginFarm'}}">{{ ++$index }}</td>
+                                <td class="align-middle {{$category->product_type == 'dutch' ? 'dutch' : 'virginFarm'}}">{{ ++$index }}</td>
                                 <td class="align-middle">
                                     <a class="editable"
                                        style="cursor:pointer;"
@@ -90,6 +91,14 @@
 
                                 <td class="align-middle">{{ dateFormatMy($category->created_at) }}</td>
                                 <td class="align-middle">{{ diff4Human($category->updated_at) }}</td>
+
+                                <td>
+                                    <select class="productTypeSelect" data-id="{{$category->id}}">
+                                        <option value="vf" {{$category->product_type == 'vf' ? 'selected' :''}} >Virgin Farms</option>
+                                        <option value="dutch" {{$category->product_type == 'dutch' ? 'selected' :''}} >Dutch Flower</option>
+                                    </select>
+                                </td>
+
                                 <td class="align-middle">
                                     <a href="{{ route('categories.delete', $category->id) }}"
                                        class="btn btn-icon"
@@ -123,7 +132,7 @@
 
     @include('partials.toaster-js')
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
-    {!! JsValidator::formRequest('Vanguard\Http\Requests\CreateShipAddressRequest', '#user-form') !!}
+
     <script>
         $.fn.editable.defaults.mode = 'inline';
         $.fn.editable.defaults.ajaxOptions = {
@@ -131,5 +140,26 @@
         };
 
         $('.editable').editable();
+
+        $('.productTypeSelect').change(function() {
+            var product_type = $(this).val();
+            var rowId = $(this).data('id');
+
+            $.ajax({
+                url: '{{route('categories.update')}}',  // This should match the route defined in Laravel
+                type: 'POST',
+                data: {
+                    pk: rowId,  // Pass the row ID to identify which record to update
+                    value: product_type,
+                    name : 'product_type'
+                },
+                success: function(response) {
+                    toastr.success('Product Type updated succesfully.');
+                },
+                error: function(response) {
+                    toastr.error('Something went wrong plz check with admin.');
+                }
+            });
+        });
     </script>
 @stop
