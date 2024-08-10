@@ -39,9 +39,9 @@ class RegisterRequest extends Request
             $rules['sales_rep'] = 'required|string|max:255';
         }
 
-//        if (setting('registration.captcha.enabled')) {
-//            $rules['g-recaptcha-response'] = 'required|captcha';
-//        }
+        if (setting('registration.captcha.enabled')) {
+            $rules['g-recaptcha-response'] = 'required|captcha';
+        }
 
         if (setting('tos')) {
             $rules['tos'] = 'accepted';

@@ -15,7 +15,6 @@ class LoginRequest extends Request
     public function rules()
     {
 
-
         $rules = [
             'username' => 'required',
             'password' => 'required'

@@ -2,6 +2,10 @@
 
 @section('page-title', __('Sign Up'))
 
+@if (setting('registration.captcha.enabled'))
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+@endif
+
 @section('content')
 
     <div class="col-md-8 col-lg-8 col-xl-6 mx-auto my-5p">
@@ -192,6 +196,12 @@
 
                             </div>
                         </div>
+
+                        @if (setting('registration.captcha.enabled'))
+                            <div class="form-group my-4">
+                                {!! app('captcha')->display() !!}
+                            </div>
+                        @endif
 
                         <div class="form-group mt-4">
                             <button type="submit" class="btn btn-primary btn-lg btn-block" id="btn-login">
