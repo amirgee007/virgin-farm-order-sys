@@ -290,29 +290,26 @@
 
                         <div class="form-groups">
                             <label for="file_inventory" class="form-label">Click to Upload Inventory File</label>
-                            <input class="form-control" type="file" id="file_inventory" name="file_inventory">
+                            <input class="form-control" required type="file" id="file_inventory" name="file_inventory">
                         </div>
                         <small>
                             ITEM#, DESCRIPTION, PRICE 1, PRICE 2,PRICE 3,QUANTITY
                         </small>
 
-{{--                        <div class="form-group row">--}}
-{{--                            <label for="dateInput" class="col-sm-3 col-form-label">Date in</label>--}}
-{{--                            <div class="col-sm-8 mt-2">--}}
-{{--                                <input required type="text" name="date_in" class="form-control-sm datepicker" id="dateInput" placeholder="Date In">--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-
                         <div class="form-group">
-                            <input type="hidden" name="range" value="" class="dateRangeVal">
-                            <label for="dateRange" class="form-label mt-3">Date IN/OUT</label>
+                            <input type="hidden" required name="range" value="" class="dateRangeVal">
+                            <label for="dateRange" class="form-label mt-3">Date Range</label>
                             <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
                                 <i class="fa fa-calendar"></i>&nbsp;
                                 <span></span>
                                 &nbsp;<i class="fa fa-caret-down"></i>
                             </div>
                         </div>
-                        <br>
+                        <br><br>
+                        <div class="form-groups">
+                            <label for="expired_at" class="form-label">Expiry Time</label>
+                            <input class="form-control" id="expired_at" type="time" name="expired_at">
+                        </div>
                         <br>
                         <div class="form-check"
                              title="Please confirm if you would like to mark all these products as special seasonal items for the above selected dates." data-toggle="tooltip" data-placement="left" >

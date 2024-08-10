@@ -363,6 +363,7 @@ class ProductsController extends Controller
             try {
 
                 $unique = uniqid();
+                $expiredtime = null;
                 $filenamePut = 'extraBulk/' . $unique . '.' . $extension;
                 $filenameRead = 'app/extraBulk/' . $unique . '.' . $extension;
 
@@ -374,6 +375,13 @@ class ProductsController extends Controller
                     if ($index == 1) {
                         $this->dateIn = $this->excelSerialDateToDate($row['3']);
                         $this->dateOut = $this->excelSerialDateToDate($row['5']);
+
+                        $expiredtime = trim($row['5']);
+                        if (!empty($expiredtime) && Carbon::hasFormat($expiredtime, 'g:i A')) {
+                            $expiredtime = Carbon::createFromFormat('g:i A', $expiredtime)->format('H:i');
+                        } else {
+                            $expiredtime = null;
+                        }
                     }
 
                     if ($index > 5) {
@@ -403,6 +411,9 @@ class ProductsController extends Controller
                             if (floatval(trim($row[4])) > 0) {
                                 $data['price_hawaii'] = trim($row[4]);
                             }
+
+                            if ($expiredtime)
+                                $data['expired_at'] = $expiredtime;
 
                             ProductQuantity::updateOrCreate([
                                 'product_id' => $product->id,
@@ -479,6 +490,9 @@ class ProductsController extends Controller
                             #just to make products as special for us in system.
                             if ($request->is_special)
                                 $data['is_special'] = 1;
+
+                            if ($request->expired_at)
+                                $data['expired_at'] = $request->expired_at;
 
                             #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
                             ProductQuantity::updateOrCreate([
