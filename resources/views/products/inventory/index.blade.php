@@ -23,7 +23,7 @@
              data-trigger="hover"
              data-toggle="tooltip">
             <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="1" {{auth()->user()->supplier_id == 1 ? 'checked' :''}}>
-            <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin F.</label>
+            <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin Farm.</label>
         </div>
         <div class="form-check form-check-inline"
              title="Switch Inventory to Dutch Flowers"
@@ -107,7 +107,8 @@
                 <div class="card-body mt-0 p-3">
                     <span>
                         <b>
-                            1. Enter your shipping information <small class="text-primary">(** You are browsing <b>{{$user->supplier_id == 1 ? 'Virgin Farms' : 'Dutch'}}</b> flowers)</small>
+                            1. Enter your shipping information
+                            <small class="text-primary">(** You are browsing <b>{{ $user->supplier_id == 1 ? 'Virgin Farms'  : ($user->supplier_id == 2 ? 'Dutch' : 'Special and Seasonal ') }}</b> flowers) </small>
                              <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
                                  <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
                                     title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
@@ -236,7 +237,7 @@
                                                      class="img-thumbnail" alt="Virgin Farm">
                                                 {{ $product->product_text }}
 
-                                                {!!  $product->supplier_id ==3 ? '<i class="fas fa-bolt text-danger blink" title="Special and Discount offers"></i>' :'' !!}
+                                                {!!  $product->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
 
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp

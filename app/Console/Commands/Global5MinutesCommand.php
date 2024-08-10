@@ -34,13 +34,12 @@ class Global5MinutesCommand extends Command
             ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->delete();
 
             // Update supplier ID
-            \DB::statement("UPDATE table_products p SET p.supplier_id = 1 WHERE p.supplier_id = 3 AND NOT EXISTS (SELECT 1 FROM table_qty q WHERE q.item_no = p.item_no)");
-
-            Log::info('Job running every 6 hours to update supplier ID and delete old records.');
+            #\DB::statement("UPDATE table_products p SET p.supplier_id = 1 WHERE p.supplier_id = 3 AND NOT EXISTS (SELECT 1 FROM table_qty q WHERE q.item_no = p.item_no)");
         }
 
         $this->emptyCartIf1HourPassed();
 
+        Log::info('Job running every 10 minutes to update supplier ID and delete old records.');
         #Cart::where('user_id', auth()->id())->delete();
     }
 

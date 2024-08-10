@@ -14,7 +14,7 @@
 
         {{ $product->product_text }}
 
-        {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}
+{{--        {!!  $product->is_deal ? '<i class="fas fa-bolt text-danger" title="Deal"></i>' :'' !!}--}}
     </td>
 
     <td class="align-middle">{{ $product->unit_of_measure }}</td>

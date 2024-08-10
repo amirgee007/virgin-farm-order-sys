@@ -22,6 +22,8 @@ return new class extends Migration
 
             $table->date('date_in')->nullable();
             $table->date('date_out')->nullable();
+            $table->boolean('is_special')->after('date_out')->default(0);
+
             $table->timestamps();
         });
 

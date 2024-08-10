@@ -62,9 +62,16 @@ class ProductsController extends Controller
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
-            ->where('product_quantities.quantity', '>', 0)
-            ->where('products.supplier_id', $user->supplier_id)
-            ->distinct('products.id');
+            ->where('product_quantities.quantity', '>', 0);
+
+        // Apply conditions based on the supplier_id and for the special products
+        if (in_array($user->supplier_id, [1, 2])) {
+            $query->where('products.supplier_id', $user->supplier_id);
+        } elseif ($user->supplier_id == 3) {
+            $query->where('product_quantities.is_special', 1);
+        }
+
+        $query->distinct('products.id');
 
         if ($date_shipped) {
             $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');
@@ -99,7 +106,7 @@ class ProductsController extends Controller
 
         $products = $query->groupBy('products.id')
             ->orderBy('product_text')
-            ->selectRaw('supplier_id,product_quantities.product_id as product_id, products.id as id, product_text, image_url, is_deal, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
+            ->selectRaw('supplier_id,product_quantities.product_id as product_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
             ->paginate(100);
 
         $fixed = [
@@ -470,9 +477,11 @@ class ProductsController extends Controller
                                 $data['price_hawaii'] = trim($row[4]);
                             }
 
+                            #just to make products as special for us in system.
+                            if ($request->is_special)
+                                $data['is_special'] = 1;
+
                             #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
-
-
                             ProductQuantity::updateOrCreate([
                                 'product_id' => $product->id,
                                 'item_no' => $product->item_no,
@@ -480,8 +489,6 @@ class ProductsController extends Controller
                                 'date_out' => $date_out,
                             ], $data);
 
-                            if($request->is_special)
-                                $product->update([ 'supplier_id' => 3 ]); #maybe later need to use the is_deal column to make this feature as live.
                         } else {
                             $data['item_no'] = trim($row[0]);
                             $data['product_text'] = trim($row[1]);
@@ -646,6 +653,7 @@ class ProductsController extends Controller
             'quantity' => 0,
             'date_in' => null,
             'date_out' => null,
+            'is_special' => 0,
         ]);
 
         session()->flash('app_message', 'Inventory has been reset successfully.');
@@ -759,9 +767,10 @@ class ProductsController extends Controller
                 'quantity' => 0,
                 'date_in' => null,
                 'date_out' => null,
+                'is_special' => 0,
             ]);
 
-        session()->flash('app_message', 'Your selected inventory has been updated successfully.');
+        session()->flash('app_message', 'Your selected inventory has been reset successfully.');
         return back();
     }
 

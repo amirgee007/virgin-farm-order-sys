@@ -285,10 +285,11 @@
                         </div>
                         <br>
                         <br>
-                        <div class="form-check">
+                        <div class="form-check"
+                             title="Please confirm if you would like to mark all these products as special seasonal items for the above selected dates." data-toggle="tooltip" data-placement="left" >
                             <input class="form-check-input" type="checkbox" value="1" id="is_special" name="is_special">
                             <label class="form-check-label" for="is_special">
-                                Is Special Inventory(AA)?
+                                Is Special Seasonal Inventory?
                             </label>
                         </div>
                         <br>

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('product_text')->nullable();
 
             $table->string('vendor' , 50)->nullable();
-            $table->boolean('is_deal')->default(0);
+//            $table->boolean('is_deal')->default(0);
             $table->float('unit_price' , 8,2)->default(0);
             $table->string('stems' , 50)->nullable();
             $table->smallInteger('quantity')->default(0);
