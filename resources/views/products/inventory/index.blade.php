@@ -11,6 +11,11 @@
             cursor: pointer;
             font-size: 9px;
         }
+        .highlighted-date {
+            background-color: rgb(219, 31, 45) !important;
+            color: #ffffff !important;
+            border-radius: 60% !important;
+        }
     </style>
 @stop
 
@@ -156,9 +161,8 @@
                                         @endforeach
                                     </select>
 
-                                    <input type="date"
-{{--                                      min="{{$user->edit_order_id ? $date_shipped : date('Y-m-d') }}"--}}
-                                           min="{{date('Y-m-d') }}"
+                                    <input type="text"
+                                           readonly
                                            class="form-control rounded"
                                            id="date_shipped"
                                            name="date_shipped"
@@ -371,6 +375,34 @@
     @include('partials.toaster-js')
 
     <script>
+
+        // Array of dates to be highlighted
+        var highlightedDates = @json($highlightedDates);
+        if (!Array.isArray(highlightedDates)) {
+            highlightedDates = Object.values(highlightedDates);
+        }
+
+        $('#date_shipped').datepicker({
+            format: 'yyyy-mm-dd',
+            startDate: new Date(), // Disable past dates
+            beforeShowDay: function(date) {
+                var dateString = moment(date).format('YYYY-MM-DD');
+                if (highlightedDates.indexOf(dateString) !== -1) {
+                    return {
+                        classes: 'highlighted-date',
+                        tooltip: 'Our inventory is available for this date! Feel free to shop for some beautiful flowers.'
+                    };
+                }
+                return;
+            }
+        });
+
+        // Initialize Bootstrap tooltips for this one.
+        $('body').tooltip({
+            selector: '.highlighted-date',
+            placement: 'top',
+            trigger: 'hover'
+        });
 
         $('.img-thumbnail').click(function () {
             $('#imagePreviewId').attr('src', $(this).data('largeimg'));

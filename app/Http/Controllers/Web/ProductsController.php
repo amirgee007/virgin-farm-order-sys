@@ -136,6 +136,7 @@ class ProductsController extends Controller
 
         #need to make it in auto job and show some counter + time etc
         CartController::makeCartEmptyIfTimePassed();
+        $highlightedDates = $this->getHighlightedDates();
 
         return view('products.inventory.index', compact(
             'products',
@@ -145,10 +146,29 @@ class ProductsController extends Controller
             'priceCol',
             'date_shipped',
             'user',
-            'myOrders'
+            'myOrders',
+            'highlightedDates'
         ));
     }
 
+    public function getHighlightedDates(){
+        $highlightedDates = [];
+
+        $productQuantities = \DB::table('product_quantities')
+            ->select('date_in', 'date_out')
+            ->whereDate('date_out', '>=', Carbon::today())
+            ->get();
+
+        foreach ($productQuantities as $productQuantity) {
+            $period = \Carbon\CarbonPeriod::create($productQuantity->date_in, $productQuantity->date_out);
+            foreach ($period as $date) {
+                $highlightedDates[] = $date->format('Y-m-d');
+            }
+        }
+
+        // Ensure the dates are unique
+        return array_unique($highlightedDates);
+    }
 
     public function deleteProduct($id)
     {
