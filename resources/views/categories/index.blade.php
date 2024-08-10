@@ -65,7 +65,17 @@
                         @foreach ($categories as $index => $category)
                             <tr class="">
                                 <td class="align-middle {{in_array($category->category_id , $dutchCats) ? 'dutch' : 'virginFarm'}}">{{ ++$index }}</td>
-                                <td class="align-middle">{{ $category->category_id }}</td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="category_id"
+                                       data-type="number"
+                                       data-emptytext="empty"
+                                       data-pk="{{$category->id}}"
+                                       data-url="{{route('categories.update')}}"
+                                       data-value="{{ $category->category_id }}">
+                                    </a>
+                                </td>
                                 <td class="align-middle">
                                     <a class="editable"
                                        style="cursor:pointer;"
