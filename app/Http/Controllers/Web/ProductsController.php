@@ -84,10 +84,19 @@ class ProductsController extends Controller
         }
 
         if ($searching) {
-            $query->where(function ($q) use ($searching) {
-                $q->orWhere('products.item_no', 'like', "%{$searching}%");
-                $q->orWhere('product_text', 'like', "%{$searching}%");
-                $q->orWhere('unit_of_measure', 'like', "%{$searching}%");
+
+            $catIds = Category::where('description', 'like', "%{$searching}%")
+                ->pluck('category_id')
+                ->toArray();
+
+            $query->where(function ($q) use ($searching, $catIds) {
+                $q->where('products.item_no', 'like', "%{$searching}%")
+                    ->orWhere('product_text', 'like', "%{$searching}%")
+                    ->orWhere('unit_of_measure', 'like', "%{$searching}%");
+
+                if (!empty($catIds)) {
+                    $q->orWhereIn('products.category_id', $catIds);
+                }
             });
         }
 

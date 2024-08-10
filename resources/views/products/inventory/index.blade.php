@@ -180,7 +180,7 @@
                                     <input type="text"
                                            id="searching"
                                            class="form-control rounded ml-2"
-                                           placeholder="Search by name, item, variety, grade, color"
+                                           placeholder="Search by name, item, category, text etc"
                                            name="searching"
                                            value="{{\Request::get('searching')}}">
 
