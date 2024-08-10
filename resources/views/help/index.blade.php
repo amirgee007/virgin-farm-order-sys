@@ -38,6 +38,14 @@
             border-radius: 20px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Shadow for the box */
         }
+        .rounded{
+            border-radius: 35px !important;
+        }
+
+        .active-btn {
+            background-color: #28a745 !important; /* Green background for the active button */
+            color: white !important; /* White text color for better contrast */
+        }
     </style>
 @stop
 
@@ -59,17 +67,28 @@
         <div class="container-fluid help-search-container">
             <h1>Help & Frequently Asked Questions (FAQs) </h1>
             <div class="search-bar">
-                <input type="text" class="form-control search-input" placeholder="Search for any help, question etc">
+                <input type="text"  id="searchInput" class="form-control search-input" placeholder="Search for any help, question etc">
+            </div>
+
+            <!-- Buttons to Open Tabs -->
+            <div class="btn-group" role="group">
+                @foreach($tutorials as $index => $tutorial)
+                    <button type="button" class="btn btn-danger p-3 rounded btn-md mt-3 @if($index === 0) active-btn @endif" data-tab-index="{{ $index }}">
+                        {{ $tutorial['title'] }}
+                    </button>
+                @endforeach
             </div>
         </div>
+        
 
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="content-box">
-                        {!! $text->value !!}
+        <div class="container mt-5">
+            <!-- Tab Content -->
+            <div class="tab-content mt-3" id="myTabContent">
+                @foreach($tutorials as $index => $tutorial)
+                    <div class="tab-pane fade @if($index === 0) show active @endif" id="content-{{ $index }}" role="tabpanel">
+                        {!! $tutorial['content'] !!}
                     </div>
-                </div>
+                @endforeach
             </div>
         </div>
 
@@ -78,12 +97,43 @@
 @stop
 
 @section('scripts')
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @include('partials.toaster-js')
-{{--    <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>--}}
-{{--    <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>--}}
-
     <script>
+        $(document).ready(function() {
+            // Handle button click to show corresponding tab content
+            $('.btn[data-tab-index]').on('click', function() {
+                const tabIndex = $(this).data('tab-index');
+                // Remove active state from all buttons
+                $('.btn[data-tab-index]').removeClass('active-btn');
 
+                // Deactivate all tabs
+                $('.tab-pane').removeClass('show active');
+
+                // Activate the selected tab
+                $(`#content-${tabIndex}`).addClass('show active');
+
+                // Add active state to the clicked button
+                $(this).addClass('active-btn');
+            });
+
+            // Search functionality
+            $('#searchInput').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                let found = false;
+
+                $('.tab-pane').each(function(index) {
+                    if ($(this).text().toLowerCase().includes(searchTerm)) {
+                        // Deactivate all tabs
+                        $('.tab-pane').removeClass('show active');
+
+                        // Activate the corresponding tab if found
+                        $(`#content-${index}`).addClass('show active');
+
+                        found = true;
+                    }
+                });
+            });
+        });
     </script>
 @stop
