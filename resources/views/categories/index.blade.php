@@ -94,8 +94,8 @@
 
                                 <td>
                                     <select class="productTypeSelect" data-id="{{$category->id}}">
-                                        <option value="vf" {{$category->product_type == 'vf' ? 'selected' :''}} >Virgin Farms</option>
-                                        <option value="dutch" {{$category->product_type == 'dutch' ? 'selected' :''}} >Dutch Flower</option>
+                                        <option class="text-primary" value="vf" {{$category->product_type == 'vf' ? 'selected' :''}} >Virgin Farms</option>
+                                        <option class="text-danger" value="dutch" {{$category->product_type == 'dutch' ? 'selected' :''}} >Dutch Flower</option>
                                     </select>
                                 </td>
 
@@ -155,6 +155,7 @@
                 },
                 success: function(response) {
                     toastr.success('Product Type updated succesfully.');
+                    location.reload();
                 },
                 error: function(response) {
                     toastr.error('Something went wrong plz check with admin.');

@@ -578,7 +578,7 @@
 
                         if(item == 'date_shipped')
                             item = 'date';
-                        
+
                         var valueHere = 'Not available for '+ item +' '+ value;
 
                         $('.noRecordText').text(valueHere);
