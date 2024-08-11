@@ -165,6 +165,7 @@
                                            readonly
                                            class="form-control rounded"
                                            id="date_shipped"
+                                           placeholder="When to Ship?"
                                            name="date_shipped"
                                            title="When do you want your product to be shipped?"
                                            data-trigger="hover"
@@ -577,6 +578,7 @@
 
                         if(item == 'date_shipped')
                             item = 'date';
+                        
                         var valueHere = 'Not available for '+ item +' '+ value;
 
                         $('.noRecordText').text(valueHere);
