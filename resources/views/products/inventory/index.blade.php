@@ -89,6 +89,30 @@
             }
         }
 
+        .date-input-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #date-input {
+            width: 100%;
+            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .calendar-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none; /* Prevent the icon from being clickable */
+            color: #888;
+            font-size: 18px;
+        }
+
         /*button {*/
         /*font-size: 11px !important;*/
         /*font-weight: 300 !important;*/
@@ -161,16 +185,48 @@
                                         @endforeach
                                     </select>
 
-                                    <input type="text"
-                                           readonly
-                                           class="form-control rounded"
-                                           id="date_shipped"
-                                           placeholder="When to Ship?"
-                                           name="date_shipped"
-                                           title="When do you want your product to be shipped?"
-                                           data-trigger="hover"
-                                           data-toggle="tooltip"
-                                           value="{{ $date_shipped }}">
+                                    <style>
+                                        .date-input-container {
+                                            position: relative;
+                                            display: inline-block;
+                                            width: 250px; /* Adjust as needed */
+                                        }
+
+                                        #date_shipped {
+                                            width: 100%;
+                                            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
+                                            font-size: 16px;
+                                            border: 1px solid #ccc;
+                                            border-radius: 4px;
+                                            box-sizing: border-box;
+                                        }
+
+                                        .calendar-icon {
+                                            position: absolute;
+                                            right: 10px;
+                                            top: 50%;
+                                            transform: translateY(-50%);
+                                            cursor: pointer;
+                                            color: #888;
+                                            font-size: 18px;
+                                        }
+                                    </style>
+
+
+
+
+                                    <div class="date-input-container">
+                                        <input type="text"
+                                               readonly
+                                              id="date_shipped"
+                                               placeholder="When to Ship?"
+                                               name="date_shipped"
+                                               title="When do you want your product to be shipped?"
+                                               data-trigger="hover"
+                                               data-toggle="tooltip"
+                                               value="{{ $date_shipped }}">
+                                        <span class="calendar-icon">&#x1F4C5;</span> <!-- Unicode calendar icon -->
+                                    </div>
 
                                     <select class="form-control rounded ml-3" name="category" id="category">
                                         <option selected value="">All Categories</option>
@@ -479,9 +535,19 @@
             });
         });
 
-        $('#date_shipped, #category').change(function () {
+        $('#date_shipped, #category').change(function (event) {
 
             if ($(this).attr('id') === 'date_shipped'){
+
+                // event.preventDefault(); // Prevent form submission by default
+                //
+                // var dateValue = $(this).val();
+                // var datePattern = /^\d{4}-\d{2}-\d{2}$/; // Simple regex for YYYY-MM-DD format
+                //
+                // if (dateValue.match(datePattern)) {
+                //     $(this).closest('form').submit(); // Submit the form
+                // }
+                
                 var dateShipped = $(this).val();
                 $.ajax({
                     url: '{{ route("date-carrier-validation") }}',
