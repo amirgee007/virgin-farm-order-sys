@@ -29,13 +29,28 @@ class Global5MinutesCommand extends Command
      */
     public function handle()
     {
-        if (now()->hour % 6 == 0) {
-            // Delete old records
-            ProductQuantity::query()->whereDate('date_out', '<', now()->toDateString())->delete();
-
-            // Update supplier ID
-            #\DB::statement("UPDATE table_products p SET p.supplier_id = 1 WHERE p.supplier_id = 3 AND NOT EXISTS (SELECT 1 FROM table_qty q WHERE q.item_no = p.item_no)");
+        // Only run the job between 00:00 and 01:00 hours
+        if (now()->hour >= 0 && now()->hour < 1) {
+            ProductQuantity::query()
+                ->where('date_out', '<', now()->format('Y-m-d'))
+                ->delete();
         }
+
+        // Time check every 10 minutes within the 00:00 - 01:00 window
+        $productQuantities = ProductQuantity::query()
+            ->where('date_out', '=', now()->format('Y-m-d'))
+            ->where(function ($query) {
+                $query->whereNull('expired_at')
+                    ->orWhere('expired_at', '<=', now()->format('H:i:s'));
+            })
+            ->get();
+
+        // Iterate through the product quantities to check and remove associated cart records
+        foreach ($productQuantities as $productQuantity) {
+            Cart::query()->where('product_id', $productQuantity->product_id)->delete();
+            $productQuantity->delete();
+        }
+
 
         $this->emptyCartIf1HourPassed();
 

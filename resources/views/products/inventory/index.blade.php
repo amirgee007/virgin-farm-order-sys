@@ -212,9 +212,6 @@
                                         }
                                     </style>
 
-
-
-
                                     <div class="date-input-container">
                                         <input type="text"
                                                readonly
@@ -547,7 +544,7 @@
                 // if (dateValue.match(datePattern)) {
                 //     $(this).closest('form').submit(); // Submit the form
                 // }
-                
+
                 var dateShipped = $(this).val();
                 $.ajax({
                     url: '{{ route("date-carrier-validation") }}',
