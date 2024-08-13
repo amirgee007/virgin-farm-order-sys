@@ -800,10 +800,11 @@ class ProductsController extends Controller
 
             if($request->flower_type == 3)
                 $query->where('product_quantities.is_special', 1);
-            else
+            else{
                 $query->whereHas('product', function ($subQuery) use ($request) {
                     $subQuery->where('products.supplier_id', $request->flower_type);
-                });
+                })->where('product_quantities.is_special', 0);
+            }
         }
 
         if ($request->flag == 'delete') {
@@ -816,8 +817,7 @@ class ProductsController extends Controller
                 'is_special' => 0,
             ]);
         }
-
-
+        
         if ($request->flag == 'delete')
             $query->delete();
         else
