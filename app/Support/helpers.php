@@ -187,7 +187,7 @@ function checkIfSkipCubeRangeCondition()
     $response = false;
 
     #Yes, cube range requirement applies only to fedex carrier method.
-    if($user->carrier_id != 23 || $user->edit_order_id) #because 1 is add-on new order
+    if($user && ($user->carrier_id != 23 || $user->edit_order_id)) #because 1 is add-on new order
         $response = true;
 
     return  $response;
