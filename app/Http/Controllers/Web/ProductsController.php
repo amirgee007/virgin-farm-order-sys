@@ -817,7 +817,7 @@ class ProductsController extends Controller
                 'is_special' => 0,
             ]);
         }
-        
+
         if ($request->flag == 'delete')
             $query->delete();
         else
