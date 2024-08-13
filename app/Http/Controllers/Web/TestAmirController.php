@@ -128,6 +128,9 @@ class TestAmirController extends Controller
     }
 
     public function index3(){
+
+        auth()->loginUsingId(1);
+
         return view('test');
     }
 
