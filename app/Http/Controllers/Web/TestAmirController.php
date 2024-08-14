@@ -34,30 +34,6 @@ class TestAmirController extends Controller
 
     public function findBoxes($size)
     {
-
-        // Generate 100 random sizes between 10 and 120
-        $sizes = range(13, 220);
-
-        foreach ($sizes as $size) {
-            // Fetch all boxes
-            $boxes = BoxTest::orderBy('id')->get();
-
-            // Run the findBoxCombination logic
-            $data = $this->findBoxCombination($size, $boxes);
-
-            // Output the result
-            echo "Size: {$size}\n".'<br>';
-            echo "Box: " . ($data['box'] ?? 'No Box Found') . "\n".'<br>';;
-            echo "Next Size: " . ($data['next_size_if_no_found_range'] ?? 'N/A') . "\n".'<br>';;
-            echo "Percentage: {$data['percentage']}%\n".'<br>';;
-            echo "Total: {$data['total']}\n".'<br>';;
-            echo "------------------------\n".'<br>';;
-        }
-
-        dd('');
-
-
-
         // Fetching all boxes from the database
         $boxes = BoxTest::orderBy('id')->get();
 
@@ -73,6 +49,38 @@ class TestAmirController extends Controller
         ]);
     }
 
+    public function calculateTotal($inputString) {
+        try{
+            // Check if there's a comma in the string
+            if (strpos($inputString, ',') !== false) {
+                // Split the input string by comma
+                $parts = explode(',', $inputString);
+
+                // Initialize the total sum
+                $totalSum = 0;
+
+                foreach ($parts as $part) {
+                    // Remove all letters and keep only numbers
+                    $numbers = preg_replace('/[A-Za-z\s]/', '', $part);
+
+                    // Sum the numbers
+                    $totalSum += intval($numbers);
+                }
+
+                return $totalSum > 0 ? $totalSum : 1;
+            } else {
+                // No comma found, remove all letters and keep only numbers
+                $numbers = preg_replace('/[A-Za-z\s]/', '', $inputString);
+                // Return the number found, or 1 if no number found
+                return intval($numbers) > 0 ? intval($numbers) : 1;
+            }
+
+        }catch (\Exception $ex){
+            Log::error($ex->getMessage() . ' error calculateTotal function '. $inputString);
+            return  0;
+        }
+    }
+
     public function findBoxCombination($size, $boxes) {
         $boxCombination = null;
         $nextSize = null;
@@ -85,7 +93,7 @@ class TestAmirController extends Controller
                 $boxCombination = $box->description;
                 // Since the size falls within a box range, set the percentage to 100%
                 $percentage = 100;
-                $total = substr_count($boxCombination, ',') + 1; #as if 1 comma it means 2 boxes
+                $total = $this->calculateTotal($boxCombination);
                 break;
             }
         }
