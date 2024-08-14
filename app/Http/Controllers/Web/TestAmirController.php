@@ -34,6 +34,30 @@ class TestAmirController extends Controller
 
     public function findBoxes($size)
     {
+
+        // Generate 100 random sizes between 10 and 120
+        $sizes = range(13, 220);
+
+        foreach ($sizes as $size) {
+            // Fetch all boxes
+            $boxes = BoxTest::orderBy('id')->get();
+
+            // Run the findBoxCombination logic
+            $data = $this->findBoxCombination($size, $boxes);
+
+            // Output the result
+            echo "Size: {$size}\n".'<br>';
+            echo "Box: " . ($data['box'] ?? 'No Box Found') . "\n".'<br>';;
+            echo "Next Size: " . ($data['next_size_if_no_found_range'] ?? 'N/A') . "\n".'<br>';;
+            echo "Percentage: {$data['percentage']}%\n".'<br>';;
+            echo "Comma Count: {$data['total']}\n".'<br>';;
+            echo "------------------------\n".'<br>';;
+        }
+
+        dd('');
+
+
+
         // Fetching all boxes from the database
         $boxes = BoxTest::orderBy('id')->get();
 
