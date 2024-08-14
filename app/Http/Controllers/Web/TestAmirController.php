@@ -35,7 +35,7 @@ class TestAmirController extends Controller
     public function findBoxes($size)
     {
         // Fetching all boxes from the database
-        $boxes = BoxTest::all();
+        $boxes = BoxTest::all()->toArray();
 
         // Find the appropriate box combination based on the size
         list($boxCombination, $nextSize, $percentage) = $this->findBoxCombination($size, $boxes);
@@ -50,31 +50,81 @@ class TestAmirController extends Controller
 
     private function findBoxCombination($size, $boxes)
     {
-        $boxCombination = [];
-        $nextSize = null;
+        // Sort boxes by MIN_CUBE in descending order to prioritize larger boxes
+        usort($boxes, function($a, $b) {
+            return $b['min_value'] <=> $a['min_value'];
+        });
+
+        $result = [];
         $remainingSize = $size;
 
-        foreach ($boxes as $box) {
-            if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
-                $boxCombination[] = $box->description;
-                $remainingSize -= $box->min_value;
+        // Try to find the largest combination of boxes
+        while ($remainingSize > 0) {
+            $found = false;
+
+            // Check for pairs of the largest boxes first to prevent using smaller boxes unnecessarily
+            foreach ($boxes as $box) {
+                while ($remainingSize >= $box['min_value'] * 2) {
+                    $result[] = $box['description'];
+                    $result[] = $box['description'];
+                    $remainingSize -= $box['min_value'] * 2;
+                    $found = true;
+                }
+                if ($found) {
+                    break;
+                }
+            }
+
+            if ($found) {
+                continue;
+            }
+
+            // Check for the largest single box that can fit
+            foreach ($boxes as $box) {
+                if ($remainingSize >= $box['min_value']) {
+                    $result[] = $box['description'];
+                    $remainingSize -= $box['min_value'];
+                    $found = true;
+                    break;
+                }
+            }
+
+            if (!$found) {
+                // If no suitable box found, break to avoid infinite loop
+                break;
             }
         }
 
-        // Calculate the next size if there's any remaining size
-        if ($remainingSize > 0) {
-            $nextSize = $remainingSize;
+        $nextSize = $this->calculateNextSize($remainingSize, $size);
+        $percentage = $this->calculatePercentage($size, $nextSize);
+
+        return [$result, $nextSize, $percentage];
+    }
+    private function calculateNextSize($remainingSize, $size)
+    {
+        if ($remainingSize === 0) {
+            return null; // No next size needed, the fit is perfect
         }
 
-        // Calculate the percentage of space used in the box
-        $percentage = $size > 0 ? (1 - ($remainingSize / $size)) * 100 : 0;
+        // Fetch the boxes again in case they are needed for this calculation
+        $boxes = BoxTest::all()->toArray();
 
-        // Round the percentage to 2 decimal places
-        $percentage = round($percentage, 2);
+        // Find the next minimum size required to reach a valid box size
+        foreach ($boxes as $box) {
+            if ($remainingSize < $box['min_value']) {
+                return $box['min_value'] - $remainingSize;
+            }
+        }
 
-        return [$boxCombination, $nextSize, $percentage];
+        // If the size is larger than the largest box, suggest adding more to reach the largest box size
+        foreach ($boxes as $box) {
+            if ($size < $box['min_value']) {
+                return $box['min_value'] - $size;
+            }
+        }
+
+        return null;
     }
-
     private function calculatePercentage($currentSize, $nextSize)
     {
         if ($nextSize == 0) {
@@ -86,7 +136,6 @@ class TestAmirController extends Controller
 
         return round($percentage, 2);
     }
-
     public function index3(){
 
         auth()->loginUsingId(1);
