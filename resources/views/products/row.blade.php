@@ -2,7 +2,7 @@
 
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
     <td class="align-middle">
-        <span class="badge badge-lg badge-danger" title="Tota Rows found for the Inventory bellow">
+        <span class="badge badge-lg badge-danger" title="Total Rows found for the Inventory bellow.">
             <i class="fa fa-arrow-down" aria-hidden="true"></i>
             {{$prodQty ? count($prodQty) : 0}}
         </span>
