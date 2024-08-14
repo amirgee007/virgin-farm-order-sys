@@ -50,7 +50,7 @@ class TestAmirController extends Controller
             echo "Box: " . ($data['box'] ?? 'No Box Found') . "\n".'<br>';;
             echo "Next Size: " . ($data['next_size_if_no_found_range'] ?? 'N/A') . "\n".'<br>';;
             echo "Percentage: {$data['percentage']}%\n".'<br>';;
-            echo "Comma Count: {$data['total']}\n".'<br>';;
+            echo "Total: {$data['total']}\n".'<br>';;
             echo "------------------------\n".'<br>';;
         }
 
