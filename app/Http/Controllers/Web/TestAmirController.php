@@ -9,6 +9,7 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Mail\VirginFarmsSystemMail;
 use Vanguard\Models\Box;
+use Vanguard\Models\BoxTest;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ShippingAddress;
@@ -33,11 +34,15 @@ class TestAmirController extends Controller
 
     public function findBoxes($size)
     {
-        list($boxes, $nextSize, $percentage) = $this->findBoxCombination($size, $this->boxes);
+        // Fetching all boxes from the database
+        $boxes = BoxTest::all();
+
+        // Find the appropriate box combination based on the size
+        list($boxCombination, $nextSize, $percentage) = $this->findBoxCombination($size, $boxes);
 
         return response()->json([
             'size' => $size,
-            'boxes' => $boxes,
+            'boxes' => $boxCombination,
             'next_size' => $nextSize,
             'percentage' => $percentage
         ]);
@@ -45,74 +50,29 @@ class TestAmirController extends Controller
 
     private function findBoxCombination($size, $boxes)
     {
-        // Sort boxes by MIN_CUBE in descending order to prioritize larger boxes
-        usort($boxes, function($a, $b) {
-            return $b['MIN_CUBE'] <=> $a['MIN_CUBE'];
-        });
-
-        $result = [];
+        $boxCombination = [];
+        $nextSize = null;
         $remainingSize = $size;
 
-        // Try to find the largest combination of boxes
-        while ($remainingSize > 0) {
-            $found = false;
-
-            // Check for pairs of the largest boxes first to prevent using smaller boxes unnecessarily
-            foreach ($boxes as $box) {
-                while ($remainingSize >= $box['MIN_CUBE'] * 2) {
-                    $result[] = $box['BOXES'];
-                    $result[] = $box['BOXES'];
-                    $remainingSize -= $box['MIN_CUBE'] * 2;
-                    $found = true;
-                }
-                if ($found) {
-                    break;
-                }
-            }
-
-            if ($found) {
-                continue;
-            }
-
-            // Check for the largest single box that can fit
-            foreach ($boxes as $box) {
-                if ($remainingSize >= $box['MIN_CUBE']) {
-                    $result[] = $box['BOXES'];
-                    $remainingSize -= $box['MIN_CUBE'];
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found) {
-                // If no suitable box found, break to avoid infinite loop
-                break;
+        foreach ($boxes as $box) {
+            if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
+                $boxCombination[] = $box->description;
+                $remainingSize -= $box->min_value;
             }
         }
 
-        $nextSize = $this->calculateNextSize($remainingSize, $size);
-        $percentage = $this->calculatePercentage($size, $nextSize);
-
-        return [$result, $nextSize, $percentage];
-    }
-
-    private function calculateNextSize($remainingSize, $size)
-    {
-        // Find the next minimum size required to reach a valid box size
-        foreach ($this->boxes as $box) {
-            if ($remainingSize < $box['MIN_CUBE']) {
-                return $box['MIN_CUBE'] - $remainingSize;
-            }
+        // Calculate the next size if there's any remaining size
+        if ($remainingSize > 0) {
+            $nextSize = $remainingSize;
         }
 
-        // If the size is larger than the largest box, suggest adding more to reach the largest box size
-        foreach ($this->boxes as $box) {
-            if ($size < $box['MIN_CUBE']) {
-                return $box['MIN_CUBE'] - $size;
-            }
-        }
+        // Calculate the percentage of space used in the box
+        $percentage = $size > 0 ? (1 - ($remainingSize / $size)) * 100 : 0;
 
-        return null;
+        // Round the percentage to 2 decimal places
+        $percentage = round($percentage, 2);
+
+        return [$boxCombination, $nextSize, $percentage];
     }
 
     private function calculatePercentage($currentSize, $nextSize)
