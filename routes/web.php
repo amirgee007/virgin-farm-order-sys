@@ -46,6 +46,7 @@ Route::group(['middleware' => ['password-reset', 'guest']], function () {
 
 Route::post('abc/xyz', 'TestAmirController@index2')->name('test-amir');
 Route::get('test-cubes', 'TestAmirController@index3')->name('test-cubes');
+Route::get('amir/{size}', 'TestAmirController@findBoxes');
 
 /**
  * Two-Factor Authentication

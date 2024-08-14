@@ -37,60 +37,52 @@ class TestAmirController extends Controller
         // Fetching all boxes from the database
         $boxes = BoxTest::all();
 
-        // Find the appropriate box combination based on the size
-        list($boxCombination, $nextSize, $percentage) = $this->findBoxCombination($size, $boxes);
+        $size = $size >220 ? 220 : $size;
+        $dataAllBelow = $this->findBoxCombination($size, $boxes);
 
         return response()->json([
             'size' => $size,
-            'boxes' => $boxCombination,
-            'next_size' => $nextSize,
-            'percentage' => $percentage
+            'box' => $dataAllBelow['box'],
+            'next_size_if_no_found_range' => $dataAllBelow['next_size_if_no_found_range'],
+            'percentage' => $dataAllBelow['percentage'],
+            'total' => $dataAllBelow['total']
         ]);
     }
 
-    private function findBoxCombination($size, $boxes)
-    {
-        $boxCombination = [];
+    public function findBoxCombination($size, $boxes) {
+        $boxCombination = null;
         $nextSize = null;
-        $remainingSize = $size;
+        $percentage = null;
+        $total = 0;
 
-        // Sort boxes by min_value in descending order to maximize space usage
-        usort($boxes, function($a, $b) {
-            return $b->min_value - $a->min_value;
-        });
-
+        // Loop through each box and check if the size falls within its range
         foreach ($boxes as $box) {
-            if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
-                $boxCombination[] = $box->description;
-                $remainingSize -= $box->min_value;
-            }
-        }
+            if ($size >= $box->min_value && $size <= $box->max_value) {
+                $boxCombination = $box->description;
 
-        // If remainingSize fits within any box range, set percentage to 100
-        $isRemainingSizeInRange = false;
-        foreach ($boxes as $box) {
-            if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
-                $isRemainingSizeInRange = true;
+                // Count the number of times "coman" appears in the description
+                $total = substr_count($boxCombination, ',') + 1; #as if 1 comma it means 2 boxes
                 break;
             }
         }
 
-        if ($remainingSize > 0) {
-            $nextSize = $remainingSize;
+        // If no box combination is found, calculate the next closest size
+        if (!$boxCombination) {
+            foreach ($boxes as $box) {
+                if ($size < $box->min_value) {
+                    $nextSize = $box->min_value;
+                    $percentage = round((($nextSize - $size) / $size) * 100, 2);
+                    break;
+                }
+            }
         }
 
-        // Calculate the percentage of space used in the box
-        if ($isRemainingSizeInRange) {
-            $percentage = 100;
-            $nextSize = 0; // Since it's considered 100% used, set next size to 0
-        } else {
-            $percentage = $size > 0 ? (1 - ($remainingSize / $size)) * 100 : 0;
-        }
-
-        // Round the percentage to 2 decimal places
-        $percentage = round($percentage, 2);
-
-        return [$boxCombination, $nextSize, $percentage];
+        return [
+            'box' => $boxCombination,
+            'next_size_if_no_found_range' => $nextSize,
+            'percentage' => $percentage,
+            'total' => $total
+        ];
     }
 
     private function calculateNextSize($remainingSize, $size)
