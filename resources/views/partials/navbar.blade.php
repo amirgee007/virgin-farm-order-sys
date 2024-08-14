@@ -74,7 +74,7 @@
                         @endforeach
                         <input type="hidden" id="itsSizeDynamic" value="{{$size}}">
                         <div class="col-lg-4 col-sm-6 col-6 total-section text-right">
-                            <p>Boxes:<b class="text-primary"> 1 </b></p>
+                            <p>Boxes:<b class="text-primary">... </b></p>
                         </div>
 
                         <div class="col-lg-4 col-sm-6 col-6 total-section text-right">
