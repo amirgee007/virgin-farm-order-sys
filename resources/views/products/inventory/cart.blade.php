@@ -178,8 +178,11 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Order Notes(Optional)</label>
-
                                 <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()" placeholder="leave comments or notes for your sales representative."></textarea>
+                                <br>
+                                <b>
+                                    ***Online orders aren't fully confirmed until processed. Availability may affect fulfillment, so changes or cancellations can occur.
+                                </b>
                             </div>
                             <div class="col-md-6">
                                 <table class="table table-bordered">
@@ -190,7 +193,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="5" class="text-right">
-                                            <h4><strong>Order Subtotal: ${{ $total }}</strong></h4>
+                                            <h5><strong>Order Subtotal: ${{ $total }}</strong></h5>
                                         </td>
                                     </tr>
                                     @php
@@ -199,17 +202,17 @@
                                     @endphp
                                     <tr>
                                         <td colspan="5" class="text-right">
-                                            <h4><strong>Service/Transportation: ${{ $totalCubeTax }}</strong></h4>
+                                            <h5><strong>Service/Transportation: ${{ $totalCubeTax }}</strong></h5>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="5" class="text-right">
-                                            <h4><strong>Tax $0</strong></h4>
+                                            <h5><strong>Tax $0</strong></h5>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td colspan="5" class="text-right">
-                                            <h3><strong>Order Total: ${{ $orderTotal }}</strong></h3>
+                                            <h4><strong>Order Total: <span class="text-danger">${{ $orderTotal }}</span></strong></h4>
                                         </td>
                                     </tr>
                                     @if(isDeliveryChargesApply())
