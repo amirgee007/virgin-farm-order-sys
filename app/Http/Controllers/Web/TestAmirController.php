@@ -51,7 +51,7 @@ class TestAmirController extends Controller
 
     public function calculateTotal($inputString) {
         try{
-            // Check if there's a comma in the string
+            // Check if there's a comma in the string 1 S, 1 L, 1 ML
             if (strpos($inputString, ',') !== false) {
                 // Split the input string by comma
                 $parts = explode(',', $inputString);
@@ -69,7 +69,7 @@ class TestAmirController extends Controller
 
                 return $totalSum > 0 ? $totalSum : 1;
             } else {
-                // No comma found, remove all letters and keep only numbers
+                // No comma found, remove all letters and keep only numbers 2 x ML
                 $numbers = preg_replace('/[A-Za-z\s]/', '', $inputString);
                 // Return the number found, or 1 if no number found
                 return intval($numbers) > 0 ? intval($numbers) : 1;
