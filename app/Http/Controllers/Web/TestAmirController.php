@@ -50,55 +50,29 @@ class TestAmirController extends Controller
 
     private function findBoxCombination($size, $boxes)
     {
-        // Sort boxes by MIN_CUBE in descending order to prioritize larger boxes
-        usort($boxes, function($a, $b) {
-            return $b['min_value'] <=> $a['min_value'];
-        });
-
-        $result = [];
+        $boxCombination = [];
+        $nextSize = null;
         $remainingSize = $size;
 
-        // Try to find the largest combination of boxes
-        while ($remainingSize > 0) {
-            $found = false;
-
-            // Check for pairs of the largest boxes first to prevent using smaller boxes unnecessarily
-            foreach ($boxes as $box) {
-                while ($remainingSize >= $box['min_value'] * 2) {
-                    $result[] = $box['description'];
-                    $result[] = $box['description'];
-                    $remainingSize -= $box['min_value'] * 2;
-                    $found = true;
-                }
-                if ($found) {
-                    break;
-                }
-            }
-
-            if ($found) {
-                continue;
-            }
-
-            // Check for the largest single box that can fit
-            foreach ($boxes as $box) {
-                if ($remainingSize >= $box['min_value']) {
-                    $result[] = $box['description'];
-                    $remainingSize -= $box['min_value'];
-                    $found = true;
-                    break;
-                }
-            }
-
-            if (!$found) {
-                // If no suitable box found, break to avoid infinite loop
-                break;
+        foreach ($boxes as $box) {
+            if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
+                $boxCombination[] = $box->description;
+                $remainingSize -= $box->min_value;
             }
         }
 
-        $nextSize = $this->calculateNextSize($remainingSize, $size);
-        $percentage = $this->calculatePercentage($size, $nextSize);
+        // Calculate the next size if there's any remaining size
+        if ($remainingSize > 0) {
+            $nextSize = $remainingSize;
+        }
 
-        return [$result, $nextSize, $percentage];
+        // Calculate the percentage of space used in the box
+        $percentage = $size > 0 ? (1 - ($remainingSize / $size)) * 100 : 0;
+
+        // Round the percentage to 2 decimal places
+        $percentage = round($percentage, 2);
+
+        return [$boxCombination, $nextSize, $percentage];
     }
     private function calculateNextSize($remainingSize, $size)
     {
