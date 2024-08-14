@@ -56,17 +56,11 @@
                 <div class="dropdown-menu" style="max-height: 600px;   overflow:auto;">
                     <div class="row total-header-section">
                         <div class="col-lg-4 col-sm-6 col-6">
-{{--                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>--}}
-
-{{--                            <div id="message"></div>--}}
-
                             <div id="progress-container"
                                  title="You are closed to meet the size criteria."
                                  data-toggle="tooltip"
                                  data-placement="top"
                                  style="position: relative; width: 50px; height: 50px;"></div>
-
-                            {{--<span class="badge badge-pill badge-danger">{{ count($myCarts)  }}</span>--}}
                         </div>
                         @php $total = 0;  $totalQty = 0; $size = 0;@endphp
                         @foreach($myCarts as $details)
@@ -78,10 +72,12 @@
                             @endphp
 
                         @endforeach
-                        {{-- Just using for the cart size so we dont need many API calls here --}}
-{{--                        <i class="fas fa-shopping-cart"></i>--}}
                         <input type="hidden" id="itsSizeDynamic" value="{{$size}}">
-                        <div class="col-lg-8 col-sm-6 col-6 total-section text-right">
+                        <div class="col-lg-4 col-sm-6 col-6 total-section text-right">
+                            <p>Boxes:<b class="text-primary"> 1 </b></p>
+                        </div>
+
+                        <div class="col-lg-4 col-sm-6 col-6 total-section text-right">
                             <p>Total Units:<b class="text-info"> {{$totalQty}}</b></p>
                         </div>
                     </div>
