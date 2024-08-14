@@ -35,7 +35,7 @@ class TestAmirController extends Controller
     public function findBoxes($size)
     {
         // Fetching all boxes from the database
-        $boxes = BoxTest::all()->toArray();
+        $boxes = BoxTest::all();
 
         // Find the appropriate box combination based on the size
         list($boxCombination, $nextSize, $percentage) = $this->findBoxCombination($size, $boxes);
