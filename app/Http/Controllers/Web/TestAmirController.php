@@ -35,9 +35,9 @@ class TestAmirController extends Controller
     public function findBoxes($size)
     {
         // Fetching all boxes from the database
-        $boxes = BoxTest::all();
+        $boxes = BoxTest::orderBy('id')->get();
 
-        $size = $size >220 ? 220 : $size;
+        $size = $size > 220 ? 220 : $size;
         $dataAllBelow = $this->findBoxCombination($size, $boxes);
 
         return response()->json([
@@ -59,19 +59,22 @@ class TestAmirController extends Controller
         foreach ($boxes as $box) {
             if ($size >= $box->min_value && $size <= $box->max_value) {
                 $boxCombination = $box->description;
-
-                // Count the number of times "coman" appears in the description
+                // Since the size falls within a box range, set the percentage to 100%
+                $percentage = 100;
                 $total = substr_count($boxCombination, ',') + 1; #as if 1 comma it means 2 boxes
                 break;
             }
         }
 
-        // If no box combination is found, calculate the next closest size
+        // If no box combination is found, calculate the next closest size and percentage filled
         if (!$boxCombination) {
             foreach ($boxes as $box) {
                 if ($size < $box->min_value) {
                     $nextSize = $box->min_value;
-                    $percentage = round((($nextSize - $size) / $size) * 100, 2);
+
+                    // Calculate the percentage to the next size
+                    $difference = $nextSize - $size;
+                    $percentage = round((($size / $nextSize) * 100), 0);
                     break;
                 }
             }
@@ -84,7 +87,6 @@ class TestAmirController extends Controller
             'total' => $total
         ];
     }
-
     private function calculateNextSize($remainingSize, $size)
     {
         if ($remainingSize === 0) {
