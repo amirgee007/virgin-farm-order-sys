@@ -164,7 +164,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     }
 
     public function getStateNameAttribute(){
-        return $this->usState ? $this->usState->state_name : '';
+        return $this->usState ? $this->usState->state_name : ''; #2,12
     }
 
     public function getCityNameAttribute(){

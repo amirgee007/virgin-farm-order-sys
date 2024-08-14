@@ -159,6 +159,7 @@ function divideIntoGroupMax($number, $groupSize = 45) {
 
 function getCubeRanges($total)
 {
+    $user = auth()->user();
     #if customer is Just for FOB when PU is carrier then no need to do the CUBE sizes
     $maxValue = 45;
     $max = Box::orderBy('max_value' , 'desc')->first();
@@ -170,7 +171,12 @@ function getCubeRanges($total)
     $matched = [];
 
     foreach ($values as $value){
-        $found = Box::where('min_value' , '<=' ,$value)->where('max_value' , '>=' , $value)->first();
+        #Restrict Hawaii and Alaska customers only, cannot purchase the medium box. Must be above 22 cubes (medium large boxes and up).
+        if (in_array($user->state, [1, 12]))
+            $found = Box::where('min_value', '>', 22)->where('max_value', '>=', $value)->first();
+        else
+            $found = Box::where('min_value', '<=', $value)->where('max_value', '>=', $value)->first();
+        
         if($found)
             $matched[] = $found->description;
     }
@@ -215,62 +221,6 @@ function getStates(){
     $states = [null => 'Select State'] + $states;
 
     return  $states;
-
-    return [
-        'Alabama',
-        'Alaska',
-        'Arizona',
-        'Arkansas',
-        'California',
-        'Colorado',
-        'Connecticut',
-        'Delaware',
-        'District of Columbia',
-        'Florida',
-        'Georgia',
-        'Hawaii',
-        'Idaho',
-        'Illinois',
-        'Indiana',
-        'Iowa',
-        'Kansas',
-        'Kentucky',
-        'Louisiana',
-        'Maine',
-        'Maryland',
-        'Massachusetts',
-        'Michigan',
-        'Minnesota',
-        'Mississippi',
-        'Missouri',
-        'Montana',
-        'Nebraska',
-        'Nevada',
-        'New Hampshire',
-        'New Jersey',
-        'New Mexico',
-        'New York',
-        'North Carolina',
-        'North Dakota',
-        'Ohio',
-        'Oklahoma',
-        'Oregon',
-        'Pennsylvania',
-        'Rhode Island',
-        'South Carolina',
-        'South Dakota',
-        'Tennessee',
-        'Texas',
-        'Utah',
-        'Vermont',
-        'Virginia',
-        'Washington',
-        'West Virginia',
-        'Wisconsin',
-        'Wyoming',
-        'Puerto Rico',
-        'U.S. Virgin Islands',
-    ];
 }
 
 function round2Digit($number){
