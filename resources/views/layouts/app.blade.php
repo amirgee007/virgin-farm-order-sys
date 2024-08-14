@@ -263,6 +263,7 @@
                 setTimeout(updateTimer, 1000);
             } else {
                 $('#carttimer').text(''); //Empty Cart. here we can add timer ETC
+                $('.spinner-grow-sm').hide();
             }
         }
 

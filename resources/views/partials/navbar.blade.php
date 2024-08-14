@@ -45,7 +45,8 @@
         <ul class="navbar-nav ml-auto pr-3 flex-row" >
 
             <div class="dropdown" style="padding-right: 40px; ">
-                <b><span style="background: lavender; font-size: 17px; border-radius:5px;" id="carttimer">Loading timer...!</span></b>
+                <span class="spinner-grow spinner-grow-sm text-danger" role="status" aria-hidden="true"></span>
+                <b><span id="carttimer">Loading timer...!</span></b>
                 @php $myCarts = getMyCart(); @endphp
                 <button type="button" class="btn btn-light btnCart" data-toggle="dropdown">
                     <i class="fa fa-shopping-cart" aria-hidden="true"></i> &nbsp;Cart

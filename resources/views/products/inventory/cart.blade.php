@@ -180,9 +180,14 @@
                                 <label>Order Notes(Optional)</label>
                                 <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()" placeholder="leave comments or notes for your sales representative."></textarea>
                                 <br>
-                                <b>
-                                    ***Online orders aren't fully confirmed until processed. Availability may affect fulfillment, so changes or cancellations can occur.
-                                </b>
+                                <div class="notes-danger">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+
+                                    Please note that online orders are subject to availability and final confirmation.
+                                    <br/>
+                                    <br/>
+                                    While we strive to fulfill every request, there are instances in which an order may need to be adjusted. We appreciate your understanding.
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <table class="table table-bordered">
