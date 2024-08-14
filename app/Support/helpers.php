@@ -7,6 +7,7 @@ use Vanguard\Models\Cart;
 use Vanguard\Models\ClientNotification;
 use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\Setting;
+use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UsState;
 
 function getMyCart()
@@ -160,6 +161,11 @@ function divideIntoGroupMax($number, $groupSize = 45) {
 function getCubeRanges($total)
 {
     $user = auth()->user();
+    $stateNotAllow22 = false;
+
+    if (in_array($user->state, [1, 12]))
+        $stateNotAllow22 = true;
+
     #if customer is Just for FOB when PU is carrier then no need to do the CUBE sizes
     $maxValue = 45;
     $max = Box::orderBy('max_value' , 'desc')->first();
@@ -172,14 +178,16 @@ function getCubeRanges($total)
 
     foreach ($values as $value){
         #Restrict Hawaii and Alaska customers only, cannot purchase the medium box. Must be above 22 cubes (medium large boxes and up).
-        if (in_array($user->state, [1, 12]))
+        if ($stateNotAllow22)
             $found = Box::where('min_value', '>', 22)->where('max_value', '>=', $value)->first();
         else
             $found = Box::where('min_value', '<=', $value)->where('max_value', '>=', $value)->first();
-        
+
         if($found)
             $matched[] = $found->description;
     }
+
+    #if($address_id) $shipAddress = ShippingAddress::find($address_id);
 
     if(checkIfSkipCubeRangeCondition())
         return [$matched , true];
