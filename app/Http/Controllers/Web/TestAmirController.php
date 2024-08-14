@@ -54,6 +54,11 @@ class TestAmirController extends Controller
         $nextSize = null;
         $remainingSize = $size;
 
+        // Sort boxes by min_value in descending order to maximize space usage
+        usort($boxes, function($a, $b) {
+            return $b->min_value - $a->min_value;
+        });
+
         foreach ($boxes as $box) {
             if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
                 $boxCombination[] = $box->description;
@@ -61,19 +66,33 @@ class TestAmirController extends Controller
             }
         }
 
-        // Calculate the next size if there's any remaining size
+        // If remainingSize fits within any box range, set percentage to 100
+        $isRemainingSizeInRange = false;
+        foreach ($boxes as $box) {
+            if ($remainingSize >= $box->min_value && $remainingSize <= $box->max_value) {
+                $isRemainingSizeInRange = true;
+                break;
+            }
+        }
+
         if ($remainingSize > 0) {
             $nextSize = $remainingSize;
         }
 
         // Calculate the percentage of space used in the box
-        $percentage = $size > 0 ? (1 - ($remainingSize / $size)) * 100 : 0;
+        if ($isRemainingSizeInRange) {
+            $percentage = 100;
+            $nextSize = 0; // Since it's considered 100% used, set next size to 0
+        } else {
+            $percentage = $size > 0 ? (1 - ($remainingSize / $size)) * 100 : 0;
+        }
 
         // Round the percentage to 2 decimal places
         $percentage = round($percentage, 2);
 
         return [$boxCombination, $nextSize, $percentage];
     }
+
     private function calculateNextSize($remainingSize, $size)
     {
         if ($remainingSize === 0) {
