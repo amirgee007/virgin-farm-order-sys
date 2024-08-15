@@ -72,9 +72,15 @@
                             @endphp
 
                         @endforeach
+
+                        @php
+                            $boxeInfo = getCubeRangesV2($size);
+                        @endphp
+
                         <input type="hidden" id="itsSizeDynamic" value="{{$size}}">
+                        <input type="hidden" id="itsPercentageDynamic" value="{{@$boxeInfo['percentage']}}">
                         <div class="col-lg-4 col-sm-6 col-6 total-section text-right">
-                            <p>Boxes:<b class="text-primary">... </b></p>
+                            <p>Boxes: <b class="text-primary">{{@$boxeInfo['countBoxes']}}</b></p>
                         </div>
 
                         <div class="col-lg-4 col-sm-6 col-6 total-section text-right">
@@ -93,14 +99,9 @@
                                 </div>
                             </div>
                         @endforeach
-
-                            @php
-                                list($boxes , $skipped) = getCubeRanges($size);
-                            @endphp
-
                         <div class="row">
                             <div class="col center-block text-center mb-2">
-                                @if($skipped)
+                                @if($boxeInfo['boxMatched'])
                                     <small class="text-primary"><b>Box capacity met. Review my order!</b></small>
                                 @else
                                     <small class="text-danger"><b>Box capacity not met. </b></small>

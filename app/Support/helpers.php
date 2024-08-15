@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Cart;
@@ -145,19 +146,81 @@ function getCubeSizeTax($size)
     return $total + $extra;
 }
 
-function divideIntoGroupMax($number, $groupSize = 45)
-{
-    $result = [];
+function getCubeRangesV2($size) {
 
-    while ($number > 0) {
-        $group = min($number, $groupSize);
-        $result[] = $group;
-        $number -= $group;
+    $boxes = Box::orderBy('id')->get();
+    $size = $size > 220 ? 220 : $size;
+
+    $boxCombination = null;
+    $percentage = null;
+    $total = 0;
+
+    // Loop through each box and check if the size falls within its range
+    foreach ($boxes as $box) {
+        if ($size >= $box->min_value && $size <= $box->max_value) {
+            $boxCombination = $box->description;
+            // Since the size falls within a box range, set the percentage to 100%
+            $percentage = 100;
+            $total = calculateTotalPackingBox($boxCombination);
+            break;
+        }
     }
 
-    return $result;
+    // If no box combination is found, calculate the next closest size and percentage filled
+    if (!$boxCombination) {
+        foreach ($boxes as $box) {
+            if ($size < $box->min_value) {
+                $nextSize = $box->min_value;
+
+                // Calculate the percentage to the next size
+                $difference = $nextSize - $size;
+                $percentage = round((($size / $nextSize) * 100), 0);
+                break;
+            }
+        }
+    }
+
+    return [
+        'size' => $size,
+        'boxMatched' => $boxCombination,
+        'percentage' => $percentage,
+        'countBoxes' => $total
+    ];
 }
 
+function calculateTotalPackingBox($inputString) {
+    try{
+        // Check if there's a comma in the string 1 S, 1 L, 1 ML
+        if (strpos($inputString, ',') !== false) {
+            // Split the input string by comma
+            $parts = explode(',', $inputString);
+
+            // Initialize the total sum
+            $totalSum = 0;
+
+            foreach ($parts as $part) {
+                // Remove all letters and keep only numbers
+                $numbers = preg_replace('/[A-Za-z\s]/', '', $part);
+
+                // Sum the numbers
+                $totalSum += intval($numbers);
+            }
+
+            return $totalSum > 0 ? $totalSum : 1;
+        } else {
+            // No comma found, remove all letters and keep only numbers 2 x ML
+            $numbers = preg_replace('/[A-Za-z\s]/', '', $inputString);
+            // Return the number found, or 1 if no number found
+            return intval($numbers) > 0 ? intval($numbers) : 1;
+        }
+
+    }catch (\Exception $ex){
+        Log::error($ex->getMessage() . ' error calculateTotal function '. $inputString);
+        return  0;
+    }
+}
+
+#we are not using it anymore will remove it once ok above.
 function getCubeRanges($total)
 {
     $user = auth()->user();

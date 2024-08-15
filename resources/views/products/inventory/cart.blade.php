@@ -14,17 +14,21 @@
         .loader {
             height: 70px !important;
         }
+
         .products-list-table th, .products-list-table td {
             padding: 0.3rem !important;
         }
+
         .products-list-table {
             font-weight: 400 !important;
             font-size: 13px !important;
             line-height: 1.6 !important;
         }
-        .width50{
+
+        .width50 {
             width: 60px !important;
         }
+
         /*button {*/
         /*font-size: 11px !important;*/
         /*font-weight: 300 !important;*/
@@ -41,69 +45,85 @@
             padding: 0px;
             margin-bottom: 20px;
         }
+
         .thumbnail img {
             width: 80%;
         }
-        .thumbnail .caption{
+
+        .thumbnail .caption {
             margin: 7px;
         }
-        .main-section{
+
+        .main-section {
             background-color: #F8F8F8;
         }
-        .dropdown{
-            float:right;
+
+        .dropdown {
+            float: right;
             padding-right: 30px;
         }
-        .btn{
-            border:0px;
-            margin:10px 0px;
-            box-shadow:none !important;
+
+        .btn {
+            border: 0px;
+            margin: 10px 0px;
+            box-shadow: none !important;
         }
-        .dropdown .dropdown-menu{
-            padding:20px;
-            top:30px !important;
-            width:350px !important;
-            left:-110px !important;
-            box-shadow:0px 5px 30px black;
+
+        .dropdown .dropdown-menu {
+            padding: 20px;
+            top: 30px !important;
+            width: 350px !important;
+            left: -110px !important;
+            box-shadow: 0px 5px 30px black;
         }
-        .total-header-section{
-            border-bottom:1px solid #d2d2d2;
+
+        .total-header-section {
+            border-bottom: 1px solid #d2d2d2;
         }
-        .total-section p{
-            margin-bottom:20px;
+
+        .total-section p {
+            margin-bottom: 20px;
         }
-        .cart-detail{
-            padding:15px 0px;
+
+        .cart-detail {
+            padding: 15px 0px;
         }
-        .cart-detail-img img{
-            width:100%;
-            height:100%;
-            padding-left:15px;
+
+        .cart-detail-img img {
+            width: 100%;
+            height: 100%;
+            padding-left: 15px;
         }
-        .cart-detail-product p{
-            margin:0px;
-            color:#000;
-            font-weight:500;
+
+        .cart-detail-product p {
+            margin: 0px;
+            color: #000;
+            font-weight: 500;
         }
-        .cart-detail .price{
-            font-size:12px;
-            margin-right:10px;
-            font-weight:500;
+
+        .cart-detail .price {
+            font-size: 12px;
+            margin-right: 10px;
+            font-weight: 500;
         }
-        .cart-detail .count{
-            color:#C2C2DC;
+
+        .cart-detail .count {
+            color: #C2C2DC;
         }
-        .checkout{
-            border-top:1px solid #d2d2d2;
+
+        .checkout {
+            border-top: 1px solid #d2d2d2;
             padding-top: 10px;
         }
-        .checkout .btn-primary{
-            border-radius:35px;
-            height:36px;
+
+        .checkout .btn-primary {
+            border-radius: 35px;
+            height: 36px;
         }
-        .checkout .btn-danger{
-            border-radius:35px;
-            height:36px;
+
+        .checkout .btn-danger {
+            border-radius: 35px;
+            height: 36px;
         }
 
 
@@ -116,9 +136,9 @@
 
     @include('partials.messages')
     @if($orderId)
-       <div class="text-center">
-           <h3>✅ Add-On Order (<small>{{$orderId > 1 ? '#W-'.$orderId : 'General'}}</small>)</h3>
-       </div>
+        <div class="text-center">
+            <h3>✅ Add-On Order (<small>{{$orderId > 1 ? '#W-'.$orderId : 'General'}}</small>)</h3>
+        </div>
     @endif
 
     <div class="row">
@@ -147,7 +167,8 @@
                                 <tr data-id="{{ $cartItem->id }}">
                                     <td data-th="Product">
                                         <div class="row">
-                                            <div class="col-sm-3 hidden-xs mt-2"><img src="{{ $cartItem->image }}" style="max-width: 40px;" class="img-responsive"/></div>
+                                            <div class="col-sm-3 hidden-xs mt-2">
+                                                <img src="{{ $cartItem->image }}" style="max-width: 40px;" class="img-responsive"/></div>
                                             <div class="col-sm-9 mt-2">
                                                 <h4 class="nomargin">{{ $cartItem->name }} Pack {{ $cartItem->stems }}</h4>
                                             </div>
@@ -156,12 +177,16 @@
                                     <td data-th="Price">${{ round2Digit($cartItem->price) }}</td>
                                     <td data-th="Stems">{{$cartItem->stems}}</td>
                                     <td data-th="Quantity">
-                                        <input type="number" min="1" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty" />
+                                        <input type="number" min="1" max="{{$cartItem->max_qty}}"
+                                               onkeydown="return false" value="{{ $cartItem->quantity }}"
+                                               class="form-control quantity change-cart-qty"/>
                                     </td>
 
-                                    <td data-th="Subtotal" class="text-center">${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}</td>
+                                    <td data-th="Subtotal" class="text-center">
+                                        ${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}</td>
                                     <td class="actions" data-th="" title="Remove from cat">
-                                        <button class="btn btn-danger btn-sm remove-from-cart"><i class="fas fa-trash"></i></button>
+                                        <button class="btn btn-danger btn-sm remove-from-cart"><i
+                                                class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -170,15 +195,16 @@
                     </table>
 
                     @php
-                        list($boxes, $skipped) = getCubeRanges($size);
+                        $boxeInfoDetail = getCubeRangesV2($size);
                         $total = round2Digit($total);
                     @endphp
 
-                    @if($skipped)
+                    @if(@$boxeInfo['boxMatched'])
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Order Notes(Optional)</label>
-                                <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()" placeholder="leave comments or notes for your sales representative."></textarea>
+                                <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()"
+                                          placeholder="leave comments or notes for your sales representative."></textarea>
                                 <br>
                                 <div class="notes-danger">
                                     <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -186,14 +212,16 @@
                                     Please note that online orders are subject to availability and final confirmation.
                                     <br/>
                                     <br/>
-                                    While we strive to fulfill every request, there are instances in which an order may need to be adjusted. We appreciate your understanding.
+                                    While we strive to fulfill every request, there are instances in which an order may
+                                    need to be adjusted. We appreciate your understanding.
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <table class="table table-bordered">
                                     <tr>
                                         <td colspan="5" class="text-center text-primary">
-                                            <h4>Box Size(s): {{ is_array($boxes) ? implode(', ', $boxes) : '' }} &nbsp; Weight: {{$size}} cu.</h4>
+                                            <h4>Box Size(s): {{ @$boxeInfoDetail['boxMatched'] }} &nbsp;
+                                                Weight: {{$size}} cu.</h4>
                                         </td>
                                     </tr>
                                     <tr>
@@ -217,7 +245,8 @@
                                     </tr>
                                     <tr>
                                         <td colspan="5" class="text-right">
-                                            <h4><strong>Order Total: <span class="text-danger">${{ $orderTotal }}</span></strong></h4>
+                                            <h4><strong>Order Total: <span class="text-danger">${{ $orderTotal }}</span></strong>
+                                            </h4>
                                         </td>
                                     </tr>
                                     @if(isDeliveryChargesApply())
@@ -229,8 +258,14 @@
                                     @endif
                                     <tr>
                                         <td colspan="5" class="text-right">
-                                            <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
-                                            <a href="{{ route('checkout.cart') }}" class="btn btn-primary" title="@lang('Checkout and Confirm the Order')" data-toggle="tooltip" data-placement="top" data-method="GET" data-confirm-title="@lang('Please Confirm To Proceed?')" data-confirm-text="@lang('Once you check out you can no longer change this order..!')" data-confirm-delete="@lang('Yes, Proceed!')">
+                                            <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i
+                                                    class="fa fa-angle-left"></i> Continue Shopping</a>
+                                            <a href="{{ route('checkout.cart') }}" class="btn btn-primary"
+                                               title="@lang('Checkout and Confirm the Order')" data-toggle="tooltip"
+                                               data-placement="top" data-method="GET"
+                                               data-confirm-title="@lang('Please Confirm To Proceed?')"
+                                               data-confirm-text="@lang('Once you check out you can no longer change this order..!')"
+                                               data-confirm-delete="@lang('Yes, Proceed!')">
                                                 Checkout &nbsp;<i class="fa fa-angle-right"></i>
                                             </a>
                                         </td>
@@ -240,9 +275,9 @@
                         </div>
                     @else
                         <div class="text-center text-danger">
-{{--                            {{$size}}--}}
                             <h3><strong>Please select more products to fill your box. </strong></h3>
-                            <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i class="fa fa-angle-left"></i> Continue Shopping</a>
+                            <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i
+                                    class="fa fa-angle-left"></i> Continue Shopping</a>
                         </div>
                     @endif
 
@@ -261,7 +296,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <img src="" id="imagePreviewId" style="width: 650px; height: 400px;" >
+                    <img src="" id="imagePreviewId" style="width: 650px; height: 400px;">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -300,7 +335,7 @@
 
             var ele = $(this);
 
-            if(confirm("Are you sure want to remove?")) {
+            if (confirm("Are you sure want to remove?")) {
                 $.ajax({
                     url: '{{ route('remove.from.cart') }}',
                     method: "POST",
@@ -322,17 +357,16 @@
                     url: '{{ route('cart.save.notes') }}',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({ notes: textValue }),
-                    success: function() {
+                    data: JSON.stringify({notes: textValue}),
+                    success: function () {
                         console.log('Text sent successfully');
                     },
-                    error: function() {
+                    error: function () {
                         console.log('Error sending text');
                     }
                 });
             }
         }
-
 
         // swal({
         //     title: 'Login Success',

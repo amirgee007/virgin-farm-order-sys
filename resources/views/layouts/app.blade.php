@@ -178,32 +178,12 @@
             });
 
             const size = $("#itsSizeDynamic").val();
+            const percentage = $("#itsPercentageDynamic").val();
+
+            progressBar.animate(percentage/100);
 
             console.log('current size before method callings is: ' + size);
-
-            fetch('/api/validate-cart-size', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({selection: size})
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.nextMax) {
-                        // const messageElement = document.querySelector('#message');
-                        // messageElement.innerText = `Min size required: ${data.nextMax}`;
-                        updateProgressBar(data.size, data.nextMax);
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-
-            function updateProgressBar(currentSize, maxLimit) {
-                console.log('current size and next max limit is: ' + currentSize, maxLimit);
-                const percentage = currentSize / maxLimit;
-                progressBar.animate(percentage > 100 ? 100 : percentage); // Update progress bar based on the max of the current range
-            }
+            console.log('current percentage before method callings is: ' + percentage);
         });
     })(jQuery);
 </script>
