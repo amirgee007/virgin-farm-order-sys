@@ -157,6 +157,7 @@ function getCubeRangesV2($size) {
         $total = 1;
     }
     else{
+        $user = auth()->user();
         $stateNotAllow22 = false;
 
         if (in_array($user->state, [1, 12]))
