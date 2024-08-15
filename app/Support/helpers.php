@@ -148,34 +148,48 @@ function getCubeSizeTax($size)
 
 function getCubeRangesV2($size) {
 
-    $boxes = Box::orderBy('id')->get();
     $size = $size > 220 ? 220 : $size;
+
 
     $boxCombination = null;
     $percentage = null;
     $total = 0;
 
-    // Loop through each box and check if the size falls within its range
-    foreach ($boxes as $box) {
-        if ($size >= $box->min_value && $size <= $box->max_value) {
-            $boxCombination = $box->description;
-            // Since the size falls within a box range, set the percentage to 100%
-            $percentage = 100;
-            $total = calculateTotalPackingBox($boxCombination);
-            break;
-        }
+    if (checkIfSkipCubeRangeCondition()){
+        $boxCombination = 'N/A';
+        $percentage = 100;
+        $total = 1;
     }
+    else{
 
-    // If no box combination is found, calculate the next closest size and percentage filled
-    if (!$boxCombination) {
+        #Restrict Hawaii and Alaska customers only, cannot purchase the medium box. Must be above 22 cubes (medium large boxes and up).
+        if ($stateNotAllow22)
+            $boxes = Box::where('min_value', '>', 22)->orderBy('id')->get();
+        else
+            $boxes = Box::orderBy('id')->get();
+
+        // Loop through each box and check if the size falls within its range
         foreach ($boxes as $box) {
-            if ($size < $box->min_value) {
-                $nextSize = $box->min_value;
-
-                // Calculate the percentage to the next size
-                $difference = $nextSize - $size;
-                $percentage = round((($size / $nextSize) * 100), 0);
+            if ($size >= $box->min_value && $size <= $box->max_value) {
+                $boxCombination = $box->description;
+                // Since the size falls within a box range, set the percentage to 100%
+                $percentage = 100;
+                $total = calculateTotalPackingBox($boxCombination);
                 break;
+            }
+        }
+
+        // If no box combination is found, calculate the next closest size and percentage filled
+        if (!$boxCombination) {
+            foreach ($boxes as $box) {
+                if ($size < $box->min_value) {
+                    $nextSize = $box->min_value;
+
+                    // Calculate the percentage to the next size
+                    $difference = $nextSize - $size;
+                    $percentage = round((($size / $nextSize) * 100), 0);
+                    break;
+                }
             }
         }
     }
@@ -218,44 +232,6 @@ function calculateTotalPackingBox($inputString) {
         Log::error($ex->getMessage() . ' error calculateTotal function '. $inputString);
         return  0;
     }
-}
-
-#we are not using it anymore will remove it once ok above.
-function getCubeRanges($total)
-{
-    $user = auth()->user();
-    $stateNotAllow22 = false;
-
-    if (in_array($user->state, [1, 12]))
-        $stateNotAllow22 = true;
-
-    #if customer is Just for FOB when PU is carrier then no need to do the CUBE sizes
-    $maxValue = 45;
-    $max = Box::orderBy('max_value', 'desc')->first();
-    if ($max && $max->max_value)
-        $maxValue = $max->max_value;
-
-    #logic is check if less than 45 then check the limit between all current boxes otherwise devide into 45, 45 and then check all.
-    $values = $total > $maxValue ? divideIntoGroupMax($total, $maxValue) : [$total];
-    $matched = [];
-
-    foreach ($values as $value) {
-        #Restrict Hawaii and Alaska customers only, cannot purchase the medium box. Must be above 22 cubes (medium large boxes and up).
-        if ($stateNotAllow22)
-            $found = Box::where('min_value', '>', 22)->where('max_value', '>=', $value)->first();
-        else
-            $found = Box::where('min_value', '<=', $value)->where('max_value', '>=', $value)->first();
-
-        if ($found)
-            $matched[] = $found->description;
-    }
-
-    #if($address_id) $shipAddress = ShippingAddress::find($address_id);
-
-    if (checkIfSkipCubeRangeCondition())
-        return [$matched, true];
-
-    return (count($values) == count($matched)) ? [$matched, true] : [$matched, false];
 }
 
 function checkIfSkipCubeRangeCondition()
