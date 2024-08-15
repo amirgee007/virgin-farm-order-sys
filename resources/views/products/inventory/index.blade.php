@@ -89,30 +89,6 @@
             }
         }
 
-        .date-input-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        #date-input {
-            width: 100%;
-            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .calendar-icon {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none; /* Prevent the icon from being clickable */
-            color: #888;
-            font-size: 18px;
-        }
-
         /*button {*/
         /*font-size: 11px !important;*/
         /*font-weight: 300 !important;*/
@@ -189,7 +165,6 @@
                                         .date-input-container {
                                             position: relative;
                                             display: inline-block;
-                                            width: 250px; /* Adjust as needed */
                                         }
 
                                         #date_shipped {
@@ -281,7 +256,6 @@
                                 <tbody>
                                 @if (count($products))
                                     @foreach ($products as $index => $product)
-
                                         <tr>
                                             <td class="align-middle">
                                                 <img style="max-width: 35px; cursor: pointer;"
@@ -351,6 +325,8 @@
                                 <b class="text-danger">Choose a Ship date and carrier to shop available inventory.</b>
                             </div>
                         </tr>
+                        <br/>
+                        @include('dashboard.warning')
                     @endif
 
                 </div>
@@ -494,7 +470,7 @@
             }
 
             if(carrier_id != 23 && carrier_id != 32){
-                swal("Reminder", " Refer to your trucking line's ship date schedule. Please place orders 1 DAY PRIOR before 4 p.m. EST.", "info");
+                swal("Reminder", " Refer to your trucking  line/delivery date schedule. Please place orders 1 DAY PRIOR before 4 p.m. EST.", "info");
             }
 
             var date_shipped = $("#date_shipped").val();

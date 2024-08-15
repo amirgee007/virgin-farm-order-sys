@@ -10,7 +10,6 @@
 @stop
 
 @section('styles')
-
     <style>
         .loader {
             height: 70px !important;
@@ -50,6 +49,7 @@
 @section('content')
     @include('partials.messages')
 
+    @include('dashboard.warning')
     <div class="row">
         @foreach (\Vanguard\Plugins\Vanguard::availableWidgets(auth()->user()) as $widget)
             @if ($widget->width)
@@ -61,7 +61,6 @@
             @endif
         @endforeach
     </div>
-
 
     <div class="row">
         <div class="col-6">
