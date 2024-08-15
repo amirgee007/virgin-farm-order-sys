@@ -72,7 +72,6 @@ function isDeliveryChargesApply()
 
 function getCubeSizeTax($size)
 {
-
     #PU(32), Federal Express(23) , DLV(17)
     $user = itsMeUser();
 
@@ -89,6 +88,7 @@ function getCubeSizeTax($size)
         $boxChargesApply = true;
 
     if ($boxChargesApply) {
+
         if ($size >= 12 && $size <= 16) {
             $tax = 32;
             $extraTax = 1;
@@ -101,10 +101,7 @@ function getCubeSizeTax($size)
         } elseif ($size >= 27 && $size <= 30) {
             $tax = 34.5;
             $extraTax = 1;
-        } elseif ($size >= 40 && $size <= 45) {
-            $tax = 36;
-            $extraTax = 2;
-        } elseif ($size > 45) {
+        } elseif ($size >= 40) {  // Combined the last two conditions
             $tax = 36;
             $extraTax = 2;
         }
@@ -118,7 +115,7 @@ function getCubeSizeTax($size)
         }
     }
 
-    if ($serviceTransportFees24)
+    if ($serviceTransportFees24) #FOB fee charge formula
         $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
 
     $total = round2Digit($additional + $tax);
@@ -149,7 +146,6 @@ function getCubeSizeTax($size)
 function getCubeRangesV2($size) {
 
     $size = $size > 220 ? 220 : $size;
-
 
     $boxCombination = null;
     $percentage = null;
