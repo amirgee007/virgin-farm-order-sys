@@ -199,7 +199,7 @@
                         $total = round2Digit($total);
                     @endphp
 
-                    @if(@$boxeInfo['boxMatched'])
+                    @if(@$boxeInfoDetail['boxMatched'])
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Order Notes(Optional)</label>
