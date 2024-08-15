@@ -157,6 +157,10 @@ function getCubeRangesV2($size) {
         $total = 1;
     }
     else{
+        $stateNotAllow22 = false;
+
+        if (in_array($user->state, [1, 12]))
+            $stateNotAllow22 = true;
 
         #Restrict Hawaii and Alaska customers only, cannot purchase the medium box. Must be above 22 cubes (medium large boxes and up).
         if ($stateNotAllow22)
