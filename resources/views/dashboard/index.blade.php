@@ -160,7 +160,7 @@
                     <h5 class="text-center mb-0">Recent Future Inventory</h5>
                 </div>
                 <div class="card-body" style="padding: 5px">
-                    <hr>
+                    <!-- Removed the first <hr> to avoid duplicate horizontal rules -->
                     <div class="table-responsive orders-list-table" id="users-table-wrapper">
                         <table class="table table-borderless table-striped">
                             <thead>
