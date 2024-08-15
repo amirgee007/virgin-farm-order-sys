@@ -156,43 +156,70 @@
 
         <div class="col-6">
             <div class="card">
+                <div class="card-header" style="cursor: pointer;" data-toggle="collapse" data-target="#futureInventoryCollapse" aria-expanded="false" aria-controls="futureInventoryCollapse">
+                    <h5 class="text-center mb-0">Recent Future Inventory</h5>
+                </div>
                 <div class="card-body" style="padding: 5px">
-                    <h5 class="text-center">Recent Future Inventory</h5>
                     <hr>
                     <div class="table-responsive orders-list-table" id="users-table-wrapper">
                         <table class="table table-borderless table-striped">
                             <thead>
                             <tr>
-                                <th colspan=2>Date Ranges</th>
-                                <th colspan=2>Last Updated</th>
+                                <th colspan="2">Date Ranges</th>
+                                <th colspan="2">Last Updated</th>
                             </tr>
-
                             </thead>
                             <tbody>
                             @if ($futureInventory)
-                                @foreach ($futureInventory as $inventory)
-                                    <tr>
-                                        <td class="align-middle" colspan=2>
-                                            {{ dateFormatRecent($inventory->date_in) }}  -  {{dateFormatRecent($inventory->date_out)}}
-                                        </td>
-
-                                        <td class="align-middle" colspan=2>
-                                            {{ $inventory->updated_at }}
-                                        </td>
-                                    </tr>
+                                @foreach ($futureInventory as $index => $inventory)
+                                    @if ($index < 2)
+                                        <!-- Always show the first two rows -->
+                                        <tr>
+                                            <td class="align-middle" colspan="2">
+                                                {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
+                                            </td>
+                                            <td class="align-middle" colspan="2">
+                                                {{ $inventory->updated_at }}
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="12">
-                                        No date range found
-                                    </td>
-                                </tr>
                             @endif
                             </tbody>
                         </table>
                     </div>
+                    @if (count($futureInventory) > 2)
+                        <!-- Collapse button and content for the rest of the rows -->
+                        <div id="futureInventoryCollapse" class="collapse">
+                            <div class="table-responsive orders-list-table" id="users-table-wrapper">
+                                <table class="table table-borderless table-striped">
+                                    <tbody>
+                                    @foreach ($futureInventory as $index => $inventory)
+                                        @if ($index >= 2)
+                                            <!-- Rest of the rows hidden by default -->
+                                            <tr>
+                                                <td class="align-middle" colspan="2">
+                                                    {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
+                                                </td>
+                                                <td class="align-middle" colspan="2">
+                                                    {{ $inventory->updated_at }}
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a style="cursor: pointer;" data-toggle="collapse" data-target="#futureInventoryCollapse" aria-expanded="false" aria-controls="futureInventoryCollapse">
+                                Show More
+                            </a>
+                        </div>
+                    @endif
                 </div>
             </div>
+
         </div>
 
         {{--        <div class="col-12">--}}
