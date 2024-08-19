@@ -511,8 +511,11 @@ class ProductsController extends Controller
                             }
 
                             #just to make products as special for us in system.
-                            if ($request->is_special)
+                            if ($request->is_special){
                                 $data['is_special'] = 1;
+
+                                Log::notice($product->item_no .' becomes special now for date '.$date_in . ' to  '.$date_out);
+                            }
 
                             if ($request->expired_at)
                                 $data['expired_at'] = $request->expired_at;
