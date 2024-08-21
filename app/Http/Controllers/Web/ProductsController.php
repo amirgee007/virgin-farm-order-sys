@@ -332,7 +332,7 @@ class ProductsController extends Controller
 
                         $product->update($data);
                     } else {
-//                        $data['product_id']  = rand(100, 999999);
+//                      $data['product_id']  = rand(100, 999999);
                         $product = Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
                     }
 
@@ -370,37 +370,29 @@ class ProductsController extends Controller
 
     public function uploadInventory(Request $request)
     {
-
         ini_set('max_execution_time', 18000);
 
-        #reset and delete zero qty products
-        $haveComma = \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0");
+        // Reset and delete zero quantity products
+        \DB::statement("DELETE FROM `product_quantities` WHERE `quantity` = 0");
         $missing = [];
 
-        #seems direct file upload from drag and drop etc
+        // Handle file upload
         if ($request->hasFile('file')) {
-
             $request->validate([
                 'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
 
             $excel = $request->file('file');
-
-            $filename = $excel->getClientOriginalName();
-            $extension = $excel->getClientOriginalExtension();
+            $filenamePut = 'extraBulk/' . uniqid() . '.' . $excel->getClientOriginalExtension();
+            $filenameRead = 'app/' . $filenamePut;
 
             try {
-
-                $unique = uniqid();
-                $expiredtime = null;
-                $filenamePut = 'extraBulk/' . $unique . '.' . $extension;
-                $filenameRead = 'app/extraBulk/' . $unique . '.' . $extension;
-
                 Storage::put($filenamePut, file_get_contents($excel->getRealPath()));
                 $products = Excel::toArray(new ImportExcelFiles(), storage_path($filenameRead));
 
-                foreach ($products[0] as $index => $row) {
+                $expiredtime = null;
 
+                foreach ($products[0] as $index => $row) {
                     if ($index == 1) {
                         $this->dateIn = $this->excelSerialDateToDate($row['3']);
                         $this->dateOut = $this->excelSerialDateToDate($row['5']);
@@ -408,147 +400,106 @@ class ProductsController extends Controller
                     }
 
                     if ($index > 5) {
-
-                        $product = Product::where('item_no', trim($row[0]))->first();
-
-                        if ($product) {
-                            $data = [
-                                'product_id' => $product->id,
-                                'item_no' => $product->item_no,
-                                'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
-                                'date_in' => $this->dateIn,
-                                'date_out' => $this->dateOut,
-
-                                'price_fedex' => $product->def_price_fedex,
-                                'price_fob' => $product->def_price_fob,
-                                'price_hawaii' => $product->def_price_hawaii,
-                            ];
-
-                            // Conditionally add prices to the data array if they are greater than zero
-                            if (floatval(trim($row[2])) > 0) {
-                                $data['price_fedex'] = trim($row[2]);
-                            }
-                            if (floatval(trim($row[3])) > 0) {
-                                $data['price_fob'] = trim($row[3]);
-                            }
-                            if (floatval(trim($row[4])) > 0) {
-                                $data['price_hawaii'] = trim($row[4]);
-                            }
-
-                            if ($expiredtime)
-                                $data['expired_at'] = $expiredtime;
-
-                            ProductQuantity::updateOrCreate([
-                                'product_id' => $product->id,
-                                'item_no' => $product->item_no,
-                                'date_in' => $this->dateIn,
-                                'date_out' => $this->dateOut,
-                            ], $data);
-
-
-                        } else if (trim($row[0]))
-                            $missing[] = $row[0];
+                        $this->processProductRow($row, $expiredtime, $missing, $request->is_special);
                     }
                 }
 
-                if ($missing)
+                if ($missing) {
                     $this->sendMissingItemEmail($missing);
+                }
 
-                $user = '-by-' . auth()->user()->first_name;
-                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY ' . $user);
-
+                Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY ' . auth()->user()->first_name);
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
             } catch (\Exception $ex) {
-                Log::warning(' error during bulk files upload plz check ' . $ex->getMessage() . ' line ' . $ex->getLine());
-                return response()->json(['error' => 'Invalid Format FIle.'], 500);
+                Log::warning('Error during bulk files upload, please check: ' . $ex->getMessage() . ' on line ' . $ex->getLine());
+                return response()->json(['error' => 'Invalid Format File.'], 500);
             }
         } else {
-            #single file upload from the products page.
-            $dates = dateRangeConverter($request->range);
-
-            $date_in = $dates['date_in'];
-            $date_out = $dates['date_out'];
-
-            Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
-            $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
-
-            #0 ITEM_ID #1 ITEM_DESC #2 PRICE_1  #3 PRICE_2	#4 PRICE_3	#5 QUANTITY, #6Type
-            if (isset($products[0]))
-                foreach ($products[0] as $index => $row) {
-
-                    try {
-
-                        if ($index == 0) continue; #skip headings
-
-                        $product = Product::where('item_no', trim($row[0]))->first();
-
-                        if ($product) {
-
-                            $data = [
-                                'product_id' => $product->id,
-                                'item_no' => $product->item_no,
-                                'quantity' => $row[5] ? trim($row[5]) : 0, // Ensure `quantity` is also trimmed and falls back to 0 if empty
-                                'date_in' => $date_in,
-                                'date_out' => $date_out,
-
-                                'price_fedex' => $product->def_price_fedex,
-                                'price_fob' => $product->def_price_fob,
-                                'price_hawaii' => $product->def_price_hawaii,
-                            ];
-
-                            #here if any price is zero then get price from master file and use it.
-
-                            // Conditionally add prices to the data array if they are greater than zero
-                            if (floatval(trim($row[2])) > 0) {
-                                $data['price_fedex'] = trim($row[2]);
-                            }
-                            if (floatval(trim($row[3])) > 0) {
-                                $data['price_fob'] = trim($row[3]);
-                            }
-                            if (floatval(trim($row[4])) > 0) {
-                                $data['price_hawaii'] = trim($row[4]);
-                            }
-
-                            #just to make products as special for us in system.
-                            if ($request->is_special){
-                                $data['is_special'] = 1;
-
-                                Log::notice($product->item_no .' becomes special now for date '.$date_in . ' to  '.$date_out);
-                            }
-
-                            if ($request->expired_at)
-                                $data['expired_at'] = $request->expired_at;
-
-                            #ALTER TABLE `products` ADD `def_price_fedex` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `unit_price`, ADD `def_price_fob` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fedex`, ADD `def_price_hawaii` FLOAT(8,2) NOT NULL DEFAULT '0' COMMENT 'default prices' AFTER `def_price_fob`;
-                            ProductQuantity::updateOrCreate([
-                                'product_id' => $product->id,
-                                'item_no' => $product->item_no,
-                                'date_in' => $date_in,
-                                'date_out' => $date_out,
-                            ], $data);
-
-                        } else {
-                            $data['item_no'] = trim($row[0]);
-                            $data['product_text'] = trim($row[1]);
-
-                            if ($row[0])
-                                $missing[] = $row[0];
-                            #$data['product_id'] = rand(100, 999999);
-                            #Product::create($data); #as for now no specific requirments for the adding product if not found. also no history etc
-                        }
-
-                    } catch (\Exception $exception) {
-                        Log::error('Error during inventory import plz check ' . $exception->getMessage());
-                    }
-                }
-
-            if ($missing)
-                $this->sendMissingItemEmail($missing);
-
-            session()->flash('app_message', 'Inventory file has been imported in the system.');
-            return back();
+            return $this->handleSingleFileUpload($request, $missing);
         }
+    }
+
+    private function processProductRow($row, $expiredtime, &$missing, $isSpecial = false)
+    {
+        $product = Product::where('item_no', trim($row[0]))->first();
+
+        if ($product) {
+            $data = $this->buildProductData($row, $product);
+
+            if ($expiredtime) {
+                $data['expired_at'] = $expiredtime;
+            }
+
+            if ($isSpecial) {
+                $data['is_special'] = 1;
+                Log::notice($product->item_no . ' becomes special now for date ' . $this->dateIn . ' to ' . $this->dateOut);
+            }
+
+            ProductQuantity::updateOrCreate([
+                'product_id' => $product->id,
+                'item_no' => $product->item_no,
+                'date_in' => $this->dateIn,
+                'date_out' => $this->dateOut,
+            ], $data);
+
+        } else if (trim($row[0])) {
+            $missing[] = $row[0];
+        }
+    }
+
+    private function buildProductData($row, $product)
+    {
+        $data = [
+            'product_id' => $product->id,
+            'item_no' => $product->item_no,
+            'quantity' => $row[5] ? trim($row[5]) : 0,
+            'date_in' => $this->dateIn,
+            'date_out' => $this->dateOut,
+            'price_fedex' => $product->def_price_fedex,
+            'price_fob' => $product->def_price_fob,
+            'price_hawaii' => $product->def_price_hawaii,
+        ];
+
+        // Conditionally add prices to the data array if they are greater than zero
+        if (floatval(trim($row[2])) > 0) {
+            $data['price_fedex'] = trim($row[2]);
+        }
+        if (floatval(trim($row[3])) > 0) {
+            $data['price_fob'] = trim($row[3]);
+        }
+        if (floatval(trim($row[4])) > 0) {
+            $data['price_hawaii'] = trim($row[4]);
+        }
+
+        return $data;
+    }
+
+    private function handleSingleFileUpload(Request $request, &$missing)
+    {
+        $dates = dateRangeConverter($request->range);
+        $date_in = $dates['date_in'];
+        $date_out = $dates['date_out'];
+
+        Storage::put('temp/import_inventory.xlsx', file_get_contents($request->file('file_inventory')->getRealPath()));
+        $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_inventory.xlsx'));
+
+        if (isset($products[0])) {
+            foreach ($products[0] as $index => $row) {
+                if ($index == 0) continue; // Skip headings
+
+                $this->dateIn = $date_in;
+                $this->dateOut = $date_out;
+                $this->processProductRow($row, $request->expired_at, $missing, $request->is_special);
+            }
+        }
+
+        if ($missing) {
+            $this->sendMissingItemEmail($missing);
+        }
+
+        session()->flash('app_message', 'Inventory file has been imported into the system.');
+        return back();
     }
 
     public function uploadProductImages(Request $request)
