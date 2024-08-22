@@ -47,7 +47,7 @@ class Global5MinutesCommand extends Command
 
         // Iterate through the product quantities to check and remove associated cart records
         foreach ($productQuantities as $productQuantity) {
-            Cart::query()->where('product_id', $productQuantity->product_id)->delete();
+            Cart::query()->where('product_qty_id', $productQuantity->id)->delete();
             $productQuantity->delete();
         }
 

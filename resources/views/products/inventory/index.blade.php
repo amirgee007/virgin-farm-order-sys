@@ -283,7 +283,7 @@
                                             <form action="{{route('add.to.cart')}}" method="POST" enctype="multipart/form-data">
                                                 {{csrf_field()}}
 
-                                                <input type="hidden" name="id" value="{{$product->id}}">
+                                                <input type="hidden" name="p_qty_id" value="{{$product->p_qty_id}}">
                                                 <td class="align-middle">
                                                     <input required class="form-control form-control-sm width50" max="{{$product->quantity}}" name="quantity" type="number" min="0">
                                                 </td>

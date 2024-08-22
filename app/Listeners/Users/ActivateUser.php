@@ -41,7 +41,6 @@ class ActivateUser
             \Log::info($user->name . ' New User Email Verification Completed on Virgin Farms.');
 
             \Mail::to('weborders@virginfarms.com')
-                ->cc('amirseersol@gmail.com')
                 ->send(new VirginFarmGlobalMail('Virgin Farms: New User Email Successfully Verified', $content));
         }
     }

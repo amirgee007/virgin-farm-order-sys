@@ -44,8 +44,11 @@ class CartController extends Controller
     {
 
         $quantity = $request->quantity;
-        $product_id = $request->id;
-        $product = Product::where('id', $product_id)->first();
+        $product_qty_id = $request->p_qty_id;
+
+        $productQty = ProductQuantity::find($product_qty_id);
+
+        $product = Product::where('id', $productQty->product_id)->first();
 
         #need to chekc it should add the correct id that we select at main page.
         $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
@@ -60,11 +63,12 @@ class CartController extends Controller
         else
         {
             Cart::create([
-                "product_id" => $product_id,
+                "product_qty_id" => $product_qty_id,
+                "product_id" => $productQty->product_id,
                 "item_no" => $product->item_no,
                 "name" => $product->product_text,
                 "quantity" => $quantity,
-                "price" => $productInfo ? $productInfo->$priceCol : 0,
+                "price" => $productQty ? $productQty->$priceCol : 1,
                 "image" => $product->image_url,
                 "size" => $product->size,
                 "stems" => $product->stems,
@@ -82,7 +86,6 @@ class CartController extends Controller
     public function refreshPriceInCartIfCarrierChange()
     {
         try {
-
             $priceCol = myPriceColumn();
 
             Log::notice('refreshPriceInCartIfCarrierChange called and updated plz check it. '.$priceCol);
@@ -92,11 +95,11 @@ class CartController extends Controller
             foreach ($carts as $details) {
 
                 $product = Product::where('id', $details->product_id)->first();
-                $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
+                $productInfo = Product::where('id', $details->product_qty_id)->first();
 
                 if ($productInfo) {
                     $details->update([
-                        "price" => $productInfo ? $productInfo->$priceCol : 0, # $details->price
+                        "price" => $productInfo ? $productInfo->$priceCol : 1, # $details->price
                         "image" => $product->image_url,
                         "max_qty" => $productInfo->quantity,
                     ]);
@@ -190,11 +193,13 @@ class CartController extends Controller
         }
 
         foreach ($carts as $cart){
-            $productQty = ProductQuantity::where('product_id', $cart->product_id)->first();
+            $productQty = ProductQuantity::where('id', $cart->product_qty_id)->first();
             $product = Product::where('id', $cart->product_id)->first();
 
-            if($productQty)
+            if($productQty){
                 $productQty->decrement('quantity', $cart->quantity); #TODO if we need STOCK history change
+                $product->increment($cart->quantity);
+            }
 
             $total += $cart->price * $cart->quantity * $cart->stems;
             $size += $cart->size * $cart->quantity;

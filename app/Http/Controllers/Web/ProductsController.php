@@ -115,7 +115,7 @@ class ProductsController extends Controller
 
         $products = $query->groupBy('products.id')
             ->orderBy('product_text')
-            ->selectRaw('supplier_id,product_quantities.product_id as product_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
+            ->selectRaw('supplier_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
             ->paginate(100);
 
         $fixed = [
@@ -862,7 +862,7 @@ class ProductsController extends Controller
 
             \Mail::raw($content, function ($message) {
                 $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
-                ])->bcc(['amirseersol@gmail.com'])->subject('Items from inventory file are not present in the master file');
+                ])->subject('Items from inventory file are not present in the master file');
             });
 
         } catch (\Exception $ex) {
