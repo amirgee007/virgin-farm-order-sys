@@ -51,7 +51,7 @@ class CartController extends Controller
         $product = Product::where('id', $productQty->product_id)->first();
 
         #need to chekc it should add the correct id that we select at main page.
-        $productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
+        #$productInfo = $product->prodQty->first(); #need to check which product qty need to be get OR store id somehwere
 
         $priceCol = myPriceColumn();
 
@@ -72,7 +72,7 @@ class CartController extends Controller
                 "image" => $product->image_url,
                 "size" => $product->size,
                 "stems" => $product->stems,
-                "max_qty" => $productInfo->quantity,
+                "max_qty" => $productQty->quantity,
                 "user_id" => auth()->id(),
             ]);
         }
