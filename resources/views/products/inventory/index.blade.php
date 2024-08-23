@@ -289,7 +289,7 @@
                                                 </td>
 
                                                 <td class="align-middle">
-                                                    @if($priceNow && $priceNow >= 1 && $product->quantity)
+                                                    @if($priceNow && $product->quantity)
                                                         <button type="submit" class="btn btn-icon"><i
                                                                 title="@lang('Add product to cart')" data-toggle="tooltip"
                                                                 data-placement="left"
