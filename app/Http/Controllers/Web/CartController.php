@@ -198,7 +198,7 @@ class CartController extends Controller
 
             if($productQty){
                 $productQty->decrement('quantity', $cart->quantity); #TODO if we need STOCK history change
-                $product->increment($cart->quantity);
+                $product->increment('sold' , $cart->quantity);
             }
 
             $total += $cart->price * $cart->quantity * $cart->stems;
