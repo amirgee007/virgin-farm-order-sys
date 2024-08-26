@@ -307,10 +307,11 @@ class ProductsController extends Controller
                     $def_price_fedex = trim($row[5]);
                     $def_price_hawaii = trim($row[6]);
 
+                    #because the AS400 must have at least .01 so we consodure it as zero in these cases.
                     $prices = [
-                        'def_price_fob' => empty($def_price_fob) ? 0 : $def_price_fob,
-                        'def_price_fedex' => empty($def_price_fedex) ? 0 : $def_price_fedex,
-                        'def_price_hawaii' =>  empty($def_price_hawaii) ? 0 : $def_price_hawaii
+                        'def_price_fob' => ($def_price_fob == '' || $def_price_fob == 0.01) ? 0 : $def_price_fob,
+                        'def_price_fedex' => ($def_price_fedex == '' || $def_price_fedex == 0.01) ? 0 : $def_price_fedex,
+                        'def_price_hawaii' => ($def_price_hawaii == '' || $def_price_hawaii == 0.01) ? 0 : $def_price_hawaii,
                     ];
 
                     $catsDutch = Category::dutchCategories(); #ok new logic
