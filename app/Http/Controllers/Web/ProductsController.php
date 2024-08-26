@@ -303,10 +303,14 @@ class ProductsController extends Controller
                         'size' => trim($row[8]),
                     ];
 
+                    $def_price_fob = trim($row[4]);
+                    $def_price_fedex = trim($row[5]);
+                    $def_price_hawaii = trim($row[6]);
+
                     $prices = [
-                        'def_price_fob' => max(1, trim($row[4])) ,     # Ensure price 1 is at least 1
-                        'def_price_fedex' => max(1, trim($row[5])),   # Ensure price 3 is at least 1
-                        'def_price_hawaii' => max(1, trim($row[6])),  # Ensure price 5 is at least 1
+                        'def_price_fob' => empty($def_price_fob) ? 0 : $def_price_fob,
+                        'def_price_fedex' => empty($def_price_fedex) ? 0 : $def_price_fedex,
+                        'def_price_hawaii' =>  empty($def_price_hawaii) ? 0 : $def_price_hawaii
                     ];
 
                     $catsDutch = Category::dutchCategories(); #ok new logic
