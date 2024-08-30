@@ -558,6 +558,8 @@ class ProductsController extends Controller
                     $sku = $file->getFilenameWithoutExtension();
                     $sku = trim($sku);
 
+                    if (strlen($sku) <= 3) continue;
+
                     $product = Product::where('item_no', $sku)->first();
 
                     if ($product)
