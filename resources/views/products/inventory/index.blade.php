@@ -371,11 +371,6 @@
                         </tr>
                         </thead>
                         <tbody>
-
-                            <tr>
-                                <td>Medium</td>
-                                <td>6-8 bunches</td>
-                            </tr>
                             <tr>
                                 <td>Medium Large</td>
                                 <td>8-9 bunches</td>

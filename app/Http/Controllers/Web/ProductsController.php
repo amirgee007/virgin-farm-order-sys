@@ -595,6 +595,7 @@ class ProductsController extends Controller
 
             $data = Product::whereIn('id', $array)->pluck('image_url', 'id')->toArray();
             $data['success'] = true;
+
             return response()->json($data);
 
         } catch (\Exception $exc) {
