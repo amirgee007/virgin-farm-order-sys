@@ -68,7 +68,7 @@ class OrdersController extends Controller
         }
 
         $count = (clone $query)->count();
-        $orders = $query->paginate(100);
+        $orders = $query->paginate(15);
 
         $isAdmin = myRoleName() == 'Admin';
         $salesRep = getSalesReps();

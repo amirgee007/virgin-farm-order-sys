@@ -62,6 +62,16 @@
         @endforeach
     </div>
 
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-auto">
+                <a target="_blank" href="https://scribehow.com/page/Web_Shop_Maintenance_Topics__LLhKs5_JSt-ohAt_Y0IMWA?referrer=documents"
+                   class="btn btn-danger btn-lg"> System Maintenance Guide (Admin Only)
+                </a>
+            </div>
+        </div>
+    </div>
+
 
     <div class="container mt-3">
             <div class="row">
