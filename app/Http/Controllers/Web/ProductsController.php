@@ -117,7 +117,7 @@ class ProductsController extends Controller
         $products = $query->groupBy('products.id')
             ->orderBy('category_id')
             ->selectRaw('supplier_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
-            ->paginate(100);
+            ->paginate(75);
 
         $fixed = [
             0 => 'New Order',

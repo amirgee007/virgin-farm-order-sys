@@ -16,6 +16,9 @@
             color: #ffffff !important;
             border-radius: 60% !important;
         }
+        .pagination{
+            height: 10px;
+        }
     </style>
 @stop
 
@@ -211,7 +214,6 @@
                                         @endforeach
                                     </select>
 
-
                                     <input type="text"
                                            id="searching"
                                            class="form-control rounded ml-2"
@@ -240,6 +242,7 @@
 
                     </div>
                     <hr>
+                    {!! $products->render() !!}
                     @if($user->last_ship_date && $user->carrier_id)
                         <div class="table-responsive mt-2" id="users-table-wrapper">
                             <table class="table table-borderless table-striped products-list-table">
