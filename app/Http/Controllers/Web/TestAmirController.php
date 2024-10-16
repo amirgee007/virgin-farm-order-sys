@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
+use App\Services\MailchimpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -19,9 +20,13 @@ class TestAmirController extends Controller
 {
 
     public function index3(){
+        
+        $user = User::first();
+        // Add user to Mailchimp audience
+        $mailchimpService = new MailchimpService();
+        $mailchimpService->addSubscriber($user->email, ['Web Shop Users']);
 
-        auth()->loginUsingId(1);
-
+        dd('DONE');
         return view('test');
     }
 

@@ -2,6 +2,7 @@
 
 namespace Vanguard\Http\Controllers\Web\Auth;
 
+use App\Services\MailchimpService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Storage;
 use Vanguard\Http\Controllers\Controller;
@@ -82,6 +83,9 @@ class RegisterController extends Controller
         \Mail::to('weborders@virginfarms.com')
             ->send(new VirginFarmGlobalMail('New User Registration Notification', $content));
 
+        // Add user to Mailchimp audience
+        #$mailchimpService = new MailchimpService();
+        #$mailchimpService->addSubscriber($user->email, ['Web Shop Users']);
 
         if ($user->state == 10) {
             $subject = 'New User Registration & Tax File Uploaded';
