@@ -3,6 +3,7 @@
 namespace Vanguard\Http\Controllers\Web\Auth;
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Storage;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\Auth\RegisterRequest;
 use Vanguard\Mail\VirginFarmGlobalMail;
@@ -39,9 +40,20 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request, RoleRepository $roles)
     {
-        $user = $this->users->create(
-            array_merge($request->validFormData(), ['role_id' => $roles->findByName('Client')->id])
-        );
+
+        // Check if the file is present
+        if ($request->hasFile('tax_file')) {
+
+            $file = $request->file('tax_file');
+            $username = $request->input('username');
+            $filename = $username . '.' . $file->getClientOriginalExtension();
+
+            $request->tax_file = $file->storeAs('tax_files', $filename);
+        }
+
+        $finalData =  array_merge($request->validFormData(), ['role_id' => $roles->findByName('Client')->id]);
+        $finalData['tax_file'] = $request->tax_file;
+        $user = $this->users->create($finalData);
 
         event(new Registered($user));
 
@@ -68,9 +80,20 @@ class RegisterController extends Controller
             . '</ul>';
 
         \Mail::to('weborders@virginfarms.com')
-            ->cc('amirseersol@gmail.com')
             ->send(new VirginFarmGlobalMail('New User Registration Notification', $content));
 
+
+        if ($user->state == 10) {
+            $subject = 'New User Registration & Tax File Uploaded';
+            $content = 'Please find attachment. A tax file has been uploaded by ' . $user->username . '.';
+            $email = new VirginFarmGlobalMail($subject, $content);
+
+            // Attach the file using your setAttach method
+            $email->setAttach('attach', storage_path('app/' . $user->tax_file));
+
+            // Send the email with the attachment
+            \Mail::to(['juan@virginfarms.com', 'olif@virginfarms.com'])->send($email);
+        }
         return redirect('/')->with('success', $message);
     }
 }

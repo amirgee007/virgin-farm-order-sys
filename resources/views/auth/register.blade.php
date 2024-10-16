@@ -22,7 +22,7 @@
                 <div class="p-2">
                     @include('partials/messages')
                     <form role="form" action="<?= url('register') ?>" method="post" id="registration-form"
-                          autocomplete="off">
+                          autocomplete="off" enctype="multipart/form-data">
                         <input type="hidden" value="<?= csrf_token() ?>" name="_token">
 
                         <div class="form-row">
@@ -165,7 +165,7 @@
                             </div>
 
                             <div class="form-group col-6">
-                                {!! Form::select('state', getStates(), '', ['class' => 'form-control input-solid']) !!}
+                                {!! Form::select('state', getStates(), '', ['class' => 'form-control input-solid' , 'id' => 'state_id']) !!}
                             </div>
 
                         </div>
@@ -180,7 +180,6 @@
                                        value="{{ old('zip') }}"
                                        required>
                             </div>
-
                             <div class="form-group col-6">
                                 <select class="form-control form-control-md"
                                         name="carrier_id"
@@ -193,7 +192,16 @@
                                         <option value="{{$key}}" > {{$name}} </option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
 
+                        <div class="form-row" id="tax-file-input" style="display: none;">
+                            <label for="tax_file" class="form-label">Tax ID File For FL. Customers</label>
+                            <div class="form-group col-12">
+                                <input type="file"
+                                       name="tax_file"
+                                       id="tax_file"
+                                       class="form-control input-solid">
                             </div>
                         </div>
 
@@ -260,6 +268,19 @@
                     $('#sales_rep').hide();
                     $('#sales_rep-error').hide();
                     $('#new_customer_message').show();
+                }
+            });
+
+            // Listen for change event on the state select input
+            $('#state_id').on('change', function() {
+                // Get the selected option value
+                var selectedState = $(this).val();
+
+                // If Florida (value 10) is selected, show the file input
+                if (selectedState == '10') {
+                    $('#tax-file-input').show(); // Show the file input
+                } else {
+                    $('#tax-file-input').hide(); // Hide the file input for other states
                 }
             });
         });

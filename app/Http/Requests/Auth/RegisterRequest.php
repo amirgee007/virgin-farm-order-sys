@@ -33,6 +33,7 @@ class RegisterRequest extends Request
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
             'carrier_id' => 'required|string|max:255',
+            'tax_file' => 'required_if:state,10|max:2048', // Allow all standard images + PDF
         ];
 
         if ($this->input('customer_type') === 'current') {
@@ -58,7 +59,8 @@ class RegisterRequest extends Request
     public function messages()
     {
         return [
-            'tos.accepted' => __('You have to accept Terms of Service.')
+            'tos.accepted' => __('You have to accept Terms of Service.'),
+            'tax_file.required_if' => 'The tax ID field is required for Florida customers.', // Custom message
         ];
     }
 
