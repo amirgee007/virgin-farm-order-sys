@@ -24,8 +24,21 @@ class DashboardController extends Controller
 
         $orders = Order::where('is_active' , 1)->orderBy('date_shipped')->limit(10)->get();
         #$future_inventory = ProductQuantity::query()->groupBy(['date_in', 'date_out'])->get();
-        $futureInventory = \DB::SELECT('SELECT date_in, date_out, max(updated_at) as updated_at
-FROM product_quantities WHERE DATE(date_out) >= CURDATE() GROUP BY date_in, date_out;');
+
+        $futureInventory = \DB::SELECT('
+    SELECT pq.date_in,
+           pq.date_out,
+           MAX(pq.updated_at) AS updated_at,
+           p.supplier_id,
+           CASE
+               WHEN p.supplier_id = 1 THEN "VF"
+               ELSE "Dutch"
+           END AS supplier_name
+    FROM product_quantities pq
+    JOIN products p ON pq.product_id = p.id
+    WHERE DATE(pq.date_out) >= CURDATE()
+    GROUP BY pq.date_in, pq.date_out, p.supplier_id;
+');
 
         #$lowInventory = ProductQuantity::where('quantity' , 0)->where('date_out' , '>' , now()->toDateString())->limit(100)->get();
         $lowInventory = [];

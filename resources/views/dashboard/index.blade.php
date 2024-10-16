@@ -165,8 +165,9 @@
                         <table class="table table-borderless table-striped">
                             <thead>
                             <tr>
-                                <th colspan="2">Date Ranges</th>
-                                <th colspan="2">Last Updated</th>
+                                <th colspan="3">Date Ranges</th>
+                                <th colspan="3">Type</th>
+                                <th colspan="3">Last Updated</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -174,14 +175,7 @@
                                 @foreach ($futureInventory as $index => $inventory)
                                     @if ($index < 2)
                                         <!-- Always show the first two rows -->
-                                        <tr>
-                                            <td class="align-middle" colspan="2">
-                                                {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
-                                            </td>
-                                            <td class="align-middle" colspan="2">
-                                                {{ $inventory->updated_at }}
-                                            </td>
-                                        </tr>
+                                        @include('dashboard.future_inventory')
                                     @endif
                                 @endforeach
                             @endif
@@ -197,14 +191,7 @@
                                     @foreach ($futureInventory as $index => $inventory)
                                         @if ($index >= 2)
                                             <!-- Rest of the rows hidden by default -->
-                                            <tr>
-                                                <td class="align-middle" colspan="2">
-                                                    {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
-                                                </td>
-                                                <td class="align-middle" colspan="2">
-                                                    {{ $inventory->updated_at }}
-                                                </td>
-                                            </tr>
+                                            @include('dashboard.future_inventory')
                                         @endif
                                     @endforeach
                                     </tbody>

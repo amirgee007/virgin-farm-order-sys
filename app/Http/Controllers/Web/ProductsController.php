@@ -202,8 +202,18 @@ class ProductsController extends Controller
         $search = \Request::get('search');
         $category = \Request::get('category');
         $filter = \Request::get('filter');
+        $qty_found = \Request::get('qty_found');
 
+        $date_in = \Request::get('date_in');
+        $date_out = \Request::get('date_out');
         #depend ON date in and date OUT.
+
+
+        if($date_in && $date_out) {
+            $query->join('product_quantities', 'products.id', '=', 'product_quantities.product_id')
+                ->whereDate('product_quantities.date_in', '>=', $date_in)
+                ->whereDate('product_quantities.date_out', '<=', $date_out);
+        }
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -228,8 +238,9 @@ class ProductsController extends Controller
             elseif ($filter == 4) #without images
                 $query->whereNull('image_url');
         }
-        $products = (clone $query)->paginate(100);
-        if ($filter || $search || $category) {
+
+        $products = (clone $query)->select('products.*')->paginate(100);
+        if ($filter || $search || $category || $qty_found || $date_in || $date_out) {
             $products->appends([
                 'filter' => $filter,
                 'search' => $search,
@@ -238,7 +249,6 @@ class ProductsController extends Controller
         }
 
         $categories = Category::pluck('description', 'category_id')->toArray();
-
         $count = (clone $query)->count();
 
         #will check if need to change it
@@ -356,7 +366,6 @@ class ProductsController extends Controller
     public function productUpdateColumn(Request $request)
     {
         try {
-
             ProductQuantity::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
             return ['Done'];
 

@@ -123,6 +123,11 @@
                                 {!! Form::select('filter', $filters, Request::get('filter') , ['id' => 'filter', 'class' => 'form-control input-solid']) !!}
                             </div>
 
+{{--                            <div class="col-md-2 mb-2">--}}
+{{--                                <input type="checkbox" id="qty_found" {{Request::get('qty_found') ? 'checked' : ''}} name="qty_found" value="2">--}}
+{{--                                <label for="qty_found">Only Show QTY > 0</label>--}}
+{{--                            </div>--}}
+
                         </div>
                     </form>
 
@@ -582,7 +587,7 @@
 
             // Dropzone.autoDiscover = false;
 
-            $("#category ,#filter").change(function () {
+            $("#category ,#filter, #qty_found").change(function () {
                 $("#product-form").submit();
             });
 

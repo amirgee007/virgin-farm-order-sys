@@ -2,15 +2,17 @@
 
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
     <td class="align-middle">
+        @if(!Request::get('date_in'))
         <span class="badge badge-lg badge-danger" title="Total Rows found for the Inventory bellow.">
             <i class="fa fa-arrow-down" aria-hidden="true"></i>
             {{$prodQty ? count($prodQty) : 0}}
         </span>
+        @endif
         {{ @$categories[$product->category_id] }}
     </td>
     <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
     <td class="align-middle" title="Show Dutch or our own products">
-        {{ $product->supplier?? 'VF' }}
+        {{ $product->supplier_id == 1 ? 'VF' : 'Dutch' }}
     </td>
 
     <td class="align-middle">
@@ -79,7 +81,12 @@
 
                 @if ($product->prodQty)
                     @foreach ($product->prodQty as $index => $prod)
-                        <tr>
+                        @php
+                            $requestDateIn = Request::get('date_in');
+                            $requestDateOut = Request::get('date_out');
+                        @endphp
+                        @if(!$requestDateIn || ($prod->date_in == $requestDateIn && $prod->date_out == $requestDateOut))
+                            <tr>
                             <td scope="row">{{++$index}}</td>
                             <td scope="row">
                                 {{$prod->item_no}}
@@ -124,11 +131,23 @@
                                 </a>
                             </td>
 
-                            <td class="align-middle">{{ $prod->quantity }}</td>
+                            <td class="align-middle">
+                                <a class="editable"
+                                   style="cursor:pointer;"
+                                   data-name="quantity"
+                                   data-type="number"
+                                   data-emptytext="0"
+                                   data-pk="{{$prod->id}}"
+                                   data-url="{{route('product.update.column')}}"
+                                   data-value="{{ $prod->quantity }}">
+                                </a>
+                            </td>
+
                             <td class="align-middle">{{ $prod->date_in }}</td>
                             <td class="align-middle">{{ $prod->date_out }}</td>
                             <td class="align-middle">{{ $prod->expired_at }}</td>
                         </tr>
+                        @endif
                     @endforeach
                 @else
                     <tr>
