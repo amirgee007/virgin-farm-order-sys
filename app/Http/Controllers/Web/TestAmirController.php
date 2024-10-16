@@ -2,7 +2,6 @@
 
 namespace Vanguard\Http\Controllers\Web;
 
-use App\Services\MailchimpService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -14,29 +13,56 @@ use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
+use Vanguard\Services\MailchimpService;
 use Vanguard\User;
 
 class TestAmirController extends Controller
 {
 
     public function index3(){
-        
-        $user = User::first();
+
+        $user = User::query()->inRandomOrder()->first();
+
+        dd($user);
+        // Define additional fields such as company, birthday, etc.
+        $mergeFields = [
+            'FNAME' => $user->first_name, // Assuming you have a first_name field in your User model
+            'LNAME' => $user->last_name,  // Assuming you have a last_name field in your User model
+            'COMPANY' => $user->company,  // Assuming you have a company field
+            'BIRTHDAY' => $user->birthday // Assuming you have a birthday field (in format MM/DD)
+        ];
+
         // Add user to Mailchimp audience
         $mailchimpService = new MailchimpService();
-        $mailchimpService->addSubscriber($user->email, ['Web Shop Users']);
+        $mailchimpService->addSubscriber($user->email, ['Web Shop Users'], $mergeFields);
 
         dd('DONE');
         return view('test');
     }
 
-    public function index2(Request $request){
+    public function index2($id = 9){
 
         ini_set('max_execution_time', 300000); //300 seconds = 5 minutes
         ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
         ini_set('memory_limit', '4096M');
 
-        return $this->findBoxes($request->number);
+        $user = User::query()->inRandomOrder()->first();
+
+        $mergeFields = [
+            'FNAME' => $user->first_name,
+            'LNAME' => $user->last_name,
+            'COMPANY' => $user->company_name,
+            'ADDRESS' => $user->address,
+            'PHONE' => $user->phone
+        ];
+
+        // Add user to Mailchimp audience
+        $mailchimpService = new MailchimpService();
+        $mailchimpService->addSubscriber($user->email, ['Web Shop Users'], $mergeFields);
+
+
+        dd('ddd');
+
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18
 

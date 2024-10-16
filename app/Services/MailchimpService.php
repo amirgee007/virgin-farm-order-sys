@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace Vanguard\Services;
 
 use MailchimpMarketing\ApiClient;
 
@@ -17,13 +17,14 @@ class MailchimpService
         ]);
     }
 
-    public function addSubscriber($email, $tags = [])
+    public function addSubscriber($email, $tags = [], $mergeFields = [])
     {
         try {
             $this->client->lists->addListMember(config('mailchimp.audience_id'), [
                 'email_address' => $email,
                 'status' => 'subscribed',
                 'tags' => $tags,
+                'merge_fields'  => $mergeFields
             ]);
         } catch (\Exception $e) {
             // Handle error (log it, notify admin, etc.)
