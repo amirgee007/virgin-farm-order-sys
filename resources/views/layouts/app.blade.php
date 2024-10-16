@@ -251,6 +251,61 @@
     });
 </script>
 
+<script>
+    let isInteractionDisabled = false;
+    function disableUserInteraction() {
+        if (!isInteractionDisabled) {
+            // Disable mouse clicks
+            document.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, true);
+
+            // Disable keypresses
+            document.addEventListener('keydown', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, true);
+
+            // Optionally, you could show an overlay to make it visually clear the app is locked
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            overlay.style.zIndex = '10000'; // Make sure the overlay covers everything
+            overlay.innerHTML = '<h2 style="color: white; text-align: center; margin-top: 20%;">Our store is being refreshed with new products. We’ll be back online shortly.</h2>';
+
+            document.body.appendChild(overlay);
+
+            isInteractionDisabled = true;  // Set flag to true
+        }
+    }
+
+    function checkStatus() {
+        if (!isInteractionDisabled){
+            // Poll the server to check the database value
+            fetch('/check-admin-uploading')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.disable) {
+                        disableUserInteraction();
+                    }
+                })
+                .catch(error => console.error('Error fetching status:', error));
+        }
+    }
+
+    // Check the status on page load
+    window.onload = function() {
+        checkStatus();
+        // Optionally, you can keep checking the status every few seconds
+        setInterval(checkStatus, 5000); // Every 5 seconds
+    };
+</script>
+
 @stack('js')
 @yield('scripts')
 

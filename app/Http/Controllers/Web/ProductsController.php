@@ -24,6 +24,7 @@ use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
+use Vanguard\Models\Setting;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
 
@@ -114,7 +115,7 @@ class ProductsController extends Controller
         $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
 
         $products = $query->groupBy('products.id')
-            ->orderBy('product_text')
+            ->orderBy('category_id')
             ->selectRaw('supplier_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
             ->paginate(100);
 
@@ -395,7 +396,7 @@ class ProductsController extends Controller
             $request->validate([
                 'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
-
+            updateSystemStatus(1);
             $excel = $request->file('file');
             $filenamePut = 'extraBulk/' . uniqid() . '.' . $excel->getClientOriginalExtension();
             $filenameRead = 'app/' . $filenamePut;
@@ -422,11 +423,13 @@ class ProductsController extends Controller
                     $this->sendMissingItemEmail($missing);
                 }
 
+                updateSystemStatus(0);
                 Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY ' . auth()->user()->first_name);
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
             } catch (\Exception $ex) {
                 Log::warning('Error during bulk files upload, please check: ' . $ex->getMessage() . ' on line ' . $ex->getLine());
+                updateSystemStatus(0);
                 return response()->json(['error' => 'Invalid Format File.'], 500);
             }
         } else {
@@ -437,6 +440,8 @@ class ProductsController extends Controller
     private function processProductRow($row, $expiredtime, &$missing, $isSpecial = false)
     {
         $product = Product::where('item_no', trim($row[0]))->first();
+
+        $cleaned_string = str_replace(",", "", trim($row[0]));
 
         if ($product) {
             $data = $this->buildProductData($row, $product);
@@ -457,8 +462,8 @@ class ProductsController extends Controller
                 'date_out' => $this->dateOut,
             ], $data);
 
-        } else if (trim($row[0])) {
-            $missing[] = $row[0];
+        } else if (trim($cleaned_string)) {
+            $missing[] = $cleaned_string;
         }
     }
 
@@ -491,6 +496,7 @@ class ProductsController extends Controller
 
     private function handleSingleFileUpload(Request $request, &$missing)
     {
+        updateSystemStatus(1);
         $dates = dateRangeConverter($request->range);
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
@@ -512,6 +518,7 @@ class ProductsController extends Controller
             $this->sendMissingItemEmail($missing);
         }
 
+        updateSystemStatus(0);
         session()->flash('app_message', 'Inventory file has been imported into the system.');
         return back();
     }

@@ -4,6 +4,11 @@
 use Vanguard\Http\Controllers\Web\ProductsController;
 use Vanguard\Http\Controllers\Web\CartController;
 
+Route::get('/check-admin-uploading', [
+    'as' => 'check.admin.uploading',
+    'uses' => 'DashboardController@checkAdminUploadingFiles'
+]);
+
 Route::get('cart', [CartController::class, 'viewCart'])->name('view.cart'); #done DB
 Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart'); #done DB
 Route::patch('update-cart-qty', [CartController::class, 'updateCartQty'])->name('change.cart.qty'); #done DB

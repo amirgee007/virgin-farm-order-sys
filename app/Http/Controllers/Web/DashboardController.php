@@ -8,6 +8,10 @@ use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Models\Order;
 use Vanguard\Models\ProductQuantity;
+use DB;
+use Vanguard\Models\Setting;
+
+// Assuming you are using DB facade
 
 class DashboardController extends Controller
 {
@@ -66,4 +70,17 @@ class DashboardController extends Controller
         #, You will be redirected to inventory page.
         return response()->json(['message' => 'Settings updated successfully.']);
     }
+
+    public function checkAdminUploadingFiles(){
+        // Replace 'your_table' and 'status_column' with your actual table and column
+        $status = Setting::where('key' , 'admin-uploading')->where('value' , 1)->first();
+
+        // Assume status 1 means block interactions, 0 means allow interactions
+        if ($status && myRoleName() != 'Admin') {
+            return response()->json(['disable' => true]);
+        } else {
+            return response()->json(['disable' => false]);
+        }
+    }
+
 }

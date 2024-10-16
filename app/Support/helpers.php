@@ -400,6 +400,10 @@ function getAddOnDetail($order)
     return $text;
 }
 
+function updateSystemStatus($value = 1){
+    Setting::where('key' , 'admin-uploading')->update(['value' => $value]);
+}
+
 #if user id is zero then it means its for ADMIN
 
 function addOwnNotification($message, $order_id = 0, $user_id = 0)
