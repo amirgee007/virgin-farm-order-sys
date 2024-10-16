@@ -187,13 +187,15 @@
                                         }
                                     </style>
 
+                                    @php $cartFound = count(getMyCart()); @endphp
                                     <div class="date-input-container">
                                         <input type="text"
                                                readonly
+                                               {{$cartFound ? 'disabled' : ''}}
                                               id="date_shipped"
                                                placeholder="When to Ship?"
                                                name="date_shipped"
-                                               title="When do you want your product to be shipped?"
+                                               title="{{$cartFound ? 'Once a product is in your cart, you cannot change the shipping date. you must empty the cart to make changes.' : 'When do you want your product to be shipped?'}}"
                                                data-trigger="hover"
                                                data-toggle="tooltip"
                                                value="{{ $date_shipped }}">
