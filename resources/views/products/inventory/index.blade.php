@@ -5,7 +5,7 @@
 
 @section ('styles')
     <style>
-        .radius{
+        .radius {
             border-radius: 2.5px;
             border-style: outset;
             cursor: pointer;
@@ -16,8 +16,143 @@
             color: #ffffff !important;
             border-radius: 60% !important;
         }
-        .pagination{
+        .pagination {
             height: 10px;
+        }
+
+        .loader {
+            height: 70px !important;
+        }
+        .products-list-table th, .products-list-table td {
+            padding: 0.3rem !important;
+        }
+        .products-list-table {
+            font-weight: 400 !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+        }
+        .width50 {
+            width: 60px !important;
+        }
+        .blink {
+            animation: blink-animation 0.75s steps(5, start) infinite;
+            -webkit-animation: blink-animation 0.75s steps(5, start) infinite;
+        }
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+        @-webkit-keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        .date-input-container {
+            position: relative;
+            display: inline-block;
+        }
+        #date_shipped {
+            width: 100%;
+            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .calendar-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .form-check-inline {
+                display: block;
+            }
+            .form-check-label {
+                display: block;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            .btn-icon {
+                font-size: 12px;
+            }
+
+            /* Ensure all form elements stack properly */
+            .custom-search-form {
+                display: flex;
+                flex-direction: column;
+            }
+            .custom-search-form .form-control {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .input-group-append {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+            #searching {
+                width: 100%;
+                margin-left: 0 !important; /* Remove ml-2 on small screens */
+            }
+
+            /* Remove ml-3 for #category on small screens */
+            #category {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+
+            /* Table responsiveness */
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .products-list-table {
+                font-size: 12px !important;
+            }
+            .products-list-table th, .products-list-table td {
+                white-space: nowrap;
+            }
+
+            .date-input-container {
+                width: 100%;
+            }
+
+            .pagination {
+                justify-content: center;
+            }
+        }
+
+        /* Further improvements for very small screens */
+        @media (max-width: 480px) {
+            .form-check-inline {
+                display: block;
+                margin-bottom: 15px;
+            }
+            .form-check-label {
+                width: 100%;
+            }
+            .custom-search-form {
+                flex-direction: column;
+            }
+
+            /* Make buttons full width */
+            .btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .pagination {
+                height: auto;
+            }
         }
     </style>
 @stop
@@ -91,17 +226,6 @@
                 visibility: hidden;
             }
         }
-
-        /*button {*/
-        /*font-size: 11px !important;*/
-        /*font-weight: 300 !important;*/
-        /*}*/
-        /*caption {*/
-        /*caption-side:top;*/
-        /*}*/
-        /*tr:hover > td {*/
-        /*cursor: pointer !important;*/
-        /*}*/
 
     </style>
 @endsection
