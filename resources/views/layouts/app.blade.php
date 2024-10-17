@@ -214,17 +214,27 @@
 <script>
     $(document).ready(function () {
 
-        // Capture scroll position before page refresh
+        var isPaginationClicked = false;
+
+        // Detect pagination click
+        $('.page-link').on('click', function() {
+            isPaginationClicked = true;  // Set flag to true if pagination is clicked
+        });
+
+        // Capture scroll position before page refresh, only if not clicking pagination
         $(window).on("beforeunload", function() {
-            localStorage.setItem("scrollPosition", $(window).scrollTop());
+            if (!isPaginationClicked) {
+                localStorage.setItem("scrollPosition", $(window).scrollTop());
+            }
         });
 
         // Restore scroll position after page load
         var scrollPosition = localStorage.getItem("scrollPosition");
-        if (scrollPosition) {
+        if (scrollPosition && !isPaginationClicked) {
             $(window).scrollTop(scrollPosition);
-            localStorage.removeItem("scrollPosition"); // Clean up after setting
+            localStorage.removeItem("scrollPosition");  // Clean up after setting
         }
+
 
         var remainingSeconds = <?php echo cartTimeLeftSec(); ?>;
 
