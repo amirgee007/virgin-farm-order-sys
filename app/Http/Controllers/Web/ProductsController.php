@@ -210,7 +210,6 @@ class ProductsController extends Controller
         $date_out = \Request::get('date_out');
         #depend ON date in and date OUT.
 
-
         if ($date_in && $date_out) {
             $query->join('product_quantities', 'products.id', '=', 'product_quantities.product_id')
                 ->whereDate('product_quantities.date_in', '>=', $date_in)

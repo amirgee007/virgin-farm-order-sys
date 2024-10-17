@@ -1,10 +1,84 @@
 @extends('layouts.app')
 
 @section('page-title', __('Client Inventory'))
+
 @section('page-heading', __('Client Inventory'))
+
+@section('breadcrumbs')
+    <li class="breadcrumb-item text-muted d-flex align-items-center flex-wrap" style="cursor: pointer;">
+            @lang('See Boxes detail')
+            <i class="fas fa-box text-danger ml-2" data-toggle="modal" data-target="#boxesModal"></i>
+
+            <div class="form-check form-check-inline ml-4"
+                 title="Change Inventory to Virgin farms"
+                 data-trigger="hover"
+                 data-toggle="tooltip">
+                <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="1"
+                    {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
+                <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin Farm</label>
+            </div>
+
+            <div class="form-check form-check-inline"
+                 title="Switch Inventory to Dutch Flowers"
+                 data-trigger="hover"
+                 data-toggle="tooltip">
+                <input class="form-check-input" type="radio" name="radioGroup" id="radioDutch" value="2"
+                    {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
+                <label class="form-check-label bg-danger text-white p-2 radius" for="radioDutch">Dutch</label>
+            </div>
+
+            <div class="form-check form-check-inline"
+                 title="Change Inventory to Special Offers"
+                 data-trigger="hover"
+                 data-toggle="tooltip">
+                <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="3"
+                    {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
+                <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Seasonal</label>
+            </div>
+        </li>
+@stop
 
 @section ('styles')
     <style>
+
+        [role=main] {
+            padding-top: 75px;
+        }
+
+        .loader {
+            height: 70px !important;
+        }
+
+        .products-list-table th, .products-list-table td {
+            padding: 0.3rem !important;
+        }
+
+        .products-list-table {
+            font-weight: 400 !important;
+            font-size: 13px !important;
+            line-height: 1.6 !important;
+        }
+
+        .width50 {
+            width: 60px !important;
+        }
+        .blink {
+            animation: blink-animation 0.75s steps(5, start) infinite;
+            -webkit-animation: blink-animation 0.75s steps(5, start) infinite;
+        }
+
+        @keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        @-webkit-keyframes blink-animation {
+            to {
+                visibility: hidden;
+            }
+        }
+
         .radius {
             border-radius: 2.5px;
             border-style: outset;
@@ -129,6 +203,21 @@
             .pagination {
                 justify-content: center;
             }
+
+            .page-header {
+                display: none;
+            }
+
+            .breadcrumb-item{
+                display: none;
+            }
+            .page-header {
+                display: none;
+            }
+
+            .dropdown .dropdown-menu {
+                width: 310px !important;
+            }
         }
 
         /* Further improvements for very small screens */
@@ -143,103 +232,54 @@
             .custom-search-form {
                 flex-direction: column;
             }
-
             /* Make buttons full width */
             .btn {
                 width: 100%;
                 margin-top: 10px;
             }
-
             .pagination {
                 height: auto;
             }
+            .page-header {
+                display: none;
+            }
+
+            .breadcrumb-item {
+                display: none;
+            }
+
+            .dropdown .dropdown-menu {
+                width: 310px !important;
+            }
         }
     </style>
 @stop
-
-@section('breadcrumbs')
-    <li class="breadcrumb-item text-muted d-flex align-items-center flex-wrap" style="cursor: pointer;">
-        @lang('See Boxes detail')
-        <i class="fas fa-box text-danger ml-2" data-toggle="modal" data-target="#boxesModal"></i>
-
-        <div class="form-check form-check-inline ml-4"
-             title="Change Inventory to Virgin farms"
-             data-trigger="hover"
-             data-toggle="tooltip">
-            <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="1"
-                {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
-            <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin Farm</label>
-        </div>
-
-        <div class="form-check form-check-inline"
-             title="Switch Inventory to Dutch Flowers"
-             data-trigger="hover"
-             data-toggle="tooltip">
-            <input class="form-check-input" type="radio" name="radioGroup" id="radioDutch" value="2"
-                {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
-            <label class="form-check-label bg-danger text-white p-2 radius" for="radioDutch">Dutch</label>
-        </div>
-
-        <div class="form-check form-check-inline"
-             title="Change Inventory to Special Offers"
-             data-trigger="hover"
-             data-toggle="tooltip">
-            <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="3"
-                {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
-            <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Seasonal</label>
-        </div>
-    </li>
-
-@stop
-
-@section('styles')
-    <style>
-
-        [role=main] {
-            padding-top: 75px;
-        }
-
-        .loader {
-            height: 70px !important;
-        }
-
-        .products-list-table th, .products-list-table td {
-            padding: 0.3rem !important;
-        }
-
-        .products-list-table {
-            font-weight: 400 !important;
-            font-size: 13px !important;
-            line-height: 1.6 !important;
-        }
-
-        .width50 {
-            width: 60px !important;
-        }
-        .blink {
-            animation: blink-animation 0.75s steps(5, start) infinite;
-            -webkit-animation: blink-animation 0.75s steps(5, start) infinite;
-        }
-
-        @keyframes blink-animation {
-            to {
-                visibility: hidden;
-            }
-        }
-
-        @-webkit-keyframes blink-animation {
-            to {
-                visibility: hidden;
-            }
-        }
-
-    </style>
-@endsection
 
 @section('content')
     @include('partials.messages')
 
     <div class="row">
+        <div class="col-md-12 d-block d-md-none">
+            <!-- Inline Radio Buttons without form-check class -->
+            <label class="mr-3" title="Change Inventory to Virgin farms" data-trigger="hover" data-toggle="tooltip">
+                <input type="radio" name="radioGroup" id="radioVirgin" value="1"
+                    {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
+                Virgin Farm
+            </label>
+
+            <label class="mr-3" title="Switch Inventory to Dutch Flowers" data-trigger="hover" data-toggle="tooltip">
+                <input type="radio" name="radioGroup" id="radioDutch" value="2"
+                    {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
+                Dutch Flowers
+            </label>
+
+            <label class="" title="Change Inventory to Special Offers" data-trigger="hover" data-toggle="tooltip">
+                <input type="radio" name="radioGroup" id="radioSpecial" value="3"
+                    {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
+                Seasonal
+            </label>
+        </div>
+
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
@@ -528,7 +568,6 @@
             </div>
         </div>
     </div>
-
 @stop
 
 @section('scripts')
