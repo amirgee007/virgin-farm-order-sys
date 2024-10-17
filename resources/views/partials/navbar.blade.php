@@ -57,7 +57,7 @@
                     <div class="row total-header-section">
                         <div class="col-lg-4 col-sm-6 col-6">
                             <div id="progress-container"
-                                 title="You are close to meeting the size criteria."
+                                 title="You're close to meeting the box capacity."
                                  data-toggle="tooltip"
                                  data-placement="top"
                                  style="position: relative; width: 50px; height: 50px;"></div>
