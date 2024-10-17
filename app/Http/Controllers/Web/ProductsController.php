@@ -242,11 +242,14 @@ class ProductsController extends Controller
         }
 
         $products = (clone $query)->select('products.*')->paginate(100);
+
         if ($filter || $search || $category || $qty_found || $date_in || $date_out) {
             $products->appends([
                 'filter' => $filter,
                 'search' => $search,
                 'category' => $category,
+                'date_in' => $date_in,
+                'date_out' => $date_out,
             ]);
         }
 
