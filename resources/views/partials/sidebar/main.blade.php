@@ -169,6 +169,15 @@
             @foreach (\Vanguard\Plugins\Vanguard::availablePlugins() as $plugin)
                 @include('partials.sidebar.items', ['item' => $plugin->sidebar()])
             @endforeach
+
+            @permission('products.manage')
+            <li class="nav-item">
+                <a target="_blank" class="nav-link" href="https://scribehow.com/page/Web_Shop_Maintenance_Topics__LLhKs5_JSt-ohAt_Y0IMWA">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>@lang('Maintenance Manual')</span>
+                </a>
+            </li>
+            @endpermission
         </ul>
     </div>
 </nav>
