@@ -260,7 +260,7 @@
             <label class="mr-3" title="Change Inventory to Virgin farms" data-trigger="hover" data-toggle="tooltip">
                 <input type="radio" name="radioGroup" id="radioVirgin" value="1" class="custom-radio-btn"
                     {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
-                Virgin Farm
+                Virgin Farms
             </label>
 
             <label class="mr-3" title="Switch Inventory to Dutch Flowers" data-trigger="hover" data-toggle="tooltip">
