@@ -15,7 +15,7 @@
                  data-toggle="tooltip">
                 <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="1"
                     {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
-                <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin Farm</label>
+                <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin Farms</label>
             </div>
 
             <div class="form-check form-check-inline"
