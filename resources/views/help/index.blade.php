@@ -65,20 +65,25 @@
     <div class="card-body">
 
         <div class="container-fluid help-search-container">
-            <h1>Help & Frequently Asked Questions (FAQs) </h1>
-            <div class="search-bar">
-                <input type="text"  id="searchInput" class="form-control search-input" placeholder="Search for any help, question etc">
+            <h1>Help & Frequently Asked Questions (FAQs)</h1>
+
+            <!-- Search Bar -->
+            <div class="search-bar mb-3">
+                <input type="text" id="searchInput" class="form-control search-input" placeholder="Search for any help, question etc">
             </div>
 
             <!-- Buttons to Open Tabs -->
-            <div class="btn-group" role="group">
-                @foreach($tutorials as $index => $tutorial)
-                    <button type="button" class="btn btn-danger ml-1 p-3 rounded btn-md mt-3 @if($index === 0) active-btn @endif" data-tab-index="{{ $index }}">
-                        {{ $tutorial['title'] }}
-                    </button>
-                @endforeach
+            <div class="row" style="margin: 0px">
+                <div class="btn-group btn-group-toggle d-flex flex-wrap" role="group">
+                    @foreach($tutorials as $index => $tutorial)
+                        <button type="button" class="btn btn-danger m-1 p-3 rounded btn-md @if($index === 0) active-btn @endif" data-tab-index="{{ $index }}">
+                            {{ $tutorial['title'] }}
+                        </button>
+                    @endforeach
+                </div>
             </div>
         </div>
+
 
 
         <div class="container mt-5">
