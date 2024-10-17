@@ -27,6 +27,8 @@ class MailchimpService
                 'merge_fields'  => $mergeFields
             ]);
         } catch (\Exception $e) {
+
+            dd($e);
             // Handle error (log it, notify admin, etc.)
             \Log::error('Mailchimp error: ' . $e->getMessage());
         }

@@ -152,7 +152,8 @@ class ProductsController extends Controller
         ));
     }
 
-    public function getHighlightedDates(){
+    public function getHighlightedDates()
+    {
         $highlightedDates = [];
 
         $productQuantities = \DB::table('product_quantities')
@@ -210,7 +211,7 @@ class ProductsController extends Controller
         #depend ON date in and date OUT.
 
 
-        if($date_in && $date_out) {
+        if ($date_in && $date_out) {
             $query->join('product_quantities', 'products.id', '=', 'product_quantities.product_id')
                 ->whereDate('product_quantities.date_in', '>=', $date_in)
                 ->whereDate('product_quantities.date_out', '<=', $date_out);
@@ -396,6 +397,7 @@ class ProductsController extends Controller
             $request->validate([
                 'file' => 'required|file|mimes:xls,xlsx|max:10008', // 10MB Max
             ]);
+
             updateSystemStatus(1);
             $excel = $request->file('file');
             $filenamePut = 'extraBulk/' . uniqid() . '.' . $excel->getClientOriginalExtension();
@@ -517,6 +519,7 @@ class ProductsController extends Controller
         if ($missing) {
             $this->sendMissingItemEmail($missing);
         }
+        $this->sendEmailIfPriceNotCorrect();
 
         updateSystemStatus(0);
         session()->flash('app_message', 'Inventory file has been imported into the system.');
@@ -776,9 +779,9 @@ class ProductsController extends Controller
         #1 = only virgin, 2= dutch and 3 = special
         if (in_array($request->flower_type, [1, 2, 3])) {
 
-            if($request->flower_type == 3)
+            if ($request->flower_type == 3)
                 $query->where('product_quantities.is_special', 1);
-            else{
+            else {
                 $query->whereHas('product', function ($subQuery) use ($request) {
                     $subQuery->where('products.supplier_id', $request->flower_type);
                 })->where('product_quantities.is_special', 0);
@@ -887,6 +890,30 @@ class ProductsController extends Controller
             \Mail::raw($content, function ($message) {
                 $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
                 ])->subject('Items from inventory file are not present in the master file');
+            });
+
+        } catch (\Exception $ex) {
+            Log::error(implode(',', $items) . ' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
+        }
+
+    }
+
+    public function sendEmailIfPriceNotCorrect()
+    {
+        $itemNos = ProductQuantity::where('quantity', '>', 0)
+            ->where(function ($query) {
+                $query->whereBetween('price_fob', [0, 0.29])
+                    ->orWhereBetween('price_fedex', [0, 0.29])
+                    ->orWhereBetween('price_hawaii', [0, 0.29]);
+            })->pluck('item_no')
+            ->toArray();
+
+        try {
+            $content = "Some items prices are too low please check asap. " . implode(',', $itemNos);
+
+            \Mail::raw($content, function ($message) {
+                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
+                ])->subject('Items from inventory file are added with wrong price < 0.29');
             });
 
         } catch (\Exception $ex) {

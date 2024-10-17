@@ -46,22 +46,8 @@ class TestAmirController extends Controller
         ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
         ini_set('memory_limit', '4096M');
 
-        $user = User::query()->inRandomOrder()->first();
-
-        $mergeFields = [
-            'FNAME' => $user->first_name,
-            'LNAME' => $user->last_name,
-            'COMPANY' => $user->company_name,
-            'ADDRESS' => $user->address,
-            'PHONE' => $user->phone
-        ];
-
-        // Add user to Mailchimp audience
-        $mailchimpService = new MailchimpService();
-        $mailchimpService->addSubscriber($user->email, ['Web Shop Users'], $mergeFields);
-
-
-        dd('ddd');
+        dd();
+        dd($user);
 
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18

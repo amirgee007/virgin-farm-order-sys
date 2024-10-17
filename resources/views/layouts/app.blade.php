@@ -276,7 +276,7 @@
             overlay.style.height = '100%';
             overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
             overlay.style.zIndex = '10000'; // Make sure the overlay covers everything
-            overlay.innerHTML = '<h2 style="color: white; text-align: center; margin-top: 20%;">Our store is being refreshed with new products. We’ll be back online shortly.</h2>';
+            overlay.innerHTML = '<h2 style="color: white; text-align: center; margin-top: 20%;">Our web shop is being refreshed with new products. We’ll be back online shortly.</h2>';
 
             document.body.appendChild(overlay);
 
