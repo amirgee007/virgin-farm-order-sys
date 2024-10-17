@@ -14,21 +14,26 @@
         .loader {
             height: 70px !important;
         }
+
         .orders-list-table th, .orders-list-table td {
             padding: 0.3rem !important;
         }
+
         .orders-list-table {
             font-weight: 400 !important;
             font-size: 10px !important;
             line-height: 1.328571429 !important;
         }
+
         button {
             font-size: 12px !important;
             font-weight: 400 !important;
         }
+
         caption {
-            caption-side:top;
+            caption-side: top;
         }
+
         tr:hover > td {
             cursor: pointer !important;
         }
@@ -38,8 +43,9 @@
         .card {
             cursor: pointer;
             border: 3px dashed transparent;
-            border-width:3px !important;
+            border-width: 3px !important;
         }
+
         .card.selected {
             border-color: #748c41;
         }
@@ -62,59 +68,64 @@
         @endforeach
     </div>
 
-{{--    <div class="container">--}}
-{{--        <div class="row justify-content-center align-items-center">--}}
-{{--            <div class="col-auto">--}}
-{{--                <a target="_blank" href="https://scribehow.com/page/Web_Shop_Maintenance_Topics__LLhKs5_JSt-ohAt_Y0IMWA?referrer=documents"--}}
-{{--                   class="btn btn-danger btn-lg"> System Maintenance Guide (Admin Only)--}}
-{{--                </a>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    {{--    <div class="container">--}}
+    {{--        <div class="row justify-content-center align-items-center">--}}
+    {{--            <div class="col-auto">--}}
+    {{--                <a target="_blank" href="https://scribehow.com/page/Web_Shop_Maintenance_Topics__LLhKs5_JSt-ohAt_Y0IMWA?referrer=documents"--}}
+    {{--                   class="btn btn-danger btn-lg"> System Maintenance Guide (Admin Only)--}}
+    {{--                </a>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 
     <div class="container mt-3">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 1 ? 'selected' :''}}" data-supplier="1" >
-                        <div class="card-body">
-                            <div class="text-center">
-                                <img src="{{ url('assets/img/dashboard/vf.png') }}" class="img-fluid" alt="{{ setting('app_name') }}" height="300">
-                            </div>
-                            <div class="text-center mt-3 text-primary">
-                                <b>Virgin Farms Inventory</b>
-                            </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 1 ? 'selected' :''}}"
+                     data-supplier="1">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img src="{{ url('assets/img/dashboard/vf.png') }}" class="img-fluid"
+                                 alt="{{ setting('app_name') }}" height="300">
+                        </div>
+                        <div class="text-center mt-3 text-primary">
+                            <b>Virgin Farms Inventory</b>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 2 ? 'selected' :''}}" data-supplier="2">
-                        <div class="card-body">
-                            <div class="text-center">
-                                <img src="{{ url('assets/img/dashboard/dutch.png') }}" class="img-fluid" alt="{{ setting('app_name') }}" height="300">
-                            </div>
-                            <div class="text-center mt-3 text-danger">
-                                <b>Dutch Flowers</b>
-                            </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 2 ? 'selected' :''}}"
+                     data-supplier="2">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img src="{{ url('assets/img/dashboard/dutch.png') }}" class="img-fluid"
+                                 alt="{{ setting('app_name') }}" height="300">
+                        </div>
+                        <div class="text-center mt-3 text-danger">
+                            <b>Dutch Flowers</b>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 3 ? 'selected' :''}}" data-supplier="3">
-                        <div class="card-body">
-                            <div class="text-center">
-                                <img src="{{ url('assets/img/dashboard/special.png') }}" class="img-fluid" alt="{{ setting('app_name') }}" height="300">
-                            </div>
-                            <div class="text-center mt-3 text-warning">
-                                <b>Special Offers</b>
-                            </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card text-white mb-3 supplier-card {{auth()->user()->supplier_id == 3 ? 'selected' :''}}"
+                     data-supplier="3">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img src="{{ url('assets/img/dashboard/special.png') }}" class="img-fluid"
+                                 alt="{{ setting('app_name') }}" height="300">
+                        </div>
+                        <div class="text-center mt-3 text-warning">
+                            <b>Special Offers</b>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+    </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-md-6 col-12">
             <div class="card">
                 <div class="card-body" style="padding: 5px">
                     <h5 class="text-center">Recent Orders</h5>
@@ -123,12 +134,12 @@
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
-                                <th >@lang('Id')</th>
-                                <th >@lang('User')</th>
-                                <th >@lang('Ship Date')</th>
-                                <th >@lang('Carrier Name')</th>
-                                <th >@lang('Status')</th>
-                                <th >@lang('Created')</th>
+                                <th>@lang('Id')</th>
+                                <th>@lang('User')</th>
+                                <th>@lang('Ship Date')</th>
+                                <th>@lang('Carrier Name')</th>
+                                <th>@lang('Status')</th>
+                                <th>@lang('Created')</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -163,9 +174,11 @@
             </div>
         </div>
 
-        <div class="col-6">
+        <div class="col-md-6 col-12">
             <div class="card">
-                <div class="card-header" style="cursor: pointer;" data-toggle="collapse" data-target="#futureInventoryCollapse" aria-expanded="false" aria-controls="futureInventoryCollapse">
+                <div class="card-header" style="cursor: pointer;" data-toggle="collapse"
+                     data-target="#futureInventoryCollapse" aria-expanded="false"
+                     aria-controls="futureInventoryCollapse">
                     <h5 class="text-center mb-0">Recent Future Inventory</h5>
                 </div>
                 <div class="card-body" style="padding: 5px">
@@ -208,70 +221,73 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <a style="cursor: pointer;" data-toggle="collapse" data-target="#futureInventoryCollapse" aria-expanded="false" aria-controls="futureInventoryCollapse">
+                            <a style="cursor: pointer;" data-toggle="collapse" data-target="#futureInventoryCollapse"
+                               aria-expanded="false" aria-controls="futureInventoryCollapse">
                                 Show More
                             </a>
                         </div>
                     @endif
                 </div>
             </div>
-
         </div>
-
-        {{--        <div class="col-12">--}}
-        {{--            <div class="card">--}}
-        {{--                    <div class="card-body" style="padding: 5px">--}}
-        {{--                        <h5 class="text-center">Show Low Inventory</h5>--}}
-        {{--                        <hr>--}}
-        {{--                        <div class="table-responsive orders-list-table">--}}
-        {{--                            <table class="table table-borderless table-striped products-list-table">--}}
-        {{--                                <thead>--}}
-        {{--                                <tr>--}}
-        {{--                                    <th >@lang('Item')</th>--}}
-        {{--                                    <th >@lang('Quantity')</th>--}}
-        {{--                                    <th >@lang('Date In')</th>--}}
-        {{--                                    <th >@lang('Date Out')</th>--}}
-        {{--                                    <th >@lang('Last Updated')</th>--}}
-        {{--                                </tr>--}}
-        {{--                                </thead>--}}
-        {{--                                <tbody>--}}
-        {{--                                @if ($lowInventory)--}}
-        {{--                                    @foreach ($lowInventory as  $product)--}}
-        {{--                                        <tr>--}}
-        {{--                                            <td class="align-middle">{{ $product->item_no }}</td>--}}
-        {{--                                            <td><span class="badge badge-lg badge-danger"> {{ $product->quantity }} </span></td>--}}
-        {{--                                            <td class="align-middle">{{ $product->date_in }}</td>--}}
-        {{--                                            <td class="align-middle">{{ $product->date_out }}</td>--}}
-        {{--                                            <td class="align-middle">{{ diff4Human($product->updated_at) }}</td>--}}
-        {{--                                        </tr>--}}
-        {{--                                    @endforeach--}}
-        {{--                                @else--}}
-        {{--                                    <tr>--}}
-        {{--                                        <td colspan="12">--}}
-        {{--                                            No Orders found--}}
-        {{--                                        </td>--}}
-        {{--                                    </tr>--}}
-        {{--                                @endif--}}
-        {{--                                </tbody>--}}
-        {{--                            </table>--}}
-        {{--                        </div>--}}
-        {{--                    </div>--}}
-        {{--                </div>--}}
-        {{--        </div>--}}
     </div>
+
+
+
+
+    {{--        <div class="col-12">--}}
+    {{--            <div class="card">--}}
+    {{--                    <div class="card-body" style="padding: 5px">--}}
+    {{--                        <h5 class="text-center">Show Low Inventory</h5>--}}
+    {{--                        <hr>--}}
+    {{--                        <div class="table-responsive orders-list-table">--}}
+    {{--                            <table class="table table-borderless table-striped products-list-table">--}}
+    {{--                                <thead>--}}
+    {{--                                <tr>--}}
+    {{--                                    <th >@lang('Item')</th>--}}
+    {{--                                    <th >@lang('Quantity')</th>--}}
+    {{--                                    <th >@lang('Date In')</th>--}}
+    {{--                                    <th >@lang('Date Out')</th>--}}
+    {{--                                    <th >@lang('Last Updated')</th>--}}
+    {{--                                </tr>--}}
+    {{--                                </thead>--}}
+    {{--                                <tbody>--}}
+    {{--                                @if ($lowInventory)--}}
+    {{--                                    @foreach ($lowInventory as  $product)--}}
+    {{--                                        <tr>--}}
+    {{--                                            <td class="align-middle">{{ $product->item_no }}</td>--}}
+    {{--                                            <td><span class="badge badge-lg badge-danger"> {{ $product->quantity }} </span></td>--}}
+    {{--                                            <td class="align-middle">{{ $product->date_in }}</td>--}}
+    {{--                                            <td class="align-middle">{{ $product->date_out }}</td>--}}
+    {{--                                            <td class="align-middle">{{ diff4Human($product->updated_at) }}</td>--}}
+    {{--                                        </tr>--}}
+    {{--                                    @endforeach--}}
+    {{--                                @else--}}
+    {{--                                    <tr>--}}
+    {{--                                        <td colspan="12">--}}
+    {{--                                            No Orders found--}}
+    {{--                                        </td>--}}
+    {{--                                    </tr>--}}
+    {{--                                @endif--}}
+    {{--                                </tbody>--}}
+    {{--                            </table>--}}
+    {{--                        </div>--}}
+    {{--                    </div>--}}
+    {{--                </div>--}}
+    {{--        </div>--}}
 
 @stop
 
 @section('scripts')
     {{--@foreach (\Vanguard\Plugins\Vanguard::availableWidgets(auth()->user()) as $widget)--}}
-        {{--@if (method_exists($widget, 'scripts'))--}}
-            {{--{!! app()->call([$widget, 'scripts']) !!}--}}
-        {{--@endif--}}
+    {{--@if (method_exists($widget, 'scripts'))--}}
+    {{--{!! app()->call([$widget, 'scripts']) !!}--}}
+    {{--@endif--}}
     {{--@endforeach--}}
     @include('partials.toaster-js')
     <script>
-        $(document).ready(function() {
-            $('.supplier-card').click(function() {
+        $(document).ready(function () {
+            $('.supplier-card').click(function () {
                 $('.supplier-card').removeClass('selected');
                 $(this).addClass('selected');
 
