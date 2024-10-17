@@ -204,15 +204,11 @@
                 justify-content: center;
             }
 
-            .page-header {
-                display: none;
-            }
-
             .breadcrumb-item{
-                display: none;
+                display: none !important;
             }
             .page-header {
-                display: none;
+                display: none !important;
             }
 
             .dropdown .dropdown-menu {
@@ -262,19 +258,19 @@
         <div class="col-md-12 d-block d-md-none">
             <!-- Inline Radio Buttons without form-check class -->
             <label class="mr-3" title="Change Inventory to Virgin farms" data-trigger="hover" data-toggle="tooltip">
-                <input type="radio" name="radioGroup" id="radioVirgin" value="1"
+                <input type="radio" name="radioGroup" id="radioVirgin" value="1" class="custom-radio-btn"
                     {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
                 Virgin Farm
             </label>
 
             <label class="mr-3" title="Switch Inventory to Dutch Flowers" data-trigger="hover" data-toggle="tooltip">
-                <input type="radio" name="radioGroup" id="radioDutch" value="2"
+                <input type="radio" name="radioGroup" id="radioDutch" value="2" class="custom-radio-btn"
                     {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
                 Dutch Flowers
             </label>
 
             <label class="" title="Change Inventory to Special Offers" data-trigger="hover" data-toggle="tooltip">
-                <input type="radio" name="radioGroup" id="radioSpecial" value="3"
+                <input type="radio" name="radioGroup" id="radioSpecial" value="3" class="custom-radio-btn"
                     {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
                 Seasonal
             </label>
@@ -609,7 +605,7 @@
             $('#largeImgModal').modal('show');
         });
 
-        $(".form-check-input").change(function() {
+        $(".form-check-input ,.custom-radio-btn").change(function() {
 
             var selectedSupplier = $(this).val();
             $.ajax({
