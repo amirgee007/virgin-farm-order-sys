@@ -888,8 +888,7 @@ class ProductsController extends Controller
             $content = "Items from inventory file are not present in the master file. Please update and reload the files." . implode(',', $items);
 
             \Mail::raw($content, function ($message) {
-                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
-                ])->subject('Items from inventory file are not present in the master file');
+                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com' , 'amirseersol@gmail.com'])->subject('Items from inventory file are not present in the master file');
             });
 
         } catch (\Exception $ex) {
