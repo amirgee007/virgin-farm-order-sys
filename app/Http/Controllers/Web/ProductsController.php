@@ -38,7 +38,7 @@ class ProductsController extends Controller
         $this->middleware('auth');
 
         $this->middleware('permission:products.manage', ['only' => [
-            'updatePurchasePrice',
+            'indexManageProducts',
         ]]);
     }
 

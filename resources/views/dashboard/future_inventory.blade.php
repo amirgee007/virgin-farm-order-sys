@@ -1,11 +1,15 @@
 <tr>
     <td class="align-middle" colspan="3">
-        <a target="_blank" title="@lang('Click to see detail and edit quantity')"
-           data-toggle="tooltip"
-           data-placement="left"
-           href="{{ route('products.index.manage', ['date_in' => $inventory->date_in, 'date_out' => $inventory->date_out]) }}">
+        @if(myRoleName() == 'Admin')
+            <a target="_blank" title="@lang('Click to see detail and edit quantity')"
+               data-toggle="tooltip"
+               data-placement="left"
+               href="{{ route('products.index.manage', ['date_in' => $inventory->date_in, 'date_out' => $inventory->date_out]) }}">
+                {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
+            </a>
+        @else
             {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
-        </a>
+        @endif
     </td>
     <td class="align-middle" colspan="3">
         {{ $inventory->supplier_name }}
