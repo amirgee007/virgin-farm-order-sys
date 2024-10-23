@@ -256,6 +256,32 @@
             }
         }
     </style>
+
+    <style>
+        .date-input-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        #date_shipped {
+            width: 100%;
+            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .calendar-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+            font-size: 18px;
+        }
+    </style>
 @stop
 
 @section('content')
@@ -335,32 +361,6 @@
                                             <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}>{{$key > 1 ? '#W - ' : '' }} {{$value}} </option>
                                         @endforeach
                                     </select>
-
-                                    <style>
-                                        .date-input-container {
-                                            position: relative;
-                                            display: inline-block;
-                                        }
-
-                                        #date_shipped {
-                                            width: 100%;
-                                            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
-                                            font-size: 16px;
-                                            border: 1px solid #ccc;
-                                            border-radius: 4px;
-                                            box-sizing: border-box;
-                                        }
-
-                                        .calendar-icon {
-                                            position: absolute;
-                                            right: 10px;
-                                            top: 50%;
-                                            transform: translateY(-50%);
-                                            cursor: pointer;
-                                            color: #888;
-                                            font-size: 18px;
-                                        }
-                                    </style>
 
                                     @php $cartFound = count(getMyCart()); @endphp
                                     <div class="date-input-container">
