@@ -175,6 +175,20 @@
             }
         }
 
+        /*!* Force the number input spinner to show on mobile *!*/
+        /*input[type="number"] {*/
+        /*    -moz-appearance: textfield; !* Firefox *!*/
+        /*    -webkit-appearance: none;   !* Safari and Chrome *!*/
+        /*    appearance: none;           !* Standard syntax *!*/
+        /*    margin: 0;*/
+        /*}*/
+
+        /*!* Add increment/decrement buttons for webkit-based browsers like Chrome *!*/
+        /*input[type="number"]::-webkit-inner-spin-button,*/
+        /*input[type="number"]::-webkit-outer-spin-button {*/
+        /*    -webkit-appearance: inner-spin-button;*/
+        /*    margin: 0;*/
+        /*}*/
 
 
     </style>
@@ -229,7 +243,11 @@
                                         <td data-th="Price">${{ round2Digit($cartItem->price) }}</td>
                                         <td data-th="Stems">{{$cartItem->stems}}</td>
                                         <td data-th="Quantity">
-                                            <input type="number" min="1" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty"/>
+                                            <div class="input-group">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm decrement-qty"><span class="text-danger">-</span></button>
+                                                <input type="number" min="1" max="{{$cartItem->max_qty}}"  onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty"/>
+                                                <button type="button" class="btn btn-outline-secondary btn-sm increment-qty"><span class="text-primary">+</span></button>
+                                            </div>
                                         </td>
                                         <td data-th="Subtotal" class="text-center">
                                             ${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}
@@ -417,5 +435,30 @@
                 });
             }
         }
+
+        $(document).ready(function () {
+            // Handle increment button
+            $('.increment-qty').on('click', function () {
+                var input = $(this).siblings('.quantity');
+                var currentValue = parseInt(input.val(), 10);
+                var maxValue = parseInt(input.attr('max'), 10);
+                if (currentValue < maxValue) {
+                    input.val(currentValue + 1).trigger('change');
+                }
+            });
+
+            // Handle decrement button
+            $('.decrement-qty').on('click', function () {
+                var input = $(this).siblings('.quantity');
+                var currentValue = parseInt(input.val(), 10);
+                var minValue = parseInt(input.attr('min'), 10);
+                if (currentValue > minValue) {
+                    input.val(currentValue - 1).trigger('change');
+                }
+            });
+        });
+
     </script>
+
+
 @endsection
