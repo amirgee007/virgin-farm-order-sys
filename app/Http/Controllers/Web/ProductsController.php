@@ -115,8 +115,9 @@ class ProductsController extends Controller
         $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
 
         $products = $query->groupBy('products.id')
-            ->orderBy($category_id ? 'product_text': 'category_id')
-            ->selectRaw('supplier_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
+            ->orderBy('category_id') // Sort by category_id first
+            ->orderBy('product_text') // Then sort by product_text within the same category
+            ->selectRaw('supplier_id,category_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
             ->paginate(100);
 
         $fixed = [
