@@ -125,37 +125,56 @@
             .products-list-table {
                 font-size: 12px !important;
             }
+
             .products-list-table th, .products-list-table td {
                 white-space: nowrap;
             }
+
             .pagination {
                 justify-content: center;
             }
 
-            .breadcrumb-item{
+            /* Hide unnecessary elements on smaller screens */
+            .breadcrumb-item, .page-header {
                 display: none !important;
             }
-            .page-header {
-                display: none !important;
+
+            /* Adjust product name font size */
+            .products-list-table td h4.nomargin {
+                font-size: 14px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 150px;
             }
         }
 
         /* Further improvements for very small screens */
         @media (max-width: 480px) {
-            /* Make buttons full width */
+            /* Full-width buttons */
             .btn {
                 width: 100%;
                 margin-top: 10px;
             }
-            .page-header {
+
+            /* Adjust product image size */
+            .products-list-table td img {
+                width: 100% !important;
+                max-width: 40px;
+            }
+
+            /* Hide breadcrumb and page headers */
+            .breadcrumb-item, .page-header {
                 display: none;
             }
 
-            .breadcrumb-item {
-                display: none;
+            /* Further adjustment for very small screen for product titles */
+            .products-list-table td h4.nomargin {
+                font-size: 12px !important;
+                max-width: 100px;
             }
-
         }
+
 
 
     </style>
@@ -176,54 +195,54 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
-                    <table id="cart" class="table table-hover table-bordered border-success">
-                        <thead>
-                        <tr>
-                            <th style="width:50%">Product</th>
-                            <th style="width:10%">Stem/Unit Price</th>
-                            <th style="width:4%">Unit Pack</th>
-                            <th style="width:8%">Quantity</th>
-                            <th style="width:22%" class="text-center">Subtotal</th>
-                            <th style="width:10%">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @php $total = 0; $size = 0 @endphp
-                        @if($carts)
-                            @foreach($carts as $cartItem)
-                                @php
-                                    $total += ($cartItem->price * $cartItem->quantity * $cartItem->stems);
-                                    $size += $cartItem->size * $cartItem->quantity;
-                                @endphp
-                                <tr data-id="{{ $cartItem->id }}">
-                                    <td data-th="Product">
-                                        <div class="row">
-                                            <div class="col-sm-3 hidden-xs mt-2">
-                                                <img src="{{ $cartItem->image }}" style="max-width: 40px;" class="img-responsive"/></div>
-                                            <div class="col-sm-9 mt-2">
-                                                <h4 class="nomargin">{{ $cartItem->name }} Pack {{ $cartItem->stems }}</h4>
+                    <div class="table-responsive">
+                        <table id="cart" class="table table-hover table-bordered border-success products-list-table">
+                            <thead>
+                            <tr>
+                                <th style="width:50%">Product</th>
+                                <th style="width:10%">Stem/Unit Price</th>
+                                <th style="width:4%">Unit Pack</th>
+                                <th style="width:8%">Quantity</th>
+                                <th style="width:22%" class="text-center">Subtotal</th>
+                                <th style="width:10%">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @php $total = 0; $size = 0 @endphp
+                            @if($carts)
+                                @foreach($carts as $cartItem)
+                                    @php
+                                        $total += ($cartItem->price * $cartItem->quantity * $cartItem->stems);
+                                        $size += $cartItem->size * $cartItem->quantity;
+                                    @endphp
+                                    <tr data-id="{{ $cartItem->id }}">
+                                        <td data-th="Product">
+                                            <div class="row">
+                                                <div class="col-sm-3 hidden-xs mt-2">
+                                                    <img src="{{ $cartItem->image }}" class="img-responsive" style="max-width: 40px;" />
+                                                </div>
+                                                <div class="col-sm-9 mt-2">
+                                                    <h4 class="nomargin">{{ $cartItem->name }} Pack {{ $cartItem->stems }}</h4>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td data-th="Price">${{ round2Digit($cartItem->price) }}</td>
-                                    <td data-th="Stems">{{$cartItem->stems}}</td>
-                                    <td data-th="Quantity">
-                                        <input type="number" min="1" max="{{$cartItem->max_qty}}"
-                                               onkeydown="return false" value="{{ $cartItem->quantity }}"
-                                               class="form-control quantity change-cart-qty"/>
-                                    </td>
-
-                                    <td data-th="Subtotal" class="text-center">
-                                        ${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}</td>
-                                    <td class="actions" data-th="" title="Remove from cat">
-                                        <button class="btn btn-danger btn-sm remove-from-cart"><i
-                                                class="fas fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endif
-                        </tbody>
-                    </table>
+                                        </td>
+                                        <td data-th="Price">${{ round2Digit($cartItem->price) }}</td>
+                                        <td data-th="Stems">{{$cartItem->stems}}</td>
+                                        <td data-th="Quantity">
+                                            <input type="number" min="1" max="{{$cartItem->max_qty}}" onkeydown="return false" value="{{ $cartItem->quantity }}" class="form-control quantity change-cart-qty"/>
+                                        </td>
+                                        <td data-th="Subtotal" class="text-center">
+                                            ${{ round2Digit($cartItem->price * $cartItem->quantity * $cartItem->stems) }}
+                                        </td>
+                                        <td class="actions" data-th="" title="Remove from cart">
+                                            <button class="btn btn-danger btn-sm remove-from-cart"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
 
                     @php
                         $boxeInfoDetail = getCubeRangesV2($size);
@@ -398,13 +417,5 @@
                 });
             }
         }
-
-        // swal({
-        //     title: 'Login Success',
-        //     text: 'Redirecting...',
-        //     icon: 'success',
-        //     timer: 5000,
-        //     buttons: false,
-        // });
     </script>
 @endsection
