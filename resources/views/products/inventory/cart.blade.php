@@ -147,6 +147,9 @@
                 text-overflow: ellipsis;
                 max-width: 150px;
             }
+            .dropdown .dropdown-menu {
+                width: 310px !important;
+            }
         }
 
         /* Further improvements for very small screens */
@@ -172,6 +175,9 @@
             .products-list-table td h4.nomargin {
                 font-size: 12px !important;
                 max-width: 100px;
+            }
+            .dropdown .dropdown-menu {
+                width: 310px !important;
             }
         }
 
