@@ -4,7 +4,7 @@
             <a target="_blank" title="@lang('Click to see detail and edit quantity')"
                data-toggle="tooltip"
                data-placement="left"
-               href="{{ route('products.index.manage', ['date_in' => $inventory->date_in, 'date_out' => $inventory->date_out]) }}">
+               href="{{ route('products.index.manage', ['date_in' => $inventory->date_in, 'date_out' => $inventory->date_out , 'supp' => $inventory->supplier_id]) }}">
                 {{ dateFormatRecent($inventory->date_in) }} - {{ dateFormatRecent($inventory->date_out) }}
             </a>
         @else

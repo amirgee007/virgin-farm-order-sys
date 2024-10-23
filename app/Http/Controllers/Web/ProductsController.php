@@ -208,12 +208,14 @@ class ProductsController extends Controller
 
         $date_in = \Request::get('date_in');
         $date_out = \Request::get('date_out');
+        $supp = \Request::get('supp') ?? 1;
         #depend ON date in and date OUT.
 
         if ($date_in && $date_out) {
             $query->join('product_quantities', 'products.id', '=', 'product_quantities.product_id')
                 ->whereDate('product_quantities.date_in', '>=', $date_in)
-                ->whereDate('product_quantities.date_out', '<=', $date_out);
+                ->whereDate('product_quantities.date_out', '<=', $date_out)
+                ->where('products.supplier_id' , $supp);
         }
 
         if ($search) {
@@ -242,13 +244,14 @@ class ProductsController extends Controller
 
         $products = (clone $query)->select('products.*')->paginate(100);
 
-        if ($filter || $search || $category || $qty_found || $date_in || $date_out) {
+        if ($filter || $search || $category || $qty_found || $date_in || $date_out || $supp) {
             $products->appends([
                 'filter' => $filter,
                 'search' => $search,
                 'category' => $category,
                 'date_in' => $date_in,
                 'date_out' => $date_out,
+                'supp' => $supp,
             ]);
         }
 
