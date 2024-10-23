@@ -41,6 +41,13 @@
 @section ('styles')
     <style>
 
+        input[disabled] + .calendar-icon {
+            background-color: #f0f0f0; /* Light grey background to indicate it's disabled */
+            color: #a0a0a0;            /* Grey text to indicate it's disabled */
+            border: 1px solid #d0d0d0; /* Softer border color */
+            cursor: not-allowed;        /* Show "not allowed" cursor when hovering */
+        }
+
         [role=main] {
             padding-top: 75px;
         }
@@ -765,6 +772,10 @@
         }
 
         $( document ).ready(function(){
+
+            $('.calendar-icon').click(function() {
+                $('#date_shipped').focus(); // This triggers the date picker on the input field
+            });
 
             const searchParams = new URLSearchParams(window.location.search);
 
