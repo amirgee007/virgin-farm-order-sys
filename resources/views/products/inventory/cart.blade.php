@@ -28,18 +28,6 @@
         .width50 {
             width: 60px !important;
         }
-
-        /*button {*/
-        /*font-size: 11px !important;*/
-        /*font-weight: 300 !important;*/
-        /*}*/
-        /*caption {*/
-        /*caption-side:top;*/
-        /*}*/
-        /*tr:hover > td {*/
-        /*cursor: pointer !important;*/
-        /*}*/
-
         .thumbnail {
             position: relative;
             padding: 0px;
@@ -124,6 +112,49 @@
         .checkout .btn-danger {
             border-radius: 35px;
             height: 36px;
+        }
+
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            /* Table responsiveness */
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .products-list-table {
+                font-size: 12px !important;
+            }
+            .products-list-table th, .products-list-table td {
+                white-space: nowrap;
+            }
+            .pagination {
+                justify-content: center;
+            }
+
+            .breadcrumb-item{
+                display: none !important;
+            }
+            .page-header {
+                display: none !important;
+            }
+        }
+
+        /* Further improvements for very small screens */
+        @media (max-width: 480px) {
+            /* Make buttons full width */
+            .btn {
+                width: 100%;
+                margin-top: 10px;
+            }
+            .page-header {
+                display: none;
+            }
+
+            .breadcrumb-item {
+                display: none;
+            }
+
         }
 
 
