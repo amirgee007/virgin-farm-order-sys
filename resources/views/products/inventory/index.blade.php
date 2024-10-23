@@ -6,36 +6,36 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted d-flex align-items-center flex-wrap" style="cursor: pointer;">
-            @lang('See Boxes detail')
-            <i class="fas fa-box text-danger ml-2" data-toggle="modal" data-target="#boxesModal"></i>
+        @lang('See Boxes detail')
+        <i class="fas fa-box text-danger ml-2" data-toggle="modal" data-target="#boxesModal"></i>
 
-            <div class="form-check form-check-inline ml-4"
-                 title="Change Inventory to Virgin farms"
-                 data-trigger="hover"
-                 data-toggle="tooltip">
-                <input class="form-check-input" type="radio" name="radioGroup" id="radioVirgin" value="1"
-                    {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
-                <label class="form-check-label bg-success text-white p-2 radius" for="radioVirgin">Virgin Farms</label>
-            </div>
+        <div class="form-check form-check-inline ml-4"
+             title="Change Inventory to Virgin farms"
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input radio-desktop" type="radio" name="radioGroupDesktop" id="radioVirginDesktop" value="1"
+                {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
+            <label class="form-check-label bg-success text-white p-2 radius" for="radioVirginDesktop">Virgin Farms</label>
+        </div>
 
-            <div class="form-check form-check-inline"
-                 title="Switch Inventory to Dutch Flowers"
-                 data-trigger="hover"
-                 data-toggle="tooltip">
-                <input class="form-check-input" type="radio" name="radioGroup" id="radioDutch" value="2"
-                    {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
-                <label class="form-check-label bg-danger text-white p-2 radius" for="radioDutch">Dutch</label>
-            </div>
+        <div class="form-check form-check-inline"
+             title="Switch Inventory to Dutch Flowers"
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input radio-desktop" type="radio" name="radioGroupDesktop" id="radioDutchDesktop" value="2"
+                {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
+            <label class="form-check-label bg-danger text-white p-2 radius" for="radioDutchDesktop">Dutch</label>
+        </div>
 
-            <div class="form-check form-check-inline"
-                 title="Change Inventory to Special Offers"
-                 data-trigger="hover"
-                 data-toggle="tooltip">
-                <input class="form-check-input" type="radio" name="radioGroup" id="radioSpecial" value="3"
-                    {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
-                <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecial">Seasonal</label>
-            </div>
-        </li>
+        <div class="form-check form-check-inline"
+             title="Change Inventory to Special Offers"
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input radio-desktop" type="radio" name="radioGroupDesktop" id="radioSpecialDesktop" value="3"
+                {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
+            <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecialDesktop">Seasonal</label>
+        </div>
+    </li>
 @stop
 
 @section ('styles')
@@ -263,21 +263,20 @@
 
     <div class="row">
         <div class="col-md-12 d-block d-md-none">
-            <!-- Inline Radio Buttons without form-check class -->
             <label class="mr-3" title="Change Inventory to Virgin farms" data-trigger="hover" data-toggle="tooltip">
-                <input type="radio" name="radioGroup" id="radioVirgin" value="1" class="custom-radio-btn"
+                <input type="radio" name="radioGroupMobile" id="radioVirginMobile" value="1" class="custom-radio-btn radio-mobile"
                     {{ auth()->user()->supplier_id == 1 ? 'checked' : '' }}>
                 Virgin Farms
             </label>
 
             <label class="mr-3" title="Switch Inventory to Dutch Flowers" data-trigger="hover" data-toggle="tooltip">
-                <input type="radio" name="radioGroup" id="radioDutch" value="2" class="custom-radio-btn"
+                <input type="radio" name="radioGroupMobile" id="radioDutchMobile" value="2" class="custom-radio-btn radio-mobile"
                     {{ auth()->user()->supplier_id == 2 ? 'checked' : '' }}>
                 Dutch Flowers
             </label>
 
             <label class="" title="Change Inventory to Special Offers" data-trigger="hover" data-toggle="tooltip">
-                <input type="radio" name="radioGroup" id="radioSpecial" value="3" class="custom-radio-btn"
+                <input type="radio" name="radioGroupMobile" id="radioSpecialMobile" value="3" class="custom-radio-btn radio-mobile"
                     {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
                 Seasonal
             </label>
@@ -371,7 +370,7 @@
                                               id="date_shipped"
                                                placeholder="When to Ship?"
                                                name="date_shipped"
-                                               title="{{$cartFound ? 'Once a product is in your cart, you cannot change the shipping date. you must empty the cart to make changes.' : 'When do you want your product to be shipped?'}}"
+                                               title="{{$cartFound ? 'You may only add products available in the inventory for the ship date selected for your current session. To change the date you must empty the cart to begin a new shopping session.' : 'When do you want your product to be shipped?'}}"
                                                data-trigger="hover"
                                                data-toggle="tooltip"
                                                value="{{ $date_shipped }}">
@@ -886,5 +885,21 @@
         {{--});--}}
 
         {{--});--}}
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Synchronize desktop radio buttons with mobile
+            $('input[name="radioGroupDesktop"]').on('change', function() {
+                var selectedValue = $('input[name="radioGroupDesktop"]:checked').val();
+                $('input[name="radioGroupMobile"][value="' + selectedValue + '"]').prop('checked', true);
+            });
+
+            // Synchronize mobile radio buttons with desktop
+            $('input[name="radioGroupMobile"]').on('change', function() {
+                var selectedValue = $('input[name="radioGroupMobile"]:checked').val();
+                $('input[name="radioGroupDesktop"][value="' + selectedValue + '"]').prop('checked', true);
+            });
+        });
     </script>
 @endsection
