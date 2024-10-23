@@ -147,8 +147,10 @@
                 text-overflow: ellipsis;
                 max-width: 150px;
             }
+
             .dropdown .dropdown-menu {
                 width: 310px !important;
+                max-height: 450px!important;
             }
         }
 
@@ -176,8 +178,10 @@
                 font-size: 12px !important;
                 max-width: 100px;
             }
+
             .dropdown .dropdown-menu {
                 width: 310px !important;
+                max-height: 400px!important;
             }
         }
 
