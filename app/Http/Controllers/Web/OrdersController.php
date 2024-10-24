@@ -71,7 +71,7 @@ class OrdersController extends Controller
         $orders = $query->paginate(15);
 
         if ($sales_rep || $search) {
-            $products->appends([
+            $orders->appends([
                 'sales_rep' => $sales_rep,
                 'search' => $search
             ]);
