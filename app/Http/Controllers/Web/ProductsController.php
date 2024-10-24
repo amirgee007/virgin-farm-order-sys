@@ -447,33 +447,43 @@ class ProductsController extends Controller
 
     private function processProductRow($row, $expiredtime, &$missing, $isSpecial = false)
     {
-        $product = Product::where('item_no', trim($row[0]))->first();
+        $cleaned_string = str_replace(",", "", trim($row[0])); // Cleaned SKU
 
-        $cleaned_string = str_replace(",", "", trim($row[0]));
+        // Ensure the SKU is not empty
+        if (empty($cleaned_string)) {
+            Log::warning("Skipping row due to empty or invalid SKU.");
+            return;
+        }
+
+        $product = Product::where('item_no', $cleaned_string)->first(); // Check if product exists
 
         if ($product) {
-            $data = $this->buildProductData($row, $product);
-
+            $data = $this->buildProductData($row, $product); // Build product data
             if ($expiredtime) {
                 $data['expired_at'] = $expiredtime;
             }
-
             if ($isSpecial) {
                 $data['is_special'] = 1;
                 Log::notice($product->item_no . ' becomes special now for date ' . $this->dateIn . ' to ' . $this->dateOut);
             }
 
-            ProductQuantity::updateOrCreate([
-                'product_id' => $product->id,
-                'item_no' => $product->item_no,
-                'date_in' => $this->dateIn,
-                'date_out' => $this->dateOut,
-            ], $data);
-
-        } else if (trim($cleaned_string)) {
+            // Update or create product quantity
+            ProductQuantity::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'item_no' => $product->item_no,
+                    'date_in' => $this->dateIn,
+                    'date_out' => $this->dateOut,
+                ],
+                $data
+            );
+        } else {
+            // Log the missing product and add it to the missing array
             $missing[] = $cleaned_string;
+            Log::warning("Product with item_no: $cleaned_string not found.");
         }
     }
+
 
     private function buildProductData($row, $product)
     {
