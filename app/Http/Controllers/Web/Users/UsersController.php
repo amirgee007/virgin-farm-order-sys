@@ -103,7 +103,6 @@ class UsersController extends Controller
             $content = $content.view('mail.info-email')->render();
 
             \Mail::to($user->email)
-                ->bcc('amirseersol@gmail.com')
                 ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
         }
 

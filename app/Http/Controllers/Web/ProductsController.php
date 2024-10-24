@@ -216,7 +216,7 @@ class ProductsController extends Controller
             $query->join('product_quantities', 'products.id', '=', 'product_quantities.product_id')
                 ->whereDate('product_quantities.date_in', '>=', $date_in)
                 ->whereDate('product_quantities.date_out', '<=', $date_out)
-                ->where('products.supplier_id' , $supp);
+                ->where('products.supplier_id', $supp);
         }
 
         if ($search) {
@@ -890,11 +890,15 @@ class ProductsController extends Controller
 
     public function sendMissingItemEmail($items)
     {
+        #$cleaned_string = str_replace(",", "", trim($row[0]));
+
         try {
             $content = "Items from inventory file are not present in the master file. Please update and reload the files." . implode(',', $items);
 
+            $subj = count($items) . ' Missing Items in Master File';
             \Mail::raw($content, function ($message) {
-                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com' , 'amirseersol@gmail.com'])->subject('Items from inventory file are not present in the master file');
+                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'])
+                    ->subject($subj);
             });
 
         } catch (\Exception $ex) {
