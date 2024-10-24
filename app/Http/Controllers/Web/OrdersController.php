@@ -34,19 +34,19 @@ class OrdersController extends Controller
         $users = [$user_id => auth()->user()->first_name];
 
         #client showing and else is in ADMIN.
-        if($user_id)
-            $query->where('user_id' , $user_id);
-        else{
-            $users = User::where('status' , UserStatus::ACTIVE)
+        if ($user_id)
+            $query->where('user_id', $user_id);
+        else {
+            $users = User::where('status', UserStatus::ACTIVE)
                 ->orderby('first_name')
                 ->pluck('first_name', 'id')
                 ->toArray();
 
-            $users = [0 => 'Show All']+$users;
+            $users = [0 => 'Show All'] + $users;
         }
 
-        if($user){
-            $query->where('user_id' , $user);
+        if ($user) {
+            $query->where('user_id', $user);
         }
 
         if ($sales_rep) {
@@ -69,6 +69,13 @@ class OrdersController extends Controller
 
         $count = (clone $query)->count();
         $orders = $query->paginate(15);
+
+        if ($sales_rep || $search) {
+            $products->appends([
+                'sales_rep' => $sales_rep,
+                'search' => $search
+            ]);
+        }
 
         $isAdmin = myRoleName() == 'Admin';
         $salesRep = getSalesReps();
