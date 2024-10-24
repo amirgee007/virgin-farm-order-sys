@@ -97,6 +97,14 @@
             color: #ffffff !important;
             border-radius: 60% !important;
         }
+        .disabled-date {
+            background-color: rgb(128, 128, 128) !important; /* Gray background */
+            color: #ffffff !important;
+            border-radius: 60% !important;
+            text-decoration: line-through; /* Adds a line through the date */
+            opacity: 0.5; /* Makes the date look faded */
+        }
+
         .pagination {
             height: 10px;
         }
@@ -134,6 +142,7 @@
             position: relative;
             display: inline-block;
         }
+
         #date_shipped {
             width: 100%;
             padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
@@ -142,6 +151,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         .calendar-icon {
             position: absolute;
             right: 10px;
@@ -254,32 +264,6 @@
             .dropdown .dropdown-menu {
                 width: 310px !important;
             }
-        }
-    </style>
-
-    <style>
-        .date-input-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        #date_shipped {
-            width: 100%;
-            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .calendar-icon {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #888;
-            font-size: 18px;
         }
     </style>
 @stop
@@ -590,17 +574,23 @@
                 var dateString = moment(date).format('YYYY-MM-DD');
                 if (highlightedDates.indexOf(dateString) !== -1) {
                     return {
+                        enabled: true, // date is selectable
                         classes: 'highlighted-date',
                         tooltip: 'Our inventory is available for this date! Feel free to shop for some beautiful flowers.'
                     };
+                } else {
+                    return {
+                        enabled: true, // date is not selectable if the confirm then make it false
+                        classes: 'disabled-date', // You can add a class for styling disabled dates if needed
+                        tooltip: 'No inventry available.'
+                    };
                 }
-                return;
             }
         });
 
         // Initialize Bootstrap tooltips for this one.
         $('body').tooltip({
-            selector: '.highlighted-date',
+            selector: '.highlighted-date, .disabled-date',
             placement: 'top',
             trigger: 'hover'
         });
