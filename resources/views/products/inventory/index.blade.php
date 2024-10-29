@@ -739,9 +739,9 @@
             var _dateShip = $("#date_shipped");
 
             // Exit function early if order_id is 1
-            if (order_id == 1) {
-                return;
-            }
+            // if (order_id == 1) {
+            //     return;
+            // }
 
             $.ajax({
                 url: '{{route('edit.order.user')}}',
@@ -810,8 +810,8 @@
         $(window).on('load', function () {
             $(function(){
                 setTimeout(function(){
+                    // $('#add-on-order option[value="1"]').prop('disabled', true);
 
-                    $('#add-on-order option[value="1"]').prop('disabled', true);
                     var selectedProductsIds = [];
 
                     $(".img-thumbnail").each( function() {

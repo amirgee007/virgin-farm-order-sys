@@ -153,7 +153,7 @@ function getCubeRangesV2($size) {
 
     if (checkIfSkipCubeRangeCondition()){
         $boxCombination = 'N/A';
-        $percentage = 0;
+        $percentage = 100;
         $total = 0;
     }
     else{
@@ -393,6 +393,8 @@ function getAddOnDetail($order)
         if ($order->full_add_on == 2)
             $text = 'Add-On #W-' . $order->id;
 
+        #Add-On General is for people who have an order in our system (like a standing order)  and they want to add to that order but purchase online
+        #What we do on our side is add it in our system to that ship date
     } catch (\Exception $ex) {
         Log::error('something went wrong during get add on detail ' . $ex->getMessage());
     }
