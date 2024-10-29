@@ -738,6 +738,11 @@
             var order_id = this.value;
             var _dateShip = $("#date_shipped");
 
+            // Exit function early if order_id is 1
+            if (order_id == 1) {
+                return;
+            }
+
             $.ajax({
                 url: '{{route('edit.order.user')}}',
                 data: {order_id},
@@ -747,12 +752,13 @@
                     let currentDate = new Date().toJSON().slice(0, 10);
                     if(order_id > 1){
                         toastr.success("Your add-on order has been chosen. Please add more items and proceed to checkout to confirm.", "Success");
+                        reloadPageWithParameter('date_shipped', response.date);
                     }
                     else{
                         toastr.success("Your add-on setting has been update. Now you can add new order.", "Success");
+                        var newUrl = "{{ route('inventory.index') }}";
+                        window.location.href = newUrl;
                     }
-
-                    reloadPageWithParameter('date_shipped', response.date);
                 }
             });
         });
@@ -805,6 +811,7 @@
             $(function(){
                 setTimeout(function(){
 
+                    $('#add-on-order option[value="1"]').prop('disabled', true);
                     var selectedProductsIds = [];
 
                     $(".img-thumbnail").each( function() {
