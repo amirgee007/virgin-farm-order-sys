@@ -59,7 +59,8 @@ class RegisterController extends Controller
             $this->sendTaxFileNotification($user);
         }
 
-        $this->addToMailchimp($user);
+        if ($request->email_opt_in == 'yes' && config('app.env') != 'local')
+            $this->addToMailchimp($user);
 
         return redirect('/')->with('success', $message);
     }
@@ -82,6 +83,7 @@ class RegisterController extends Controller
             ['role_id' => $roles->findByName('Client')->id]
         );
         $finalData['tax_file'] = $request->tax_file;
+        unset($finalData['email_opt_in']);
 
         return $this->users->create($finalData);
     }

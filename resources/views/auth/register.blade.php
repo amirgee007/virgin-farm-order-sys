@@ -205,6 +205,20 @@
                             </div>
                         </div>
 
+                        <div class="form-row">
+                            <label for="tax_file" class="form-label">Do you want to receive our latest updates, offers, exclusive content?</label>
+                            <div class="form-group col-6">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="email_opt_in" id="opt_in_yes" value="yes">
+                                    <label class="form-check-label" for="opt_in_yes">Yes!</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="email_opt_in" id="opt_in_no" value="no">
+                                    <label class="form-check-label" for="opt_in_no">No.</label>
+                                </div>
+                            </div>
+                        </div>
+
                         @if (setting('registration.captcha.enabled'))
                             <div class="form-group my-4">
                                 {!! app('captcha')->display() !!}
