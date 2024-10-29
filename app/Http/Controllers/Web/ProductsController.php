@@ -124,7 +124,12 @@ class ProductsController extends Controller
             0 => 'New Order',
             1 => 'Add-On General',
         ];
-        $myOrders = $fixed + Order::where('user_id', auth()->id())->where('date_shipped', '>', now()->toDateString())->latest()->pluck('id', 'id')->toArray();
+        $myOrders = $fixed + Order::where('user_id', auth()->id())
+                ->whereDate('date_shipped', '>', now()->toDateString())
+                ->where('is_active', 1)
+                ->latest()
+                ->pluck('id', 'id')
+                ->toArray();
 
         if ($date_shipped || $category_id || $searching) {
             $products->appends([
