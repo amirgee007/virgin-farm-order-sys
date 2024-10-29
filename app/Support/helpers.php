@@ -153,8 +153,8 @@ function getCubeRangesV2($size) {
 
     if (checkIfSkipCubeRangeCondition()){
         $boxCombination = 'N/A';
-        $percentage = 100;
-        $total = 1;
+        $percentage = 0;
+        $total = 0;
     }
     else{
         $user = auth()->user();
