@@ -74,6 +74,8 @@ class ProductsController extends Controller
 
         $query->distinct('products.id');
 
+        $highlightedDates = $this->getHighlightedDates($query);
+
         if ($date_shipped) {
             $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');
         } else {
@@ -85,7 +87,6 @@ class ProductsController extends Controller
         }
 
         if ($searching) {
-
             $catIds = Category::where('description', 'like', "%{$searching}%")
                 ->pluck('category_id')
                 ->toArray();
@@ -114,7 +115,7 @@ class ProductsController extends Controller
 
         $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
 
-        $products = $query->groupBy('products.id')
+        $products = (clone $query)->groupBy('products.id')
             ->orderBy('category_id') // Sort by category_id first
             ->orderBy('product_text') // Then sort by product_text within the same category
             ->selectRaw('supplier_id,category_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
@@ -143,7 +144,6 @@ class ProductsController extends Controller
 
         #need to make it in auto job and show some counter + time etc
         CartController::makeCartEmptyIfTimePassed();
-        $highlightedDates = $this->getHighlightedDates();
 
         return view('products.inventory.index', compact(
             'products',
@@ -158,12 +158,11 @@ class ProductsController extends Controller
         ));
     }
 
-    public function getHighlightedDates()
+    public function getHighlightedDates($query)
     {
         $highlightedDates = [];
 
-        $productQuantities = \DB::table('product_quantities')
-            ->select('date_in', 'date_out')
+        $productQuantities = $query->select('date_in', 'date_out')
             ->whereDate('date_out', '>=', Carbon::today())
             ->get();
 
@@ -173,7 +172,6 @@ class ProductsController extends Controller
                 $highlightedDates[] = $date->format('Y-m-d');
             }
         }
-
         // Ensure the dates are unique
         return array_unique($highlightedDates);
     }
