@@ -909,7 +909,7 @@ class ProductsController extends Controller
             $content = "Items from inventory file are not present in the master file. Please update and reload the files." . implode(',', $items);
 
             $subj = count($items) . ' Missing Items in Master File';
-            \Mail::raw($content, function ($message) {
+            \Mail::raw($content, function ($message) use($subj) {
                 $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'])
                     ->subject($subj);
             });
