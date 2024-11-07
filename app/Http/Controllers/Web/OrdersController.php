@@ -168,7 +168,7 @@ class OrdersController extends Controller
         #this one we called when date change.
         if ($dateShipped == date('Y-m-d')) {
             $currentTime = Carbon::now();
-            $cutoffTime = Carbon::createFromTimeString('14:30:00'); // 2:30 PM will make later 3:30
+            $cutoffTime = Carbon::createFromTimeString('15:30:00'); // 3:30 is cut of time
 
             $carrierMatch = [23, 32]; #PU and Fedex
 

@@ -380,7 +380,6 @@
 
     <div class="modal" id="upload_excel_images" type="">
         <div class="modal-dialog">
-
             <div class="modal-content">
 
                 <div class="modal-header">
