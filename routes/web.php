@@ -19,6 +19,8 @@ Route::post('update-cart-notes', [CartController::class, 'saveOrderNotes'])->nam
 
 Route::post('/api/validate-cart-size', 'CartController@validateCartSelection');
 
+Route::post('/check-popup-date', [\Vanguard\Http\Controllers\Web\SettingsController::class, 'checkPopupDate'])->name('check-popup-date');
+
 /**
  * Authentication
  */

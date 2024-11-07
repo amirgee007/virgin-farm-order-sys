@@ -8,6 +8,7 @@ use Vanguard\Events\Settings\Updated as SettingsUpdated;
 use Illuminate\Http\Request;
 use Setting;
 use Vanguard\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 /**
  * Class SettingsController
@@ -27,10 +28,12 @@ class SettingsController extends Controller
      */
     public function general()
     {
-        return view('settings.general');
+        $popup = \Vanguard\Models\Setting::where('key', 'popup-seting')->first();
+        return view('settings.general', compact('popup'));
     }
 
-    public static function unitOfMeaures(){
+    public static function unitOfMeaures()
+    {
         return [
             "B03" => "Pack 3 stems (bunch)",
             "B16" => "Pack 16 (Used for bouquets)",
@@ -76,9 +79,39 @@ class SettingsController extends Controller
      */
     public function update(Request $request)
     {
-        $this->updatesetting($request->except("_token"));
+        if ($request->pop_up_dynamic) {
+            $popup = \Vanguard\Models\Setting::where('key', 'popup-seting')->first();
 
+            $popup->value = $request->pop_up_text;
+            $popup->label = $request->start_date;
+            $popup->extra_info = $request->end_date;
+
+            $popup->save();
+
+        } else {
+            $this->updatesetting($request->except("_token"));
+        }
         return back()->withSuccess(__('Settings updated successfully.'));
+    }
+
+    public function checkPopupDate(Request $request)
+    {
+        // Get the shipped_date from the AJAX request
+        $shippedDate = Carbon::parse($request->input('shipped_date'));
+
+        // Get the popup settings
+        $popup = \Vanguard\Models\Setting::where('key', 'popup-seting')->first();
+        $startDate = Carbon::parse($popup->label);
+        $endDate = Carbon::parse($popup->extra_info);
+
+        // Check if the shipped_date is within the start_date and end_date
+        $showPopup = $shippedDate->between($startDate, $endDate);
+
+        // Return JSON response with the popup text if the date is within range
+        return response()->json([
+            'show_popup' => $showPopup,
+            'popup_text' => $showPopup ? $popup->value : ''
+        ]);
     }
 
     /**
