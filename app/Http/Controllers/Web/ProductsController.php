@@ -464,6 +464,7 @@ class ProductsController extends Controller
             $data = $this->buildProductData($row, $product); // Build product data
             if ($expiredtime) {
                 $data['expired_at'] = $expiredtime;
+                Log::debug($expiredtime);
             }
             if ($isSpecial) {
                 $data['is_special'] = 1;
