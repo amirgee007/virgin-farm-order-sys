@@ -32,7 +32,7 @@ class Global5MinutesCommand extends Command
         // Only run the job between 00:00 and 01:00 hours
         if (now()->hour >= 0 && now()->hour < 1) {
             ProductQuantity::query()
-                ->where('date_out', '<', now()->format('Y-m-d'))
+                ->where('date_out', '<', now()->subDay()->format('Y-m-d'))
                 ->delete();
         }
 
@@ -54,7 +54,7 @@ class Global5MinutesCommand extends Command
 
         $this->emptyCartIf1HourPassed();
 
-        Log::info('Job running every 10 minutes to update supplier ID and delete old records.');
+        Log::info('Job running every 10 minutes to update supplier ID and delete old records. 8 november 2024');
         #Cart::where('user_id', auth()->id())->delete();
     }
 

@@ -5,7 +5,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">
-        @lang('Dashboard')
+        @lang('Dashboard') {{now()->toDateTimeString()}}
     </li>
 @stop
 
