@@ -313,7 +313,7 @@
                         <br><br>
                         <div class="form-groups">
                             <label for="expired_at" class="form-label">Expiry Time</label>
-                            <input class="form-control" id="expired_at" type="time" name="expired_at">
+                            <input class="form-control" required id="expired_at" type="time" name="expired_at">
                         </div>
                         <br>
                         <div class="form-check"

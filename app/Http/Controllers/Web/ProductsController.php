@@ -393,6 +393,21 @@ class ProductsController extends Controller
         return $excelBaseDate->add(new \DateInterval('P' . $serial . 'D'))->format('Y-m-d');
     }
 
+    private function excelSerialTimeToTime($serial)
+    {
+        // Check if it's a time serial (less than 1)
+        if ($serial < 1) {
+            $totalSeconds = $serial * 86400; // Convert the fraction of the day to seconds
+            $hours = floor($totalSeconds / 3600);
+            $minutes = floor(($totalSeconds % 3600) / 60);
+            // Create a formatted string for AM/PM
+            return date('H:i', strtotime("$hours:$minutes"));
+        }
+
+        // If it's a date serial, handle it differently (not in scope here)
+        return null;
+    }
+
     public function uploadInventory(Request $request)
     {
         ini_set('max_execution_time', 18000);
@@ -422,7 +437,8 @@ class ProductsController extends Controller
                     if ($index == 1) {
                         $this->dateIn = $this->excelSerialDateToDate($row['3']);
                         $this->dateOut = $this->excelSerialDateToDate($row['5']);
-                        $expiredtime = trim($row['5']) ?? null;
+
+                        $expiredtime = $this->excelSerialTimeToTime($row['6']);
                     }
 
                     if ($index > 5) {
@@ -529,10 +545,10 @@ class ProductsController extends Controller
         if (isset($products[0])) {
             foreach ($products[0] as $index => $row) {
                 if ($index == 0) continue; // Skip headings
-
+                $expiredtime = $request->expired_at;
                 $this->dateIn = $date_in;
                 $this->dateOut = $date_out;
-                $this->processProductRow($row, $request->expired_at, $missing, $request->is_special);
+                $this->processProductRow($row, $expiredtime, $missing, $request->is_special);
             }
         }
 
