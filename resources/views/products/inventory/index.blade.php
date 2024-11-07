@@ -696,8 +696,41 @@
                             $('#date_shipped').val(response.old_ship_date);
                             return '';
                         }
-                        else
-                            $("#filters-form").submit();
+                        else{
+                            let shippedDate = $('#date_shipped').val();
+                            if (shippedDate) {
+                                // Send the date to the controller via AJAX
+                                $.ajax({
+                                    url: "{{ route('check-popup-date') }}", // Define a route in web.php
+                                    type: "POST",
+                                    data: {
+                                        shipped_date: shippedDate,
+                                        _token: $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
+                                    },
+                                    success: function (response) {
+                                        if (response.show_popup) {
+                                            swal({
+                                                title: "Reminder",
+                                                text: response.popup_text,
+                                                icon: "info",
+                                                buttons: true // This shows the "OK" button on the popup
+                                            }).then((willSubmit) => {
+                                                if (willSubmit) {
+                                                    // User clicked "OK", so submit the form
+                                                    $("#filters-form").submit();
+                                                }
+                                            });
+                                        } else {
+                                            // Directly submit the form if no popup is shown
+                                            $("#filters-form").submit();
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error("Error:", error);
+                                    }
+                                });
+                            }
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error('AJAX Error:', status, error);
@@ -799,28 +832,6 @@
 
         $(window).on('load', function () {
             $(function(){
-
-                let shippedDate = $('#date_shipped').val();
-                if (shippedDate) {
-                    // Send the date to the controller via AJAX
-                    $.ajax({
-                        url: "{{ route('check-popup-date') }}", // Define a route in web.php
-                        type: "POST",
-                        data: {
-                            shipped_date: shippedDate,
-                            _token: $('meta[name="csrf-token"]').attr('content') // CSRF token for Laravel
-                        },
-                        success: function (response) {
-                            if (response.show_popup) {
-                                swal("Reminder", response.popup_text, "info");
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error("Error:", error);
-                        }
-                    });
-                }
-
                 setTimeout(function(){
                     // $('#add-on-order option[value="1"]').prop('disabled', true);
 
