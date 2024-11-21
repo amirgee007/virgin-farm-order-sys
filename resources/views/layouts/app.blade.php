@@ -142,10 +142,10 @@
 
 <script src="{{ url('assets/plugins/progressbar/progressbar.js') }}"></script>
 
-@env('production')
-    <script src="https://cdn.logr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>
-    <script>window.LogRocket && window.LogRocket.init('bszrrw/virginfarms');</script>
-@endenv
+{{--@env('production')--}}
+{{--    <script src="https://cdn.logr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>--}}
+{{--    <script>window.LogRocket && window.LogRocket.init('bszrrw/virginfarms');</script>--}}
+{{--@endenv--}}
 
 <script>
     (function ($) {
