@@ -122,6 +122,8 @@ function getCubeSizeTax($size)
     $extra = 0;
 
     try {
+
+        #{"date_in":"2025-01-27","date_out":"2025-02-13"}
         #checked if week is during the PRICES then up it too.
         $found = Setting::where('key', 'extra-fees-date')->where('value', '>', 0)->first();
         if ($found) {
@@ -130,9 +132,10 @@ function getCubeSizeTax($size)
             $start = Carbon::parse($dates['date_in']);
             $end = Carbon::parse($dates['date_out']);
 
-            $today = Carbon::today();
+            $user = itsMeUser();
+            $date_shipped = Carbon::parse($user->last_ship_date);
 
-            if ($today->between($start, $end)) {
+            if ($date_shipped->between($start, $end)) {
                 $extra = round2Digit(($found->value / 100) * $total);
             }
         }
