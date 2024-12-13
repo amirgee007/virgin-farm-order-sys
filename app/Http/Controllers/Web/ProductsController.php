@@ -950,8 +950,9 @@ class ProductsController extends Controller
         try {
             $content = "Some items prices are too low please check asap. " . implode(',', $itemNos);
 
+            if($itemNos)
             \Mail::raw($content, function ($message) {
-                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'
+                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com', 'amirseersol@gmail.com'
                 ])->subject('Items from inventory file are added with wrong price < 0.29');
             });
 
