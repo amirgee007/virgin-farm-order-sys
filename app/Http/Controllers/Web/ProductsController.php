@@ -451,6 +451,8 @@ class ProductsController extends Controller
                 }
 
                 updateSystemStatus(0);
+
+                $this->sendEmailIfPriceNotCorrect();
                 Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY ' . auth()->user()->first_name);
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
