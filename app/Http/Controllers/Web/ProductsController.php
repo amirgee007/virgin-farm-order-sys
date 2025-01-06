@@ -954,7 +954,7 @@ class ProductsController extends Controller
 
             if($itemNos)
             \Mail::raw($content, function ($message) {
-                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com', 'amirseersol@gmail.com'
+                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com', 'angief@virginfarms.com'
                 ])->subject('Items from inventory file are added with wrong price < 0.29');
             });
 
