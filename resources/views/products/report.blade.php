@@ -20,7 +20,7 @@
 <h4>Availability Week of {{@dateFormatMy($dateIn)}}</h4>
 <table border="0.5px" width="100%">
     <thead>
-    
+
     <tr>
         @foreach ($columns as $column)
             <th style="text-align: left;">{{ @$columnCustomNames[$column] }}</th>
@@ -31,7 +31,13 @@
     @foreach ($data as $row)
         <tr>
             @foreach ($columns as $column)
-                <td>{{ $row[$column] }}</td>
+                <td>
+                    @if (str_contains($column, 'price'))
+                        {{ round2Digit($row[$column]) }}
+                    @else
+                        {{ $row[$column] }}
+                    @endif
+                </td>
             @endforeach
         </tr>
     @endforeach
