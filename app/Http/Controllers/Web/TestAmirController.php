@@ -68,7 +68,7 @@ class TestAmirController extends Controller
         }, $columns);
 
         // Fetch data
-        $data = ProductQuantity::where('date_in', '>=', $dateIn)->where('date_out', '<=', $dateOut)
+        $data = ProductQuantity::where('quantity' , '>' , 0)->where('date_in', '>=', $dateIn)->where('date_out', '<=', $dateOut)
             ->join('products', 'products.id', '=', 'product_quantities.product_id')
             ->get($columnsWithTableNames);
 
