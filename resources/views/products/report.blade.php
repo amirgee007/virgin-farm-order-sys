@@ -15,7 +15,7 @@
     </address>
 </div>
 
-<h4>Availability Week of {{@$dateIn}} to {{@$dateOut}}</h4>
+<h4>Availability Week of {{now()->toDateString()}}</h4>
 <table border="0.5px" width="100%">
     <thead>
     <tr>
