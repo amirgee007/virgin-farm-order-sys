@@ -23,7 +23,7 @@
 
     <tr>
         @foreach ($columns as $column)
-            <th style="text-align: left;">{{ @$columnCustomNames[$column] }}</th>
+            <th style="text-align: center;">{{ @$columnCustomNames[$column] }}</th>
         @endforeach
     </tr>
     </thead>
@@ -31,7 +31,7 @@
     @foreach ($data as $row)
         <tr>
             @foreach ($columns as $column)
-                <td>
+                <td style="text-align: center;">
                     @if (str_contains($column, 'price'))
                         {{ round2Digit($row[$column]) }}
                     @else
