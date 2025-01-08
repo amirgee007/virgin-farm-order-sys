@@ -582,7 +582,7 @@
                                 <option value="price_fedex">Price FedEx</option>
                                 <option value="price_hawaii">Price Hawaii</option>
                                 <option value="quantity" selected>Quantity</option>
-                                <option value="date_in_date_out">Date In/Out</option>
+{{--                                <option value="date_in_date_out">Date In/Out</option>--}}
                             </select>
                         </div>
 

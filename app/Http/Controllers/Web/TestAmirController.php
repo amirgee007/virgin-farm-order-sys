@@ -56,17 +56,27 @@ class TestAmirController extends Controller
         $dateOut = $validated['date_out'];
         $columns = $validated['columns'];
 
+
+// Add table names to the columns
+        $columnsWithTableNames = array_map(function ($column) {
+            if (in_array($column, ['product_text', 'item_no'])) {
+                return "products.$column";
+            } else {
+                return "product_quantities.$column";
+            }
+        }, $columns);
+
         // Fetch data
         $data = ProductQuantity::where('date_in', '>=', $dateIn)->where('date_in', '<=', $dateOut)
             ->join('products', 'products.id', '=', 'product_quantities.product_id')
-            ->get(['product_quantities.*', ...$columns]);
+            ->get(array_merge(['product_quantities.*'], $columnsWithTableNames));
 
         $name = 'Inventory-Report';
         if ($validated['report_type'] === 'excel') {
             return \Excel::download(new ProductReportExport($data, $columns), "$name.xlsx");
         } else {
-            #return view('products.report', compact('data', 'columns'));
-            $pdf = \Pdf::loadView('products.report', compact('data', 'columns'));
+            #return view('products.report', compact('data', 'columns' , 'dateIn' , 'dateOut'));
+            $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn' , 'dateOut'));
             return $pdf->download("$name.pdf");
         }
     }

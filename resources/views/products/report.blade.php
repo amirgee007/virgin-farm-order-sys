@@ -4,20 +4,23 @@
     <title>Product Report</title>
 </head>
 <body>
-<div style="text-align: center;">
-    <img src="{{ asset('assets/img/virgin-farms-logo.png') }}" alt="Logo Virgin Farms" style="max-height: 100px; text-align: left;">
-    <address style="text-align: right;">
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <img src="{{ asset('assets/img/virgin-farms-logo.png') }}" alt="Logo Virgin Farms" style="max-height: 100px;">
+    <address style="text-align: right; margin: 0;">
         <b>Virgin Farms Direct</b><br>
         1.888.548 (7673)<br>
         www.virginfarms.com<br>
-        sales@virginfarms.com<br><br>
+        sales@virginfarms.com<br>
     </address>
 </div>
-<table border="0.5" width="100%">
+
+<h4>Availability Week of {{@$dateIn}} to {{@$dateOut}}</h4>
+<table border="0.5px" width="100%">
     <thead>
     <tr>
         @foreach ($columns as $column)
-            <th>{{ ucwords(str_replace('_', ' ', $column)) }}</th>
+            <th style="text-align: left;">{{ ucwords(str_replace('_', ' ', $column)) }}</th>
         @endforeach
     </tr>
     </thead>
