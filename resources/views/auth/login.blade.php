@@ -10,7 +10,7 @@
 
 <div class="col-md-8 col-lg-6 col-xl-5 mx-auto my-5p" id="login">
     <div class="text-center">
-        <img src="{{ url('assets/img/vanguard-logo.png') }}" alt="{{ setting('app_name') }}" height="100">
+        <img src="{{ url('assets/img/virgin-farms-logo.png') }}" alt="{{ setting('app_name') }}" height="100">
     </div>
 
     <div class="card mt-5">

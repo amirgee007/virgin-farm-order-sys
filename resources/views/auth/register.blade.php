@@ -10,7 +10,7 @@
 
     <div class="col-md-8 col-lg-8 col-xl-6 mx-auto my-5p">
         <div class="text-center">
-            <img src="{{ url('assets/img/vanguard-logo.png') }}" alt="{{ setting('app_name') }}" height="100">
+            <img src="{{ url('assets/img/virgin-farms-logo.png') }}" alt="{{ setting('app_name') }}" height="100">
         </div>
 
         <div class="card mt-3">

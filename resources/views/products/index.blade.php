@@ -123,7 +123,13 @@
                                 {!! Form::select('filter', $filters, Request::get('filter') , ['id' => 'filter', 'class' => 'form-control input-solid']) !!}
                             </div>
 
-{{--                            <div class="col-md-2 mb-2">--}}
+                            <div class="col-md-2 mt-2">
+                                <a href="#" id="showModalBtn" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-download"></i> Download Report
+                                </a>
+                            </div>
+
+                            {{-- <div class="col-md-2 mb-2">--}}
 {{--                                <input type="checkbox" id="qty_found" {{Request::get('qty_found') ? 'checked' : ''}} name="qty_found" value="2">--}}
 {{--                                <label for="qty_found">Only Show QTY > 0</label>--}}
 {{--                            </div>--}}
@@ -555,6 +561,54 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reportModalLabel">Generate Report</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="generateReportForm" method="POST" action="{{ route('generate.report') }}">
+                        @csrf
+
+                        <div class="form-group">
+                            <label for="columns">Select Columns:</label>
+                            <select required class="form-control select2" name="columns[]" multiple id="columns" style="width: 100%; height: 25px">
+                                <option value="product_text" selected>Product Name</option>
+                                <option value="item_no">Item Number</option>
+                                <option value="price_fob">Price FOB</option>
+                                <option value="price_fedex">Price FedEx</option>
+                                <option value="price_hawaii">Price Hawaii</option>
+                                <option value="quantity" selected>Quantity</option>
+                                <option value="date_in_date_out">Date In/Out</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="date_in" class="form-label">Date In</label>
+                            <input required type="date" id="date_in" name="date_in" class="form-control"
+                                   value="{{ request('date_in', now()->toDateString()) }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="date_out" class="form-label">Date Out</label>
+                            <input required type="date" id="date_out" name="date_out" class="form-control"
+                                   value="{{ request('date_out', now()->toDateString()) }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="report_type" class="form-label">Report Format</label>
+                            <select required id="report_type" name="report_type" class="form-control ">
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Generate Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('scripts')
@@ -566,6 +620,12 @@
 
     <script>
         $(function() {
+
+            document.getElementById('showModalBtn').addEventListener('click', function () {
+                // Show the modal programmatically
+                const modal = new bootstrap.Modal(document.getElementById('reportModal'));
+                modal.show();
+            });
 
             var currentUrl = window.location;
 

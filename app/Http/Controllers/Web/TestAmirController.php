@@ -5,12 +5,14 @@ namespace Vanguard\Http\Controllers\Web;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Vanguard\Exports\ProductReportExport;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Mail\VirginFarmsSystemMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
+use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
 use Vanguard\Services\MailchimpService;
@@ -19,7 +21,8 @@ use Vanguard\User;
 class TestAmirController extends Controller
 {
 
-    public function index3(){
+    public function index3()
+    {
 
         $user = User::query()->inRandomOrder()->first();
 
@@ -40,19 +43,49 @@ class TestAmirController extends Controller
         return view('test');
     }
 
-    public function index2($id = 9){
+    public function generateReport(Request $request)
+    {
+        $validated = $request->validate([
+            'columns' => 'required|array',
+            'date_in' => 'required|date',
+            'date_out' => 'required|date|after_or_equal:date_in',
+            'report_type' => 'required|in:pdf,excel',
+        ]);
+
+        $dateIn = $validated['date_in'];
+        $dateOut = $validated['date_out'];
+        $columns = $validated['columns'];
+
+        // Fetch data
+        $data = ProductQuantity::where('date_in', '>=', $dateIn)->where('date_in', '<=', $dateOut)
+            ->join('products', 'products.id', '=', 'product_quantities.product_id')
+            ->get(['product_quantities.*', ...$columns]);
+
+        $name = 'Inventory-Report';
+        if ($validated['report_type'] === 'excel') {
+            return \Excel::download(new ProductReportExport($data, $columns), "$name.xlsx");
+        } else {
+            #return view('products.report', compact('data', 'columns'));
+            $pdf = \Pdf::loadView('products.report', compact('data', 'columns'));
+            return $pdf->download("$name.pdf");
+        }
+    }
+
+    public function index2($id = 9)
+    {
 
         ini_set('max_execution_time', 300000); //300 seconds = 5 minutes
         ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
         ini_set('memory_limit', '4096M');
 
         dd();
+
         dd($user);
 
         #current size before method callings is: 111.41
         # cart:931 current size and next max limit is: -66.41 18
 
-        $request = Request::create('/', 'GET', ['selection' => 90.73+18 ]);
+        $request = Request::create('/', 'GET', ['selection' => 90.73 + 18]);
 
         $ok = (new CartController())->validateCartSelection($request);
 
@@ -60,7 +93,7 @@ class TestAmirController extends Controller
         $user = User::first();
         $content = '<p>New user has been successfully registered on Virgin farms order system. Here are the details of the new user:</p>'
             . '<ul>'
-            . '<li><strong>Full Name:</strong> ' . $user->first_name.' '.$user->last_name . '</li>'
+            . '<li><strong>Full Name:</strong> ' . $user->first_name . ' ' . $user->last_name . '</li>'
             . '<li><strong>Last Name:</strong> ' . $user->last_name . '</li>'
             . '<li><strong>Company Name:</strong> ' . $user->company_name . '</li>'
             . '<li><strong>Phone No:</strong> ' . $user->phone . '</li>'
@@ -85,7 +118,7 @@ class TestAmirController extends Controller
         $order_id = rand();
         $message = 'abccccccccccccccc adfsa fasdfareacasd';
 
-        addNotification($user_id , $order_id , $message);
+        addNotification($user_id, $order_id, $message);
         dd($quantity);
 
         $user = User::first();
@@ -93,12 +126,13 @@ class TestAmirController extends Controller
 
         $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
 
-        $content = 'User Changed his shipping address under profile page please check asap i.e user is '.$user->first_name;
+        $content = 'User Changed his shipping address under profile page please check asap i.e user is ' . $user->first_name;
 
-        \Mail::raw($content, function ($message) use($salesRepEmail) {
+        \Mail::raw($content, function ($message) use ($salesRepEmail) {
             $message->to('christinah@virginfarms.com')
-                ->bcc(['amirseersol@gmail.com' , $salesRepEmail])
-                ->subject('Hi, plz check some user updated shipping address');});
+                ->bcc(['amirseersol@gmail.com', $salesRepEmail])
+                ->subject('Hi, plz check some user updated shipping address');
+        });
 
 //        \Mail::to('christinah@virginfarms.com')
 //            ->bcc('amirseersol@gmail.com')
@@ -132,7 +166,7 @@ class TestAmirController extends Controller
                 continue;
             }
 
-            $adjustedRanges[] = [ 'min' => $startLimit, 'max' => $min - 1 ]; // Add the adjusted range to the array
+            $adjustedRanges[] = ['min' => $startLimit, 'max' => $min - 1]; // Add the adjusted range to the array
             $startLimit = $max + 1;
         }
     }

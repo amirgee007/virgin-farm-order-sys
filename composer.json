@@ -31,6 +31,7 @@
         "akaunting/laravel-setting": "^1.2",
         "anhskohbo/no-captcha": "3.*",
         "arcanedev/log-viewer": "^10.0",
+        "barryvdh/laravel-dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "intervention/image": "^2.3",
         "jenssegers/agent": "^2.5",
