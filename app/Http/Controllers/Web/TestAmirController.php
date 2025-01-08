@@ -71,7 +71,7 @@ class TestAmirController extends Controller
             ->join('products', 'products.id', '=', 'product_quantities.product_id')
             ->get($columnsWithTableNames);
 
-        $name = 'Inventory-Report';
+        $name = 'Inventory-Report-'.$dateIn;
         if ($validated['report_type'] === 'excel') {
 
             return \Excel::download(new ProductReportExport($data, $columns), "$name.xlsx");
