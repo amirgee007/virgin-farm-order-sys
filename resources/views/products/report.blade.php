@@ -20,6 +20,7 @@
 <h4>Availability Week of {{@dateFormatMy($dateIn)}}</h4>
 <table border="0.5px" width="100%">
     <thead>
+    
     <tr>
         @foreach ($columns as $column)
             <th style="text-align: left;">{{ @$columnCustomNames[$column] }}</th>

@@ -76,7 +76,7 @@ class TestAmirController extends Controller
         if ($validated['report_type'] === 'excel') {
             return \Excel::download(new ProductReportExport($data, $columns , $columnCustomNames), "$name.xlsx");
         } else {
-            return view('products.report', compact('data', 'columns' , 'dateIn'));
+            #return view('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
             $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
             return $pdf->download("$name.pdf");
         }
