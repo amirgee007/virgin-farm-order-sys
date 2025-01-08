@@ -576,13 +576,11 @@
                         <div class="form-group">
                             <label for="columns">Select Columns:</label>
                             <select required class="form-control select2" name="columns[]" multiple id="columns" style="width: 100%; height: 25px">
-                                <option value="product_text" selected>Product Name</option>
-                                <option value="item_no">Item Number</option>
-                                <option value="price_fob">Price FOB</option>
-                                <option value="price_fedex">Price FedEx</option>
-                                <option value="price_hawaii">Price Hawaii</option>
-                                <option value="quantity" selected>Quantity</option>
-{{--                                <option value="date_in_date_out">Date In/Out</option>--}}
+                                @foreach ($columnCustomNames as $key => $name)
+                                    <option value="{{$key}}" {{ in_array($key, ['product_text' , 'quantity']) ? 'selected' : '' }}>
+                                        {{ $name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 

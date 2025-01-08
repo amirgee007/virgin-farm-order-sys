@@ -269,13 +269,16 @@ class ProductsController extends Controller
         $selected['end'] = $end_date->toDayDateTimeString();
 
         $itemsHaveImage = Product::whereNotNull('image_url')->pluck('item_no');
+        $columnCustomNames = getReportColumns();
+
         return view('products.index', compact(
             'products',
             'categories',
             'count',
             'selected',
             'itemsHaveImage',
-            'filters'
+            'filters',
+            'columnCustomNames',
         ));
     }
 

@@ -436,3 +436,19 @@ function stripXSS($data)
     $sanitized = cleanArray($data);
     return $sanitized;
 }
+
+
+function getReportColumns()
+{
+    // Define the options as an associative array
+    $columns = [
+        "product_text" => "Product Description",
+        "item_no" => "Item Number",
+        "price_fob" => "Price FOB",
+        "price_fedex" => "Price FedEx",
+        "price_hawaii" => "Price Hawaii",
+        "quantity" => "Available"
+    ];
+
+    return $columns;
+}

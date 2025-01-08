@@ -11,16 +11,18 @@
         <b>Virgin Farms Direct</b><br>
         1.888.548 (7673)<br>
         www.virginfarms.com<br>
+        www.virginfarms.net<br>
         sales@virginfarms.com<br>
+        weborders@virginfarms.com<br>
     </address>
 </div>
 
-<h4>Availability Week of {{@$dateIn}}</h4>
+<h4>Availability Week of {{@dateFormatMy($dateIn)}}</h4>
 <table border="0.5px" width="100%">
     <thead>
     <tr>
         @foreach ($columns as $column)
-            <th style="text-align: left;">{{ ucwords(str_replace('_', ' ', $column)) }}</th>
+            <th style="text-align: left;">{{ @$columnCustomNames[$column] }}</th>
         @endforeach
     </tr>
     </thead>

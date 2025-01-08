@@ -56,6 +56,7 @@ class TestAmirController extends Controller
         $dateOut = $validated['date_out'];
         $columns = $validated['columns'];
 
+        $columnCustomNames = getReportColumns();
 
 // Add table names to the columns
         $columnsWithTableNames = array_map(function ($column) {
@@ -77,7 +78,7 @@ class TestAmirController extends Controller
             return \Excel::download(new ProductReportExport($data, $columns), "$name.xlsx");
         } else {
             #return view('products.report', compact('data', 'columns' , 'dateIn'));
-            $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn'));
+            $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
             return $pdf->download("$name.pdf");
         }
     }

@@ -9,11 +9,13 @@ class ProductReportExport implements FromCollection, WithHeadings
 {
     protected $data;
     protected $columns;
+    protected $columnCustomNames;
 
-    public function __construct($data, $columns)
+    public function __construct($data, $columns , $columnCustomNames)
     {
         $this->data = $data;
         $this->columns = $columns;
+        $this->columnCustomNames = $columnCustomNames;
     }
 
     public function collection()
@@ -24,7 +26,8 @@ class ProductReportExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return array_map(function ($column) {
-            return strtoupper(str_replace('_', ' ', $column));
+            return $this->columnCustomNames[$column] ?? strtoupper(str_replace('_', ' ', $column));
         }, $this->columns);
     }
+
 }
