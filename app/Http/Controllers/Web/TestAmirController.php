@@ -67,16 +67,17 @@ class TestAmirController extends Controller
         }, $columns);
 
         // Fetch data
-        $data = ProductQuantity::where('date_in', '>=', $dateIn)->where('date_in', '<=', $dateOut)
+        $data = ProductQuantity::where('date_in', '>=', $dateIn)->where('date_out', '<=', $dateOut)
             ->join('products', 'products.id', '=', 'product_quantities.product_id')
-            ->get(array_merge(['product_quantities.*'], $columnsWithTableNames));
+            ->get($columnsWithTableNames);
 
         $name = 'Inventory-Report';
         if ($validated['report_type'] === 'excel') {
+
             return \Excel::download(new ProductReportExport($data, $columns), "$name.xlsx");
         } else {
-            #return view('products.report', compact('data', 'columns'));
-            $pdf = \Pdf::loadView('products.report', compact('data', 'columns'));
+            #return view('products.report', compact('data', 'columns' , 'dateIn'));
+            $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn'));
             return $pdf->download("$name.pdf");
         }
     }
