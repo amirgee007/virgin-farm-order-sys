@@ -2,12 +2,51 @@
 <html>
 <head>
     <title>Product Report</title>
+    <style>
+        /* Add styling to ensure proper alignment and spacing */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-container img {
+            max-height: 100px; /* Adjusted for better fit */
+            text-align: left !important;
+        }
+
+        .header-container address {
+            text-align: right;
+            font-style: normal; /* Remove default italic styling of address */
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 0.5px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
-    <img src="{{ url('VFLogo.png') }}" alt="Logo Virgin Farms" style="max-height: 150px;">
-    <address style="text-align: right; margin: 0;">
+<div class="header-container">
+    <!-- Image in one section -->
+    <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('VFLogo.png'))) }}" height="150px" alt="Logo Virgin Farms">
+
+    <!-- Address in the other section -->
+    <address>
         <b>Virgin Farms Direct</b><br>
         1.888.548 (7673)<br>
         <a href="https://www.virginfarms.com" target="_blank">www.virginfarms.com</a><br>
@@ -18,7 +57,9 @@
 </div>
 
 <h4>Availability Week of {{@dateFormatMy($dateIn)}}</h4>
-<table border="0.5px" width="100%">
+
+<!-- Table Section -->
+<table>
     <thead>
     <tr>
         @foreach ($columns as $column)
