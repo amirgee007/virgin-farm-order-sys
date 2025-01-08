@@ -6,7 +6,7 @@
 <body>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-    <img src="{{ asset('assets/img/virgin-farms-logo.png') }}" alt="Logo Virgin Farms" style="max-height: 100px;">
+    <img src="https://virginfarms.net/assets/img/virgin-farms-logo.png" alt="Logo Virgin Farms" style="max-height: 100px;">
     <address style="text-align: right; margin: 0;">
         <b>Virgin Farms Direct</b><br>
         1.888.548 (7673)<br>
