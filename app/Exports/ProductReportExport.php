@@ -2,32 +2,28 @@
 
 namespace Vanguard\Exports;
 
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class ProductReportExport implements FromCollection, WithHeadings
+class ProductReportExport implements FromView
 {
-    protected $data;
+    protected $groupedData;
     protected $columns;
     protected $columnCustomNames;
 
-    public function __construct($data, $columns , $columnCustomNames)
+    public function __construct($columns, $groupedData , $columnCustomNames)
     {
-        $this->data = $data;
         $this->columns = $columns;
+        $this->groupedData = $groupedData;
         $this->columnCustomNames = $columnCustomNames;
     }
 
-    public function collection()
+    public function view(): View
     {
-        return collect($this->data);
+        return view('products.reports.__report-table', [
+            'columns' => $this->columns,
+            'groupedData' => $this->groupedData,
+            'columnCustomNames' => $this->columnCustomNames,
+        ]);
     }
-
-    public function headings(): array
-    {
-        return array_map(function ($column) {
-            return $this->columnCustomNames[$column] ?? strtoupper(str_replace('_', ' ', $column));
-        }, $this->columns);
-    }
-
 }

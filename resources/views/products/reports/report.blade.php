@@ -80,31 +80,6 @@
 <!-- Optional Heading -->
 <h4 style="padding-left: 30px">Availability Week of {{@dateFormatMy($dateIn)}}</h4>
 <!-- Table Section -->
-<table style="padding: 0 30px;">
-    <thead>
-    <tr>
-        @foreach ($columns as $column)
-            <th style="text-align: {{ $column === 'product_text' ? 'left' : 'center' }};">{{ @$columnCustomNames[$column] }}</th>
-        @endforeach
-    </tr>
-    </thead>
-    <tbody>
-    @foreach ($data as $row)
-        <tr>
-            @foreach ($columns as $column)
-                <td style="text-align: {{ $column === 'product_text' ? 'left' : 'center' }};">
-                    @if (str_contains($column, 'price'))
-                        ${{ round2Digit($row[$column]) }}
-                    @else
-                        {{ $row[$column] }}
-                    @endif
-                </td>
-            @endforeach
-        </tr>
-    @endforeach
-    </tbody>
-</table>
-
-
+@include('products.reports.__report-table')
 </body>
 </html>

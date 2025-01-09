@@ -58,7 +58,7 @@ class TestAmirController extends Controller
 
         $columnCustomNames = getReportColumns();
 
-// Add table names to the columns
+        // Add table names to the columns
         $columnsWithTableNames = array_map(function ($column) {
             if (in_array($column, ['product_text', 'item_no'])) {
                 return "products.$column";
@@ -68,16 +68,24 @@ class TestAmirController extends Controller
         }, $columns);
 
         // Fetch data
-        $data = ProductQuantity::where('quantity' , '>' , 0)->where('date_in', '>=', $dateIn)->where('date_out', '<=', $dateOut)
+        $data = ProductQuantity::where('quantity', '>', 0)
+            ->where('date_in', '>=', $dateIn)
+            ->where('date_out', '<=', $dateOut)
             ->join('products', 'products.id', '=', 'product_quantities.product_id')
-            ->get($columnsWithTableNames);
+            ->join('categories', 'categories.category_id', '=', 'products.category_id') // Join with categories table
+            ->orderBy('products.category_id') // Sort by category_id
+//            ->orderBy('products.product_text') // Then sort by product_text
+            ->get(array_merge($columnsWithTableNames, ['categories.description as category_name'])); // Include category_name in the result
+
+        $groupedData = $data->groupBy('category_name');
 
         $name = 'Inventory-Report-'.$dateIn;
         if ($validated['report_type'] === 'excel') {
-            return \Excel::download(new ProductReportExport($data, $columns , $columnCustomNames), "$name.xlsx");
+            return \Excel::download(new ProductReportExport($columns , $groupedData , $columnCustomNames), "$name.xlsx");
+            #return \Excel::download(new ProductReportExport($data, $columns , $columnCustomNames), );
         } else {
             #return view('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
-            $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
+            $pdf = \Pdf::loadView('products.reports.report', compact('columns' , 'dateIn' , 'columnCustomNames' ,'groupedData'));
 
             return $pdf->download("$name.pdf");
         }
