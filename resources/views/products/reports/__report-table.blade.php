@@ -46,6 +46,8 @@
                     <td style="text-align: {{ $column === 'product_text' ? 'left' : 'center' }};">
                         @if (str_contains($column, 'price'))
                             ${{ round2Digit($row[$column]) }}
+                        @elseif($column == 'product_text')
+                            {!!  $row->is_special>5 ? '⚡' : '' !!} {{ $row[$column] }}
                         @else
                             {{ $row[$column] }}
                         @endif
