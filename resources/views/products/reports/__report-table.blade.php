@@ -1,4 +1,4 @@
-<table style="padding: 0 30px;">
+<table style="padding: 0 75px;">
     <thead>
     <tr>
         @foreach ($columns as $column)

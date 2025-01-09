@@ -64,7 +64,7 @@
 
         /* Optional: Add some spacing for better visual separation */
         h4 {
-            padding-left: 20px;
+            padding-left: 75px;
             font-size: 15px; /* Reduce heading font size */
         }
     </style>
@@ -72,7 +72,7 @@
 <body>
 
 <!-- Table with logo on the left and address on the right -->
-<table style="margin-left: -25px;">
+<table style="margin-left: -25px; margin-bottom: -25px;">
     <tr>
         <!-- Logo Section (Left) -->
         <td class="logo" style="width: 30%; vertical-align: top; border: 0px;">
