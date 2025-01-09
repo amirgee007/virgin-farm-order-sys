@@ -13,9 +13,10 @@
         body {
             margin: 0;
             padding: 0;
-
             font-family: 'DejaVu Sans', sans-serif;
+            font-size: 10px; /* Reduce font size */
         }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -23,7 +24,7 @@
 
         th, td {
             border: 0.5px solid #000;
-            padding: 8px;
+            padding: 2px; /* Minimized padding */
             text-align: left;
         }
 
@@ -35,15 +36,15 @@
         .logo img {
             width: 350px; /* Adjust the logo width */
             height: auto;
-            margin-top:-50px;
-            margin-left:-30px;
+            margin-top: -50px;
+            margin-left: -30px;
         }
 
         /* Styling for the address */
         .address {
             text-align: right;
             font-style: normal;
-            line-height: 1.6;
+            line-height: 1.4; /* Adjust line height */
         }
 
         .address a {
@@ -54,6 +55,18 @@
         .address a:hover {
             text-decoration: underline;
         }
+
+        /* Adjust table heading and data for compact display */
+        th, td {
+            font-size: 9px; /* Smaller font size for table */
+            padding: 1px; /* Minimum padding for compact layout */
+        }
+
+        /* Optional: Add some spacing for better visual separation */
+        h4 {
+            padding-left: 20px;
+            font-size: 15px; /* Reduce heading font size */
+        }
     </style>
 </head>
 <body>
@@ -62,12 +75,12 @@
 <table style="margin-left: -25px;">
     <tr>
         <!-- Logo Section (Left) -->
-        <td class="logo" style="width: 30%; vertical-align: top; border:0px;">
+        <td class="logo" style="width: 30%; vertical-align: top; border: 0px;">
             <img src="{{public_path('VFLogo.png')}}" alt="Virgin Farms Logo">
         </td>
 
         <!-- Address Section (Right) -->
-        <td class="address" style="width: 70%; margin-left: -20px; border:0px;"> <!-- Adjust the value as needed -->
+        <td class="address" style="width: 70%; margin-left: -20px; border: 0px; font-size: 15px; "> <!-- Adjust the value as needed -->
             <b>Virgin Farms Direct</b><br>
             1.888.548 (7673)<br>
             <a href="https://www.virginfarms.com" target="_blank">www.virginfarms.com</a><br>
@@ -79,7 +92,7 @@
 </table>
 
 <!-- Optional Heading -->
-<h4 style="padding-left: 30px">Availability Week of {{@dateFormatMy($dateIn)}}</h4>
+<h4>Availability Week of {{@dateFormatMy($dateIn)}}</h4>
 <!-- Table Section -->
 @include('products.reports.__report-table')
 </body>
