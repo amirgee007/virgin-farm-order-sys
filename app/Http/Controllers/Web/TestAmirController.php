@@ -78,6 +78,7 @@ class TestAmirController extends Controller
         } else {
             #return view('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
             $pdf = \Pdf::loadView('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
+
             return $pdf->download("$name.pdf");
         }
     }
