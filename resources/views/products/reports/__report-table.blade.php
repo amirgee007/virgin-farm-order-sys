@@ -11,7 +11,7 @@
         // Define colors for specific words
         $colors = [
             'YELLOW' => '#FFFF00',
-            'WHITE' => '#FFFFFF',
+            'WHITE' => '#B2B2B2', #White not look better so we used grey
             'RED' => '#FF7373',
             'PINK' => '#FFC0CB',
             'PEACH' => '#FFDAB9',
