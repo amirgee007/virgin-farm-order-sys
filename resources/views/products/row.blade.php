@@ -125,7 +125,7 @@
                                    data-step="any"
                                    data-type="number"
                                    data-emptytext="0"
-                                   data-pk="{{$product->id}}"
+                                   data-pk="{{$prod->p_qty_id}}"
                                    data-url="{{route('product.update.column')}}"
                                    data-value="{{ $prod->price_hawaii }}">
                                 </a>
