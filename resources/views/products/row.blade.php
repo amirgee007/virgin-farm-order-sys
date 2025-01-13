@@ -99,7 +99,7 @@
                                    data-step="any"
                                    data-type="number"
                                    data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
+                                   data-pk="{{$prod->p_qty_id}}"
                                    data-url="{{route('product.update.column')}}"
                                    data-value="{{ $prod->price_fob }}">
                                 </a>
@@ -112,7 +112,7 @@
                                    data-step="any"
                                    data-type="number"
                                    data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
+                                   data-pk="{{$prod->p_qty_id}}"
                                    data-url="{{route('product.update.column')}}"
                                    data-value="{{ $prod->price_fedex }}">
                                 </a>
@@ -137,7 +137,7 @@
                                    data-name="quantity"
                                    data-type="number"
                                    data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
+                                   data-pk="{{$prod->p_qty_id}}"
                                    data-url="{{route('product.update.column')}}"
                                    data-value="{{ $prod->quantity }}">
                                 </a>

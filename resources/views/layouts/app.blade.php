@@ -263,71 +263,71 @@
     let isInteractionDisabled = false;
     let overlay; // Make overlay a global variable to remove it later
 
-    function disableUserInteraction() {
-        if (!isInteractionDisabled) {
-            // Disable mouse clicks
-            document.addEventListener('click', function preventClicks(e) {
-                if (isInteractionDisabled) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            }, true);
+    // function disableUserInteraction() {
+    //     if (!isInteractionDisabled) {
+    //         // Disable mouse clicks
+    //         document.addEventListener('click', function preventClicks(e) {
+    //             if (isInteractionDisabled) {
+    //                 e.preventDefault();
+    //                 e.stopPropagation();
+    //             }
+    //         }, true);
+    //
+    //         // Disable keypresses
+    //         document.addEventListener('keydown', function preventKeyPress(e) {
+    //             if (isInteractionDisabled) {
+    //                 e.preventDefault();
+    //                 e.stopPropagation();
+    //             }
+    //         }, true);
+    //
+    //         // Create and show the overlay
+    //         overlay = document.createElement('div');
+    //         overlay.style.position = 'fixed';
+    //         overlay.style.top = '0';
+    //         overlay.style.left = '0';
+    //         overlay.style.width = '100%';
+    //         overlay.style.height = '100%';
+    //         overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    //         overlay.style.zIndex = '10000';
+    //         overlay.innerHTML = '<h2 style="color: white; text-align: center; margin-top: 20%;">Our web shop is being refreshed with new products. We’ll be back online shortly.</h2>';
+    //
+    //         document.body.appendChild(overlay);
+    //         isInteractionDisabled = true;  // Set flag to true
+    //     }
+    // }
 
-            // Disable keypresses
-            document.addEventListener('keydown', function preventKeyPress(e) {
-                if (isInteractionDisabled) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                }
-            }, true);
+    // function enableUserInteraction() {
+    //     if (isInteractionDisabled) {
+    //         // Remove the overlay
+    //         if (overlay) {
+    //             document.body.removeChild(overlay);
+    //         }
+    //
+    //         isInteractionDisabled = false;  // Set flag to false
+    //     }
+    // }
 
-            // Create and show the overlay
-            overlay = document.createElement('div');
-            overlay.style.position = 'fixed';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            overlay.style.zIndex = '10000';
-            overlay.innerHTML = '<h2 style="color: white; text-align: center; margin-top: 20%;">Our web shop is being refreshed with new products. We’ll be back online shortly.</h2>';
+    // function checkStatus() {
+    //     // Poll the server to check the database value
+    //     fetch('/check-admin-uploading')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             if (data.disable && !isInteractionDisabled) {
+    //                 disableUserInteraction();  // Disable if not already disabled
+    //             } else if (!data.disable && isInteractionDisabled) {
+    //                 enableUserInteraction();   // Enable if it was disabled
+    //             }
+    //         })
+    //         .catch(error => console.error('Error fetching status:', error));
+    // }
 
-            document.body.appendChild(overlay);
-            isInteractionDisabled = true;  // Set flag to true
-        }
-    }
-
-    function enableUserInteraction() {
-        if (isInteractionDisabled) {
-            // Remove the overlay
-            if (overlay) {
-                document.body.removeChild(overlay);
-            }
-
-            isInteractionDisabled = false;  // Set flag to false
-        }
-    }
-
-    function checkStatus() {
-        // Poll the server to check the database value
-        fetch('/check-admin-uploading')
-            .then(response => response.json())
-            .then(data => {
-                if (data.disable && !isInteractionDisabled) {
-                    disableUserInteraction();  // Disable if not already disabled
-                } else if (!data.disable && isInteractionDisabled) {
-                    enableUserInteraction();   // Enable if it was disabled
-                }
-            })
-            .catch(error => console.error('Error fetching status:', error));
-    }
-
-    // Check the status on page load
-    window.onload = function() {
-        checkStatus();
-        // Keep checking the status every 5 seconds
-        setInterval(checkStatus, 5000); // Every 5 seconds
-    };
+    // // Check the status on page load
+    // window.onload = function() {
+    //     checkStatus();
+    //     // Keep checking the status every 5 seconds
+    //     setInterval(checkStatus, 5000); // Every 5 seconds
+    // };
 </script>
 
 @stack('js')
