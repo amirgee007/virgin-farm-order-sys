@@ -15,7 +15,7 @@
 
     <div class="card mt-5">
         <div class="card-body">
-            <h5 class="card-title text-center mt-4 text-uppercase">
+            <h5 class="card-title text-center mt-2 text-uppercase">
                 @lang('Login')
             </h5>
 
