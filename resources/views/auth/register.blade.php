@@ -132,12 +132,12 @@
                                 <p id="new_customer_message" class="text-danger" style="display: none;"><b>Sales Representative will be assigned upon confirmation.</b></p>
                             </div>
                             <div class="form-group col-12">
-                <textarea name="address"
-                      id="address"
-                      class="form-control input-solid"
-                      placeholder="Shipping Address"
-                      rows="3"
-                      required>{{ old('address') }}</textarea>
+                                <textarea name="address"
+                                  id="address"
+                                  class="form-control input-solid"
+                                  placeholder="Shipping Address"
+                                  rows="3"
+                                  required>{{ old('address') }}</textarea>
                             </div>
                         </div>
 
@@ -154,6 +154,17 @@
                         </div>
 
                         <div class="form-row">
+                            <div class="form-group col-12">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input regioninput" name="region_other" type="radio" id="region_us" value="us">
+                                    <label class="form-check-label" for="region_us">United States</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input regioninput" name="region_other" id="region_other" type="radio" value="other">
+                                    <label class="form-check-label" for="region_other">Others</label>
+                                </div>
+                            </div>
+
                             <div class="form-group col-6">
                                 <input type="text"
                                        name="city"
@@ -210,7 +221,6 @@
                                 </a>
                             </div>
                         </div>
-
 
                         <div class="form-row">
                             <label for="tax_file" class="form-label">Do you want to receive our latest updates, offers, exclusive content?</label>
@@ -275,12 +285,40 @@
     @endif
 
 @stop
-
 @section('scripts')
     {!! JsValidator::formRequest('Vanguard\Http\Requests\Auth\RegisterRequest', '#registration-form') !!}
 
     <script>
         $(document).ready(function() {
+
+            const stateDropdown = $('#state_id');
+            const originalOptions = stateDropdown.html();
+
+            $('.regioninput').change(function () {
+                    let selectedRegion = $(this).val();
+
+                    if (selectedRegion === 'us') {
+                        // Filter for US states (ID: 1 to 50)
+                        stateDropdown.html(originalOptions); // Reset to all options
+                        stateDropdown.find('option').each(function () {
+                            if ($(this).val() > 52) {
+                                $(this).remove();
+                            }
+                        });
+
+                    } else if (selectedRegion === 'other') {
+                        stateDropdown.html(originalOptions); // Reset to all options
+                        stateDropdown.find('option').each(function () {
+                            if ($(this).val() <= 52) {
+                                $(this).remove();
+                            }
+                        });
+
+                        stateDropdown.prepend('<option value="" selected="selected">Select Other State</option>');
+
+                    }
+                });
+
             $('input[name="customer_type"]').change(function() {
                 if ($('#current_customer').is(':checked')) {
                     $('#sales_rep').show();
@@ -304,6 +342,8 @@
                     $('#tax-file-input').hide(); // Hide the file input for other states
                 }
             });
+
+            $('#region_us').trigger('click');
         });
     </script>
 @stop

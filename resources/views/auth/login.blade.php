@@ -89,9 +89,8 @@
         </div>
     </div>
 
-
     <div class="text-center text-muted">
-        Visit our main website <a class="font-weight-bold text-danger" target="_blank" href="https://www.virginfarms.com/">virginfarms.com</a> to explore our floral catalog, subscribe to our Weekly Special newsletter, and explore our services.
+        Visit our main website <a class="font-weight-bold text-danger" target="_blank" href="https://www.virginfarms.com/">virginfarms.com</a> to browse our floral catalog, subscribe to our Weekly Special newsletter, and explore our services.
     </div>
 </div>
 
