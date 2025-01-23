@@ -80,14 +80,18 @@
                     <a href="<?= route('password.request') ?>" class="forgot">@lang('I forgot my password')</a>
                 @endif
             </div>
+            <div class="text-center text-muted">
+                @if (setting('reg_enabled'))
+                    @lang("Don't have an account?")
+                    <a class="font-weight-bold" href="<?= url("register") ?>">@lang('Sign Up')</a>
+                @endif
+            </div>
         </div>
     </div>
 
+
     <div class="text-center text-muted">
-        @if (setting('reg_enabled'))
-            @lang("Don't have an account?")
-            <a class="font-weight-bold" href="<?= url("register") ?>">@lang('Sign Up')</a>
-        @endif
+        Visit our main website <a class="font-weight-bold text-danger" target="_blank" href="https://www.virginfarms.com/">virginfarms.com</a> to explore our floral catalog, subscribe to our Weekly Special newsletter, and explore our services.
     </div>
 </div>
 
