@@ -195,15 +195,22 @@
                             </div>
                         </div>
 
-                        <div class="form-row" id="tax-file-input" style="display: none;">
-                            <label for="tax_file" class="form-label">Tax ID File For FL. Customers</label>
-                            <div class="form-group col-12">
-                                <input type="file"
-                                       name="tax_file"
-                                       id="tax_file"
-                                       class="form-control input-solid">
+                        <div class="form-row align-items-center" id="tax-file-input" style="display: none;">
+                            <!-- Input Section -->
+                            <div class="form-group flex-grow-1 me-3">
+                                <label for="tax_file" class="form-label">Tax ID For FL. Customers</label>
+                                <input type="file" name="tax_file" id="tax_file" class="form-control input-solid">
+                            </div>
+
+                            <!-- Description Section -->
+                            <div class="form-group text-muted">
+                                <i class="fa fa-search me-2" aria-hidden="true"></i>
+                                <a href="https://ritx-fl-sales.bswa.net/" target="_blank" style="font-weight: bold; text-decoration: underline; color: inherit;">
+                                    Current Florida Annual Resale Certificate for Sales Tax
+                                </a>
                             </div>
                         </div>
+
 
                         <div class="form-row">
                             <label for="tax_file" class="form-label">Do you want to receive our latest updates, offers, exclusive content?</label>
