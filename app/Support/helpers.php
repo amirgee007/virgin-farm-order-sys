@@ -268,12 +268,11 @@ function getCarriers()
 
 function getStates()
 {
-
     $states = UsState::orderby('state_name')
         ->pluck('state_name', 'id')
         ->toArray();
 
-    $states = [null => 'Select State'] + $states;
+    $states = [null => 'Select US State'] + $states;
 
     return $states;
 }
