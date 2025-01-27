@@ -102,7 +102,8 @@ class ProductsController extends Controller
             });
         }
 
-        $carriers = getCarriers();
+        $carriers = getCarriers($user->state > 52 ? 1 : 0);
+
         $categoriesQuery = Category::query();
         $dutchCats = Category::dutchCategories(); #ok new logic
 
