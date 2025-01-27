@@ -231,6 +231,12 @@
             .dropdown .dropdown-menu {
                 width: 310px !important;
             }
+
+            .datepicker-dropdown {
+                width: 90% !important; /* Make it fit within the screen */
+                left: 5% !important;  /* Center it horizontally */
+                right: 5% !important; /* Add padding on the sides */
+            }
         }
 
         /* Further improvements for very small screens */
@@ -265,21 +271,12 @@
                 width: 310px !important;
             }
 
-            /* Specific fix for datepicker dropdown */
             .datepicker-dropdown {
-                width: auto !important;
-                z-index: 1050 !important; /* Ensure it's above other elements */
-                position: absolute !important; /* Prevent it from being affected by other positioning rules */
-                display: block !important; /* Ensure it always shows correctly */
+                width: 90% !important; /* Make it fit within the screen */
+                left: 5% !important;  /* Center it horizontally */
+                right: 5% !important; /* Add padding on the sides */
             }
 
-            .datepicker-dropdown .dropdown-menu {
-                width: auto !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                border: none !important;
-                box-shadow: none !important;
-            }
         }
     </style>
 @stop
@@ -585,6 +582,9 @@
 
         $('#date_shipped').datepicker({
             format: 'yyyy-mm-dd',
+            orientation: 'auto', // Dynamically position to prevent overflow
+            autoclose: true,
+            container: 'body',
             startDate: new Date(), // Disable past dates
             beforeShowDay: function(date) {
                 var dateString = moment(date).format('YYYY-MM-DD');
