@@ -264,6 +264,22 @@
             .dropdown .dropdown-menu {
                 width: 310px !important;
             }
+
+            /* Specific fix for datepicker dropdown */
+            .datepicker-dropdown {
+                width: auto !important;
+                z-index: 1050 !important; /* Ensure it's above other elements */
+                position: absolute !important; /* Prevent it from being affected by other positioning rules */
+                display: block !important; /* Ensure it always shows correctly */
+            }
+
+            .datepicker-dropdown .dropdown-menu {
+                width: auto !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
         }
     </style>
 @stop
@@ -580,7 +596,7 @@
                     };
                 } else {
                     return {
-                        enabled: true, // date is not selectable if the confirm then make it false
+                        enabled: false, // date is not selectable if the confirm then make it false
                         classes: 'disabled-date', // You can add a class for styling disabled dates if needed
                         tooltip: 'No inventory available.'
                     };
