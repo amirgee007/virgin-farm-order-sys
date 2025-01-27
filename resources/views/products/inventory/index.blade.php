@@ -580,7 +580,7 @@
                     };
                 } else {
                     return {
-                        enabled: true, // date is not selectable if the confirm then make it false
+                        enabled: false, // date is not selectable if the confirm then make it false
                         classes: 'disabled-date', // You can add a class for styling disabled dates if needed
                         tooltip: 'No inventory available.'
                     };
