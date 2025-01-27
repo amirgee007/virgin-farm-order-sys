@@ -35,11 +35,20 @@ function cartTimeLeftSec()
 
 }
 
+function getNonUSCarrier()
+{
+    return [2, 3, 10, 25, 43];
+}
+
 function myPriceColumn()
 {
     #OPTIMIZATION required plz keep in mind to reduce conditions
     $user = itsMeUser();
     $prices = getPrices();
+
+    # if user is non-americal then use the price always price_fob
+    if ($user->state > 52)
+        return 'price_fob';
 
     $column = $user->price_list ? $prices[$user->price_list] : 'price_fedex';
 
@@ -146,7 +155,8 @@ function getCubeSizeTax($size)
     return $total + $extra;
 }
 
-function getCubeRangesV2($size) {
+function getCubeRangesV2($size)
+{
 
     $size = $size > 220 ? 220 : $size;
 
@@ -154,12 +164,11 @@ function getCubeRangesV2($size) {
     $percentage = null;
     $total = 0;
 
-    if (checkIfSkipCubeRangeCondition()){
+    if (checkIfSkipCubeRangeCondition()) {
         $boxCombination = 'N/A';
         $percentage = 100;
         $total = 0;
-    }
-    else{
+    } else {
         $user = auth()->user();
         $stateNotAllow22 = false;
 
@@ -206,8 +215,9 @@ function getCubeRangesV2($size) {
     ];
 }
 
-function calculateTotalPackingBox($inputString) {
-    try{
+function calculateTotalPackingBox($inputString)
+{
+    try {
         // Check if there's a comma in the string 1 S, 1 L, 1 ML
         if (strpos($inputString, ',') !== false) {
             // Split the input string by comma
@@ -232,9 +242,9 @@ function calculateTotalPackingBox($inputString) {
             return intval($numbers) > 0 ? intval($numbers) : 1;
         }
 
-    }catch (\Exception $ex){
-        Log::error($ex->getMessage() . ' error calculateTotal function '. $inputString);
-        return  0;
+    } catch (\Exception $ex) {
+        Log::error($ex->getMessage() . ' error calculateTotal function ' . $inputString);
+        return 0;
     }
 }
 
@@ -261,9 +271,21 @@ function getPrices()
     ];
 }
 
-function getCarriers()
+function getCarriers($nonUS = false)
 {
-    return Carrier::pluck('carrier_name', 'id')->sortBy('c_code')->toArray();
+    $onlyThese = $nonUS ? getNonUSCarrier() : [];
+
+    $carriers = Carrier::pluck('carrier_name', 'id')->sortBy('c_code')->toArray();
+
+    // Check if the first array is empty
+    if (empty($onlyThese)) {
+        $filteredArray = $carriers; // Return all of the second array
+    } else {
+        // Filter the second array to include only matching keys from the first array
+        $filteredArray = array_intersect_key($carriers, array_flip($onlyThese));
+    }
+
+    return $filteredArray;
 }
 
 function getStates()
@@ -404,8 +426,9 @@ function getAddOnDetail($order)
     return $text;
 }
 
-function updateSystemStatus($value = 1){
-    Setting::where('key' , 'admin-uploading')->update(['value' => $value]);
+function updateSystemStatus($value = 1)
+{
+    Setting::where('key', 'admin-uploading')->update(['value' => $value]);
 }
 
 #if user id is zero then it means its for ADMIN
