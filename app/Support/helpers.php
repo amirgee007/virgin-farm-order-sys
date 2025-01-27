@@ -37,7 +37,7 @@ function cartTimeLeftSec()
 
 function getNonUSCarrier()
 {
-    return [2, 3, 10, 25, 43];
+    return [2, 3, 10, 25, 48];
 }
 
 function myPriceColumn()
