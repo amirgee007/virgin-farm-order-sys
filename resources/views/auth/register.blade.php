@@ -284,6 +284,7 @@
         </div>
     @endif
 
+
 @stop
 @section('scripts')
     {!! JsValidator::formRequest('Vanguard\Http\Requests\Auth\RegisterRequest', '#registration-form') !!}
@@ -292,7 +293,12 @@
         $(document).ready(function() {
 
             const stateDropdown = $('#state_id');
+            const carrierDropdown = $('#carrier_id');
+
             const originalOptions = stateDropdown.html();
+            const originalCarrierOptions = carrierDropdown.html();
+
+            const carrierNonUS = {!! json_encode(getNonUSCarrier()) !!};
 
             $('.regioninput').change(function () {
                     let selectedRegion = $(this).val();
@@ -306,6 +312,9 @@
                             }
                         });
 
+                        // Show all carriers for US
+                        carrierDropdown.html(originalCarrierOptions);
+
                     } else if (selectedRegion === 'other') {
                         stateDropdown.html(originalOptions); // Reset to all options
                         stateDropdown.find('option').each(function () {
@@ -315,6 +324,15 @@
                         });
 
                         stateDropdown.prepend('<option value="" selected="selected">Select Other State</option>');
+
+                        // Filter carriers for Non-US
+                        carrierDropdown.html(originalCarrierOptions); // Reset carrier dropdown
+                        carrierDropdown.find('option').each(function () {
+                            const carrierValue = $(this).val();
+                            if (!carrierNonUS.includes(Number(carrierValue))) { // Check if carrier is not in Non-US carriers
+                                $(this).remove();
+                            }
+                        });
 
                     }
                 });
