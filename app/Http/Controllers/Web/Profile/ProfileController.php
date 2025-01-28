@@ -17,8 +17,8 @@ use Vanguard\Support\Enum\UserStatus;
 class ProfileController extends Controller
 {
     public function __construct(
-        private UserRepository $users,
-        private RoleRepository $roles,
+        private UserRepository    $users,
+        private RoleRepository    $roles,
         private CountryRepository $countries
     )
     {

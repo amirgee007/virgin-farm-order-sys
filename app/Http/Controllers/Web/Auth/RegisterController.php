@@ -85,6 +85,9 @@ class RegisterController extends Controller
         $finalData['tax_file'] = $request->tax_file;
         unset($finalData['email_opt_in']);
 
+        if ($finalData['state'] > 52) #restrict to FOB for Non US
+            $finalData['price_list'] = 'price_fob';
+
         return $this->users->create($finalData);
     }
 
