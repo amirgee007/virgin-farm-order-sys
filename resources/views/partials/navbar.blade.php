@@ -53,7 +53,7 @@
                     <span class="badge badge-pill badge-danger">{{ count($myCarts) }}</span>
                 </button>
 
-                <div class="dropdown-menu" style="max-height: 600px;   overflow:auto;">
+                <div class="dropdown-menu" style="max-height: 550px; overflow:auto;">
                     <div class="row total-header-section">
                         <div class="col-lg-4 col-sm-6 col-6">
                             <div id="progress-container"

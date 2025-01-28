@@ -115,6 +115,52 @@
             text-align: center;
             text-decoration: none;
         }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .btn-icon {
+                font-size: 12px;
+            }
+            .breadcrumb-item{
+                display: none !important;
+            }
+            .page-header {
+                display: none !important;
+            }
+
+            .dropdown .dropdown-menu {
+                width: 310px !important;
+                max-height: 500px!important;
+            }
+
+        }
+
+        /* Further improvements for very small screens */
+        @media (max-width: 480px) {
+
+            .page-header {
+                display: none;
+            }
+
+            .breadcrumb-item {
+                display: none;
+            }
+
+            .dropdown .dropdown-menu {
+                width: 310px !important;
+                max-height: 450px!important;
+            }
+
+        }
+
+        /* Further improvements for very small screens */
+        @media (max-width: 320px) {
+            .dropdown .dropdown-menu {
+                width: 220px !important; /* Adjust width for smaller screens */
+                max-height: 400px!important;
+            }
+        }
+
     </style>
 
     @yield('styles')

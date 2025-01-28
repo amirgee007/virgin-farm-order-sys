@@ -85,7 +85,6 @@
                 visibility: hidden;
             }
         }
-
         .radius {
             border-radius: 2.5px;
             border-style: outset;
@@ -230,6 +229,7 @@
 
             .dropdown .dropdown-menu {
                 width: 310px !important;
+                max-height: 500px!important;
             }
 
             .datepicker-dropdown {
@@ -269,6 +269,7 @@
 
             .dropdown .dropdown-menu {
                 width: 310px !important;
+                max-height: 450px!important;
             }
 
             .datepicker-dropdown {
@@ -278,6 +279,15 @@
             }
 
         }
+
+        /* Further improvements for very small screens */
+        @media (max-width: 320px) {
+            .dropdown .dropdown-menu {
+                width: 220px !important;
+                max-height: 400px!important;
+            }
+        }
+
     </style>
 @stop
 
