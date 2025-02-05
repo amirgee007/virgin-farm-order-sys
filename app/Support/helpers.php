@@ -474,3 +474,12 @@ function getReportColumns()
 
     return $columns;
 }
+
+function getContractCodes()
+{
+    return [
+        1 => "FedEx",
+        2 => "FOB",
+        3 => "HI & AK"
+    ];
+}

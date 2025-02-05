@@ -135,9 +135,10 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="contract_code">@lang('Contract Code')</label>
-                <input type="number" class="form-control input-solid" id="contract_code"
-                       name="contract_code" placeholder="@lang('Contract Code')"
-                       value="{{ $edit ? $user->contract_code : '' }}">
+                {!! Form::select('contract_code', getContractCodes(), $edit ? $user->contract_code : '', ['class' => 'form-control input-solid']) !!}
+
+{{--                <input type="number" class="form-control input-solid" id=""--}}
+{{--                       name="contract_code" placeholder="@lang('Contract Code')" value="{{ $edit ? $user->contract_code : '' }}">--}}
             </div>
         </div>
 
