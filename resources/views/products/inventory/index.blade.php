@@ -373,7 +373,7 @@
                                     <div class="date-input-container">
                                         <input type="text"
                                                readonly
-                                               {{$cartFound ? 'disabled' : ''}}
+                                               {{$cartFound || $user->edit_order_id ? 'disabled' : ''}}
                                               id="date_shipped"
                                                placeholder="When to Ship?"
                                                name="date_shipped"
