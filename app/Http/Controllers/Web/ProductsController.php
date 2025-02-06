@@ -60,6 +60,11 @@ class ProductsController extends Controller
             }
         }
 
+        if ($user->edit_order_id) {
+            $order = Order::find($user->edit_order_id);
+            $date_shipped = $order->date_shipped ?? $date_shipped;
+        }
+
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
@@ -932,7 +937,7 @@ class ProductsController extends Controller
             $content = "Items from inventory file are not present in the master file. Please update and reload the files." . implode(',', $items);
 
             $subj = count($items) . ' Missing Items in Master File';
-            \Mail::raw($content, function ($message) use($subj) {
+            \Mail::raw($content, function ($message) use ($subj) {
                 $message->to(['esteban@virginfarms', 'weborders@virginfarms.com'])
                     ->subject($subj);
             });
@@ -956,11 +961,11 @@ class ProductsController extends Controller
         try {
             $content = "Some items prices are too low please check asap. " . implode(',', $itemNos);
 
-            if($itemNos)
-            \Mail::raw($content, function ($message) {
-                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com', 'angief@virginfarms.com'
-                ])->subject('Items from inventory file are added with wrong price < 0.29');
-            });
+            if ($itemNos)
+                \Mail::raw($content, function ($message) {
+                    $message->to(['esteban@virginfarms', 'weborders@virginfarms.com', 'angief@virginfarms.com'
+                    ])->subject('Items from inventory file are added with wrong price < 0.29');
+                });
 
         } catch (\Exception $ex) {
             Log::error(implode(',', $items) . ' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
