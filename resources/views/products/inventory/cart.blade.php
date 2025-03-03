@@ -281,7 +281,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Order Notes(Optional)</label>
-                                <textarea class="form-control" id="order-notes" rows="6" onblur="saveOrderNote()"
+                                <textarea class="form-control" id="order-notes" rows="4" onblur="saveOrderNote()"
                                           placeholder="leave comments or notes for your sales representative."></textarea>
                                 <br>
                                 <div class="notes-danger">
@@ -293,7 +293,9 @@
                                     While we strive to fulfill every request, there are instances in which an order may
                                     need to be adjusted. We appreciate your understanding.
                                 </div>
+
                             </div>
+
                             <div class="col-md-6">
                                 <table class="table table-bordered">
                                     <tr>
@@ -322,7 +324,20 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5" class="text-right">
+                                        <td colspan="2">
+                                            <div class="promo-code-section">
+                                                <label for="promo-code"><i class="fas fa-gift text-danger"></i> Have a promo code?</label>
+                                                <div class="input-group">
+                                                    <input type="text" id="promo-code" class="form-control " placeholder="Enter promo code">
+                                                    <div class="input-group-append">
+                                                        <button class="btn-md btn-danger apply-promo">Apply</button>
+                                                    </div>
+                                                </div>
+                                                <small class="text-danger promo-error d-none">Invalid promo code. Please try again.</small>
+                                                <small class="text-success promo-success d-none">Promo code applied successfully!</small>
+                                            </div>
+                                        </td>
+                                        <td colspan="2" class="text-right">
                                             <h4><strong>Order Total: <span class="text-danger">${{ $orderTotal }}</span></strong>
                                             </h4>
                                         </td>
@@ -465,6 +480,39 @@
                 if (currentValue > minValue) {
                     input.val(currentValue - 1).trigger('change');
                 }
+            });
+
+            $('.apply-promo').on('click', function () {
+                var promoCode = $('#promo-code').val().trim();
+
+                if (promoCode === '') {
+                    $('.promo-error').removeClass('d-none').text("Please enter a promo code.");
+                    $('.promo-success').addClass('d-none');
+                    return;
+                }
+
+                $.ajax({
+                    url: '{{ route("apply.promo") }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        promo_code: promoCode
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $('.promo-success').removeClass('d-none').text(response.message);
+                            $('.promo-error').addClass('d-none');
+                            // window.location.reload(); // Refresh to update cart total will do some code later on
+                        } else {
+                            $('.promo-error').removeClass('d-none').text(response.message);
+                            $('.promo-success').addClass('d-none');
+                        }
+                    },
+                    error: function () {
+                        $('.promo-error').removeClass('d-none').text("Invalid or expired promo code.");
+                        $('.promo-success').addClass('d-none');
+                    }
+                });
             });
         });
 
