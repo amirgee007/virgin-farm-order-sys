@@ -169,7 +169,7 @@
 
         function savePromoCode() {
             let id = $("#promoId").val();
-            let url = id ? `/admin/promo-codes/update/${id}` : "/admin/promo-codes/store";
+            let url = id ? `/promo-codes/update/${id}` : "/promo-codes/store";
             let method = id ? 'POST' : 'POST';
 
             $.ajax({
@@ -188,7 +188,7 @@
         }
 
         function editPromoCode(id) {
-            $.get(`/admin/promo-codes/${id}/edit`, function (promo) {
+            $.get(`/promo-codes/${id}/edit`, function (promo) {
                 $("#promoId").val(promo.id);
                 $("#code").val(promo.code);
                 $("#discount_amount").val(promo.discount_amount);
@@ -209,7 +209,7 @@
         function deletePromoCode(id) {
             if (confirm("Are you sure?")) {
                 $.ajax({
-                    url: `/admin/promo-codes/delete/${id}`,
+                    url: `/promo-codes/delete/${id}`,
                     method: 'DELETE',
                     success: function () {
                         fetchPromoCodes();
