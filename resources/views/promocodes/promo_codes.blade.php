@@ -19,6 +19,7 @@
                         <thead>
                         <tr>
                             <th>Code</th>
+                            <th>Promo Disc. Class</th>
                             <th>Discount</th>
                             <th>Max Usage</th>
                             <th>Valid From</th>
@@ -95,7 +96,13 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Promo Disc. Class</label>
+                                    <input type="text" class="form-control" id="promo_disc_class" name="promo_disc_class">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Status</label><br>
                                     <div class="form-check form-check-inline">
@@ -142,6 +149,7 @@
                         $("#promoTableBody").append(`
                     <tr>
                         <td>${promo.code}</td>
+                        <td>${promo.promo_disc_class || '-'}</td> <!-- New column added -->
                         <td>${promo.discount_amount || promo.discount_percentage + '%'}</td>
                         <td>${promo.max_usage}</td>
                         <td>${promo.valid_from || '-'}</td>
@@ -202,6 +210,7 @@
                 } else {
                     $("#inactive").prop("checked", true);
                 }
+                $("#promo_disc_class").val(promo.promo_disc_class);
                 $("#promoModal").modal('show');
             });
         }

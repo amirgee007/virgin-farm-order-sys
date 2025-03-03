@@ -10,6 +10,7 @@ use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Order;
 use Vanguard\Models\Product;
+use Vanguard\Models\PromoCode;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Support\Enum\UserStatus;
 use Vanguard\User;
@@ -189,20 +190,21 @@ class OrdersController extends Controller
         $promoCode = PromoCode::where('code', $request->promo_code)->first();
 
         if (!$promoCode || !$promoCode->isValid()) {
-            return response()->json(['message' => 'Invalid or expired promo code'], 400);
+            return response()->json(['message' => 'Invalid or expired promo code' , 'success' => false], 400);
         }
 
-        $orderTotal = $request->order_total;
+        $orderTotal = 1;
         $discountAmount = $promoCode->discount_amount ?? 0;
         if ($promoCode->discount_percentage) {
             $discountAmount = $orderTotal * ($promoCode->discount_percentage / 100);
         }
 
         return response()->json([
+            'success' => true,
             'discount' => $discountAmount,
             'final_total' => $orderTotal - $discountAmount,
+            'message' => 'Promo code applied successfully!',
         ]);
-
 
 
 //
@@ -226,9 +228,6 @@ class OrdersController extends Controller
 //            'promo_code_id' => $promoCode->id ?? null,
 //            'discount_applied' => $discountAmount,
 //        ]);
-
-
-
 
     }
 }

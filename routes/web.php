@@ -90,8 +90,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/promo-codes/delete/{id}', [PromoCodeController::class, 'destroy'])->name('promo_codes.destroy');
 });
 
-Route::post('/apply-promo', [OrderController::class, 'applyPromoCode'])->name('apply.promo');
-Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+Route::post('/apply-promo', [\Vanguard\Http\Controllers\Web\OrdersController::class, 'applyPromoCode'])->name('apply.promo');
 
 Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
 
