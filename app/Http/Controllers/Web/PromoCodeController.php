@@ -27,6 +27,7 @@ class PromoCodeController extends Controller
 
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes',
+            'promo_disc_class' => 'nullable|string|max:255',
             'discount_amount' => 'nullable|numeric',
             'discount_percentage' => 'nullable|numeric|min:1|max:100',
             'max_usage' => 'nullable|integer|min:1',
@@ -41,9 +42,7 @@ class PromoCodeController extends Controller
         }
 
         $promoCode = PromoCode::create($request->all());
-
-        $promoCode->is_active = $request->input('is_active');
-        $promoCode->save();
+        
         return response()->json(['message' => 'Promo Code Created', 'data' => $promoCode]);
     }
 
@@ -59,6 +58,7 @@ class PromoCodeController extends Controller
 
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes,code,' . $id,
+            'promo_disc_class' => 'nullable|string|max:255',
             'discount_amount' => 'nullable|numeric',
             'discount_percentage' => 'nullable|numeric|min:1|max:100',
             'max_usage' => 'nullable|integer|min:1',
