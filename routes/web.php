@@ -4,6 +4,7 @@
 use Vanguard\Http\Controllers\Web\ProductsController;
 use Vanguard\Http\Controllers\Web\CartController;
 use Vanguard\Http\Controllers\Web\TestAmirController;
+use Vanguard\Http\Controllers\Web\PromoCodeController;
 
 Route::get('/check-admin-uploading', [
     'as' => 'check.admin.uploading',
@@ -78,6 +79,19 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
 Route::group(['middleware' => 'auth'], function () {
     Route::impersonate();
 });
+
+///Promocodes routes.
+Route::middleware(['auth'])->group(function () {
+    Route::get('/promo-codes', [PromoCodeController::class, 'index'])->name('promo_codes.index');
+    Route::get('/promo-codes/list', [PromoCodeController::class, 'getPromoCodes'])->name('promo_codes.list'); // JSON data
+    Route::post('/promo-codes/store', [PromoCodeController::class, 'store'])->name('promo_codes.store');
+    Route::get('/promo-codes/{id}/edit', [PromoCodeController::class, 'edit'])->name('promo_codes.edit');
+    Route::post('/promo-codes/update/{id}', [PromoCodeController::class, 'update'])->name('promo_codes.update');
+    Route::delete('/promo-codes/delete/{id}', [PromoCodeController::class, 'destroy'])->name('promo_codes.destroy');
+});
+
+Route::post('/apply-promo', [OrderController::class, 'applyPromoCode'])->name('apply.promo');
+Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
 
 Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
 

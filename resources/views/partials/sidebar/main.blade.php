@@ -104,6 +104,14 @@
                 </ul>
             </li>
             @endpermission
+            @permission('manage.promo.codes')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('promo-codes*') ? 'active' : ''  }}" href="{{ route('promo_codes.index') }}">
+                    <i class="fas fa-wine-glass"></i>
+                    <span>@lang('Promo Codes')</span>
+                </a>
+            </li>
+            @endpermission
 
             @permission('boxes.manage')
             <li class="nav-item">

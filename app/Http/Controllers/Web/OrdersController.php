@@ -182,5 +182,53 @@ class OrdersController extends Controller
         return response()->json($data);
     }
 
+    public function applyPromoCode(Request $request)
+    {
+        $request->validate(['promo_code' => 'required|string']);
 
+        $promoCode = PromoCode::where('code', $request->promo_code)->first();
+
+        if (!$promoCode || !$promoCode->isValid()) {
+            return response()->json(['message' => 'Invalid or expired promo code'], 400);
+        }
+
+        $orderTotal = $request->order_total;
+        $discountAmount = $promoCode->discount_amount ?? 0;
+        if ($promoCode->discount_percentage) {
+            $discountAmount = $orderTotal * ($promoCode->discount_percentage / 100);
+        }
+
+        return response()->json([
+            'discount' => $discountAmount,
+            'final_total' => $orderTotal - $discountAmount,
+        ]);
+
+
+
+//
+//        $request->validate([
+//            'user_id' => 'required|exists:users,id',
+//            'total' => 'required|numeric',
+//            'promo_code' => 'nullable|string',
+//        ]);
+//
+//        $promoCode = PromoCode::where('code', $request->promo_code)->first();
+//        $discountAmount = 0;
+//
+//        if ($promoCode && $promoCode->isValid()) {
+//            $discountAmount = $promoCode->discount_amount ?? ($request->total * ($promoCode->discount_percentage / 100));
+//            $promoCode->increment('used_count');
+//        }
+//
+//        $order = Order::create([
+//            'user_id' => $request->user_id,
+//            'total' => $request->total - $discountAmount,
+//            'promo_code_id' => $promoCode->id ?? null,
+//            'discount_applied' => $discountAmount,
+//        ]);
+
+
+
+
+    }
 }
