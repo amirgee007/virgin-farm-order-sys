@@ -328,7 +328,7 @@
                                             <div class="promo-code-section">
                                                 <label for="promo-code"><i class="fas fa-gift text-danger"></i> Have a promo code?</label>
                                                 <div class="input-group">
-                                                    <input type="hidden" id="total_amount_promo" name="total_amount" value="{{$orderTotal}}">
+                                                    <input type="hidden" id="total_amount_promo" name="total_amount" value="{{$total}}">
                                                     <input type="text" id="promo-code" class="form-control " placeholder="Enter promo code">
                                                     <div class="input-group-append">
                                                         <button class="btn-md btn-danger apply-promo">Apply</button>
