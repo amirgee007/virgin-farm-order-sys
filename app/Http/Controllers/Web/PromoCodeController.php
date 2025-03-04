@@ -28,13 +28,12 @@ class PromoCodeController extends Controller
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes',
             'promo_disc_class' => 'nullable|string|max:255',
-            'discount_amount' => 'nullable|numeric',
+            'min_box_weight' => 'nullable|numeric',
             'discount_percentage' => 'nullable|numeric|min:1|max:100',
             'max_usage' => 'nullable|integer|min:1',
             'valid_from' => 'nullable|date',
             'valid_until' => 'nullable|date|after:valid_from',
             'is_active' => 'required|boolean',
-
         ]);
 
         if ($validator->fails()) {
@@ -59,7 +58,7 @@ class PromoCodeController extends Controller
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes,code,' . $id,
             'promo_disc_class' => 'nullable|string|max:255',
-            'discount_amount' => 'nullable|numeric',
+            'min_box_weight' => 'nullable|numeric',
             'discount_percentage' => 'nullable|numeric|min:1|max:100',
             'max_usage' => 'nullable|integer|min:1',
             'valid_from' => 'nullable|date',

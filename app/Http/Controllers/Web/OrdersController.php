@@ -197,12 +197,7 @@ class OrdersController extends Controller
         $totalAmount = $request->total_amount; // Get total order amount from request
         $discountAmount = 0; // Default no discount
 
-        // Apply fixed discount only if discount_amount is set
-        if (!is_null($promoCode->discount_amount) && $promoCode->discount_amount > 0) {
-            $discountAmount = $promoCode->discount_amount;
-        }
-        // Otherwise, apply percentage-based discount
-        elseif (!is_null($promoCode->discount_percentage) && $promoCode->discount_percentage > 0) {
+        if (!is_null($promoCode->discount_percentage) && $promoCode->discount_percentage > 0) {
             $discountAmount = ($promoCode->discount_percentage / 100) * $totalAmount;
         }
 
