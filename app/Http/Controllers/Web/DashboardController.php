@@ -68,7 +68,6 @@ class DashboardController extends Controller
 
     public function updateFaqRead(Request $request)
     {
-
         // Store the selected supplier in the user preferences
         auth()->user()->forceFill([
             'announcements_last_read_at' => now()
@@ -89,6 +88,11 @@ class DashboardController extends Controller
         } else {
             return response()->json(['disable' => false]);
         }
+    }
+
+    public function salesRepInfo(){
+
+        return view('dashboard.sales-rep');
     }
 
 }

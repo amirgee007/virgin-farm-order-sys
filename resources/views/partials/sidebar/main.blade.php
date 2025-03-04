@@ -156,11 +156,20 @@
                 </li>
             @endpermission
 
+            @permission('sales.rep.index')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('sales-rep*') ? 'active' : ''  }}" href="{{ route('sales.rep.index') }}">
+                    <i class="fas fa-user-alt"></i>
+                    <span>@lang('Sales Rep.')</span>
+                </a>
+            </li>
+            @endpermission
+
             @permission('shipping.address.index')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('shipping-address*') ? 'active' : ''  }}" href="{{ route('shipping.address.index') }}">
                     <i class="fas fa-address-card"></i>
-                    <span>@lang('Shipping Address ')</span>
+                    <span>@lang('Shipping Address')</span>
                 </a>
             </li>
             @endpermission

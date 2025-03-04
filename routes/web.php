@@ -92,13 +92,18 @@ Route::middleware(['auth'])->group(function () {
 
 Route::post('/apply-promo', [\Vanguard\Http\Controllers\Web\OrdersController::class, 'applyPromoCode'])->name('apply.promo');
 
-Route::group(['middleware' => ['auth', 'verified', 'approved']], function () {
+Route::group(['middleware' => ['auth', 'verified']], function () {
 
     /**
      * Dashboard
      */
 
     Route::get('/', 'DashboardController@index')->name('dashboard');
+
+    Route::get('/sales-rep', [
+        'as' => 'sales.rep.index',
+        'uses' => 'DashboardController@salesRepInfo'
+    ]);
 
     Route::post('/update-supplier', [
         'as' => 'update.supplier',

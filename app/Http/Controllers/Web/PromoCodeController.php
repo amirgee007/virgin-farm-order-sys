@@ -11,7 +11,7 @@ class PromoCodeController extends Controller
 {
     public function index()
     {
-        if(myRoleName() != 'Admin')
+        if (myRoleName() != 'Admin')
             abort(403);
 
         return view('promocodes.promo_codes');
@@ -42,7 +42,7 @@ class PromoCodeController extends Controller
         }
 
         $promoCode = PromoCode::create($request->all());
-        
+
         return response()->json(['message' => 'Promo Code Created', 'data' => $promoCode]);
     }
 
@@ -73,11 +73,16 @@ class PromoCodeController extends Controller
 
         $promoCode->update($request->all());
 
+//        if ($promoCode->id == 1)
+//            $promoCode->update(['valid_until' => null]); #default
+
         return response()->json(['message' => 'Promo Code Updated', 'data' => $promoCode]);
     }
 
     public function destroy($id)
     {
+        if ($id == 1)
+            return response()->json(['message' => 'The default promo code cannot be deleted.']);
         $promoCode = PromoCode::findOrFail($id);
         $promoCode->delete();
 

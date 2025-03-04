@@ -428,9 +428,11 @@
                                 <thead>
                                     <tr>
                                     <th class="min-width-200">@lang('Product Description')</th>
-                                    <th class="min-width-80">@lang('Stem/Unit Price')</th>
-                                    <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Unit Pack')</th>
-                                    <th class="min-width-80">@lang('Available Qty')</th>
+                                    @if(auth()->user()->is_approved)
+                                        <th class="min-width-80">@lang('Stem/Unit Price')</th>
+                                        <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Unit Pack')</th>
+                                        <th class="min-width-80">@lang('Available Qty')</th>
+                                    @endif
 {{--                                    <th class="min-width-80" title="Weight of the item">@lang('Weight')</th>--}}
 {{--                                    <th class="min-width-80" title="Size of the item">@lang('Size')</th>--}}
                                     <th class="min-width-80">@lang('Order Qty')</th>
@@ -455,12 +457,12 @@
 
                                                 {!!  $product->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
-
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp
-                                            <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>
-                                                {{--ST stad for per STEM flowers --}}
-                                            <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->stems }}</td>
-                                            <td class="align-middle" title="Bunch">{{ $product->quantity }}</td>
+                                            @if(auth()->user()->is_approved)
+                                                <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>
+                                                    {{--ST stad for per STEM flowers --}}
+                                                <td class="align-middle" title="How many stems in a bunch UOM">{{ $product->stems }}</td>
+                                                <td class="align-middle" title="Bunch">{{ $product->quantity }}</td>
 {{--                                            <td class="align-middle" title="Weight">{{ $product->weight }}</td>--}}
 {{--                                            <td class="align-middle" title="Size">{{ $product->size }}</td>--}}
 
@@ -489,6 +491,17 @@
                                                     {{--</a>--}}
                                                 </td>
                                             </form>
+                                            @else
+                                                <td class="align-middle show-warning">
+                                                    <input readonly class="form-control form-control-sm width50" type="number" min="0">
+                                                </td>
+
+                                                <td class="align-middle show-warning">
+                                                    <button class="btn btn-icon text-danger"><i title="@lang('Add product to cart')" data-toggle="tooltip"
+                                                            data-placement="left" class="fas fa-plus-circle "></i>
+                                                    </button>
+                                                </td>
+                                            @endif
 
                                         </tr>
                                     @endforeach
@@ -583,6 +596,12 @@
     @include('partials.toaster-js')
 
     <script>
+
+        $(".show-warning").on("click", function () {
+            swal("",
+                "Only a few more steps to start shopping! Your sales manager will reach out to establish your account in our system.",
+                "warning");
+        });
 
         // Array of dates to be highlighted
         var highlightedDates = @json($highlightedDates);

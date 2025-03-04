@@ -52,6 +52,10 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         try {
+
+            if(!auth()->user()->is_approved) {
+                return redirect()->back()->with('success', 'Please ask admin to approve your account!');
+            }
             $quantity = $request->quantity;
             $product_qty_id = $request->p_qty_id;
 
