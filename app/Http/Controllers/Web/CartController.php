@@ -13,6 +13,7 @@ use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
+use Vanguard\Models\PromoCode;
 use Vanguard\Models\ShippingAddress;
 
 class CartController extends Controller
@@ -235,10 +236,9 @@ class CartController extends Controller
             \Cache::forget($promoCodeAmmountT);
 
             if ($promoCodeId) {
-                $promo = Promo::where('id', $promoCodeId)->first();
+                $promo = PromoCode::where('id', $promoCodeId)->first();
                 if ($promo) $promo->increment('used_count');
-            }
-            else{
+            } else {
                 // Check if this is the user's first order ebecause we already created 1 order above.
                 $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
 
