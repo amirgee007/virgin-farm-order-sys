@@ -225,6 +225,16 @@ class CartController extends Controller
             $notes = \Cache::get($string);
             \Cache::forget($string);
 
+
+            $promoCodeT = "promo_code_{$user->id}";
+            $promoCodeId = \Cache::get($promoCodeT);
+            \Cache::forget($promoCodeT);
+
+            $promoCodeAmmountT = "discount_amount_{$user->id}";
+            $discountAmount = \Cache::get($promoCodeAmmountT);
+            \Cache::forget($promoCodeAmmountT);
+
+
             $order->update([
                 'sub_total' => round2Digit($total),
                 'discount' => 0,
@@ -233,6 +243,8 @@ class CartController extends Controller
                 'full_add_on' => $order->full_add_on == 0 ? $full_add_on : $order->full_add_on,
                 'total' => round2Digit($totalWithTax),
                 'notes' => $notes,
+                'promo_code_id' => $promoCodeId ?? null,
+                'discount_applied' => $discountAmount ?? 0,
             ]);
 
             $order->refresh();
@@ -261,7 +273,10 @@ class CartController extends Controller
             session()->flash('success', 'Your order has been successfully received. We will notify you shortly. Please check your email for the order summary.');
             return \redirect(route('orders.index'));
         } catch (\Exception $ex) {
-            Log::error('Error in checkOutCart: ' . $ex->getMessage());
+            Log::error('Error in checkOutCart: ' . $ex->getTraceAsString());
+
+            session()->flash('app_error', 'Something went wrong plz check with admin.');
+            return back();
         }
     }
 

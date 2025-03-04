@@ -15,9 +15,12 @@
     <td class="align-middle">{{ $order->phone }}</td>
     <td class="align-middle">{{ $order->shipping_address }}</td>
     <td class="align-middle text-danger">${{ round2Digit($order->sub_total) }}</td>
-{{--    <td class="align-middle">0</td>--}}
-    <td class="align-middle text-primary">${{ round2Digit($order->total) }}</td>
-{{--    <td class="align-middle">{{ $order->size }}</td>--}}
+    <td class="align-middle text-primary">
+        ${{ round2Digit($order->total) }}
+        @if($order->discount_applied > 0)
+            <span class="text-danger">(-${{ round2Digit($order->discount_applied) }})</span>
+        @endif
+    </td>
     <td class="align-middle">
         @if($order->is_active == 1)
            <span class="badge badge-lg badge-danger"> Active </span>

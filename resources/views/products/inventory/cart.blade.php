@@ -328,6 +328,7 @@
                                             <div class="promo-code-section">
                                                 <label for="promo-code"><i class="fas fa-gift text-danger"></i> Have a promo code?</label>
                                                 <div class="input-group">
+                                                    <input type="hidden" id="total_amount_promo" name="total_amount" value="{{$orderTotal}}">
                                                     <input type="text" id="promo-code" class="form-control " placeholder="Enter promo code">
                                                     <div class="input-group-append">
                                                         <button class="btn-md btn-danger apply-promo">Apply</button>
@@ -338,8 +339,10 @@
                                             </div>
                                         </td>
                                         <td colspan="2" class="text-right">
-                                            <h4><strong>Order Total: <span class="text-danger">${{ $orderTotal }}</span></strong>
-                                            </h4>
+                                            <h4><strong>Order Total: <span class="text-danger" id="order-total">${{ $orderTotal }}</span></strong></h4>
+                                            <p class="text-success d-none" id="applied-discount-info">
+                                                ✅ Discount Applied: <span id="discount-amount"></span>
+                                            </p>
                                         </td>
                                     </tr>
                                     @if(isDeliveryChargesApply())
@@ -484,6 +487,7 @@
 
             $('.apply-promo').on('click', function () {
                 var promoCode = $('#promo-code').val().trim();
+                var total_amount = $('#total_amount_promo').val().trim();
 
                 if (promoCode === '') {
                     $('.promo-error').removeClass('d-none').text("Please enter a promo code.");
@@ -496,13 +500,22 @@
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        promo_code: promoCode
+                        promo_code: promoCode,
+                        total_amount: total_amount,
                     },
                     success: function (response) {
                         if (response.success) {
+                            // Show success message
                             $('.promo-success').removeClass('d-none').text(response.message);
                             $('.promo-error').addClass('d-none');
-                            // window.location.reload(); // Refresh to update cart total will do some code later on
+
+                            // Update the Order Total & Show Discount Info
+                            var newTotal = response.new_total; // Backend should return updated total
+                            var discountAmount = response.discount; // Discount applied
+
+                            $('#order-total').text('$' + newTotal.toFixed(2)); // Update Order Total
+                            $('#discount-amount').text('-$' + discountAmount.toFixed(2)); // Show Discount Amount
+                            $('#applied-discount-info').removeClass('d-none'); // Show Discount Info
                         } else {
                             $('.promo-error').removeClass('d-none').text(response.message);
                             $('.promo-success').addClass('d-none');
@@ -514,6 +527,7 @@
                     }
                 });
             });
+
         });
 
     </script>
