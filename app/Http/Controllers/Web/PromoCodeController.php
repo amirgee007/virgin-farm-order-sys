@@ -11,7 +11,7 @@ class PromoCodeController extends Controller
 {
     public function index()
     {
-        if(myRoleName() != 'Admin')
+        if (myRoleName() != 'Admin')
             abort(403);
 
         return view('promocodes.promo_codes');
@@ -28,13 +28,12 @@ class PromoCodeController extends Controller
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes',
             'promo_disc_class' => 'nullable|string|max:255',
-            'discount_amount' => 'nullable|numeric',
+            'min_box_weight' => 'nullable|numeric',
             'discount_percentage' => 'nullable|numeric|min:1|max:100',
             'max_usage' => 'nullable|integer|min:1',
             'valid_from' => 'nullable|date',
             'valid_until' => 'nullable|date|after:valid_from',
             'is_active' => 'required|boolean',
-
         ]);
 
         if ($validator->fails()) {
@@ -42,7 +41,7 @@ class PromoCodeController extends Controller
         }
 
         $promoCode = PromoCode::create($request->all());
-        
+
         return response()->json(['message' => 'Promo Code Created', 'data' => $promoCode]);
     }
 
@@ -59,7 +58,7 @@ class PromoCodeController extends Controller
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes,code,' . $id,
             'promo_disc_class' => 'nullable|string|max:255',
-            'discount_amount' => 'nullable|numeric',
+            'min_box_weight' => 'nullable|numeric',
             'discount_percentage' => 'nullable|numeric|min:1|max:100',
             'max_usage' => 'nullable|integer|min:1',
             'valid_from' => 'nullable|date',
@@ -73,11 +72,16 @@ class PromoCodeController extends Controller
 
         $promoCode->update($request->all());
 
+//        if ($promoCode->id == 1)
+//            $promoCode->update(['valid_until' => null]); #default
+
         return response()->json(['message' => 'Promo Code Updated', 'data' => $promoCode]);
     }
 
     public function destroy($id)
     {
+        if ($id == 1)
+            return response()->json(['message' => 'The default promo code cannot be deleted.']);
         $promoCode = PromoCode::findOrFail($id);
         $promoCode->delete();
 

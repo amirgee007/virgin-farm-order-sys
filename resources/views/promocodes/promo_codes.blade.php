@@ -24,6 +24,7 @@
                             <th>Max Usage</th>
                             <th>Valid From</th>
                             <th>Valid Until</th>
+                            <th>Min Box Weight</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -59,8 +60,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Max Usage</label>
-                                    <input type="number" class="form-control" id="max_usage" name="max_usage">
+                                    <label>Promo Disc. Class</label>
+                                    <input type="text" class="form-control" id="promo_disc_class" name="promo_disc_class">
                                 </div>
                             </div>
                         </div>
@@ -68,16 +69,17 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Discount Amount</label>
-                                    <input type="number" class="form-control" id="discount_amount" name="discount_amount">
+                                    <label>Discount Percentage</label>
+                                    <input type="number" steps="0.1" class="form-control" id="discount_percentage" min="0" max="100" name="discount_percentage">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Discount Percentage</label>
-                                    <input type="number" class="form-control" id="discount_percentage" name="discount_percentage">
+                                    <label>Max Usage</label>
+                                    <input type="number" class="form-control" id="max_usage" name="max_usage">
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
@@ -98,12 +100,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Promo Disc. Class</label>
-                                    <input type="text" class="form-control" id="promo_disc_class" name="promo_disc_class">
+                                    <label>Min Box Weight</label>
+                                    <input type="text" step="0.1" class="form-control" id="min_box_weight" min="0" name="min_box_weight">
                                 </div>
                             </div>
+
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group mt-3">
                                     <label>Status</label><br>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="is_active" id="active" value="1">
@@ -129,6 +132,7 @@
 
 @section('scripts')
     @include('partials.toaster-js')
+
     <script>
         function fetchPromoCodes() {
             $.ajax({
@@ -150,10 +154,11 @@
                     <tr>
                         <td>${promo.code}</td>
                         <td>${promo.promo_disc_class || '-'}</td> <!-- New column added -->
-                        <td>${promo.discount_amount || promo.discount_percentage + '%'}</td>
+                        <td>${promo.discount_percentage + '%'}</td>
                         <td>${promo.max_usage}</td>
                         <td>${promo.valid_from || '-'}</td>
                         <td>${promo.valid_until || '-'}</td>
+                        <td>${promo.min_box_weight || '-'}</td>
                         <td>${promo.is_active ? 'Active' : 'Inactive'}</td>
                         <td>
                             <button class="btn btn-warning btn-sm" onclick="editPromoCode(${promo.id})">Edit</button>
@@ -187,10 +192,10 @@
                 success: function (response) {
                     $("#promoModal").modal('hide');
                     fetchPromoCodes();
-                    alert(response.message);
+                    toastr.success(response.message);
                 },
                 error: function (error) {
-                    alert("Something went wrong!");
+                    toastr.error('Validation error plz fill all inputs with unique code and valid until date should be bigger.');
                 }
             });
         }
@@ -199,9 +204,9 @@
             $.get(`/promo-codes/${id}/edit`, function (promo) {
                 $("#promoId").val(promo.id);
                 $("#code").val(promo.code);
-                $("#discount_amount").val(promo.discount_amount);
                 $("#discount_percentage").val(promo.discount_percentage);
                 $("#max_usage").val(promo.max_usage);
+                $("#min_box_weight").val(promo.min_box_weight);
                 $("#valid_from").val(promo.valid_from);
                 $("#valid_until").val(promo.valid_until);
                 // Set Active/Inactive radio button
@@ -216,6 +221,10 @@
         }
 
         function deletePromoCode(id) {
+            if (id <= 1) {
+                toastr.error("Error: This promo code cannot be deleted.");
+                return;
+            }
             if (confirm("Are you sure?")) {
                 $.ajax({
                     url: `/promo-codes/delete/${id}`,

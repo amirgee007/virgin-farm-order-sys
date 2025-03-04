@@ -13,6 +13,7 @@ use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
+use Vanguard\Models\PromoCode;
 use Vanguard\Models\ShippingAddress;
 
 class CartController extends Controller
@@ -51,6 +52,10 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         try {
+
+            if(!auth()->user()->is_approved) {
+                return redirect()->back()->with('success', 'Please ask admin to approve your account!');
+            }
             $quantity = $request->quantity;
             $product_qty_id = $request->p_qty_id;
 
@@ -225,6 +230,37 @@ class CartController extends Controller
             $notes = \Cache::get($string);
             \Cache::forget($string);
 
+
+            $promoCodeT = "promo_code_{$user->id}";
+            $promoCodeId = \Cache::get($promoCodeT);
+            \Cache::forget($promoCodeT);
+
+            $promoCodeAmmountT = "discount_amount_{$user->id}";
+            $discountAmount = \Cache::get($promoCodeAmmountT);
+            \Cache::forget($promoCodeAmmountT);
+
+            if ($promoCodeId) {
+                $promo = PromoCode::where('id', $promoCodeId)->first();
+                if ($promo) $promo->increment('used_count');
+            } else {
+                // Check if this is the user's first order ebecause we already created 1 order above.
+                $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
+
+
+                $firstOrderDiscount = 0;
+                if ($isFirstOrder) {
+                    #$firstOrderDiscount = Promo::where('id', 1)->value('amount'); // Assuming promo ID 1 is the first order discount
+
+//                    $totalAmount = $request->total_amount; // Get total order amount from request
+//                    $discountAmount = 0; // Default no discount
+//
+//                    // Otherwise, apply percentage-based discount
+//                    elseif (!is_null($promoCode->discount_percentage) && $promoCode->discount_percentage > 0) {
+//                        $discountAmount = ($promoCode->discount_percentage / 100) * $totalAmount;
+//                    }
+                }
+            }
+
             $order->update([
                 'sub_total' => round2Digit($total),
                 'discount' => 0,
@@ -233,6 +269,8 @@ class CartController extends Controller
                 'full_add_on' => $order->full_add_on == 0 ? $full_add_on : $order->full_add_on,
                 'total' => round2Digit($totalWithTax),
                 'notes' => $notes,
+                'promo_code_id' => $promoCodeId ?? null,
+                'discount_applied' => $discountAmount ?? 0,
             ]);
 
             $order->refresh();
@@ -261,7 +299,10 @@ class CartController extends Controller
             session()->flash('success', 'Your order has been successfully received. We will notify you shortly. Please check your email for the order summary.');
             return \redirect(route('orders.index'));
         } catch (\Exception $ex) {
-            Log::error('Error in checkOutCart: ' . $ex->getMessage());
+            Log::error('Error in checkOutCart: ' . $ex->getTraceAsString());
+
+            session()->flash('app_error', 'Something went wrong plz check with admin.');
+            return back();
         }
     }
 

@@ -78,10 +78,10 @@ class LoginController extends Controller
                 ->withErrors(__('Your account is banned by administrator.'));
         }
 
-        if (!$user->is_approved) {
-            return redirect()->to('login' . $to)
-                ->withErrors(__('Your account is not approved yet.'));
-        }
+//        if (!$user->is_approved) {
+//            return redirect()->to('login' . $to)
+//                ->withErrors(__('Your account is not approved yet.'));
+//        }
 
         Auth::login($user, setting('remember_me') && $request->get('remember'));
 

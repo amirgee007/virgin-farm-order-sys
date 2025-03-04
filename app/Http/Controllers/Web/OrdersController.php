@@ -185,6 +185,7 @@ class OrdersController extends Controller
 
     public function applyPromoCode(Request $request)
     {
+        $userId = auth()->id();
         $request->validate(['promo_code' => 'required|string']);
 
         $promoCode = PromoCode::where('code', $request->promo_code)->first();
@@ -193,21 +194,28 @@ class OrdersController extends Controller
             return response()->json(['message' => 'Invalid or expired promo code' , 'success' => false], 400);
         }
 
-        $orderTotal = 1;
-        $discountAmount = $promoCode->discount_amount ?? 0;
-        if ($promoCode->discount_percentage) {
-            $discountAmount = $orderTotal * ($promoCode->discount_percentage / 100);
+        $totalAmount = $request->total_amount; // Get total order amount from request
+        $discountAmount = 0; // Default no discount
+
+        if (!is_null($promoCode->discount_percentage) && $promoCode->discount_percentage > 0) {
+            $discountAmount = ($promoCode->discount_percentage / 100) * $totalAmount;
         }
+
+        // Calculate new total after discount
+        $newTotal = max(0, $totalAmount - $discountAmount);
+
+        // Store in session with user ID to user later on.
+        $time = now()->addMinutes(12);
+        \Cache::put("promo_code_{$userId}", $promoCode->id, $time);
+        \Cache::put("discount_amount_{$userId}", $discountAmount, $time);
 
         return response()->json([
             'success' => true,
             'discount' => $discountAmount,
-            'final_total' => $orderTotal - $discountAmount,
+            'new_total' => $newTotal,
             'message' => 'Promo code applied successfully!',
         ]);
 
-
-//
 //        $request->validate([
 //            'user_id' => 'required|exists:users,id',
 //            'total' => 'required|numeric',

@@ -110,7 +110,7 @@
                                 <th class="min-width-80">@lang('Address')</th>
                                 <th class="min-width-80">@lang('SubTotal')</th>
 {{--                                <th class="min-width-80">@lang('Shipping Cost')</th>--}}
-                                <th class="min-width-80">@lang('Total')</th>
+                                <th class="min-width-80">@lang('Total/Discount')</th>
 {{--                                <th class="min-width-80">@lang('Size')</th>--}}
                                 <th class="min-width-80">@lang('Status')</th>
                                 <th class="min-width-80">@lang('Created')</th>

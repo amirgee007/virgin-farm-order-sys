@@ -22,8 +22,11 @@
     | <strong>Summary</strong>   |    |  |  |
     |    |    |  <small>Subtotal:</small>| <small>${{round2Digit($order->sub_total) }}</small> |
     |    |    |  <small>Service/Transportation:</small>| <small>${{round2Digit($order->shipping_cost)}}</small> |
+    @if($order->discount_applied > 0)
+    |    |    |  <small>Promo Code Applied:</small> | <small class="text-success">- ${{ round2Digit($order->discount_applied) }}</small> |
+    @endif
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
-    |    |    |     Total             | <small>${{round2Digit($order->total) }}</small> |
+    |    |    |  <strong>Total</strong> | <strong>${{ round2Digit($order->total - $order->discount_amount) }}</strong> |
     @if(isDeliveryChargesApply())
     |    |    |      <small>**Delivery charges may apply.</small> |     |
     @endif
