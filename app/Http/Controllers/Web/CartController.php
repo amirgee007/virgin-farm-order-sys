@@ -234,6 +234,32 @@ class CartController extends Controller
             $discountAmount = \Cache::get($promoCodeAmmountT);
             \Cache::forget($promoCodeAmmountT);
 
+            if ($promoCodeId) {
+                $promo = Promo::where('id', $promoCodeId)->first();
+                if ($promo) $promo->increment('used_count');
+            }
+            else{
+                // Check if this is the user's first order ebecause we already created 1 order above.
+                $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
+
+
+                $firstOrderDiscount = 0;
+                if ($isFirstOrder) {
+                    #$firstOrderDiscount = Promo::where('id', 1)->value('amount'); // Assuming promo ID 1 is the first order discount
+
+//                    $totalAmount = $request->total_amount; // Get total order amount from request
+//                    $discountAmount = 0; // Default no discount
+//
+//                    // Apply fixed discount only if discount_amount is set
+//                    if (!is_null($promoCode->discount_amount) && $promoCode->discount_amount > 0) {
+//                        $discountAmount = $promoCode->discount_amount;
+//                    }
+//                    // Otherwise, apply percentage-based discount
+//                    elseif (!is_null($promoCode->discount_percentage) && $promoCode->discount_percentage > 0) {
+//                        $discountAmount = ($promoCode->discount_percentage / 100) * $totalAmount;
+//                    }
+                }
+            }
 
             $order->update([
                 'sub_total' => round2Digit($total),
