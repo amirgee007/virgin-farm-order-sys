@@ -341,6 +341,14 @@ function getSalesReps()
     ];
 }
 
+function getPromoCodes()
+{
+    $promoCodes = \Vanguard\Models\PromoCode::pluck('promo_disc_class')->toArray();
+
+    // Add "Select" option at the beginning
+    return [0 => 'Select Class'] + $promoCodes;
+}
+
 function getSalesRepsNameEmail($name)
 {
     # Define the mapping of names to emails.
