@@ -40,6 +40,8 @@ class ProfileController extends Controller
         $terms = getTerms();
         $salesRep = getSalesReps();
 
+        $promoCodes = getPromoCodes();
+
         return view('user.profile', [
             'user' => auth()->user(),
             'edit' => true,
@@ -52,6 +54,7 @@ class ProfileController extends Controller
             'states' => $states,
             'terms' => $terms,
             'salesRep' => $salesRep,
+            'promoCodes' => $promoCodes,
         ]);
     }
 }

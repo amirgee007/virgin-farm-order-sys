@@ -160,7 +160,7 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('sales-rep*') ? 'active' : ''  }}" href="{{ route('sales.rep.index') }}">
                     <i class="fas fa-user-alt"></i>
-                    <span>@lang('Sales Rep.')</span>
+                    <span>@lang('Contact Sales')</span>
                 </a>
             </li>
             @endpermission

@@ -1,6 +1,5 @@
 <?php
 
-
 use Vanguard\Http\Controllers\Web\ProductsController;
 use Vanguard\Http\Controllers\Web\CartController;
 use Vanguard\Http\Controllers\Web\TestAmirController;
@@ -90,7 +89,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/promo-codes/delete/{id}', [PromoCodeController::class, 'destroy'])->name('promo_codes.destroy');
 });
 
-Route::post('/apply-promo', [\Vanguard\Http\Controllers\Web\OrdersController::class, 'applyPromoCode'])->name('apply.promo');
+Route::post('/apply-promo', [CartController::class, 'applyPromoCode'])->name('apply.promo');
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
 
