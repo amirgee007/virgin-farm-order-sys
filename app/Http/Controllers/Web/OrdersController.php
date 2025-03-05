@@ -185,13 +185,23 @@ class OrdersController extends Controller
 
     public function applyPromoCode(Request $request)
     {
+
+        $carts = getMyCart();
+        $cubic_weight = 0;
+        foreach ($carts as $cartItem)
+            $cubic_weight += $cartItem->size * $cartItem->quantity;
+
         $userId = auth()->id();
         $request->validate(['promo_code' => 'required|string']);
 
-        $promoCode = PromoCode::where('code', $request->promo_code)->first();
+        #first promo code can only apply on first order.
+        $promoCode = PromoCode::where('id', '>', 1)
+            ->where('min_box_weight' ,'<=', $cubic_weight)
+            ->where('code', $request->promo_code)
+            ->first();
 
         if (!$promoCode || !$promoCode->isValid()) {
-            return response()->json(['message' => 'Invalid or expired promo code' , 'success' => false], 400);
+            return response()->json(['message' => 'Invalid or expired promo code.', 'success' => false], 400);
         }
 
         $totalAmount = $request->total_amount; // Get total order amount from request

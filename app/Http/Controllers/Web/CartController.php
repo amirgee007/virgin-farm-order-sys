@@ -37,12 +37,9 @@ class CartController extends Controller
     {
         try {
             CartController::makeCartEmptyIfTimePassed();
-
-            $string = 'order_note_' . auth()->id();
-            \Cache::forget($string);
+            \Cache::forget("order_note_" . auth()->id());
 
             $carts = getMyCart();
-
             return view('products.inventory.cart', compact('carts'));
         } catch (\Exception $ex) {
             Log::error('Error in viewCart: ' . $ex->getMessage());
@@ -53,7 +50,7 @@ class CartController extends Controller
     {
         try {
 
-            if(!auth()->user()->is_approved) {
+            if (!auth()->user()->is_approved) {
                 return redirect()->back()->with('success', 'Please ask admin to approve your account!');
             }
             $quantity = $request->quantity;
@@ -226,38 +223,40 @@ class CartController extends Controller
             $totalCubeTax = getCubeSizeTax($size);
             $totalWithTax = $total + $totalCubeTax;
 
-            $string = 'order_note_' . $user->id;
-            $notes = \Cache::get($string);
-            \Cache::forget($string);
+            $cacheKey = "order_note_{$user->id}";
+            // Retrieve and clear the cached order note in one step
+            $notes = \Cache::pull($cacheKey);
 
+            $promoCodeKey = "promo_code_{$user->id}";
+            $discountAmountKey = "discount_amount_{$user->id}";
 
-            $promoCodeT = "promo_code_{$user->id}";
-            $promoCodeId = \Cache::get($promoCodeT);
-            \Cache::forget($promoCodeT);
-
-            $promoCodeAmmountT = "discount_amount_{$user->id}";
-            $discountAmount = \Cache::get($promoCodeAmmountT);
-            \Cache::forget($promoCodeAmmountT);
+            // Retrieve and clear cached promo code and discount amount
+            $promoCodeId = \Cache::pull($promoCodeKey);
+            $discountAmount = \Cache::pull($discountAmountKey);
 
             if ($promoCodeId) {
-                $promo = PromoCode::where('id', $promoCodeId)->first();
-                if ($promo) $promo->increment('used_count');
+                $promo = PromoCode::find($promoCodeId);
+                if ($promo) {
+                    $promo->increment('used_count');
+                }
             } else {
-                // Check if this is the user's first order ebecause we already created 1 order above.
+                // Check if this is the user's first order
                 $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
-
-
                 $firstOrderDiscount = 0;
-                if ($isFirstOrder) {
-                    #$firstOrderDiscount = Promo::where('id', 1)->value('amount'); // Assuming promo ID 1 is the first order discount
 
-//                    $totalAmount = $request->total_amount; // Get total order amount from request
-//                    $discountAmount = 0; // Default no discount
-//
-//                    // Otherwise, apply percentage-based discount
-//                    elseif (!is_null($promoCode->discount_percentage) && $promoCode->discount_percentage > 0) {
-//                        $discountAmount = ($promoCode->discount_percentage / 100) * $totalAmount;
-//                    }
+                if ($isFirstOrder) {
+                    $promoCodeId = 1;
+                    $promo = Promo::find($promoCodeId);
+
+                    if ($promo) {
+                        $firstOrderDiscount = $promo->amount;
+                        $discountAmount = 0;
+
+                        if (!empty($promo->discount_percentage) && $promo->discount_percentage > 0) {
+                            $discountAmount = ($promo->discount_percentage / 100) * $total;
+                            $promo->increment('used_count');
+                        }
+                    }
                 }
             }
 

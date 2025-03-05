@@ -5,7 +5,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item active">
-        @lang('Sales Rep')
+        @lang('Sales Representative')
     </li>
 @stop
 
@@ -15,11 +15,9 @@
 
 @section('content')
     <div class="card">
-        <h5 class="card-header">Meet Your Sales Representative: John Doe</h5>
+        <h5 class="card-header">Meet Your Sales Representative <b>{{ Auth::user()->sales_rep }}</b></h5>
         <div class="card-body">
-            <h5 class="card-title">Exclusive Offers Just for You!</h5>
-            <p class="card-text">John is here to help you find the best deals and assist with all your inquiries.</p>
-            <a href="#" class="btn btn-primary">Contact John</a>
+            <img src="{{ asset('assets/img/salerep/' . Auth::user()->sales_rep . '.png') }}" alt="{{ Auth::user()->sales_rep }}" class="img-fluid">
         </div>
     </div>
 @stop

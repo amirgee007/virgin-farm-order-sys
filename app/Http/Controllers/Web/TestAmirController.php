@@ -13,6 +13,7 @@ use Vanguard\Models\Box;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
 use Vanguard\Models\ProductQuantity;
+use Vanguard\Models\PromoCode;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
 use Vanguard\Services\MailchimpService;
@@ -23,8 +24,15 @@ class TestAmirController extends Controller
 
     public function index3()
     {
-
         $user = User::query()->inRandomOrder()->first();
+
+        $promo = PromoCode::first();
+        // Send email notification
+        $content = "<h4>We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.</h4>";
+        $content = $content.view('mail.info-email' , compact('promo'))->render();
+
+        \Mail::to('amirseersol@gmail.com')
+            ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
 
         dd($user);
         // Define additional fields such as company, birthday, etc.
