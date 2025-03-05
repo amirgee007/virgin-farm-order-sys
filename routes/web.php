@@ -4,13 +4,13 @@ use Vanguard\Http\Controllers\Web\ProductsController;
 use Vanguard\Http\Controllers\Web\CartController;
 use Vanguard\Http\Controllers\Web\TestAmirController;
 use Vanguard\Http\Controllers\Web\PromoCodeController;
+use Vanguard\Http\Controllers\Web\ReportsController;
 
 Route::get('/check-admin-uploading', [
     'as' => 'check.admin.uploading',
     'uses' => 'DashboardController@checkAdminUploadingFiles'
 ]);
 
-Route::post('generate-report', [TestAmirController::class, 'generateReport'])->name('generate.report');
 
 Route::get('cart', [CartController::class, 'viewCart'])->name('view.cart'); #done DB
 Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart'); #done DB
@@ -323,7 +323,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'uses' => 'ProductsController@updateCategory'
     ]);
 
-
     /**
      * User Profile
      */
@@ -475,5 +474,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'as' => 'settings.notifications.update',
         'uses' => 'SettingsController@update',
         'middleware' => 'permission:settings.notifications'
+    ]);
+
+
+    Route::post('/generate-report', [
+        'as' => 'generate.report',
+        'uses' => 'ReportsController@generateReport'
     ]);
 });

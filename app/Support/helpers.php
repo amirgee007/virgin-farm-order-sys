@@ -343,7 +343,7 @@ function getSalesReps()
 
 function getPromoCodes()
 {
-    $promoCodes = \Vanguard\Models\PromoCode::pluck('promo_disc_class')->toArray();
+    $promoCodes = \Vanguard\Models\PromoCode::pluck('promo_disc_class' , 'promo_disc_class')->toArray();
 
     // Add "Select" option at the beginning
     return [0 => 'Select Class'] + $promoCodes;
