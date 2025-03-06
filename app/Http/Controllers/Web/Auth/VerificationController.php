@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
-use Vanguard\Models\User;
+use Vanguard\User;
 
 class VerificationController extends Controller
 {
@@ -53,6 +53,7 @@ class VerificationController extends Controller
 
     public function verify(Request $request, $id, $hash)
     {
+        
         $user = User::find($id); // Manually fetch the user by ID
 
         if (!$user) {
