@@ -6,11 +6,12 @@ use Vanguard\Http\Controllers\Web\TestAmirController;
 use Vanguard\Http\Controllers\Web\PromoCodeController;
 use Vanguard\Http\Controllers\Web\ReportsController;
 
+Route::emailVerification();
+
 Route::get('/check-admin-uploading', [
     'as' => 'check.admin.uploading',
     'uses' => 'DashboardController@checkAdminUploadingFiles'
 ]);
-
 
 Route::get('cart', [CartController::class, 'viewCart'])->name('view.cart'); #done DB
 Route::post('add-to-cart', [CartController::class, 'addToCart'])->name('add.to.cart'); #done DB
@@ -36,8 +37,6 @@ Route::group(['middleware' => ['registration', 'guest']], function () {
     Route::post('register', 'Auth\RegisterController@register');
 });
 
-Route::emailVerification();
-
 #few routes need to do without login, and other middlewares.
 Route::get('/help-faq', [
     'as' => 'help.faq.index',
@@ -48,7 +47,6 @@ Route::get('/update-faq-status', [
     'as' => 'update.faq.read.status',
     'uses' => 'DashboardController@updateFaqRead'
 ]);
-
 
 Route::group(['middleware' => ['password-reset', 'guest']], function () {
     Route::resetPassword();
