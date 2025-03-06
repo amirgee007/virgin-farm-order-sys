@@ -12,6 +12,7 @@ use Vanguard\Http\Requests\User\CreateUserRequest;
 use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\ClientNotification;
+use Vanguard\Models\PromoCode;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -99,8 +100,11 @@ class UsersController extends Controller
 
         if ($request->is_approved) {
             // Send email notification
+
+            $promo = PromoCode::first();
+            // Send email notification
             $content = "<h4>We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.</h4>";
-            $content = $content.view('mail.info-email')->render();
+            $content = $content.view('mail.info-email' , compact('promo'))->render();
 
             \Mail::to($user->email)
                 ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
