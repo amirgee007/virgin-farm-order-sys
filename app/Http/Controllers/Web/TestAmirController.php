@@ -25,17 +25,6 @@ class TestAmirController extends Controller
     public function index3()
     {
 
-        $user = User::find(1);
-        $verificationUrl = \URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
-        );
-
-        dd($verificationUrl);
-
-
-
 
         $user = User::query()->inRandomOrder()->first();
 
