@@ -53,7 +53,7 @@ class VerificationController extends Controller
 
     public function verify(Request $request, $id, $hash)
     {
-        
+
         $user = User::find($id); // Manually fetch the user by ID
 
         if (!$user) {
@@ -65,7 +65,7 @@ class VerificationController extends Controller
         }
 
         if ($user->hasVerifiedEmail()) {
-            return redirect('/dashboard')->with('message', 'Your email is already verified.');
+            return redirect('/')->with('message', 'Your email is already verified.');
         }
 
         if ($user->markEmailAsVerified()) {
@@ -74,7 +74,7 @@ class VerificationController extends Controller
 
         Auth::login($user); // Ensure the user is logged in after verification
 
-        return redirect('/dashboard')->with('verified', true);
+        return redirect('/')->with('verified', true);
     }
 
     public function resend(Request $request)
