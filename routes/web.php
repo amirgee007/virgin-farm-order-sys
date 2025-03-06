@@ -16,6 +16,10 @@ Route::post('/email/resend', [VerificationController::class, 'resend'])
 Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
     ->name('verification.verify');
 
+Route::get('/email/verify', [VerificationController::class, 'show'])
+    ->middleware('auth')
+    ->name('verification.notice');
+
 
 Route::get('/check-admin-uploading', [
     'as' => 'check.admin.uploading',
