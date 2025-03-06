@@ -178,6 +178,7 @@ class UsersController extends Controller
             'prices' => getPrices(),
             'states' => getStates(),
             'terms' => getTerms(),
+            'promoCodes' => getPromoCodes(),
             'socialLogins' => $this->users->getUserSocialLogins($user->id)
         ]);
     }

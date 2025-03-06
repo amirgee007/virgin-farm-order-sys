@@ -161,7 +161,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label for="promo_disc_class">@lang('Promo Disc. Class')</label>
-                {!! Form::select('promo_disc_class', $promoCodes, $edit ? $user->promo_disc_class : '', ['class' => 'form-control input-solid']) !!}
+                {!! Form::select('promo_disc_class', @$promoCodes, $edit ? $user->promo_disc_class : '', ['class' => 'form-control input-solid']) !!}
             </div>
         </div>
     @endif
