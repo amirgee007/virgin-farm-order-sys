@@ -5,8 +5,17 @@ use Vanguard\Http\Controllers\Web\CartController;
 use Vanguard\Http\Controllers\Web\TestAmirController;
 use Vanguard\Http\Controllers\Web\PromoCodeController;
 use Vanguard\Http\Controllers\Web\ReportsController;
+use Vanguard\Http\Controllers\Web\Auth\VerificationController;
 
-Route::emailVerification();
+//Route::emailVerification();
+
+Route::post('/email/resend', [VerificationController::class, 'resend'])
+    ->middleware('auth')
+    ->name('verification.resend');
+
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
+    ->name('verification.verify');
+
 
 Route::get('/check-admin-uploading', [
     'as' => 'check.admin.uploading',

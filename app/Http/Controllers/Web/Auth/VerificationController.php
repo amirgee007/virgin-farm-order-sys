@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\VerifiesEmails;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
+use Vanguard\Models\User;
 
 class VerificationController extends Controller
 {
@@ -29,7 +30,7 @@ class VerificationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/products/inventory';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -43,20 +44,43 @@ class VerificationController extends Controller
         $this->middleware('throttle:6,1')->only('verify', 'resend');
     }
 
-    public function verify(Request $request)
+    public function verify(Request $request, $id, $hash)
     {
-        $user = $request->user();
+        $user = User::find($id); // Manually fetch the user by ID
+
+        if (!$user) {
+            return redirect('/login')->with('error', 'User not found.');
+        }
+
+        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+            return redirect('/login')->with('error', 'Invalid verification link.');
+        }
 
         if ($user->hasVerifiedEmail()) {
-            return redirect($this->redirectPath())->with('message', 'Your email is already verified.');
+            return redirect('/dashboard')->with('message', 'Your email is already verified.');
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        Auth::login($user); // Ensure user stays logged in
+        Auth::login($user); // Ensure the user is logged in after verification
 
-        return redirect($this->redirectPath())->with('verified', true);
+        return redirect('/dashboard')->with('verified', true);
+    }
+
+    public function resend(Request $request)
+    {
+        if (Auth::check() && Auth::user()->hasVerifiedEmail()) {
+            return redirect('/')->with('message', 'Your email is already verified.');
+        }
+
+        if (!$request->user()) {
+            return redirect('/login')->with('error', 'Please log in to resend the verification email.');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('resent', true);
     }
 }
