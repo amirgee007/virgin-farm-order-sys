@@ -8,6 +8,7 @@ use Illuminate\View\View;
 use Vanguard\Events\User\Deleted;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Http\Requests\User\CreateUserRequest;
+
 //use Vanguard\Repositories\Activity\ActivityRepository;
 use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Models\Carrier;
@@ -25,7 +26,9 @@ use Vanguard\User;
  */
 class UsersController extends Controller
 {
-    public function __construct(private UserRepository $users) {  }
+    public function __construct(private UserRepository $users)
+    {
+    }
 
     /**
      * Display paginated list of all users.
@@ -43,7 +46,7 @@ class UsersController extends Controller
         $statuses = ['' => __('All')] + UserStatus::lists();
 
         $salesRep = getSalesReps();
-        return view('user.list', compact('users', 'statuses' , 'carriers' , 'prices' , 'salesRep'));
+        return view('user.list', compact('users', 'statuses', 'carriers', 'prices', 'salesRep'));
     }
 
     /**
@@ -62,7 +65,7 @@ class UsersController extends Controller
         $salesRep = getSalesReps();
 
         return view('user.view', compact(
-            'user' ,
+            'user',
             'states',
             'prices',
             'carriers',
@@ -99,12 +102,9 @@ class UsersController extends Controller
         $user->save();
 
         if ($request->is_approved) {
-            // Send email notification
-
+            // Send email notification approval
             $promo = PromoCode::first();
-            // Send email notification
-            $content = "<h4>We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.</h4>";
-            $content = $content.view('mail.info-email' , compact('promo'))->render();
+            $content = view('mail.email-approval-alert', compact('promo'))->render();
 
             \Mail::to($user->email)
                 ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
@@ -137,23 +137,23 @@ class UsersController extends Controller
         // When user is created by administrator, we will set his
         // status to Active by default.
         $data = $request->all() + [
-            'status' => UserStatus::ACTIVE,
-            'email_verified_at' => now()
-        ];
+                'status' => UserStatus::ACTIVE,
+                'email_verified_at' => now()
+            ];
 
-        if (! data_get($data, 'country_id')) {
+        if (!data_get($data, 'country_id')) {
             $data['country_id'] = null;
         }
 
         // Username should be updated only if it is provided.
-        if (! data_get($data, 'username')) {
+        if (!data_get($data, 'username')) {
             $data['username'] = null;
         }
 
         $this->users->create($data);
 
         #admin notify
-        $message = 'New customer profile added : '.$data['first_name'];
+        $message = 'New customer profile added : ' . $data['first_name'];
         addOwnNotification($message);
 
         return redirect()->route('users.index')
@@ -220,18 +220,21 @@ class UsersController extends Controller
     }
 
     #every user has its own page but if admin want to see all, he can see it.
-    public function indexShippingAddress(){
+    public function indexShippingAddress()
+    {
         return 'plz wait for the front page';
     }
 
-    public function indexNotifications(){
+    public function indexNotifications()
+    {
 
 
         $notifications = ClientNotification::mine()->limit(500)->latest()->get();
-        return view('notifications.index' , compact('notifications'));
+        return view('notifications.index', compact('notifications'));
     }
 
-    public function deleteNotifications($id){
+    public function deleteNotifications($id)
+    {
 
         $not = ClientNotification::find($id);
         $not->delete();

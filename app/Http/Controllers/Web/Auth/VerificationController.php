@@ -2,12 +2,15 @@
 
 namespace Vanguard\Http\Controllers\Web\Auth;
 
+use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\VerifiesEmails;
 
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Auth;
+use Vanguard\Mail\VirginFarmGlobalMail;
+use Vanguard\Models\PromoCode;
 use Vanguard\User;
 
 class VerificationController extends Controller
@@ -60,7 +63,7 @@ class VerificationController extends Controller
             return redirect('/login')->with('error', 'User not found.');
         }
 
-        if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        if (!hash_equals((string)$hash, sha1($user->getEmailForVerification()))) {
             return redirect('/login')->with('error', 'Invalid verification link.');
         }
 
@@ -70,6 +73,7 @@ class VerificationController extends Controller
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
+            $this->sendVerificationEmail($user);
         }
 
         Auth::login($user); // Ensure the user is logged in after verification
@@ -91,4 +95,18 @@ class VerificationController extends Controller
 
         return back()->with('resent', true);
     }
+
+    public function sendVerificationEmail($user)
+    {
+        try {
+            $promo = PromoCode::first();
+            $content = view('mail.email-verification-alert', compact('promo', 'user'))->render();
+
+            \Mail::to($user->email)
+                ->send(new VirginFarmGlobalMail('Your Email is Verified – Next Step: Admin Approval', $content));
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage() . ' sendVerificationEmail email user id ' . $user->id);
+        }
+    }
+
 }

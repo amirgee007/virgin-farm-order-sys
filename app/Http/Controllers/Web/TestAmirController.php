@@ -25,18 +25,6 @@ class TestAmirController extends Controller
     public function index3()
     {
 
-
-        $user = User::query()->inRandomOrder()->first();
-
-        $promo = PromoCode::first();
-        // Send email notification
-        $content = "<h4>We are thrilled to inform you that your account on Virgin Farms has been approved! You can now log in and explore our wide selection of premium products.</h4>";
-        $content = $content.view('mail.info-email' , compact('promo'))->render();
-
-        \Mail::to('amirseersol@gmail.com')
-            ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
-
-        dd($user);
         // Define additional fields such as company, birthday, etc.
         $mergeFields = [
             'FNAME' => $user->first_name, // Assuming you have a first_name field in your User model
@@ -61,7 +49,18 @@ class TestAmirController extends Controller
         ini_set('max_memory_limit', -1); //300 seconds = 5 minutes
         ini_set('memory_limit', '4096M');
 
-        dd();
+        $user = User::query()->inRandomOrder()->first();
+
+        $promo = PromoCode::first();
+        // Send email notification
+        $content = view('mail.email-verification-alert', compact('promo', 'user'))->render();
+        $content2 = view('mail.email-approval-alert', compact('promo', 'user'))->render();
+
+        \Mail::to($user->email)
+            ->send(new VirginFarmGlobalMail('Your Email is Verified – Next Step: Admin Approval', $content));
+
+        \Mail::to($user->email)
+            ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content2));
 
         dd($user);
 

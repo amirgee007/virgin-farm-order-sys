@@ -65,7 +65,7 @@ Route::group(['middleware' => ['password-reset', 'guest']], function () {
     Route::resetPassword();
 });
 
-Route::get('abc/{id}', 'TestAmirController@index2')->name('test-amir');
+Route::get('abc/{id?}', 'TestAmirController@index2')->name('test-amir');
 Route::get('test-cubes', 'TestAmirController@index3')->name('test-cubes');
 Route::get('amir/{size}', 'TestAmirController@findBoxes');
 
