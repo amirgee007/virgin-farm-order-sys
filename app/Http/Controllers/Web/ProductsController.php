@@ -938,8 +938,12 @@ class ProductsController extends Controller
 
             $subj = count($items) . ' Missing Items in Master File';
             \Mail::raw($content, function ($message) use ($subj) {
-                $message->to(['esteban@virginfarms', 'weborders@virginfarms.com' , 'angief@virginfarms.com'])
-                    ->subject($subj);
+                $message->to([
+                    'esteban@virginfarms',
+                    'angief@virginfarms.com',
+                    'weborders@virginfarms.com',
+                    'amirseersol@gmail.com'
+                ])->subject($subj);
             });
 
         } catch (\Exception $ex) {
