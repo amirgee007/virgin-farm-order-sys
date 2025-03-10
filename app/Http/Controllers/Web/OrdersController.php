@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Carrier;
+use Vanguard\Models\Cart;
 use Vanguard\Models\Order;
 use Vanguard\Models\Product;
 use Vanguard\Models\PromoCode;
@@ -158,28 +159,32 @@ class OrdersController extends Controller
 
     public function dateCarrierValidation(Request $request)
     {
-        $dateShipped = $request->input('date_shipped') ?? auth()->user()->last_ship_date;
-        $usersCarrierId = $request->input('carrier_id') ?? auth()->user()->carrier_id;
-        $lastShipDate = auth()->user()->last_ship_date;
+        $user = auth()->user();
+        $dateShipped = $request->input('date_shipped', $user->last_ship_date);
+        $usersCarrierId = $request->input('carrier_id', $user->carrier_id);
+        $lastShipDate = $user->last_ship_date;
 
-        $data = [
-            'error' => false
+        $cartExist = Cart::mineCart()->exists();
+
+        // Initialize response data
+        $response = [
+            'error' => $cartExist,
+            'cartExist' => $cartExist,
         ];
 
-        #this one we called when date change.
-        if ($dateShipped == date('Y-m-d')) {
-            $currentTime = Carbon::now();
-            $cutoffTime = Carbon::createFromTimeString('15:30:00'); // 3:30 is cut of time
+        // If the date has changed to today and no cart exists, check cutoff conditions
+        if (!$cartExist && $dateShipped === now()->toDateString()) {
+            $currentTime = now();
+            $cutoffTime = Carbon::createFromTimeString('15:30:00'); // 3:30 PM cutoff time
+            $restrictedCarriers = [23, 32]; // PU and FedEx
 
-            $carrierMatch = [23, 32]; #PU and Fedex
-
-            // Check if current time is past 3:30 PM and carrir is fedex and PU only.
-            if ($currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $carrierMatch)) {
-                $data['error'] = true;
-                $data['old_ship_date'] = $lastShipDate;
+            // If current time is past cutoff and carrier is in the restricted list
+            if ($currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $restrictedCarriers)) {
+                $response['error'] = true;
+                $response['old_ship_date'] = $lastShipDate;
             }
         }
 
-        return response()->json($data);
+        return response()->json($response);
     }
 }
