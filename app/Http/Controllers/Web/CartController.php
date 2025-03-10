@@ -42,7 +42,7 @@ class CartController extends Controller
             $carts = getMyCart();
 
             // Check if this is the user's first order
-            $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
+            $isFirstOrder = Order::where('user_id', auth()->id())->count() < 2;
             $discount_percentage = 0;
 
             if ($isFirstOrder) {
