@@ -46,7 +46,7 @@ class CartController extends Controller
             $discount_percentage = 0;
 
             if ($isFirstOrder) {
-                $promo = Promo::find(1);
+                $promo = PromoCode::find(1);
                 $discount_percentage = $promo ? $promo->discount_percentage : 0;
             }
 
@@ -256,7 +256,7 @@ class CartController extends Controller
 
                 if ($isFirstOrder) {
                     $promoCodeId = 1;
-                    $promo = Promo::find($promoCodeId);
+                    $promo = PromoCode::find($promoCodeId);
 
                     if ($promo) {
                         $firstOrderDiscount = $promo->amount;
