@@ -56,10 +56,10 @@ class TestAmirController extends Controller
         $content = view('mail.email-verification-alert', compact('promo', 'user'))->render();
         $content2 = view('mail.email-approval-alert', compact('promo', 'user'))->render();
 
-        \Mail::to($user->email)
+        \Mail::to('amirseersol@gmail.com')
             ->send(new VirginFarmGlobalMail('Your Email is Verified – Next Step: Admin Approval', $content));
 
-        \Mail::to($user->email)
+        \Mail::to('amirseersol@gmail.com')
             ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content2));
 
         dd($user);

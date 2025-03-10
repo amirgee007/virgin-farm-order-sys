@@ -104,7 +104,7 @@ class UsersController extends Controller
         if ($request->is_approved) {
             // Send email notification approval
             $promo = PromoCode::first();
-            $content = view('mail.email-approval-alert', compact('promo'))->render();
+            $content = view('mail.email-approval-alert', compact('promo' , 'user'))->render();
 
             \Mail::to($user->email)
                 ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
