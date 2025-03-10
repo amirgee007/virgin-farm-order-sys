@@ -352,8 +352,7 @@
                                             </p>
                                         </td>
                                     </tr>
-
-                                    $discount_percentage
+                                    
                                     @if(isDeliveryChargesApply())
                                         <tr>
                                             <td colspan="5" class="text-right text-danger">
