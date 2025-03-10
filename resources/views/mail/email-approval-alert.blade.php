@@ -16,5 +16,5 @@
 <p>💥 Use promo code <b>{{$promo->code}}</b> to get <b>{{$promo->discount_percentage}}%</b> off.</p>
 
 <p>We can’t wait for you to enjoy shopping with us. If you have any questions, feel free to reach out to our support team.</p>
-
 <p><b>Happy Shopping! 🛍️</b></p>
+<p><a href="{{ env('APP_URL') }}" style="display: inline-block; padding: 10px 20px; background-color: #28a745; color: #fff; text-decoration: none; border-radius: 5px;">Click To Shop Now</a></p>
