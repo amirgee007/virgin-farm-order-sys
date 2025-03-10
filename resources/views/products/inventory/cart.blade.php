@@ -310,6 +310,11 @@
                                         </td>
                                     </tr>
                                     @php
+                                        $discount_applied = 0;
+                                        if($discount_percentage){
+                                            $discount_applied = ($discount_percentage / 100) * $total;
+                                            $total = $total - $discount_applied;
+                                        }
                                         $totalCubeTax = getCubeSizeTax($size);
                                         $orderTotal =  round2Digit($total + $totalCubeTax);
                                     @endphp
@@ -323,6 +328,7 @@
                                             <h5><strong>Tax $0</strong></h5>
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <td colspan="2">
                                             <div class="promo-code-section">
@@ -338,13 +344,16 @@
                                                 <small class="text-success promo-success d-none">Promo code applied successfully!</small>
                                             </div>
                                         </td>
+
                                         <td colspan="2" class="text-right">
                                             <h4><strong>Order Total: <span class="text-danger" id="order-total">${{ $orderTotal }}</span></strong></h4>
-                                            <p class="text-success d-none" id="applied-discount-info">
-                                                ✅ Discount Applied: <span id="discount-amount"></span>
+                                            <p class="text-success {{$discount_applied ? '' : 'd-none'}}" id="applied-discount-info">
+                                                ✅ Discount Applied: <span id="discount-amount">{{$discount_applied}}</span>
                                             </p>
                                         </td>
                                     </tr>
+
+                                    $discount_percentage
                                     @if(isDeliveryChargesApply())
                                         <tr>
                                             <td colspan="5" class="text-right text-danger">

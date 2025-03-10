@@ -40,7 +40,17 @@ class CartController extends Controller
             \Cache::forget("order_note_" . auth()->id());
 
             $carts = getMyCart();
-            return view('products.inventory.cart', compact('carts'));
+
+            // Check if this is the user's first order
+            $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
+            $discount_percentage = 0;
+
+            if ($isFirstOrder) {
+                $promo = Promo::find(1);
+                $discount_percentage = $promo ? $promo->discount_percentage : 0;
+            }
+
+            return view('products.inventory.cart', compact('carts' , 'discount_percentage'));
         } catch (\Exception $ex) {
             Log::error('Error in viewCart: ' . $ex->getMessage());
         }
@@ -366,7 +376,7 @@ class CartController extends Controller
         #todo: check max user as well as check how many times we need it to use
         #first promo code can only apply on first order.
         $promoCode = PromoCode::where('id', '>', 1)
-            ->where('min_box_weight' ,'<=', $cubic_weight)
+            ->where('min_box_weight', '<=', $cubic_weight)
             ->where('code', $request->promo_code)
             ->first();
 
