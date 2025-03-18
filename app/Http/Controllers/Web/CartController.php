@@ -295,7 +295,7 @@ class CartController extends Controller
                     'sales@virginfarms.com',
                     'christinah@virginfarms.com',
                     'esteban@virginfarms.com',
-                    'sales@virginfarms.net', $salesRepEmail
+                    $salesRepEmail
                 ])->send(new OrderConfirmationMail($order, $user));
 
             addOwnNotification('Your order has been successfully received.', $order->id, $user->id);
