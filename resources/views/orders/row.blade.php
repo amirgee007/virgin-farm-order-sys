@@ -34,7 +34,7 @@
     <td class="align-middle">
 
         @if($isAdmin)
-            @if($order->is_active == 1)
+            @if($order->is_active == 1 || $order->is_active == 2)
                 <a href="{{ route('orders.update', [$order->id , 'markCompeted']) }}"
                class="btn btn-icon"
                title="@lang('Mark order as completed')"
