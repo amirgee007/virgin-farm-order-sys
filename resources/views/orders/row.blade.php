@@ -16,7 +16,7 @@
     <td class="align-middle">{{ $order->shipping_address }}</td>
     <td class="align-middle text-danger">${{ round2Digit($order->sub_total) }}</td>
     <td class="align-middle text-primary">
-        ${{ round2Digit($order->total) }}
+        ${{ round2Digit($order->total - $order->discount_applied) }}
         @if($order->discount_applied > 0)
             <span class="text-danger">(-${{ round2Digit($order->discount_applied) }})</span>
         @endif
