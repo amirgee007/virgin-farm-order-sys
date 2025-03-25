@@ -26,7 +26,7 @@
     |    |    |  <small>Promo Code Applied:</small> | <small class="text-success">- ${{ round2Digit($order->discount_applied) }}</small> |
     @endif
     |    |    |  <small>Taxes:</small>| <small>$0</small> |
-    |    |    |  <strong>Total</strong> | <strong>${{ round2Digit($order->total - $order->discount_amount) }}</strong> |
+    |    |    |  <strong>Total</strong> | <strong>${{ round2Digit($order->total - $order->discount_applied) }}</strong> |
     @if(isDeliveryChargesApply())
     |    |    |      <small>**Delivery charges may apply.</small> |     |
     @endif
