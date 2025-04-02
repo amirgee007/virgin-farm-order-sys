@@ -48,9 +48,12 @@ class CartController extends Controller
             if ($isFirstOrder) {
                 $promo = PromoCode::find(1);
                 $discount_percentage = $promo ? $promo->discount_percentage : 0;
+            } elseif ($user->promo_disc_class) {
+                $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)->first();
+                $discount_percentage = $promo && !$promoCode->isValid() ? $promo->discount_percentage : 0;
             }
 
-            return view('products.inventory.cart', compact('carts' , 'discount_percentage'));
+            return view('products.inventory.cart', compact('carts', 'discount_percentage'));
         } catch (\Exception $ex) {
             Log::error('Error in viewCart: ' . $ex->getMessage());
         }
@@ -252,19 +255,27 @@ class CartController extends Controller
             } else {
                 // Check if this is the user's first order
                 $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
-                $firstOrderDiscount = 0;
 
                 if ($isFirstOrder) {
                     $promoCodeId = 1;
                     $promo = PromoCode::find($promoCodeId);
 
                     if ($promo) {
-                        $firstOrderDiscount = $promo->amount;
                         $discountAmount = 0;
-
                         if (!empty($promo->discount_percentage) && $promo->discount_percentage > 0) {
                             $discountAmount = ($promo->discount_percentage / 100) * $total;
                             $promo->increment('used_count');
+                        }
+                    }
+                } elseif ($user->promo_disc_class) {
+                    $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)->first();
+
+                    if ($promo) {
+                        $discountAmount = 0;
+                        if (!empty($promo->discount_percentage) && $promo->discount_percentage > 0 && !$promo->isValid()) {
+                            $discountAmount = ($promo->discount_percentage / 100) * $total;
+                            $promo->increment('used_count');
+                            $promoCodeId = $promo->id;
                         }
                     }
                 }
