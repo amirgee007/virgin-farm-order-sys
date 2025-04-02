@@ -4,15 +4,15 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Http\Controllers\Validator;
 use Vanguard\Models\PromoCode;
 
 class PromoCodeController extends Controller
 {
     public function index()
     {
-        if (myRoleName() != 'Admin')
+        if (myRoleName() != 'Admin') {
             abort(403);
+        }
 
         return view('promocodes.promo_codes');
     }
@@ -24,7 +24,6 @@ class PromoCodeController extends Controller
 
     public function store(Request $request)
     {
-
         $validator = \Validator::make($request->all(), [
             'code' => 'required|unique:promo_codes',
             'promo_disc_class' => 'nullable|string|max:255',
@@ -40,7 +39,13 @@ class PromoCodeController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $promoCode = PromoCode::create($request->all());
+        // Default unchecked checkboxes to 0
+        $data = $request->all();
+        $data['price_fob'] = $request->input('price_fob', 0);
+        $data['price_fedex'] = $request->input('price_fedex', 0);
+        $data['price_hawaii'] = $request->input('price_hawaii', 0);
+
+        $promoCode = PromoCode::create($data);
 
         return response()->json(['message' => 'Promo Code Created', 'data' => $promoCode]);
     }
@@ -70,18 +75,22 @@ class PromoCodeController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $promoCode->update($request->all());
+        $data = $request->all();
+        $data['price_fob'] = $request->input('price_fob', 0);
+        $data['price_fedex'] = $request->input('price_fedex', 0);
+        $data['price_hawaii'] = $request->input('price_hawaii', 0);
 
-//        if ($promoCode->id == 1)
-//            $promoCode->update(['valid_until' => null]); #default
+        $promoCode->update($data);
 
         return response()->json(['message' => 'Promo Code Updated', 'data' => $promoCode]);
     }
 
     public function destroy($id)
     {
-        if ($id == 1)
+        if ($id == 1) {
             return response()->json(['message' => 'The default promo code cannot be deleted.']);
+        }
+
         $promoCode = PromoCode::findOrFail($id);
         $promoCode->delete();
 

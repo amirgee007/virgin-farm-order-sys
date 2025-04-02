@@ -10,9 +10,21 @@ class PromoCode extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code', 'discount_amount', 'discount_percentage', 'max_usage', 'used_count',
-        'valid_from', 'valid_until', 'is_active', 'promo_disc_class','min_box_weight'
+        'code',
+        'discount_amount',
+        'discount_percentage',
+        'max_usage',
+        'used_count',
+        'valid_from',
+        'valid_until',
+        'is_active',
+        'promo_disc_class',
+        'min_box_weight',
+        'price_fob',
+        'price_fedex',
+        'price_hawaii'
     ];
+
 
     public function isValid()
     {

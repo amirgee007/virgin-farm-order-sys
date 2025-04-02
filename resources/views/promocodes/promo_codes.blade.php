@@ -8,6 +8,7 @@
         @lang('Promo Codes')
     </li>
 @stop
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -70,7 +71,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Discount Percentage</label>
-                                    <input type="number" steps="0.1" class="form-control" id="discount_percentage" min="0" max="100" name="discount_percentage">
+                                    <input type="number" step="0.1" class="form-control" id="discount_percentage" min="0" max="100" name="discount_percentage">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -79,7 +80,6 @@
                                     <input type="number" class="form-control" id="max_usage" name="max_usage">
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row">
@@ -101,7 +101,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Min Box Weight</label>
-                                    <input type="text" step="0.1" class="form-control" id="min_box_weight" min="0" name="min_box_weight">
+                                    <input type="number" step="0.1" class="form-control" id="min_box_weight" min="0" name="min_box_weight">
                                 </div>
                             </div>
 
@@ -120,11 +120,26 @@
                             </div>
                         </div>
 
+                        <!-- New Price Options -->
+                        <div class="form-group" style="border: 1px solid red; padding: 10px; border-radius: 5px;">
+                            <label>Price Options</label><br>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="price_fob" name="price_fob" value="1">
+                                <label class="form-check-label" for="price_fob">FOB</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="price_fedex" name="price_fedex" value="1">
+                                <label class="form-check-label" for="price_fedex">FedEx</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="price_hawaii" name="price_hawaii" value="1">
+                                <label class="form-check-label" for="price_hawaii">HI&AK</label>
+                            </div>
+                        </div>
+
                         <button type="button" class="btn btn-success" onclick="savePromoCode()">Save</button>
                     </form>
-
                 </div>
-
             </div>
         </div>
     </div>
@@ -138,34 +153,27 @@
             $.ajax({
                 url: "{{ route('promo_codes.list') }}",
                 method: "GET",
-                dataType: "json", // Ensure the response is treated as JSON
+                dataType: "json",
                 success: function (data) {
-                    console.log("Received data:", data);
-
-                    if (!data || !Array.isArray(data)) {
-                        console.error("Invalid data format:", data);
-                        return;
-                    }
-
-                    $("#promoTableBody").empty(); // Clear existing table data
+                    $("#promoTableBody").empty();
 
                     data.forEach(promo => {
                         $("#promoTableBody").append(`
-                    <tr>
-                        <td>${promo.code}</td>
-                        <td>${promo.promo_disc_class || '-'}</td> <!-- New column added -->
-                        <td>${promo.discount_percentage + '%'}</td>
-                        <td>${promo.max_usage}</td>
-                        <td>${promo.valid_from || '-'}</td>
-                        <td>${promo.valid_until || '-'}</td>
-                        <td>${promo.min_box_weight || '-'}</td>
-                        <td>${promo.is_active ? 'Active' : 'Inactive'}</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="editPromoCode(${promo.id})">Edit</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePromoCode(${promo.id})">Delete</button>
-                        </td>
-                    </tr>
-                `);
+                        <tr>
+                            <td>${promo.code}</td>
+                            <td>${promo.promo_disc_class || '-'}</td>
+                            <td>${promo.discount_percentage + '%'}</td>
+                            <td>${promo.max_usage}</td>
+                            <td>${promo.valid_from || '-'}</td>
+                            <td>${promo.valid_until || '-'}</td>
+                            <td>${promo.min_box_weight || '-'}</td>
+                            <td>${promo.is_active ? 'Active' : 'Inactive'}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm" onclick="editPromoCode(${promo.id})">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deletePromoCode(${promo.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `);
                     });
                 },
                 error: function (xhr, status, error) {
@@ -177,25 +185,33 @@
         function openCreateModal() {
             $("#promoForm")[0].reset();
             $("#promoId").val('');
+            $("#price_fob, #price_fedex, #price_hawaii").prop("checked", false);
             $("#promoModal").modal('show');
         }
 
         function savePromoCode() {
             let id = $("#promoId").val();
             let url = id ? `/promo-codes/update/${id}` : "/promo-codes/store";
-            let method = id ? 'POST' : 'POST';
+            let method = 'POST';
+
+            let formData = $("#promoForm").serializeArray();
+
+            // Add checkbox values manually
+            formData.push({ name: "price_fob", value: $("#price_fob").is(":checked") ? 1 : 0 });
+            formData.push({ name: "price_fedex", value: $("#price_fedex").is(":checked") ? 1 : 0 });
+            formData.push({ name: "price_hawaii", value: $("#price_hawaii").is(":checked") ? 1 : 0 });
 
             $.ajax({
                 url: url,
                 method: method,
-                data: $("#promoForm").serialize(),
+                data: formData,
                 success: function (response) {
                     $("#promoModal").modal('hide');
                     fetchPromoCodes();
                     toastr.success(response.message);
                 },
                 error: function (error) {
-                    toastr.error('Validation error plz fill all inputs with unique code and valid until date should be bigger.');
+                    toastr.error('Plz fill all inputs with unique code and valid until date should be bigger.');
                 }
             });
         }
@@ -209,13 +225,15 @@
                 $("#min_box_weight").val(promo.min_box_weight);
                 $("#valid_from").val(promo.valid_from);
                 $("#valid_until").val(promo.valid_until);
-                // Set Active/Inactive radio button
-                if (promo.is_active == 1) {
-                    $("#active").prop("checked", true);
-                } else {
-                    $("#inactive").prop("checked", true);
-                }
                 $("#promo_disc_class").val(promo.promo_disc_class);
+
+                $("#active").prop("checked", promo.is_active == 1);
+                $("#inactive").prop("checked", promo.is_active == 0);
+
+                $("#price_fob").prop("checked", promo.price_fob == 1);
+                $("#price_fedex").prop("checked", promo.price_fedex == 1);
+                $("#price_hawaii").prop("checked", promo.price_hawaii == 1);
+
                 $("#promoModal").modal('show');
             });
         }
