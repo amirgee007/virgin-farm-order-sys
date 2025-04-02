@@ -50,7 +50,7 @@ class CartController extends Controller
                 $discount_percentage = $promo ? $promo->discount_percentage : 0;
             } elseif ($user->promo_disc_class) {
                 $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)->first();
-                $discount_percentage = $promo && !$promoCode->isValid() ? $promo->discount_percentage : 0;
+                $discount_percentage = $promo && $promoCode->isValid() ? $promo->discount_percentage : 0;
             }
 
             return view('products.inventory.cart', compact('carts', 'discount_percentage'));
@@ -272,7 +272,7 @@ class CartController extends Controller
 
                     if ($promo) {
                         $discountAmount = 0;
-                        if (!empty($promo->discount_percentage) && $promo->discount_percentage > 0 && !$promo->isValid()) {
+                        if (!empty($promo->discount_percentage) && $promo->discount_percentage > 0 && $promo->isValid()){
                             $discountAmount = ($promo->discount_percentage / 100) * $total;
                             $promo->increment('used_count');
                             $promoCodeId = $promo->id;
