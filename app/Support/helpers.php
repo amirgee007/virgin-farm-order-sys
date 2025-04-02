@@ -10,6 +10,8 @@ use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\Setting;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UsState;
+use Vanguard\Models\PromoCode;
+use Vanguard\Models\Order;
 
 function getMyCart()
 {
@@ -341,9 +343,58 @@ function getSalesReps()
     ];
 }
 
+
+/**
+ * Get the applicable promo code and discount amount for a user and total.
+ *
+ * @param \Vanguard\Models\User $user
+ * @param float $total
+ * @param float|null $cubic_weight
+ * @param int|null $cachedPromoId
+ * @return array [discountAmount, promoCodeId]
+ */
+function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cachedPromoId = null)
+{
+    $discountAmount = 0;
+    $promoCodeId = null;
+    $promo = null;
+
+    if ($cachedPromoId) {
+        $promo = PromoCode::find($cachedPromoId);
+    }
+
+    if ($promo && $promo->isValid()) {
+        $discountAmount = ($promo->discount_percentage / 100) * $total;
+        $promoCodeId = $promo->id;
+    } else {
+        // First order check
+        $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
+
+        if ($isFirstOrder) {
+            $promo = PromoCode::find(1);
+            if ($promo && $promo->isValid()) {
+                $discountAmount = ($promo->discount_percentage / 100) * $total;
+                $promoCodeId = $promo->id;
+            }
+        } elseif ($user->promo_disc_class) {
+            $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)->first();
+            if ($promo && $promo->isValid()) {
+                $discountAmount = ($promo->discount_percentage / 100) * $total;
+                $promoCodeId = $promo->id;
+            }
+        }
+    }
+
+    return [
+        'discountAmount' => round2Digit($discountAmount),
+        'promoCodeId' => $promoCodeId,
+    ];
+}
+
+
 function getPromoCodes()
 {
-    $promoCodes = \Vanguard\Models\PromoCode::pluck('promo_disc_class' , 'promo_disc_class')->toArray(); #$user->promo_disc_class
+    $promoCodes = \Vanguard\Models\PromoCode::pluck('promo_disc_class', 'promo_disc_class')->toArray(); #$user->promo_disc_class
 
     // Add "Select" option at the beginning
     return [0 => 'Select Class'] + $promoCodes;
