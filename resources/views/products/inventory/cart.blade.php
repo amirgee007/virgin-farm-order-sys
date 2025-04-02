@@ -319,10 +319,14 @@
                                         $orderTotal =  round2Digit($total + $totalCubeTax);
                                     @endphp
                                     <tr>
-                                        <td colspan="5" class="text-right">
+                                        <td colspan="2">
+                                            <h5>Shipping Carrier: <b>{{ auth()->user()->carrier->carrier_name }}</b></h5>
+                                        </td>
+                                        <td colspan="3" class="text-right">
                                             <h5><strong>Service/Transportation: ${{ $totalCubeTax }}</strong></h5>
                                         </td>
                                     </tr>
+
                                     <tr>
                                         <td colspan="5" class="text-right">
                                             <h5><strong>Tax $0</strong></h5>
