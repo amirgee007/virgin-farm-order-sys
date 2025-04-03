@@ -67,7 +67,8 @@ class CartController extends Controller
             $product_qty_id = $request->p_qty_id;
 
             $productQty = ProductQuantity::find($product_qty_id);
-            $product = Product::find($productQty->product_id);
+
+            $product = Product::where('id', $productQty->product_id)->first();
             $priceCol = myPriceColumn();
 
             $cartExist = Cart::mineCart()->where('item_no', $product->item_no)->first();
@@ -104,12 +105,12 @@ class CartController extends Controller
 
             $carts = getMyCart();
             foreach ($carts as $details) {
-                $product = Product::find($details->product_id);
-                $productQty = ProductQuantity::find($details->product_qty_id);
+                $product = Product::where('id', $details->product_id)->first();
+                $productQty = Product::where('id', $details->product_qty_id)->first();
 
                 if ($productQty) {
                     $details->update([
-                        "price" => $productQty->$priceCol,
+                        "price" => $productQty ? $productQty->$priceCol : 1,
                         "image" => $product->image_url,
                         "max_qty" => $productQty->quantity,
                     ]);
