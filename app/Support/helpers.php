@@ -359,6 +359,7 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
     $promoCodeId = null;
     $promo = null;
 
+
     if ($cachedPromoId) {
         $promo = PromoCode::find($cachedPromoId);
     }
@@ -376,11 +377,18 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
                 $discountAmount = ($promo->discount_percentage / 100) * $total;
                 $promoCodeId = $promo->id;
             }
-        } elseif ($user->promo_disc_class) {
+        }
+        #its only for auto discount applying
+        elseif ($user->promo_disc_class) {
             $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)->first();
+            $priceCol = myPriceColumn();
             if ($promo && $promo->isValid()) {
-                $discountAmount = ($promo->discount_percentage / 100) * $total;
-                $promoCodeId = $promo->id;
+                // Check if the promo object has the price column and ensure it's not null before checking its value dynamic rule for applying discount for customer profile
+                if (!is_null($promo->{$priceCol}) && $promo->{$priceCol} == 1) {
+                    // Apply discount logic if the condition is met
+                    $discountAmount = ($promo->discount_percentage / 100) * $total;
+                    $promoCodeId = $promo->id;
+                }
             }
         }
     }

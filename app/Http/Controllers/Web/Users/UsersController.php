@@ -228,7 +228,6 @@ class UsersController extends Controller
     public function indexNotifications()
     {
 
-
         $notifications = ClientNotification::mine()->limit(500)->latest()->get();
         return view('notifications.index', compact('notifications'));
     }

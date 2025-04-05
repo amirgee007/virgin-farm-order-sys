@@ -310,11 +310,14 @@
                                         </td>
                                     </tr>
                                     @php
+                                        $promoData = getApplicablePromoDiscount(auth()->user(), $total);
+
                                         $discount_applied = 0;
-                                        if($discount_percentage){
-                                            $discount_applied = ($discount_percentage / 100) * $total;
+                                        if ($promoData['discountAmount']) {
+                                            $discount_applied = $promoData['discountAmount'];
                                             $total = $total - $discount_applied;
                                         }
+
                                         $totalCubeTax = getCubeSizeTax($size);
                                         $orderTotal =  round2Digit($total + $totalCubeTax);
                                     @endphp
@@ -351,7 +354,7 @@
 
                                         <td colspan="2" class="text-right">
                                             <h4><strong>Order Total: <span class="text-danger" id="order-total">${{ $orderTotal }}</span></strong></h4>
-                                            <p class="text-success {{$discount_applied ? '' : 'd-none'}}" id="applied-discount-info">
+                                            <p class="text-success {{$discount_applied >0 ? '' : 'd-none'}}" id="applied-discount-info">
                                                 ✅ Discount Applied: <span id="discount-amount">{{$discount_applied}}</span>
                                             </p>
                                         </td>

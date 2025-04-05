@@ -42,15 +42,7 @@ class CartController extends Controller
             $user = auth()->user();
             $carts = getMyCart();
 
-            $promoData = getApplicablePromoDiscount($user, 100); // Placeholder total
-            $discount_percentage = 0;
-
-            if ($promoData['promoCodeId']) {
-                $promo = PromoCode::find($promoData['promoCodeId']);
-                $discount_percentage = $promo->discount_percentage ?? 0;
-            }
-
-            return view('products.inventory.cart', compact('carts', 'discount_percentage'));
+            return view('products.inventory.cart', compact('carts'));
         } catch (\Exception $ex) {
             Log::error('Error in viewCart: ' . $ex->getMessage());
         }
@@ -293,6 +285,9 @@ class CartController extends Controller
         try {
             if (cartTimeLeftSec() <= 0) {
                 Cart::where('user_id', auth()->id())->delete();
+
+                Cache::forget("promo_code_" . auth()->id());
+                Cache::forget("discount_amount_" . auth()->id());
             }
         } catch (\Exception $ex) {
             Log::error('Error in makeCartEmptyIfTimePassed: ' . $ex->getMessage());
@@ -356,7 +351,9 @@ class CartController extends Controller
         }
 
         $totalAmount = $request->total_amount;
+
         $promoData = getApplicablePromoDiscount($user, $totalAmount, $cubic_weight, $promo->id);
+
         $discountAmount = $promoData['discountAmount'];
         $newTotal = max(0, $totalAmount - $discountAmount);
 
