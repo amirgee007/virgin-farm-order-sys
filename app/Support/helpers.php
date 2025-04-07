@@ -368,9 +368,8 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
         $discountAmount = ($promo->discount_percentage / 100) * $total;
         $promoCodeId = $promo->id;
     } else {
-        // First order check
-        $isFirstOrder = Order::where('user_id', $user->id)->count() < 2;
-
+        // Check if this is the user's first order
+        $isFirstOrder = !Order::where('user_id', $user->id)->exists();
         if ($isFirstOrder) {
             $promo = PromoCode::find(1);
             if ($promo && $promo->isValid()) {
