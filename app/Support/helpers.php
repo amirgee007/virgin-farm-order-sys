@@ -357,8 +357,8 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
 {
     $discountAmount = 0;
     $promoCodeId = null;
+    $promoCodeName = null; ###code
     $promo = null;
-
 
     if ($cachedPromoId) {
         $promo = PromoCode::find($cachedPromoId);
@@ -367,6 +367,7 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
     if ($promo && $promo->isValid()) {
         $discountAmount = ($promo->discount_percentage / 100) * $total;
         $promoCodeId = $promo->id;
+        $promoCodeName = $promo->code;
     } else {
         // Check if this is the user's first order
         $isFirstOrder = !Order::where('user_id', $user->id)->exists();
@@ -375,6 +376,7 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
             if ($promo && $promo->isValid()) {
                 $discountAmount = ($promo->discount_percentage / 100) * $total;
                 $promoCodeId = $promo->id;
+                $promoCodeName = $promo->code;
             }
         }
         #its only for auto discount applying
@@ -387,6 +389,7 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
                     // Apply discount logic if the condition is met
                     $discountAmount = ($promo->discount_percentage / 100) * $total;
                     $promoCodeId = $promo->id;
+                    $promoCodeName = $promo->code;
                 }
             }
         }
@@ -395,6 +398,7 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
     return [
         'discountAmount' => round2Digit($discountAmount),
         'promoCodeId' => $promoCodeId,
+        'promoCodeName' => $promoCodeName
     ];
 }
 

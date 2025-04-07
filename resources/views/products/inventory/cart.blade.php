@@ -200,6 +200,24 @@
         /*    margin: 0;*/
         /*}*/
 
+        @media (max-width: 576px) {
+            .promo-code-section .input-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .promo-code-section .input-group .form-control,
+            .promo-code-section .input-group .input-group-append {
+                width: 100%;
+            }
+
+            .promo-code-section .input-group .input-group-append button {
+                width: 100%;
+                margin-top: 5px;
+            }
+        }
+
+
 
     </style>
 @endsection
@@ -313,9 +331,11 @@
                                         $promoData = getApplicablePromoDiscount(auth()->user(), $total);
 
                                         $discount_applied = 0;
+                                        $promo_code_name = null;
                                         if ($promoData['discountAmount']) {
                                             $discount_applied = $promoData['discountAmount'];
                                             $total = $total - $discount_applied;
+                                            $promo_code_name = $promoData['promoCodeName'];
                                         }
 
                                         $totalCubeTax = getCubeSizeTax($size);
@@ -339,12 +359,15 @@
                                     <tr>
                                         <td colspan="2">
                                             <div class="promo-code-section">
-                                                <label for="promo-code"><i class="fas fa-gift text-danger"></i> Have a promo code?</label>
-                                                <div class="input-group">
-                                                    <input type="hidden" id="total_amount_promo" name="total_amount" value="{{$total}}">
-                                                    <input type="text" id="promo-code" class="form-control " placeholder="Enter promo code">
-                                                    <div class="input-group-append">
-                                                        <button class="btn-md btn-danger apply-promo">Apply</button>
+                                                <div class="form-group">
+                                                    <label for="promo-code"><i class="fas fa-gift text-danger"></i> Have a promo code?</label>
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-8 mb-2 mb-md-0 mt-2">
+                                                            <input type="text" id="promo-code" class="form-control" placeholder="Enter promo code">
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <button class="btn btn-danger btn-block apply-promo">Apply</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <small class="text-danger promo-error d-none">Invalid promo code. Please try again.</small>
@@ -357,6 +380,7 @@
                                             <p class="text-success {{$discount_applied >0 ? '' : 'd-none'}}" id="applied-discount-info">
                                                 ✅ Discount Applied: <span id="discount-amount">{{$discount_applied}}</span>
                                             </p>
+                                            <small>({{$promo_code_name}})</small>
                                         </td>
                                     </tr>
 
