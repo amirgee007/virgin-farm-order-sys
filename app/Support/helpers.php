@@ -170,7 +170,7 @@ function getImportTariffTax($total)
     } elseif ($price === 'price_fedex' || $price === 'price_hawaii') {
         $tax = $total * 0.05; // 5% for FedEx or Hawaii/Alaska
     }
-    return $tax;
+    return round2Digit($tax);
 }
 
 

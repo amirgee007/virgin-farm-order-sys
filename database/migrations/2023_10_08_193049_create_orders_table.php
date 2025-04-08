@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('shipping_address_id')->nullable();;
             $table->integer('sub_total')->default(0);
             $table->integer('discount')->default(0);
-            $table->integer('tax')->default(0);
+            $table->integer('tarrif_tax')->default(0);
             $table->integer('shipping_cost')->default(0);
             $table->integer('total')->default(0);
 

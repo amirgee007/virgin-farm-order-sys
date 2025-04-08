@@ -222,7 +222,8 @@ class CartController extends Controller
             }
 
             $totalCubeTax = getCubeSizeTax($size);
-            $totalWithTax = $total + $totalCubeTax;
+            $tarrif_tax = getImportTariffTax($total);
+            $totalWithTax = $total + $totalCubeTax + $tarrif_tax;
 
             $notes = Cache::pull("order_note_{$user->id}");
             $promoCodeId = Cache::pull("promo_code_{$user->id}");
@@ -241,7 +242,7 @@ class CartController extends Controller
             $order->update([
                 'sub_total' => round2Digit($total),
                 'discount' => 0,
-                'tax' => 0,
+                'tarrif_tax' => $tarrif_tax,
                 'shipping_cost' => $totalCubeTax,
                 'full_add_on' => $order->full_add_on ?: $full_add_on,
                 'total' => round2Digit($totalWithTax),
