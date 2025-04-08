@@ -363,6 +363,7 @@
                                                 <div class="form-group">
                                                     <label for="promo-code"><i class="fas fa-gift text-danger"></i> Have a promo code?</label>
                                                     <div class="row">
+                                                        <input type="hidden" id="total_amount_promo" name="total_amount" value="{{$total}}">
                                                         <div class="col-12 col-md-8 mb-2 mb-md-0 mt-2">
                                                             <input type="text" id="promo-code" class="form-control" placeholder="Enter promo code">
                                                         </div>
@@ -370,9 +371,9 @@
                                                             <button class="btn btn-danger btn-block apply-promo">Apply</button>
                                                         </div>
                                                     </div>
+                                                    <small class="text-danger promo-error d-none">Invalid promo code. Please try again.</small>
+                                                    <p class="text-success promo-success d-none">Promo code applied successfully!</p>
                                                 </div>
-                                                <small class="text-danger promo-error d-none">Invalid promo code. Please try again.</small>
-                                                <small class="text-success promo-success d-none">Promo code applied successfully!</small>
                                             </div>
                                         </td>
 
@@ -381,7 +382,7 @@
                                             <p class="text-success {{$discount_applied >0 ? '' : 'd-none'}}" id="applied-discount-info">
                                                 ✅ Discount Applied: <span id="discount-amount">{{$discount_applied}}</span>
                                             </p>
-                                            <small>({{$promo_code_name}})</small>
+                                            @if($promo_code_name)<small>({{$promo_code_name}})</small>@endif
                                         </td>
                                     </tr>
 
@@ -549,12 +550,13 @@
                             $('.promo-success').removeClass('d-none').text(response.message);
                             $('.promo-error').addClass('d-none');
 
+                            console.log(response);
                             // Update the Order Total & Show Discount Info
                             var newTotal = response.new_total; // Backend should return updated total
                             var discountAmount = response.discount; // Discount applied
 
-                            $('#order-total').text('$' + newTotal.toFixed(2)); // Update Order Total
-                            $('#discount-amount').text('-$' + discountAmount.toFixed(2)); // Show Discount Amount
+                            $('#order-total').text('$' + newTotal); // Update Order Total
+                            $('#discount-amount').text('-$' + discountAmount); // Show Discount Amount
                             $('#applied-discount-info').removeClass('d-none'); // Show Discount Info
                         } else {
                             $('.promo-error').removeClass('d-none').text(response.message);
