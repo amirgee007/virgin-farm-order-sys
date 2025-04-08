@@ -226,10 +226,10 @@ class CartController extends Controller
 
             $notes = Cache::pull("order_note_{$user->id}");
             $promoCodeId = Cache::pull("promo_code_{$user->id}");
-            $discountAmount = Cache::pull("discount_amount_{$user->id}");
+            #$discountAmount = Cache::pull("discount_amount_{$user->id}");
 
-            if (!$promoCodeId) {
-                $promoData = getApplicablePromoDiscount($user, $total);
+            if (true) {
+                $promoData = getApplicablePromoDiscount($user, $total , $size , $promoCodeId);
                 $discountAmount = $promoData['discountAmount'];
                 $promoCodeId = $promoData['promoCodeId'];
 
@@ -268,6 +268,10 @@ class CartController extends Controller
 
             Cart::mineCart()->delete();
             auth()->user()->update(['edit_order_id' => null]);
+
+            Cache::forget("promo_code_" . auth()->id());
+            Cache::forget("discount_amount_" . auth()->id());
+
             auth()->user()->fresh();
 
             session()->flash('success', 'Your order has been successfully received. We will notify you shortly. Please check your email for the order summary.');

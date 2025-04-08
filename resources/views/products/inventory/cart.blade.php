@@ -318,8 +318,7 @@
                                 <table class="table table-bordered">
                                     <tr>
                                         <td colspan="5" class="text-center text-primary">
-                                            <h4>Box Size(s): {{ @$boxeInfoDetail['boxMatched'] }} &nbsp;
-                                                Weight: {{$size}} cu.</h4>
+                                            <h4>Box Size(s): {{ @$boxeInfoDetail['boxMatched'] }} &nbsp; Weight: {{$size}} cu.</h4>
                                         </td>
                                     </tr>
                                     <tr>
@@ -328,7 +327,7 @@
                                         </td>
                                     </tr>
                                     @php
-                                        $promoData = getApplicablePromoDiscount(auth()->user(), $total);
+                                        $promoData = getApplicablePromoDiscount(auth()->user(), $total , $size);
 
                                         $discount_applied = 0;
                                         $promo_code_name = null;

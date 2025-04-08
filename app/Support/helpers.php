@@ -381,7 +381,10 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
         }
         #its only for auto discount applying
         elseif ($user->promo_disc_class) {
-            $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)->first();
+            $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)
+                ->where('min_box_weight', '<=', $cubic_weight)
+                ->first();
+
             $priceCol = myPriceColumn();
             if ($promo && $promo->isValid()) {
                 // Check if the promo object has the price column and ensure it's not null before checking its value dynamic rule for applying discount for customer profile

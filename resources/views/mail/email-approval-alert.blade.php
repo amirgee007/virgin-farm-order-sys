@@ -12,8 +12,8 @@
 </ul>
 
 <h4>🎁 Special Welcome Offer Just for You!</h4>
-<p>As a warm welcome, we’re offering you an exclusive discount on your first order!</p>
-<p>💥 Use promo code <b>{{$promo->code}}</b> to get <b>{{$promo->discount_percentage}}%</b> off.</p>
+<p>As a warm welcome, we’re offering you an exclusive <b>{{$promo->discount_percentage}}%</b> off on your first order—automatically applied at checkout!</p>
+<p>No code needed. Just shop and save.😊</p>
 
 <p>We can’t wait for you to enjoy shopping with us. If you have any questions, feel free to reach out to our support team.</p>
 <p><b>Happy Shopping! 🛍️</b></p>
