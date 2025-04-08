@@ -941,8 +941,7 @@ class ProductsController extends Controller
                 $message->to([
                     'esteban@virginfarms',
                     'angief@virginfarms.com',
-                    'weborders@virginfarms.com',
-                    'amirseersol@gmail.com'
+                    'weborders@virginfarms.com'
                 ])->subject($subj);
             });
 
