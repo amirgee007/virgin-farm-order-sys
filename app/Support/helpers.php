@@ -157,9 +157,25 @@ function getCubeSizeTax($size)
     return $total + $extra;
 }
 
+function getImportTariffTax($total)
+{
+    #FOB price (Also carriers All others, not fedex) = 6% FedEx and HI/AK prices: 5%
+    $price = myPriceColumn();
+    $user = itsMeUser();
+    $tax = 0;
+
+    // Determine tax rate based on conditions 23 means FEDEX carrier
+    if ($price === 'price_fob' && $user->carrier_id != 23) {
+        $tax = $total * 0.06; // 6% for FOB and not FedEx
+    } elseif ($price === 'price_fedex' || $price === 'price_hawaii') {
+        $tax = $total * 0.05; // 5% for FedEx or Hawaii/Alaska
+    }
+    return $tax;
+}
+
+
 function getCubeRangesV2($size)
 {
-
     $size = $size > 220 ? 220 : $size;
 
     $boxCombination = null;
@@ -378,8 +394,7 @@ function getApplicablePromoDiscount($user, $total, $cubic_weight = null, $cached
                 $promoCodeId = $promo->id;
                 $promoCodeName = $promo->code;
             }
-        }
-        #its only for auto discount applying
+        } #its only for auto discount applying
         elseif ($user->promo_disc_class) {
             $promo = PromoCode::where('promo_disc_class', $user->promo_disc_class)
                 ->where('min_box_weight', '<=', $cubic_weight)

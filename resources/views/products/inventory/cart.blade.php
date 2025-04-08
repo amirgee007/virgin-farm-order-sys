@@ -327,6 +327,8 @@
                                         </td>
                                     </tr>
                                     @php
+                                        $tarifTax = getImportTariffTax($total);
+
                                         $promoData = getApplicablePromoDiscount(auth()->user(), $total , $size);
 
                                         $discount_applied = 0;
@@ -338,7 +340,7 @@
                                         }
 
                                         $totalCubeTax = getCubeSizeTax($size);
-                                        $orderTotal =  round2Digit($total + $totalCubeTax);
+                                        $orderTotal =  round2Digit($total + $totalCubeTax + $tarifTax);
                                     @endphp
                                     <tr>
                                         <td colspan="2">
@@ -350,8 +352,8 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="5" class="text-right">
-                                            <h5><strong>Tax $0</strong></h5>
+                                        <td colspan="5" class="text-right" title="A tariff (often called a tariff tax) is a tax imposed by a government on imports or exports of goods. It's basically a way to control trade between countries.">
+                                            <h5 ><strong>Import Tariff: ${{$tarifTax}}</strong></h5>
                                         </td>
                                     </tr>
 
