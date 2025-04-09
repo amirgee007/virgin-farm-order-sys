@@ -212,10 +212,10 @@ class UsersController extends Controller
     {
         auth()->loginUsingId($user->id);
 
-        $user->update([
-            'last_ship_date' => null,
-            'supplier_id' => 0,
-        ]);
+//        $user->update([
+//            'last_ship_date' => null,
+//            'supplier_id' => 0,
+//        ]);
         return redirect()->route('dashboard');
     }
 
