@@ -59,7 +59,7 @@ class LoginController extends Controller
 
         $credentials = $request->getCredentials();
 
-        if (! Auth::validate($credentials)) {
+        if (!Auth::validate($credentials)) {
             // If the login attempt was unsuccessful we will increment the number of attempts
             // to login and redirect the user back to the login form. Of course, when this
             // user surpasses their maximum number of attempts they will get locked out.
@@ -88,16 +88,19 @@ class LoginController extends Controller
         $user->update([
             'last_ship_date' => null,
             'supplier_id' => 0,
+            'edit_order_id' => null,
         ]);
 
+        #Yes always after logout begin reset and also if after 1 hour session expires
+        Cart::where('user_id', $user->id)->delete();
         return $this->authenticated($request, $throttles, $user);
     }
 
     /**
      * Send the response after the user was authenticated.
      *
-     * @param  Request $request
-     * @param  bool $throttles
+     * @param Request $request
+     * @param bool $throttles
      * @param $user
      * @return RedirectResponse|Response
      */
@@ -113,7 +116,7 @@ class LoginController extends Controller
 
         event(new LoggedIn);
 
-        if($user->role_id == 2)
+        if ($user->role_id == 2)
             return redirect()->to(route('inventory.index'));
 
         if ($request->has('to')) {
