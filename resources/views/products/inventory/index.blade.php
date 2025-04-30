@@ -676,16 +676,34 @@
             }
 
             if(carrier_id != 23 && carrier_id != 32){
-                swal("Reminder", " Refer to your trucking  line/delivery date schedule. Please place orders 1 DAY PRIOR before 4 p.m. EST.", "info");
+                swal({
+                    title: "Reminder",
+                    text: "Refer to your trucking line/delivery date schedule. Please place orders 1 DAY PRIOR before 4 p.m. EST.",
+                    icon: "info",
+                    buttons: {
+                        confirm: {
+                            text: "OK",
+                            visible: true,
+                            closeModal: true
+                        }
+                    },
+                    closeOnClickOutside: false,
+                    closeOnEsc: false
+                }).then(() => {
+                    proceedWithCarrierChange(carrier_id);
+                });
             }
+        });
 
+        function proceedWithCarrierChange(carrier_id) {
             var date_shipped = $("#date_shipped").val();
             $.ajax({
                 url: '{{ route("date-carrier-validation") }}',
                 method: 'POST',
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),
-                    date_shipped,carrier_id
+                    date_shipped,
+                    carrier_id
                 },
                 success: function(response) {
                     if (response.error) {
@@ -695,9 +713,8 @@
                             swal("Unavailable for Ship Date & Carrier.", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
 
                         $('#changeCarrier').val(previousCarrier);
-                        return '';
-                    }
-                    else{
+                        return;
+                    } else {
                         $.ajax({
                             url: '{{route('carriers.create.update')}}',
                             data: {carrier_id},
@@ -707,7 +724,7 @@
                                 toastr.success("Your carrier has been updated successfully.", "Success");
                                 setTimeout(function() {
                                     location.reload();
-                                }, 3000); // 3000 milliseconds = 5 seconds
+                                }, 100); // 3000 milliseconds = 5 seconds
                             }
                         });
                     }
@@ -716,7 +733,7 @@
                     console.error('AJAX Error:', status, error);
                 }
             });
-        });
+        }
 
         $('#date_shipped, #category').change(function (event) {
 

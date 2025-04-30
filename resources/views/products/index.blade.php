@@ -601,6 +601,24 @@
                                 <option value="excel">Excel</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label class="form-label d-block">Select Supplier:</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" checked name="supplier_id" id="supplier_all" value="all" required>
+                                <label class="form-check-label" for="supplier_all">All</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="supplier_id" id="supplier_vf" value="1">
+                                <label class="form-check-label" for="supplier_vf">VF</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="supplier_id" id="supplier_dutch" value="2">
+                                <label class="form-check-label" for="supplier_dutch">Dutch</label>
+                            </div>
+                        </div>
+
+
                         <button type="submit" class="btn btn-success">Generate Report</button>
                     </form>
                 </div>

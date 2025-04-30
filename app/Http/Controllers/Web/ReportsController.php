@@ -21,11 +21,14 @@ class ReportsController extends Controller
             'date_in' => 'required|date',
             'date_out' => 'required|date|after_or_equal:date_in',
             'report_type' => 'required|in:pdf,excel',
+            'supplier_id' => 'required',
         ]);
 
         $dateIn = $validated['date_in'];
         $dateOut = $validated['date_out'];
         $columns = $validated['columns'];
+
+        $supplier = in_array($validated['supplier_id'], [1, 2]) ? $validated['supplier_id'] : null;
 
         $columnCustomNames = getReportColumns();
 
@@ -39,23 +42,27 @@ class ReportsController extends Controller
         }, $columns);
 
         // Fetch data
-        $data = ProductQuantity::where('quantity', '>', 0)
+        $query = ProductQuantity::where('quantity', '>', 0)
             ->where('date_in', '>=', $dateIn)
             ->where('date_out', '<=', $dateOut)
             ->join('products', 'products.id', '=', 'product_quantities.product_id')
             ->join('categories', 'categories.category_id', '=', 'products.category_id') // Join with categories table
-            ->orderBy('products.category_id') // Sort by category_id
+            ->orderBy('products.category_id'); // Sort by category_id
+
+        if ($supplier)
+            $query->where('products.supplier_id', $supplier);
+
 //            ->orderBy('products.product_text') // Then sort by product_text
-            ->get(array_merge($columnsWithTableNames, ['categories.description as category_name' , 'product_quantities.is_special'])); // Include category_name in the result
+        $data = $query->get(array_merge($columnsWithTableNames, ['categories.description as category_name', 'product_quantities.is_special'])); // Include category_name in the result
 
         $groupedData = $data->groupBy('category_name');
 
-        $name = 'Inventory-Report-'.$dateIn;
+        $name = 'Inventory-Report-' . $dateIn;
         if ($validated['report_type'] === 'excel') {
-            return \Excel::download(new ProductReportExport($columns , $groupedData , $columnCustomNames), "$name.xlsx");
+            return \Excel::download(new ProductReportExport($columns, $groupedData, $columnCustomNames), "$name.xlsx");
         } else {
             #return view('products.report', compact('data', 'columns' , 'dateIn' , 'columnCustomNames'));
-            $pdf = \Pdf::loadView('products.reports.report', compact('columns' , 'dateIn' , 'columnCustomNames' ,'groupedData'));
+            $pdf = \Pdf::loadView('products.reports.report', compact('columns', 'dateIn', 'columnCustomNames', 'groupedData'));
             return $pdf->download("$name.pdf");
         }
     }
