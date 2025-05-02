@@ -676,9 +676,13 @@
             }
 
             if(carrier_id != 23 && carrier_id != 32){
+                var textSwal = "Please refer to your trucking line/delivery schedule. Orders must be placed 1 DAY PRIOR before 4 p.m. EST.";
+                if(carrier_id == 17)
+                    textSwal = "Deliveries to West Palm Beach are offered on Tuesdays. Please place your order by 4 p.m. EST the day before.";
+
                 swal({
                     title: "Reminder",
-                    text: "Refer to your trucking line/delivery date schedule. Please place orders 1 DAY PRIOR before 4 p.m. EST.",
+                    text: textSwal,
                     icon: "info",
                     buttons: {
                         confirm: {
