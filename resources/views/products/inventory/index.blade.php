@@ -697,6 +697,8 @@
                     proceedWithCarrierChange(carrier_id);
                 });
             }
+            else
+                proceedWithCarrierChange(carrier_id);
         });
 
         function proceedWithCarrierChange(carrier_id) {

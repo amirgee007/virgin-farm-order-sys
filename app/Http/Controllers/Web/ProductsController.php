@@ -290,10 +290,13 @@ class ProductsController extends Controller
 
     public function createNewProduct(Request $request)
     {
-
         $product = Product::where('item_no', $request->item_no)->first();
-
         $data = $request->except('_token');
+
+        $uom_obj = UnitOfMeasure::where('unit' , $data['unit_of_measure'])->first();
+        if($uom_obj)
+            $data['stems'] = $uom_obj->total;
+
         if ($product) {
             $product->update($data);
         } else
