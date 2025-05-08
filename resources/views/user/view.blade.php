@@ -112,7 +112,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Carrier Id'):</strong>
-                        {{ $carriers[$user->carrier_id] }}
+                        {{ $carriers[$user->carrier_id_default] }}
                     </li>
                 </ul>
             </div>

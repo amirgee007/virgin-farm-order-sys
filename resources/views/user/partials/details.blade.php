@@ -153,8 +153,8 @@
 
         <div class="col-md-4">
             <div class="form-group">
-                <label for="carrier_id">@lang('Carrier')</label>
-                {!! Form::select('carrier_id', $carriers, $edit ? $user->carrier_id : '', ['class' => 'form-control input-solid']) !!}
+                <label for="carrier_id_default">@lang('Carrier')</label>
+                {!! Form::select('carrier_id_default', $carriers, $edit ? $user->carrier_id_default : '', ['class' => 'form-control input-solid']) !!}
             </div>
         </div>
 

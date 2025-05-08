@@ -8,7 +8,7 @@
 ##### Reference: WO{{$order->id}}
 --------------------------------------
 ##### Ship Date: {{$order->date_shipped}}
-##### Carrier: {{@$user->carrier->carrier_name}}
+##### Carrier: {{@$order->carrier->carrier_name}}
 ##### Ship To: {{$order->ship_to}}
 
 # Prebook {{getAddOnDetail($order)}}

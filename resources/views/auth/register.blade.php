@@ -193,8 +193,8 @@
                             </div>
                             <div class="form-group col-6">
                                 <select class="form-control form-control-md"
-                                        name="carrier_id"
-                                        id="carrier_id"
+                                        name="carrier_id_default"
+                                        id="carrier_id_default"
                                         title="Select Shipping Method how you want to ship the items?"
                                         data-trigger="hover"
                                         data-toggle="tooltip">
@@ -293,7 +293,7 @@
         $(document).ready(function() {
 
             const stateDropdown = $('#state_id');
-            const carrierDropdown = $('#carrier_id');
+            const carrierDropdown = $('#carrier_id_default');
 
             const originalOptions = stateDropdown.html();
             const originalCarrierOptions = carrierDropdown.html();

@@ -161,7 +161,7 @@ class OrdersController extends Controller
     {
         $user = auth()->user();
         $dateShipped = $request->input('date_shipped', $user->last_ship_date);
-        $usersCarrierId = $request->input('carrier_id', $user->carrier_id);
+        $usersCarrierId = $request->input('carrier_id', $user->carrier_id_default);
         $lastShipDate = $user->last_ship_date;
 
         $cartExist = Cart::mineCart()->exists();

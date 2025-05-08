@@ -27,6 +27,7 @@ use Vanguard\Models\ProductQuantity;
 use Vanguard\Models\Setting;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
+use Vanguard\User;
 
 class ProductsController extends Controller
 {
@@ -49,6 +50,11 @@ class ProductsController extends Controller
         $searching = trim($request->searching);
         $user = auth()->user();
         $address = $user->shipAddress;
+
+        #by default we will use the default carrier.
+        if(!$user->carrier_id){
+            $user->update(['carrier_id' => $user->carrier_id_default]);
+        }
 
         if (!$date_shipped) {
             $date_shipped = $user->last_ship_date;

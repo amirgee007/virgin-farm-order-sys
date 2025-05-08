@@ -121,7 +121,7 @@ class RegisterController extends Controller
             . '<li><strong>City:</strong> ' . $user->city . '</li>'
             . '<li><strong>State:</strong> ' . @$user->usState->state_name . '</li>'
             . '<li><strong>Zip:</strong> ' . $user->zip . '</li>'
-            . '<li><strong>Shipping Method:</strong> ' . @$user->carrier->carrier_name . '</li>'
+            . '<li><strong>Shipping Method:</strong> ' . @$user->carrierDefault->carrier_name . '</li>'
             . '</ul>';
     }
 

@@ -32,7 +32,7 @@ class RegisterRequest extends Request
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'zip' => 'required|string|max:10',
-            'carrier_id' => 'required|string|max:255',
+            'carrier_id_default' => 'required|string|max:255',
             'tax_file' => 'required_if:state,10|max:2048', // Allow all standard images + PDF
         ];
 
@@ -79,7 +79,7 @@ class RegisterRequest extends Request
 
         #ship_method remaning here yet.
         return array_merge($this->only('email', 'username', 'password' ,'first_name', 'last_name',
-            'company_name', 'phone', 'sales_rep', 'address', 'apt_suit', 'city', 'state', 'zip' , 'carrier_id'), [
+            'company_name', 'phone', 'sales_rep', 'address', 'apt_suit', 'city', 'state', 'zip' , 'carrier_id_default'), [
             'status' => $status,
             'email_verified_at' => setting('reg_email_confirmation') ? null : now()
         ]);

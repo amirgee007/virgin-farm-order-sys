@@ -48,6 +48,13 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     ];
 
     /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = ['password', 'remember_token'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -65,6 +72,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'terms',
         'credit_limit',
         'carrier_id',
+        'carrier_id_default',
         'country_id',
         'address_id',
         'last_ship_date',
@@ -73,13 +81,6 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         'tax_file',
         'promo_disc_class'
     ];
-
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['password', 'remember_token'];
 
     /**
      * Always encrypt password when it is updated.
@@ -159,6 +160,11 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
     public function carrier()
     {
         return $this->hasOne(Carrier::class , 'id' , 'carrier_id');
+    }
+
+    public function carrierDefault()
+    {
+        return $this->hasOne(Carrier::class , 'id' , 'carrier_id_default');
     }
 
     public function usState() {
