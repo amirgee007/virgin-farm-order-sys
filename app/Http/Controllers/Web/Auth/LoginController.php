@@ -89,6 +89,7 @@ class LoginController extends Controller
             'last_ship_date' => null,
             'supplier_id' => 0,
             'edit_order_id' => null,
+            'carrier_id' => null,
         ]);
 
         #Yes always after logout begin reset and also if after 1 hour session expires
