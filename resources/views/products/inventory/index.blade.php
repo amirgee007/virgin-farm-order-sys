@@ -340,12 +340,12 @@
                                  </select>
                              </label>
 
-                            <label class="form-check-label float-right mt-2 text-danger">Select Carrier
+                            <label class="form-check-label float-right mt-2 text-danger" title="{{$user->carrier_id}}">Select Carrier
                                  <select class="form-control form-control-md" id="changeCarrier"
                                          title="Click to change carrier how you want to ship the items?"
                                          data-trigger="hover"
                                          data-toggle="tooltip">
-                                     <option hidden value="">Select Shipping Carrier {{$user->carrier_id}}</option>
+                                     <option hidden value="">Select Shipping Carrier </option>
                                     @foreach($carriers AS $key => $name)
                                          <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
                                      @endforeach
@@ -702,7 +702,6 @@
         });
 
         function proceedWithCarrierChange(carrier_id) {
-
             var date_shipped = $("#date_shipped").val();
             $.ajax({
                 url: '{{ route("date-carrier-validation") }}',

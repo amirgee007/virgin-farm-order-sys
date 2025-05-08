@@ -296,10 +296,6 @@ class CartController extends Controller
 
                 Cache::forget("promo_code_" . auth()->id());
                 Cache::forget("discount_amount_" . auth()->id());
-
-                auth()->user()->update([
-                    'carrier_id' => null,
-                ]);
             }
         } catch (\Exception $ex) {
             Log::error('Error in makeCartEmptyIfTimePassed: ' . $ex->getMessage());
