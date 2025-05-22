@@ -41,7 +41,7 @@ class UsersController extends Controller
         $carriers = getCarriers();
         $prices = getPrices();
         $sortBy = [
-            '' => 'Sorty By Created Date',
+            '' => 'Sorty By Date',
             'state_id' => 'Client State'
         ];
 
