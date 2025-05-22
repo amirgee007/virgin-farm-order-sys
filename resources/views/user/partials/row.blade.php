@@ -29,8 +29,9 @@
         </div>
     </td>
 
-    <td class="align-middle">{{ $user->first_name . ' ' . $user->last_name . '('.$user->customer_number.')'}}</td>
-    <td class="align-middle">{{ $user->email }}</td>
+    <td class="align-middle" data-toggle="tooltip" data-placement="top"
+        title="{{$user->email}}">{{ $user->first_name . ' ' . $user->last_name . '('.$user->customer_number.')'}}</td>
+{{--    <td class="align-middle">{{ $user->email }}</td>--}}
     <td class="align-middle">{{ $user->address }}</td>
     <td class="align-middle">{{ $user->created_at->format(config('app.date_format')) }}</td>
     <td class="align-middle">{{ $user->company_name }}</td>
