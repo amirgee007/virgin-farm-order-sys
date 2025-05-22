@@ -51,6 +51,7 @@ class ProductsController extends Controller
         $user = auth()->user();
         $address = $user->shipAddress;
 
+
         #by default we will use the default carrier.
         if(!$user->carrier_id){
             $user->update(['carrier_id' => $user->carrier_id_default]);

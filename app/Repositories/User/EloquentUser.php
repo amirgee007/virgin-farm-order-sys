@@ -98,21 +98,39 @@ class EloquentUser implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function paginate($perPage, $search = null, $status = null)
+    public function paginate($perPage, $search = null, $status = null, $sort_by = null)
     {
         $query = User::query();
 
-        if ($status) {
-            $query->where('status', $status);
+        // Sort by state name if sort_by is 'state_id'
+        if ($sort_by === 'state_id') {
+            $query->join('us_states', 'users.state', '=', 'us_states.id')
+                ->orderBy('us_states.state_code')
+                ->select('users.*'); // Avoid selecting state fields if we select state here then it will not worki nind efault queryr
+        } else {
+            $query->orderBy('id', 'desc');
         }
 
+        // Status filter
+        if ($status) {
+            $cleanStatus = trim($status);
+
+            if (in_array($cleanStatus, ['Approved', 'NotApproved'])) {
+                $query->where('is_approved', $cleanStatus === 'Approved' ? 1 : 0);
+            } else {
+                $query->where('status', $cleanStatus);
+            }
+        }
+
+        // Search filter
         if ($search) {
             (new UserKeywordSearch)($query, $search);
         }
 
-        $result = $query->orderBy('id', 'desc')
-            ->paginate($perPage);
+        // Pagination
+        $result = $query->paginate($perPage);
 
+        // Preserve query string
         if ($search) {
             $result->appends(['search' => $search]);
         }
@@ -121,8 +139,14 @@ class EloquentUser implements UserRepository
             $result->appends(['status' => $status]);
         }
 
+        if ($sort_by) {
+            $result->appends(['sort_by' => $sort_by]);
+        }
+
         return $result;
     }
+
+
 
     /**
      * {@inheritdoc}
@@ -142,15 +166,16 @@ class EloquentUser implements UserRepository
 
             $salesRepEmail = getSalesRepsNameEmail($user->sales_rep);
 
-            $content = 'User Changed his shipping address under profile page please check asap i.e user is '.$user->first_name;
+            $content = 'User Changed his shipping address under profile page please check asap i.e user is ' . $user->first_name;
 
-            \Mail::raw($content, function ($message) use($salesRepEmail) {
+            \Mail::raw($content, function ($message) use ($salesRepEmail) {
                 $message->to('christinah@virginfarms.com')
                     ->bcc(['weborders@virginfarms.com', $salesRepEmail])
-                    ->subject('User Update: Shipping Address');});
+                    ->subject('User Update: Shipping Address');
+            });
 
             #admin notify
-            $message = 'User updated his shipping address : '.strtoupper($user->username);
+            $message = 'User updated his shipping address : ' . strtoupper($user->username);
             addOwnNotification($message);
 
         }

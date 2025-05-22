@@ -79,8 +79,18 @@
                         )
                     !!}
                 </div>
+                <div class="col-md-2 mt-2 mt-md-0">
+                    {!!
+                        Form::select(
+                            'sort_by',
+                            $sortBy,
+                            Request::get('sort_by'),
+                            ['id' => 'sort_by', 'class' => 'form-control input-solid']
+                        )
+                    !!}
+                </div>
 
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <a href="{{ route('users.create') }}" class="btn btn-primary btn-rounded float-right btn-sm">
                         <i class="fas fa-plus mr-2"></i>
                         @lang('Add Client OR Admin')
@@ -102,8 +112,9 @@
                     <th class="min-width-150">@lang('Full Name')</th>
                     <th class="min-width-100">@lang('Email')</th>
                     <th class="min-width-100">@lang('Address')</th>
-                    <th class="min-width-80">@lang('Signup Date')</th>
+                    <th class="min-width-80">@lang('Date')</th>
                     <th class="min-width-80">@lang('Company')</th>
+                    <th class="min-width-80">@lang('State')</th>
                     <th class="min-width-80">@lang('Role')</th>
                     <th class="min-width-80">@lang('Email Status')</th>
                     <th class="text-center min-width-150">@lang('Action')</th>
@@ -134,7 +145,7 @@
     <script>
         $(document).ready(function() {
 
-            $("#status").change(function () {
+            $("#status , #sort_by").change(function () {
                 $("#users-form").submit();
             });
 

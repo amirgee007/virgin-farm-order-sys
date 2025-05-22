@@ -40,13 +40,21 @@ class UsersController extends Controller
     {
         $carriers = getCarriers();
         $prices = getPrices();
+        $sortBy = [
+            '' => 'Sorty By Created Date',
+            'state_id' => 'Client State'
+        ];
 
-        $users = $this->users->paginate($perPage = 20, $request->search, $request->status);
+        $users = $this->users->paginate($perPage = 25, $request->search, $request->status , $request->sort_by);
 
         $statuses = ['' => __('All')] + UserStatus::lists();
+        #for user is_approved
+        $statuses['Approved'] = 'Approved';
+        $statuses['NotApproved'] = 'Not-Approved';
 
         $salesRep = getSalesReps();
-        return view('user.list', compact('users', 'statuses', 'carriers', 'prices', 'salesRep'));
+
+        return view('user.list', compact('users', 'statuses', 'carriers', 'prices', 'salesRep' , 'sortBy'));
     }
 
     /**

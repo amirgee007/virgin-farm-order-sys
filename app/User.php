@@ -171,6 +171,7 @@ class User extends Authenticatable implements TwoFactorAuthenticatableContract, 
         return $this->hasOne(UsState::class , 'id' , 'state');
     }
 
+
     public function getStateNameAttribute(){
         return $this->usState ? $this->usState->state_name : ''; #2,12
     }
