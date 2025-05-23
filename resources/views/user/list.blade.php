@@ -43,57 +43,103 @@
 
 <div class="card">
     <div class="card-body">
+        @php
+            $stateId = Request::get('state');
+            $salesRep = Request::get('sales_rep');
+            $status = Request::get('status');
+            $stateName = null;
 
-        <form action="" method="GET" id="users-form" class="pb-2 mb-3 border-bottom-light">
-            <div class="row my-3 flex-md-row flex-column-reverse">
-                <div class="col-md-4 mt-md-0 mt-2">
+            if ($stateId && isset($states[$stateId])) {
+                $stateName = $states[$stateId];
+            }
+        @endphp
+        <form action="" method="GET" id="users-form" class="pb-2 border-bottom-light">
+
+            @if($stateName || $salesRep || $status)
+                <div class="mb-3">
+                    <h6 class="mb-0">
+                        <span class="text-muted">Filtering clients by:</span>
+                        @if($status)
+                            <span class="text-success fw-bold">Status: {{ $status }}</span>
+                        @endif
+                        @if($stateName)
+                            <span class="text-muted">|</span>
+                        @endif
+                        @if($stateName)
+                            <span class="text-warning fw-bold">State: {{ $stateName }}</span>
+                        @endif
+                        @if($stateName && $salesRep)
+                            <span class="text-muted">|</span>
+                        @endif
+                        @if($salesRep)
+                            <span class="text-danger fw-bold">Sales Rep: {{ $salesRep }}</span>
+                        @endif
+                    </h6>
+                </div>
+            @endif
+
+            <div class="row mb-3 flex-md-row flex-column-reverse">
+                {{-- Search Box --}}
+                <div class="col-md-3 mt-md-0 mt-1">
                     <div class="input-group custom-search-form">
                         <input type="text"
-                               class="form-control input-solid"
+                               class="form-control input-solid form-control-sm"
                                name="search"
                                value="{{ Request::get('search') }}"
-                               placeholder="@lang('Search for clients and admins...')">
-
-                            <span class="input-group-append">
-                                @if (Request::has('search') && Request::get('search') != '')
-                                    <a href="{{ route('users.index') }}"
-                                           class="btn btn-light d-flex align-items-center text-muted"
-                                           role="button">
-                                        <i class="fas fa-times"></i>
-                                    </a>
-                                @endif
-                                <button class="btn btn-light" type="submit" id="search-users-btn">
-                                    <i class="fas fa-search text-muted"></i>
-                                </button>
-                            </span>
+                               placeholder="@lang('Search by name, email, company, address, city')">
+                        <span class="input-group-append">
+                            @if (Request::has('search') && Request::get('search') != '')
+                                <a href="{{ route('users.index') }}"
+                                   class="btn btn-light d-flex align-items-center text-muted"
+                                   role="button">
+                                    <i class="fas fa-times"></i>
+                                </a>
+                            @endif
+                    <button class="btn btn-light" type="submit" id="search-users-btn">
+                        <i class="fas fa-search text-muted"></i>
+                    </button>
+                </span>
                     </div>
                 </div>
 
-                <div class="col-md-2 mt-2 mt-md-0">
-                    {!!
-                        Form::select(
-                            'status',
-                            $statuses,
-                            Request::get('status'),
-                            ['id' => 'status', 'class' => 'form-control input-solid']
-                        )
-                    !!}
-                </div>
-                <div class="col-md-2 mt-2 mt-md-0">
-                    {!!
-                        Form::select(
-                            'sort_by',
-                            $sortBy,
-                            Request::get('sort_by'),
-                            ['id' => 'sort_by', 'class' => 'form-control input-solid']
-                        )
-                    !!}
+                {{-- Status Filter --}}
+                <div class="col-md-1 mt-2 mt-md-0">
+                    {!! Form::select('status', $statuses, Request::get('status'), [
+                        'id' => 'status',
+                        'class' => 'form-control input-solid form-control-sm',
+                    ]) !!}
                 </div>
 
-                <div class="col-md-4">
+                {{-- Sort By Filter --}}
+                <div class="col-md-2 mt-2 mt-md-0">
+                    {!! Form::select('sort_by', $sortBy, Request::get('sort_by'), [
+                        'id' => 'sort_by',
+                        'class' => 'form-control input-solid form-control-sm',
+                    ]) !!}
+                </div>
+
+                {{-- State Filter --}}
+                <div class="col-md-2 mt-2 mt-md-0">
+                    {!! Form::select('state', $states, Request::get('state'), [
+                        'id' => 'state',
+                        'class' => 'form-control input-solid form-control-sm',
+                        'placeholder' => __('All States')
+                    ]) !!}
+                </div>
+
+                {{-- Sales Rep Filter --}}
+                <div class="col-md-2 mt-2 mt-md-0">
+                    {!! Form::select('sales_rep', $salesReps, Request::get('sales_rep'), [
+                        'id' => 'sales_rep',
+                        'class' => 'form-control input-solid form-control-sm'
+                    ]) !!}
+                </div>
+
+                {{-- Add Button --}}
+                <div class="col-md-2 mt-2 mt-md-0 text-right">
                     <a href="{{ route('users.create') }}" class="btn btn-primary btn-rounded float-right btn-sm">
                         <i class="fas fa-plus mr-2"></i>
-                        @lang('Add Client OR Admin')
+                        @lang('Add user')
                     </a>
                 </div>
             </div>
@@ -116,6 +162,7 @@
                     <th class="min-width-80">@lang('Company')</th>
                     <th class="min-width-80">@lang('State')</th>
                     <th class="min-width-80">@lang('Role')</th>
+                    <th class="min-width-80">@lang('Sales Rep')</th>
                     <th class="min-width-80">@lang('Email Status')</th>
                     <th class="text-center min-width-150">@lang('Action')</th>
                 </tr>
@@ -145,7 +192,7 @@
     <script>
         $(document).ready(function() {
 
-            $("#status , #sort_by").change(function () {
+            $("#status , #sort_by , #state , #sales_rep").change(function () {
                 $("#users-form").submit();
             });
 

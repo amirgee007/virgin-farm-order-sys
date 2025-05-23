@@ -16,7 +16,7 @@ interface UserRepository
      * @param null $status
      * @return mixed
      */
-    public function paginate($perPage, $search = null, $status = null ,  $sort_by = null);
+    public function paginate($perPage, $search = null, $status = null ,  $sort_by = null , $state = null, $sales_rep = null);
 
     /**
      * Find user by its id.

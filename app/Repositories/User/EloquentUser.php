@@ -98,7 +98,7 @@ class EloquentUser implements UserRepository
     /**
      * {@inheritdoc}
      */
-    public function paginate($perPage, $search = null, $status = null, $sort_by = null)
+    public function paginate($perPage, $search = null, $status = null, $sort_by = null , $state = null, $sales_rep = null)
     {
         $query = User::query();
 
@@ -120,6 +120,15 @@ class EloquentUser implements UserRepository
             } else {
                 $query->where('status', $cleanStatus);
             }
+        }
+
+        // Search filter
+        if ($state) {
+            $query->where('state', $state);
+        }
+
+        if ($sales_rep) {
+            $query->where('sales_rep', $sales_rep);
         }
 
         // Search filter

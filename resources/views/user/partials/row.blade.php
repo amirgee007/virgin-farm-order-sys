@@ -39,6 +39,7 @@
         title="{{$user->address}}"
     >{{ $user->state_name }}</td>
     <td class="align-middle">{{ $user->role->display_name }}</td>
+    <td class="align-middle">{{ $user->sales_rep }}</td>
 
     <td class="align-middle">
         <span class="badge badge-lg badge-{{ $user->present()->labelClass }}">

@@ -14,6 +14,7 @@ use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\ClientNotification;
 use Vanguard\Models\PromoCode;
+use Vanguard\Models\UsState;
 use Vanguard\Repositories\Country\CountryRepository;
 use Vanguard\Repositories\Role\RoleRepository;
 use Vanguard\Repositories\User\UserRepository;
@@ -45,16 +46,32 @@ class UsersController extends Controller
             'state_id' => 'Client State'
         ];
 
-        $users = $this->users->paginate($perPage = 25, $request->search, $request->status , $request->sort_by);
+        $states =\DB::table('users')
+            ->join('us_states', 'users.state', '=', 'us_states.id')
+            ->select('us_states.id', 'us_states.state_name')
+            ->distinct()
+            ->orderBy('us_states.state_name')
+            ->pluck('us_states.state_name', 'us_states.id')
+            ->toArray();
+
+        $users = $this->users->paginate($perPage = 25, $request->search, $request->status , $request->sort_by , $request->state, $request->sales_rep);
 
         $statuses = ['' => __('All')] + UserStatus::lists();
         #for user is_approved
         $statuses['Approved'] = 'Approved';
         $statuses['NotApproved'] = 'Not-Approved';
 
-        $salesRep = getSalesReps();
+        $salesReps = getSalesReps(); #sales_rep
 
-        return view('user.list', compact('users', 'statuses', 'carriers', 'prices', 'salesRep' , 'sortBy'));
+        return view('user.list', compact(
+            'users',
+            'statuses',
+            'carriers',
+            'prices',
+            'salesReps' ,
+            'sortBy',
+            'states',
+        ));
     }
 
     /**
@@ -90,7 +107,6 @@ class UsersController extends Controller
      */
     public function create(CountryRepository $countryRepository, RoleRepository $roleRepository)
     {
-
         return view('user.add', [
             'countries' => $this->parseCountries($countryRepository),
             'roles' => $roleRepository->lists(),
@@ -100,6 +116,7 @@ class UsersController extends Controller
             'states' => getStates(),
             'terms' => getTerms(),
             'prices' => getPrices(),
+            'promoCodes' => getPromoCodes(),
         ]);
     }
 
