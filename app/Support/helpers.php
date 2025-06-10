@@ -83,6 +83,7 @@ function isDeliveryChargesApply()
 
 function getCubeSizeTax($size)
 {
+
     #PU(32), Federal Express(23) , DLV(17)
     $user = itsMeUser();
 
@@ -102,23 +103,15 @@ function getCubeSizeTax($size)
 
         if ($size >= 12 && $size <= 16) {
             $tax = 32;
-            $extraTax = 1;
         } elseif ($size >= 18 && $size <= 21) {
-            $tax = 35;
-            $extraTax = 1;
-        } elseif ($size >= 22 && $size <= 25) {
-            $tax = 33;
-            $extraTax = 1;
+            $tax = 38;
+        } elseif ($size >= 22 && $size <= 26) {
+            $tax = 34;
         } elseif ($size >= 27 && $size <= 30) {
-            $tax = 34.5;
-            $extraTax = 1;
+            $tax = 35;
         } elseif ($size >= 40) {  // Combined the last two conditions
-            $tax = 36;
-            $extraTax = 2;
+            $tax = 37;
         }
-
-        if ($salesRepExtra)
-            $tax = $tax + $extraTax;
 
         if ($size / 45 > 1) {
             $countMore45 = ((int)ceil($size / 45) - 1);
