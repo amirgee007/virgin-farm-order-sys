@@ -175,9 +175,34 @@ class CartController extends Controller
             $total = $size = $is_add_on = 0;
             $full_add_on = $user->edit_order_id > 0 ? min(2, $user->edit_order_id) : 0;
 
+            // === Step 1: Calculate total and size from cart ===
+            foreach ($carts as $cart) {
+                $total += $cart->price * $cart->quantity * $cart->stems;
+                $size += $cart->size * $cart->quantity;
+            }
+
+            // === Step 2: Get promo discount BEFORE order is created ===
+            $promoCodeId = Cache::pull("promo_code_{$user->id}");
+            $promoData = getApplicablePromoDiscount($user, $total, $size, $promoCodeId);
+            $discountAmount = $promoData['discountAmount'];
+            $promoCodeId = $promoData['promoCodeId'];
+            $promoCodeName = $promoData['promoCodeName'];
+
+            if ($promoCodeId) {
+                PromoCode::find($promoCodeId)?->increment('used_count');
+            }
+
+            // === Step 3: Apply discount ===
+            $discountedTotal = $total - $discountAmount;
+
+            // === Step 4: Calculate taxes based on discounted total ===
+            $totalCubeTax = getCubeSizeTax($size);
+            $tarrif_tax = getImportTariffTax($discountedTotal);
+            $totalWithTax = $discountedTotal + $totalCubeTax + $tarrif_tax;
+
+            // === Step 5: Create or load order ===
             if ($user->edit_order_id > 1) {
                 $order = Order::find($user->edit_order_id);
-                $total = $order->total;
                 $is_add_on = 1;
             } else {
                 $order = Order::create([
@@ -192,9 +217,12 @@ class CartController extends Controller
                     'phone' => $shipAddress->phone,
                     'shipping_address' => $shipAddress->address,
                     'address_2' => $shipAddress->city_name . ' ,' . $shipAddress->state_name . ' ,' . $shipAddress->zip,
+                    'promo_code_id' => $promoCodeId,
+                    'discount_applied' => $discountAmount,
                 ]);
             }
 
+            // === Step 6: Create order items ===
             foreach ($carts as $cart) {
                 $productQty = ProductQuantity::where('id', $cart->product_qty_id)->first();
                 $product = Product::where('id', $cart->product_id)->first();
@@ -203,9 +231,6 @@ class CartController extends Controller
                     $productQty->decrement('quantity', $cart->quantity);
                     $product->increment('sold', $cart->quantity);
                 }
-
-                $total += $cart->price * $cart->quantity * $cart->stems;
-                $size += $cart->size * $cart->quantity;
 
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -221,39 +246,23 @@ class CartController extends Controller
                 ]);
             }
 
-            $totalCubeTax = getCubeSizeTax($size);
-            $tarrif_tax = getImportTariffTax($total);
-            $totalWithTax = $total + $totalCubeTax + $tarrif_tax;
-
+            // === Step 7: Final update to order ===
             $notes = Cache::pull("order_note_{$user->id}");
-            $promoCodeId = Cache::pull("promo_code_{$user->id}");
-            #$discountAmount = Cache::pull("discount_amount_{$user->id}");
-
-            if (true) {
-                $promoData = getApplicablePromoDiscount($user, $total , $size , $promoCodeId);
-                $discountAmount = $promoData['discountAmount'];
-                $promoCodeId = $promoData['promoCodeId'];
-
-                if ($promoCodeId) {
-                    PromoCode::find($promoCodeId)?->increment('used_count');
-                }
-            }
 
             $order->update([
                 'sub_total' => round2Digit($total),
-                'discount' => 0,
+                'discount' => 0, #its not we are using it anywhere
                 'tarrif_tax' => $tarrif_tax,
                 'shipping_cost' => $totalCubeTax,
                 'full_add_on' => $order->full_add_on ?: $full_add_on,
                 'total' => round2Digit($totalWithTax),
                 'notes' => $notes,
-                'promo_code_id' => $promoCodeId,
-                'discount_applied' => $discountAmount,
             ]);
 
             $order->refresh();
             Log::info($order->id . ' placed the order with total and sub total ' . $order->total);
 
+            // === Step 8: Send confirmation email ===
             \Mail::to($user->email)
                 ->cc('weborders@virginfarms.com')
                 ->bcc([
@@ -264,6 +273,7 @@ class CartController extends Controller
                     getSalesRepsNameEmail($user->sales_rep)
                 ])->send(new OrderConfirmationMail($order, $user));
 
+            // === Step 9: Cleanup ===
             addOwnNotification('Your order has been successfully received.', $order->id, $user->id);
             addOwnNotification('New Order Received: WO-' . $order->id, $order->id);
 
@@ -287,6 +297,7 @@ class CartController extends Controller
             return back();
         }
     }
+
 
     public static function makeCartEmptyIfTimePassed()
     {
