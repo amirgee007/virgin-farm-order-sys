@@ -210,9 +210,25 @@
                     fetchPromoCodes();
                     toastr.success(response.message);
                 },
-                error: function (error) {
-                    toastr.error('Plz fill all inputs with unique code and valid until date should be bigger.');
+                error: function (xhr) {
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        let errors = xhr.responseJSON.errors;
+                        let messages = [];
+
+                        for (let field in errors) {
+                            if (errors.hasOwnProperty(field)) {
+                                messages.push(errors[field].join(", "));
+                            }
+                        }
+
+                        if (messages.length) {
+                            toastr.error(messages.join("<br>")); // multiple error lines
+                        }
+                    } else {
+                        toastr.error('An unexpected error occurred.');
+                    }
                 }
+
             });
         }
 

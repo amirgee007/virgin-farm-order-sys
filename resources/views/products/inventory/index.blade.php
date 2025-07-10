@@ -424,7 +424,7 @@
                     {!! $products->render() !!}
                     @if($user->last_ship_date && $user->carrier_id)
                         <div class="table-responsive mt-2" id="users-table-wrapper">
-                            <table class="table table-borderless table-striped products-list-table">
+                            <table class="table  table-bordered products-list-table">
                                 <thead>
                                     <tr>
                                     <th class="min-width-200">@lang('Product Description')</th>

@@ -4,6 +4,7 @@ use Vanguard\Http\Controllers\Web\ProductsController;
 use Vanguard\Http\Controllers\Web\CartController;
 use Vanguard\Http\Controllers\Web\TestAmirController;
 use Vanguard\Http\Controllers\Web\PromoCodeController;
+use Vanguard\Http\Controllers\Web\ColorClassController;
 use Vanguard\Http\Controllers\Web\ReportsController;
 use Vanguard\Http\Controllers\Web\Auth\VerificationController;
 
@@ -91,13 +92,24 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 ///Promocodes routes.
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth' , 'permission:manage.promo.codes'])->group(function () {
     Route::get('/promo-codes', [PromoCodeController::class, 'index'])->name('promo_codes.index');
     Route::get('/promo-codes/list', [PromoCodeController::class, 'getPromoCodes'])->name('promo_codes.list'); // JSON data
     Route::post('/promo-codes/store', [PromoCodeController::class, 'store'])->name('promo_codes.store');
     Route::get('/promo-codes/{id}/edit', [PromoCodeController::class, 'edit'])->name('promo_codes.edit');
     Route::post('/promo-codes/update/{id}', [PromoCodeController::class, 'update'])->name('promo_codes.update');
     Route::delete('/promo-codes/delete/{id}', [PromoCodeController::class, 'destroy'])->name('promo_codes.destroy');
+});
+
+
+// ColorsClass routes
+Route::middleware(['auth' , 'permission:manage.color.class'])->group(function () {
+    Route::get('/colors-class', [ColorClassController::class, 'index'])->name('colors_class.index');
+    Route::get('/colors-class/list', [ColorClassController::class, 'getColorsClass'])->name('colors_class.list');
+    Route::post('/colors-class/store', [ColorClassController::class, 'store'])->name('colors_class.store');
+    Route::get('/colors-class/{id}/edit', [ColorClassController::class, 'edit'])->name('colors_class.edit');
+    Route::post('/colors-class/update/{id}', [ColorClassController::class, 'update'])->name('colors_class.update');
+    Route::delete('/colors-class/delete/{id}', [ColorClassController::class, 'destroy'])->name('colors_class.destroy');
 });
 
 Route::post('/apply-promo', [CartController::class, 'applyPromoCode'])->name('apply.promo');

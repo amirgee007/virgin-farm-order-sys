@@ -113,6 +113,15 @@
             </li>
             @endpermission
 
+            @permission('manage.color.class')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('color-class*') ? 'active' : ''  }}" href="{{ route('colors_class.index') }}">
+                    <i class="fas fa-wine-glass"></i>
+                    <span>@lang('Manage Colors')</span>
+                </a>
+            </li>
+            @endpermission
+
             @permission('boxes.manage')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('boxes*') ? 'active' : ''  }}" href="{{ route('boxes.index') }}">
