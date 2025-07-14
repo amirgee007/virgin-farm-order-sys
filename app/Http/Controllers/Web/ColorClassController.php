@@ -63,6 +63,10 @@ class ColorClassController extends Controller
 
         $colorClass->update($request->all());
 
+        ColorClass::where('sub_class' , $request->sub_class)->update([
+            'color' => $request->color
+        ]);
+
         return response()->json(['message' => 'Color Class Updated', 'data' => $colorClass]);
     }
 
