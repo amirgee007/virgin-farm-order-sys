@@ -66,6 +66,10 @@ function myPriceColumn()
     elseif ($user->price_list == 3 && $user->carrier_id != 23)
         $column = 'price_fob';
 
+    #if price is fedex lus and  and carrier  FedEx then use
+    elseif ($user->price_list == 4 && $user->carrier_id == 23)
+        $column = 'price_fedex_2';
+
     return $column;
 }
 
@@ -160,7 +164,7 @@ function getImportTariffTax($total)
     // Determine tax rate based on conditions 23 means FEDEX carrier
     if ($price === 'price_fob' && $user->carrier_id != 23) {
         $tax = $total * 0.06; // 6% for FOB and not FedEx
-    } elseif ($price === 'price_fedex' || $price === 'price_hawaii') {
+    } elseif ($price === 'price_fedex' || $price === 'price_hawaii' || $price === 'price_fedex_2') {
         $tax = $total * 0.05; // 5% for FedEx or Hawaii/Alaska
     }
     return round2Digit($tax);
@@ -279,6 +283,7 @@ function getPrices()
         1 => 'price_fedex',
         2 => 'price_fob', #dont change this ID as its using somewhere.
         3 => 'price_hawaii',
+        4 => 'price_fedex_2',
     ];
 }
 
@@ -550,6 +555,7 @@ function getReportColumns()
         "price_fob" => "Price FOB",
         "price_fedex" => "Price FedEx",
         "price_hawaii" => "Price Hawaii",
+        "price_fedex_2" => "Price FedEx Plus",
         "quantity" => "Available"
     ];
 
@@ -561,6 +567,7 @@ function getContractCodes()
     return [
         1 => "FedEx",
         2 => "FOB",
-        3 => "HI & AK"
+        3 => "HI & AK",
+        4 => "FedEx+"
     ];
 }
