@@ -471,7 +471,7 @@
                                             <td class="align-middle">
                                                 <span class="color-circle" style="background-color: {{ strtolower($product->color_name) }};"></span>
                                             </td>
-                                            
+
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp
                                             @if(auth()->user()->is_approved)
                                                 <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>

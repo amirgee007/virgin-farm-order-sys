@@ -28,7 +28,7 @@
         {{ $product->product_text }}
     </td>
 
-    <td class="align-middle">{{ $product->color_name  }}({{$product->color_sub_class }})</td>
+    <td class="align-middle">{{ $product->color_name  }} {{$product->color_sub_class }}</td>
     <td class="align-middle">{{ $product->unit_of_measure }}</td>
 
     <td class="align-middle">{{ $product->weight }}</td>
