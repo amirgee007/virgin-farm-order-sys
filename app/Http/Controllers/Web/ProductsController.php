@@ -20,6 +20,7 @@ use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
 use Vanguard\Models\Category;
+use Vanguard\Models\ColorClass;
 use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
@@ -53,7 +54,7 @@ class ProductsController extends Controller
 
 
         #by default we will use the default carrier.
-        if(!$user->carrier_id){
+        if (!$user->carrier_id) {
             $user->update(['carrier_id' => $user->carrier_id_default]);
         }
 
@@ -217,7 +218,7 @@ class ProductsController extends Controller
             4 => 'Products without images',
         ];
 
-        $query = Product::query();
+        $query = Product::query()->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id');
         $search = \Request::get('search');
         $category = \Request::get('category');
         $filter = \Request::get('filter');
@@ -259,7 +260,11 @@ class ProductsController extends Controller
                 $query->whereNull('image_url');
         }
 
-        $products = (clone $query)->select('products.*')->paginate(100);
+        $products = (clone $query)->select(
+            'products.*',
+            'colors_class.sub_class as color_sub_class',
+            'colors_class.color as color_name'
+        )->paginate(100);
 
         if ($filter || $search || $category || $qty_found || $date_in || $date_out || $supp) {
             $products->appends([
@@ -300,8 +305,8 @@ class ProductsController extends Controller
         $product = Product::where('item_no', $request->item_no)->first();
         $data = $request->except('_token');
 
-        $uom_obj = UnitOfMeasure::where('unit' , $data['unit_of_measure'])->first();
-        if($uom_obj)
+        $uom_obj = UnitOfMeasure::where('unit', $data['unit_of_measure'])->first();
+        if ($uom_obj)
             $data['stems'] = $uom_obj->total;
 
         if ($product) {
@@ -324,34 +329,43 @@ class ProductsController extends Controller
 
         $UOM = UnitOfMeasure::pluck('total', 'unit')->toArray();
 
-        #0 Item Class,	1Item No., 2Description,	3UOM	4Price 1, 5Price 3,6Price 5, 7Weight, 8Size
+        #11 COLUMNS FROM 0 TO 1.
+        #0 Item Class,	1Item No., 2Description,	3UOM, 4colorClass,	5Price1, 6Price2, 7Price3,8Price4, 9Weight, 10Size
         if (isset($products[0]))
             foreach ($products[0] as $index => $row) {
-
                 try {
 
                     if ($index < 2) continue;
                     $uomTrim = trim($row[3]);
+                    $category_id = trim($row[0]); #class_id
+
+                    $subclass = trim($row[4]); #sub_class
+
+                    $color = ColorClass::where('sub_class', $subclass)->where('class_id', $category_id)->first();
+
                     $data = [
                         'item_no' => trim($row[1]),
-                        'category_id' => trim($row[0]),
+                        'category_id' => $category_id,
                         'product_text' => trim($row[2]),
                         'unit_of_measure' => $uomTrim,
                         'stems' => isset($UOM[$uomTrim]) ? $UOM[$uomTrim] : 1, #for our own purpose we are doing.
 
-                        'weight' => trim($row[7]),
-                        'size' => trim($row[8]),
+                        'color_id' => $color ? $color->id : null,
+                        'weight' => trim($row[9]),
+                        'size' => trim($row[10]),
                     ];
 
-                    $def_price_fob = trim($row[4]);
-                    $def_price_fedex = trim($row[5]);
-                    $def_price_hawaii = trim($row[6]);
+                    $def_price_fob = trim($row[5]);
+                    $def_price_fedex = trim($row[6]);
+                    $def_price_hawaii = trim($row[7]);
+                    $def_price_fedex_2 = trim($row[8]);
 
                     #because the AS400 must have at least .01 so we consodure it as zero in these cases.
                     $prices = [
                         'def_price_fob' => ($def_price_fob == '' || $def_price_fob == 0.01) ? 0 : $def_price_fob,
                         'def_price_fedex' => ($def_price_fedex == '' || $def_price_fedex == 0.01) ? 0 : $def_price_fedex,
                         'def_price_hawaii' => ($def_price_hawaii == '' || $def_price_hawaii == 0.01) ? 0 : $def_price_hawaii,
+                        'def_price_fedex_2' => ($def_price_fedex_2 == '' || $def_price_fedex_2 == 0.01) ? 0 : $def_price_fedex_2,
                     ];
 
                     $catsDutch = Category::dutchCategories(); #ok new logic
@@ -429,6 +443,7 @@ class ProductsController extends Controller
 
     public function uploadInventory(Request $request)
     {
+
         ini_set('max_execution_time', 18000);
 
         // Reset and delete zero quantity products
@@ -453,7 +468,9 @@ class ProductsController extends Controller
                 $expiredtime = null;
 
                 foreach ($products[0] as $index => $row) {
+
                     if ($index == 1) {
+
                         $this->dateIn = $this->excelSerialDateToDate($row['3']);
                         $this->dateOut = $this->excelSerialDateToDate($row['5']);
 
@@ -498,7 +515,7 @@ class ProductsController extends Controller
         $product = Product::where('item_no', $cleaned_string)->first(); // Check if product exists
 
         if ($product) {
-            $data = $this->buildProductData($row, $product); // Build product data
+            $data = $this->buildProductData($row, $product); // Build product data done price fedex 2
             if ($expiredtime) {
                 $data['expired_at'] = $expiredtime;
                 Log::debug($expiredtime);
@@ -531,7 +548,7 @@ class ProductsController extends Controller
         $data = [
             'product_id' => $product->id,
             'item_no' => $product->item_no,
-            'quantity' => $row[5] ? trim($row[5]) : 0,
+            'quantity' => $row[6] ? trim($row[6]) : 0,
             'date_in' => $this->dateIn,
             'date_out' => $this->dateOut,
             'price_fedex' => $product->def_price_fedex,
@@ -548,6 +565,9 @@ class ProductsController extends Controller
         }
         if (floatval(trim($row[4])) > 0) {
             $data['price_hawaii'] = trim($row[4]);
+        }
+        if (floatval(trim($row[5])) > 0) {
+            $data['price_fedex_2'] = trim($row[5]);
         }
 
         return $data;
@@ -956,7 +976,7 @@ class ProductsController extends Controller
             });
 
         } catch (\Exception $ex) {
-            Log::error(implode(',', $items) . ' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
+            Log::error('itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
         }
 
     }
@@ -981,7 +1001,7 @@ class ProductsController extends Controller
                 });
 
         } catch (\Exception $ex) {
-            Log::error(implode(',', $items) . ' itesm list sendMissingItemEmail plz check ASAP.' . $ex->getMessage());
+            Log::error('itesm list sendMissingItemEmail plz check ASAP sendEmailIfPriceNotCorrect.' . $ex->getMessage());
         }
 
     }

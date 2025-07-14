@@ -28,6 +28,7 @@
         {{ $product->product_text }}
     </td>
 
+    <td class="align-middle">{{ $product->color_name  }}({{$product->color_sub_class }})</td>
     <td class="align-middle">{{ $product->unit_of_measure }}</td>
 
     <td class="align-middle">{{ $product->weight }}</td>
@@ -71,6 +72,7 @@
                         <th class="min-width-80">@lang('Price-FOB $')</th>
                         <th class="min-width-80">@lang('FedEx $')</th>
                         <th class="min-width-80">@lang('HI & AK $')</th>
+                        <th class="min-width-80">@lang('FedEx Plus $')</th>
                         <th class="min-width-80">@lang('Quantity')</th>
                         <th class="min-width-80">@lang('Date In')</th>
                         <th class="min-width-80">@lang('Date Out')</th>
@@ -130,6 +132,18 @@
                                    data-value="{{ $prod->price_hawaii }}">
                                 </a>
                             </td>
+                                <td class="align-middle">
+                                    <a class="editable"
+                                       style="cursor:pointer;"
+                                       data-name="price_fedex_2"
+                                       data-step="any"
+                                       data-type="number"
+                                       data-emptytext="0"
+                                       data-pk="{{$prod->id}}"
+                                       data-url="{{route('product.update.column')}}"
+                                       data-value="{{ $prod->price_fedex_2 }}">
+                                    </a>
+                                </td>
 
                             <td class="align-middle">
                                 <a class="editable"

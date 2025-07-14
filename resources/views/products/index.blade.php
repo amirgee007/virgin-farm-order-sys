@@ -145,6 +145,7 @@
                                 <th class="min-width-80">@lang('Item')</th>
                                 <th class="min-width-80">@lang('Supplier')</th>
                                 <th class="min-width-200">@lang('Product Description')</th>
+                                <th class="min-width-80">@lang('Color')</th>
                                 <th class="min-width-80" title="the UOM is how many stems per bunch">@lang('UOM')</th>
 
                                 <th class="min-width-80">@lang('Weight')</th>
@@ -198,7 +199,7 @@
                     </form>
 
                     <small>
-                        6 Columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,QUANTITY
+                        7 Columns include i.e ITEM#, ITEM DESC, PRICE 1, PRICE 2,PRICE 3,PRICE 4,QUANTITY
                     </small>
                 </div>
 
@@ -372,7 +373,7 @@
 {{--                        </div>--}}
 
                         <small>
-                            Only 9 columns include i.e Item Class,	Item No, Description, UOM Price 1, Price 3,Price 5, Weight, Size, Type
+                            Only 10 columns include i.e Item Class,	Item No, Description, UOM Price 1, Price 3,Price 5,PriceFedex +, Weight, Size, Type
                         </small>
                         <br>
                         <br>
