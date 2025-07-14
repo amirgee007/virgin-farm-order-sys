@@ -76,6 +76,7 @@ class ProductsController extends Controller
         #ALTER TABLE `users` ADD `last_ship_date` DATE NULL DEFAULT NULL AFTER `address_id`;
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
+            ->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id')
             ->where('product_quantities.quantity', '>', 0);
 
         // Apply conditions based on the supplier_id and for the special products
@@ -132,7 +133,24 @@ class ProductsController extends Controller
         $products = (clone $query)->groupBy('products.id')
             ->orderBy('category_id') // Sort by category_id first
             ->orderBy('product_text') // Then sort by product_text within the same category
-            ->selectRaw('supplier_id,category_id,product_quantities.id as p_qty_id,product_quantities.is_special, products.id as id, product_text, image_url, unit_of_measure, products.stems, product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity, weight, products.size, price_fob, price_fedex, price_hawaii')
+            ->selectRaw('
+                supplier_id,
+                category_id,
+                product_quantities.id as p_qty_id,
+                product_quantities.is_special,
+                products.id as id,
+                product_text,
+                image_url,
+                unit_of_measure,
+                products.stems,
+                product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity,
+                weight,
+                products.size,
+                price_fob,
+                price_fedex,
+                price_hawaii,
+                colors_class.sub_class as color_sub_class,
+                colors_class.color as color_name')
             ->paginate(100);
 
         $fixed = [

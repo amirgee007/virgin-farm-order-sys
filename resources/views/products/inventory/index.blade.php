@@ -47,6 +47,15 @@
             border: 1px solid #d0d0d0; /* Softer border color */
             cursor: not-allowed;        /* Show "not allowed" cursor when hovering */
         }
+        .color-circle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+        }
 
         [role=main] {
             padding-top: 75px;
@@ -428,6 +437,7 @@
                                 <thead>
                                     <tr>
                                     <th class="min-width-200">@lang('Product Description')</th>
+                                    <th>@lang('Color')</th>
                                     @if(auth()->user()->is_approved)
                                         <th class="min-width-80">@lang('Stem/Unit Price')</th>
                                         <th class="min-width-80" title="How many stems in a bunch UOM">@lang('Unit Pack')</th>
@@ -457,6 +467,11 @@
 
                                                 {!!  $product->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
+
+                                            <td class="align-middle">
+                                                <span class="color-circle" style="background-color: {{ strtolower($product->color_name) }};"></span>
+                                            </td>
+                                            
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp
                                             @if(auth()->user()->is_approved)
                                                 <td class="align-middle" title="Per STEM flowers & Price Column: {{$priceCol}}">${{ $priceNow }}</td>
