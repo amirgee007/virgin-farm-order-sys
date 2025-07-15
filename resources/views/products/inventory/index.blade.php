@@ -728,11 +728,14 @@
                 },
                 success: function(response) {
                     if (response.error) {
-                        if(response.cartExist)
+                        if (response.cartExist) {
                             swal("Carrier Change Restricted", "To change the carrier, please empty your cart or complete your order first.", "error");
-                        else
-                            swal("Unavailable for Ship Date & Carrier.", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
-
+                        } else if (response.VFNotAllowed) {
+                            // Show the custom message returned from backend (like for VF carrier)
+                            swal("Carrier Not Allowed", response.message, "error");
+                        } else {
+                            swal("Unavailable for Ship Date & Carrier", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
+                        }
                         $('#changeCarrier').val(previousCarrier);
                         return;
                     } else {

@@ -172,6 +172,16 @@ class OrdersController extends Controller
             'cartExist' => $cartExist,
         ];
 
+        // Get the day of the week for the selected ship date
+        $dayOfWeek = Carbon::parse($dateShipped)->dayOfWeekIso; // 1 = Monday, 7 = Sunday
+
+        // 🚫 Disable VF Carrier (ID 17) on Wed, Thu, Fri
+        if ($usersCarrierId == 17 && in_array($dayOfWeek, [3, 4, 5])) {
+            $response['error'] = true;
+            $response['VFNotAllowed'] = 'VF carrier is only available until Tuesday. Please choose FedEx or another carrier for Wednesday, Thursday, or Friday.';
+            return response()->json($response);
+        }
+
         // If the date has changed to today and no cart exists, check cutoff conditions
         if (!$cartExist && $dateShipped === now()->toDateString()) {
             $currentTime = now();
