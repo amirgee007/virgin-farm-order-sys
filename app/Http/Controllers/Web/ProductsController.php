@@ -1006,7 +1006,9 @@ class ProductsController extends Controller
                 $query->whereBetween('price_fob', [0, 0.29])
                     ->orWhereBetween('price_fedex', [0, 0.29])
                     ->orWhereBetween('price_hawaii', [0, 0.29]);
-            })->pluck('item_no')
+            })
+            ->where('date_out', '>', Carbon::today())
+            ->pluck('item_no')
             ->toArray();
 
         try {
