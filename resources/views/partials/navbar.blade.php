@@ -74,7 +74,7 @@
                         @endforeach
 
                         @php
-                            $boxeInfo = getCubeRangesV2($size);
+                            $boxeInfo = getCubeRangesV2($size , $total);
                         @endphp
 
                         <input type="hidden" id="itsSizeDynamic" value="{{$size}}">
@@ -104,7 +104,11 @@
                                 @if($boxeInfo['boxMatched'])
                                     <small class="text-primary"><b>Box capacity met. Review my order!</b></small>
                                 @else
-                                    <small class="text-danger"><b>Box capacity not met. </b></small>
+                                    @if(isset($boxeInfo['message']))
+                                        <small class="text-danger"><b>{{$boxeInfo['message']}}</b></small>
+                                    @else
+                                        <small class="text-danger"><b>Box capacity not met.</b></small>
+                                    @endif
                                 @endif
                             </div>
                         </div>

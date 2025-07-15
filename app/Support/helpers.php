@@ -171,7 +171,7 @@ function getImportTariffTax($total)
 }
 
 
-function getCubeRangesV2($size)
+function getCubeRangesV2($size , $orderTotal = 0)
 {
     $size = $size > 220 ? 220 : $size;
 
@@ -184,6 +184,19 @@ function getCubeRangesV2($size)
         $percentage = 100;
         $total = 0;
     } else {
+        $minimumOrder = Setting::where('key' , 'minimum_order_amount')->first();
+
+        // 🚫 Check if order total meets minimum requirement also todo here which carriers
+        if ($minimumOrder && $orderTotal < $minimumOrder->value) {
+            return [
+                'message' => "Minimum order not met. Add more items to reach the $" . $minimumOrder->value,
+                'size' => $size,
+                'boxMatched' => null,
+                'percentage' => 0,
+                'countBoxes' => 0
+            ];
+        }
+
         $user = auth()->user();
         $stateNotAllow22 = false;
 

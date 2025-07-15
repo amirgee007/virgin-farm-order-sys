@@ -291,8 +291,8 @@
                     </div>
 
                     @php
-                        $boxeInfoDetail = getCubeRangesV2($size);
                         $total = round2Digit($total);
+                        $boxeInfoDetail = getCubeRangesV2($size , $total);
                     @endphp
 
                     @if(@$boxeInfoDetail['boxMatched'])
@@ -412,7 +412,11 @@
                         </div>
                     @else
                         <div class="text-center text-danger">
-                            <h3><strong>Please select more products to fill your box. </strong></h3>
+                                @if(isset($boxeInfoDetail['message']))
+                                    <h3><strong>{{$boxeInfoDetail['message']}} </strong></h3>
+                                @else
+                                    <h3><strong>Please select more products to fill your box. </strong></h3>
+                                @endif
                             <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i
                                     class="fa fa-angle-left"></i> Continue Shopping</a>
                         </div>

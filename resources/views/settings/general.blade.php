@@ -35,6 +35,22 @@
 
                 {{ Form::close() }}
             </div>
+
+            <div class="card-body">
+                {!! Form::open(['route' => 'settings.general.update', 'id' => 'minimum-order-settings-form']) !!}
+                <input type="hidden" name="minimum_order_setting" value="YES">
+
+                <div class="form-group">
+                    <label for="minimum_order_amount">@lang('Minimum Order Amount') $</label>
+                    <input type="number" placeholder="Minimum order amount for users" step="0.01" min="0" max="1000" class="form-control input-solid" required id="minimum_order_amount" name="minimum_order_amount" value="{{ $minimumOrder->value ?? '' }}">
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    @lang('Update')
+                </button>
+
+                {{ Form::close() }}
+            </div>
         </div>
     </div>
 
@@ -68,5 +84,6 @@
 
         </div>
     </div>
+
 </div>
 @stop

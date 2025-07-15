@@ -29,7 +29,9 @@ class SettingsController extends Controller
     public function general()
     {
         $popup = \Vanguard\Models\Setting::where('key', 'popup-seting')->first();
-        return view('settings.general', compact('popup'));
+        $minimumOrder = \Vanguard\Models\Setting::where('key', 'minimum_order_amount')->first();
+
+        return view('settings.general', compact('popup' , 'minimumOrder'));
     }
 
     public static function unitOfMeaures()
@@ -80,15 +82,22 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         if ($request->pop_up_dynamic) {
-            $popup = \Vanguard\Models\Setting::where('key', 'popup-seting')->first();
+            $popup = \Vanguard\Models\Setting::firstOrNew(['key' => 'popup-seting']);
 
             $popup->value = $request->pop_up_text;
             $popup->label = $request->start_date;
             $popup->extra_info = $request->end_date;
 
             $popup->save();
+        }
 
-        } else {
+        if ($request->minimum_order_amount) {
+            $minimumOrder = \Vanguard\Models\Setting::firstOrNew(['key' => 'minimum_order_amount']);
+
+            $minimumOrder->value = $request->minimum_order_amount;
+            $minimumOrder->save();
+        }
+        else {
             $this->updatesetting($request->except("_token"));
         }
         return back()->withSuccess(__('Settings updated successfully.'));
