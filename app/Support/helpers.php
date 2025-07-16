@@ -171,7 +171,7 @@ function getImportTariffTax($total)
 }
 
 
-function getCubeRangesV2($size , $orderTotal = 0)
+function getCubeRangesV2($size, $orderTotal = 0)
 {
     $size = $size > 220 ? 220 : $size;
 
@@ -179,25 +179,35 @@ function getCubeRangesV2($size , $orderTotal = 0)
     $percentage = null;
     $total = 0;
 
+    // Fetch the configured minimum order amount
+    $minimumOrderSetting = Setting::where('key', 'minimum_order_amount')->first();
+    $user = itsMeUser();
+
+    // List of carriers that are exempt from the minimum order requirement
+    $excludedCarrierIds = [17, 23]; // Delivery VF and FedEx Overnight
+
+    // Nullify minimum order setting if the user's carrier is excluded
+    if (in_array($user->carrier_id, $excludedCarrierIds)) {
+        $minimumOrderSetting = null; #just set to skip the error messages
+    }
+
+    // Check if the order meets the minimum requirement
+    if ($minimumOrderSetting && $orderTotal < $minimumOrderSetting->value) {
+        $minVal = $minimumOrderSetting->value;
+        return [
+            'message' => "Your cart is below the $$minVal minimum for this carrier. Please add more items to proceed.",
+            'size' => $size,
+            'boxMatched' => null,
+            'percentage' => 0,
+            'countBoxes' => 0,
+        ];
+    }
+
     if (checkIfSkipCubeRangeCondition()) {
         $boxCombination = 'N/A';
         $percentage = 100;
         $total = 0;
     } else {
-        $minimumOrder = Setting::where('key' , 'minimum_order_amount')->first();
-
-        // 🚫 Check if order total meets minimum requirement also todo here which carriers
-        if ($minimumOrder && $orderTotal < $minimumOrder->value) {
-            return [
-                'message' => "Minimum order not met. Add more items to reach the $" . $minimumOrder->value,
-                'size' => $size,
-                'boxMatched' => null,
-                'percentage' => 0,
-                'countBoxes' => 0
-            ];
-        }
-
-        $user = auth()->user();
         $stateNotAllow22 = false;
 
         if (in_array($user->state, [1, 12]))

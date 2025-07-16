@@ -43,6 +43,8 @@
                 <div class="form-group">
                     <label for="minimum_order_amount">@lang('Minimum Order Amount') $</label>
                     <input type="number" placeholder="Minimum order amount for users" step="0.01" min="0" max="1000" class="form-control input-solid" required id="minimum_order_amount" name="minimum_order_amount" value="{{ $minimumOrder->value ?? '' }}">
+                <small>Minimum order value for all other carriers except Delivery VF and Fedex Overnight
+                </small>
                 </div>
 
                 <button type="submit" class="btn btn-primary">

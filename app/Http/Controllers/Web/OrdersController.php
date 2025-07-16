@@ -175,10 +175,10 @@ class OrdersController extends Controller
         // Get the day of the week for the selected ship date
         $dayOfWeek = Carbon::parse($dateShipped)->dayOfWeekIso; // 1 = Monday, 7 = Sunday
 
-        // 🚫 Disable VF Carrier (ID 17) on Wed, Thu, Fri
-        if ($usersCarrierId == 17 && in_array($dayOfWeek, [3, 4, 5])) {
+        // 🚫 Disable VF Carrier (ID 17) only can order on monday before east time
+        if ($usersCarrierId == 17 && $dayOfWeek != 1) {
             $response['error'] = true;
-            $response['VFNotAllowed'] = 'VF carrier is only available until Tuesday. Please choose FedEx or another carrier for Wednesday, Thursday, or Friday.';
+            $response['VFNotAllowed'] = "Choose Monday as your ship date to ensure Tuesday delivery with Virgin Farms";
             return response()->json($response);
         }
 
