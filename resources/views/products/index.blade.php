@@ -20,6 +20,11 @@
         .clickable {
             cursor: pointer;
         }
+        .product-checkbox,#select-all {
+            transform: scale(1.5); /* or 2 for even larger */
+            margin: 5px;
+            margin-top: 10px;
+        }
     </style>
 
 @endsection
@@ -84,6 +89,11 @@
                                 <i class="fas fa-upload"></i>
                             </a>
 
+                            <a href="javascript:void(0)" id="bulk_delete_excel" title="BULK delete products by excel file" data-toggle="tooltip" data-placement="left"
+                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
+                                <i class="fas fa-trash"></i>
+                            </a>
+
                         </p>
                     </div>
 
@@ -137,10 +147,20 @@
                         </div>
                     </form>
 
-                    <div class="table-responsive mt-2" id="users-table-wrapper">
+                    <form method="POST" action="{{ route('products.bulk.delete') }}" id="bulkDeleteForm">
+                        @csrf
+                        <div class="mb-2">
+                            <button type="submit" id="bulkDeleteBtn" class="btn btn-danger btn-sm d-none">
+                                <i class="fas fa-trash"></i> Delete  <span id="selectedCountValue">0</span> Selected Products
+                            </button>
+
+                        </div>
+                        <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">
                             <thead>
                             <tr>
+                                <th><input type="checkbox" id="select-all"></th>
+
                                 <th class="min-width-80">@lang('Category')</th>
                                 <th class="min-width-80">@lang('Item')</th>
                                 <th class="min-width-80">@lang('Supplier')</th>
@@ -157,6 +177,7 @@
                             <tbody>
                             @if (count($products))
                                 @foreach ($products as $index => $product)
+
                                     @include('products.row')
                                 @endforeach
                             @else
@@ -169,6 +190,7 @@
                             </tbody>
                         </table>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -626,6 +648,34 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="bulkDeleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <form method="POST" action="{{ route('products.bulk.delete') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Bulk Delete Products</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+{{--                        <label for="sku_list">Enter SKUs (comma-separated or new lines):</label>--}}
+{{--                        <textarea readonly name="sku_list" id="sku_list" class="form-control" rows="6" required></textarea>--}}
+{{--                        <hr>--}}
+                        <label>Upload Excel:</label>
+                        <input type="file" name="sku_excel" accept=".xlsx,.xls,.csv" class="form-control">
+                        <small>File must have a 1 column with <b>item_nos</b></small>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-danger">Delete Products</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 @stop
 
 @section('scripts')
@@ -691,6 +741,44 @@
             cb(start, end);
         });
 
+        $(document).ready(function () {
+
+            $(document).on('click', '.product-checkbox', function(event) {
+                event.stopPropagation(); // Stops the click from triggering the parent row's collapse
+            });
+
+            // Show/hide delete button and update selected count
+            function updateBulkActions() {
+                const selectedCount = $('.product-checkbox:checked').length;
+                $('#bulkDeleteBtn').toggleClass('d-none', selectedCount === 0);
+                $('#selectedCountValue').text(selectedCount);
+            }
+
+            $('#select-all').on('change', function () {
+                $('.product-checkbox').prop('checked', this.checked).trigger('change');
+            });
+
+            $(document).on('change', '.product-checkbox', function () {
+                updateBulkActions();
+            });
+
+            $('#bulkDeleteForm').on('submit', function (e) {
+                const selectedCount = $('.product-checkbox:checked').length;
+                if (selectedCount === 0) {
+                    e.preventDefault();
+                    toastr.warning('Please select at least one product.');
+                    return;
+                }
+
+                const confirmed = confirm(`Are you sure you want to delete ${selectedCount} selected product(s)?`);
+                if (!confirmed) {
+                    e.preventDefault();
+                }
+            });
+
+        });
+
+
         $.fn.editable.defaults.mode = 'inline';
         $.fn.editable.defaults.ajaxOptions = {
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
@@ -732,6 +820,10 @@
 
         $('#import_excel_inventory_bulk').on('click', function () {
             $('#upload_excel_inventory_bulk').modal('show');
+        });
+
+        $('#bulk_delete_excel').on('click', function () {
+            $('#bulkDeleteModal').modal('show');
         });
 
         $('#reset_delete_inventory').on('click', function () {

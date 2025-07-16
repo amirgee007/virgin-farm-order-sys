@@ -1,6 +1,9 @@
 @php $prodQty = $product->prodQty; @endphp
 
 <tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
+    <td>
+        <input type="checkbox" class="product-checkbox" name="product_ids[]" value="{{ $product->id }}">
+    </td>
     <td class="align-middle">
         @if(!Request::get('date_in'))
         <span class="badge badge-lg badge-danger" title="Total Rows found for the Inventory bellow.">
@@ -61,9 +64,8 @@
 </tr>
 
 <tr>
-    <td colspan="7">
+    <td colspan="10">
         <div id="accordion{{$product->id}}" class="collapse">
-
             <table class="table">
                 <thead>
                     <tr>
@@ -170,7 +172,6 @@
                 @endif
                 </tbody>
             </table>
-
         </div>
     </td>
 </tr>

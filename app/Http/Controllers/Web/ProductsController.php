@@ -52,10 +52,18 @@ class ProductsController extends Controller
         $user = auth()->user();
         $address = $user->shipAddress;
 
-
         #by default we will use the default carrier.
         if (!$user->carrier_id) {
             $user->update(['carrier_id' => $user->carrier_id_default]);
+        }
+
+        // Check current user's carrier ID
+        $user = itsMeUser();
+        $isCarrierVF = $user && $user->carrier_id == 17;
+
+        // If carrier is VF (17) and date_shipped is Monday, reset it to null
+        if ($isCarrierVF && $date_shipped && !Carbon::parse($date_shipped)->isMonday()) {
+            $date_shipped = Carbon::parse($date_shipped)->startOfWeek()->addWeek()->toDateString(); // This gives next Monday
         }
 
         if (!$date_shipped) {
@@ -194,6 +202,10 @@ class ProductsController extends Controller
     {
         $highlightedDates = [];
 
+        // Check current user's carrier ID
+        $user = itsMeUser();
+        $isCarrierVF = $user && $user->carrier_id == 17; #!$date->isMonday()
+
         $productQuantities = $query->select('date_in', 'date_out')
             ->whereDate('date_out', '>=', Carbon::today())
             ->get();
@@ -201,6 +213,10 @@ class ProductsController extends Controller
         foreach ($productQuantities as $productQuantity) {
             $period = \Carbon\CarbonPeriod::create($productQuantity->date_in, $productQuantity->date_out);
             foreach ($period as $date) {
+                // If carrier is 23, only allow Mondays
+                if ($isCarrierVF && !$date->isMonday()) {
+                    continue;
+                }
                 $highlightedDates[] = $date->format('Y-m-d');
             }
         }
@@ -208,10 +224,83 @@ class ProductsController extends Controller
         return array_unique($highlightedDates);
     }
 
+    public function bulkDeleteProducts(Request $request)
+    {
+
+        if($request->product_ids){
+            $ids = $request->input('product_ids', []);
+
+            if (empty($ids)) {
+                return back()->withErrors('No products selected.');
+            } else {
+                $products = Product::whereIn('id', $ids)->get();
+
+                foreach ($products as $product) {
+                    self::deleteProductLogic($product);
+                }
+
+                session()->flash('success', "Deleted " . count($products) . " products successfully.");
+                return back();
+            }
+        }
+
+        $itemNos = [];
+
+        // Option 1: Parse comma-separated or newline SKUs
+//        if ($request->filled('sku_list')) {
+//            $lines = preg_split('/[\r\n,]+/', $request->input('sku_list'));
+//            $itemNos = array_filter(array_map('trim', $lines));
+//        }
+
+        // Option 2: Excel Upload
+        if ($request->hasFile('sku_excel')) {
+            $file = $request->file('sku_excel');
+            $data = \Excel::toArray([], $file);
+
+            foreach ($data[0] as $row) {
+                if (!empty($row[0])) {
+                    $itemNos[] = trim($row[0]);
+                }
+            }
+        }
+
+        $itemNos = array_unique($itemNos);
+        if (empty($itemNos)) {
+            session()->flash('app_error', 'No valid SKUs provided.');
+            return back();
+        }
+
+        // Delete related quantities and images
+        $products = Product::whereIn('item_no', $itemNos)->get();
+
+        foreach ($products as $product) {
+            self::deleteProductLogic($product);
+        }
+
+        session()->flash('success', "Deleted " . count($products) . " products successfully.");
+        return back();
+    }
+
+    static function deleteProductLogic($product)
+    {
+        // Delete image if stored
+        if ($product->image_url && \Storage::exists($product->image_url)) {
+            \Storage::delete($product->image_url);
+        }
+
+        // Delete product quantities
+        $product->prodQty()->delete();
+
+        // Delete product
+        $product->delete();
+    }
+
     public function deleteProduct($id)
     {
         #todo: plz check all relational data here.
-        Product::where('id', $id)->delete();
+        $product = Product::where('id', $id)->first();
+        self::deleteProductLogic($product);
+
         session()->flash('success', 'Product deleted successfully');
         return back();
     }

@@ -151,6 +151,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@deleteProduct'
         ]);
 
+        Route::post('/bulk-delete-products', [
+            'as' => 'products.bulk.delete',
+            'uses' => 'ProductsController@bulkDeleteProducts'
+        ]);
+
         Route::delete('/reset-product/{id}', [
             'as' => 'products.reset',
             'uses' => 'ProductsController@resetProduct'
