@@ -178,7 +178,7 @@ class OrdersController extends Controller
         // 🚫 Disable VF Carrier (ID 17) only can order on monday before east time
         if ($usersCarrierId == 17 && $dayOfWeek != 1) {
             $response['error'] = true;
-            $response['VFNotAllowed'] = "Choose Monday as your ship date to ensure Tuesday delivery with Virgin Farms";
+            $response['VFNotAllowed'] = "Choose Monday as your ship date for Tuesday delivery with Virgin Farms. Alternatively, FedEx is available.";
             return response()->json($response);
         }
 
