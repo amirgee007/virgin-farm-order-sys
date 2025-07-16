@@ -227,7 +227,7 @@ class ProductsController extends Controller
     public function bulkDeleteProducts(Request $request)
     {
 
-        if($request->product_ids){
+        if ($request->product_ids) {
             $ids = $request->input('product_ids', []);
 
             if (empty($ids)) {
@@ -517,12 +517,50 @@ class ProductsController extends Controller
     public function productUpdateColumn(Request $request)
     {
         try {
+            $column = $request['name'];
+            $value = $request['value'];
+            $pk = $request['pk'];
+
+            // Validate unit_of_measure
+            if ($column === 'unit_of_measure') {
+                $isValid = \DB::table('unit_of_measures')->where('unit', $value)->exists();
+                if (!$isValid) {
+                    return response()->json(['Invalid unit_of_measure'], 422);
+                }
+            }
+
+            // Validate item_no uniqueness
+            if ($column === 'item_no') {
+                $duplicate = Product::where('item_no', $value)
+                    ->where('id', '!=', $pk)
+                    ->exists();
+
+                if ($duplicate) {
+                    return response()->json(['Item number already exists. Please use a unique one.'], 422);
+                }
+            }
+
+            // Perform update
+            Product::where('id', $pk)->update([$column => $value]);
+
+            return ['success' => true];
+
+        } catch (\Exception $ex) {
+            \Log::error('Product update failed: ' . $ex->getMessage());
+            return response()->json(['error' => 'Something went wrong. Please try again later.'], 500);
+        }
+    }
+
+
+    public function productQtyUpdateColumn(Request $request)
+    {
+        try {
             ProductQuantity::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
             return ['Done'];
 
         } catch (\Exception $ex) {
             #dd($ex->getMessage());
-            session()->flash('app_error', 'Something went wrong plz try again later inventoryUpdateColumn.');
+            session()->flash('app_error', 'Something went wrong plz try again later productQtyUpdateColumn.');
             return back();
         }
     }

@@ -784,7 +784,15 @@
             headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
         };
 
-        $('.editable').editable();
+        $('.editable').editable({
+            success: function(response, newValue) {
+                toastr.success('Updated successfully.');
+            },
+            error: function(response) {
+                toastr.error(response.responseText);
+            }
+        });
+
 
         $('.collapse').on('show.bs.collapse', function () {
             $('.collapse.in').collapse('hide');

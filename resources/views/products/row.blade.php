@@ -13,7 +13,9 @@
         @endif
         {{ @$categories[$product->category_id] }}
     </td>
-    <td class="align-middle" title="{{$product->id}}">{{ $product->item_no }}</td>
+    <td class="align-middle">
+        <x-editable name="item_no" pk="{{ $product->id }}" value="{{ $product->item_no }}" url="{{ route('product.update.column') }}" />
+    </td>
     <td class="align-middle" title="Show Dutch or our own products">
         {{ $product->supplier_id == 1 ? 'VF' : 'Dutch' }}
     </td>
@@ -32,10 +34,19 @@
     </td>
 
     <td class="align-middle">{{ $product->color_name  }} {{$product->color_sub_class }}</td>
-    <td class="align-middle">{{ $product->unit_of_measure }}</td>
 
-    <td class="align-middle">{{ $product->weight }}</td>
-    <td class="align-middle">{{ $product->size }}</td>
+    <td class="align-middle">
+        <x-editable name="unit_of_measure" pk="{{ $product->id }}" value="{{ $product->unit_of_measure }}" url="{{ route('product.update.column') }}" />
+    </td>
+
+    <td class="align-middle">
+        <x-editable name="weight" pk="{{ $product->id }}" type="number" step="any" empty="0" value="{{ $product->weight }}" url="{{ route('product.update.column') }}" />
+    </td>
+
+    <td class="align-middle">
+        <x-editable name="size" pk="{{ $product->id }}" type="number" step="any" empty="0" value="{{ $product->size }}" url="{{ route('product.update.column') }}" />
+    </td>
+
     <td class="align-middle">
         <a href="{{ route('products.delete', $product->id) }}"
            class="btn btn-icon"
@@ -96,68 +107,12 @@
                                 {{$prod->item_no}}
                                 {!!  $prod->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                             </td>
-                            <td class="align-middle">
-                                <a class="editable"
-                                   style="cursor:pointer;"
-                                   data-name="price_fob"
-                                   data-step="any"
-                                   data-type="number"
-                                   data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
-                                   data-url="{{route('product.update.column')}}"
-                                   data-value="{{ $prod->price_fob }}">
-                                </a>
-                            </td>
 
-                            <td class="align-middle">
-                                <a class="editable"
-                                   style="cursor:pointer;"
-                                   data-name="price_fedex"
-                                   data-step="any"
-                                   data-type="number"
-                                   data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
-                                   data-url="{{route('product.update.column')}}"
-                                   data-value="{{ $prod->price_fedex }}">
-                                </a>
-                            </td>
-
-                            <td class="align-middle">
-                                <a class="editable"
-                                   style="cursor:pointer;"
-                                   data-name="price_hawaii"
-                                   data-step="any"
-                                   data-type="number"
-                                   data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
-                                   data-url="{{route('product.update.column')}}"
-                                   data-value="{{ $prod->price_hawaii }}">
-                                </a>
-                            </td>
-                                <td class="align-middle">
-                                    <a class="editable"
-                                       style="cursor:pointer;"
-                                       data-name="price_fedex_2"
-                                       data-step="any"
-                                       data-type="number"
-                                       data-emptytext="0"
-                                       data-pk="{{$prod->id}}"
-                                       data-url="{{route('product.update.column')}}"
-                                       data-value="{{ $prod->price_fedex_2 }}">
-                                    </a>
-                                </td>
-
-                            <td class="align-middle">
-                                <a class="editable"
-                                   style="cursor:pointer;"
-                                   data-name="quantity"
-                                   data-type="number"
-                                   data-emptytext="0"
-                                   data-pk="{{$prod->id}}"
-                                   data-url="{{route('product.update.column')}}"
-                                   data-value="{{ $prod->quantity }}">
-                                </a>
-                            </td>
+                            <td class="align-middle"><x-editable name="price_fob" type="number" step="any" empty="0" pk="{{ $prod->id }}" url="{{ route('product.qty.update.column') }}" value="{{ $prod->price_fob }}" /></td>
+                            <td class="align-middle"><x-editable name="price_fedex" type="number" step="any" empty="0" pk="{{ $prod->id }}" url="{{ route('product.qty.update.column') }}" value="{{ $prod->price_fedex }}" /></td>
+                            <td class="align-middle"><x-editable name="price_hawaii" type="number" step="any" empty="0" pk="{{ $prod->id }}" url="{{ route('product.qty.update.column') }}" value="{{ $prod->price_hawaii }}" /></td>
+                            <td class="align-middle"><x-editable name="price_fedex_2" type="number" step="any" empty="0" pk="{{ $prod->id }}" url="{{ route('product.qty.update.column') }}" value="{{ $prod->price_fedex_2 }}" /></td>
+                            <td class="align-middle"><x-editable name="quantity" type="number" empty="0" pk="{{ $prod->id }}" url="{{ route('product.qty.update.column') }}" value="{{ $prod->quantity }}" /></td>
 
                             <td class="align-middle">{{ $prod->date_in }}</td>
                             <td class="align-middle">{{ $prod->date_out }}</td>

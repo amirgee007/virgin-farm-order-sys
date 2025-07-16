@@ -161,10 +161,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@resetProduct'
         ]);
 
-
         Route::post('/product-update-column', [
             'as' => 'product.update.column',
             'uses' => 'ProductsController@productUpdateColumn'
+        ]);
+
+        Route::post('/product-qty-update-column', [
+            'as' => 'product.qty.update.column',
+            'uses' => 'ProductsController@productQtyUpdateColumn'
         ]);
 
         Route::post('/upload-create-products', [
