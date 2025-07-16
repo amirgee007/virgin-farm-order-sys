@@ -30,7 +30,7 @@
              data-largeimg="{{$product->image_url}}"
              src="{{ asset('assets\img\no-image.png') }}" class="img-thumbnail" alt="VF Farm">
 
-        {{ $product->product_text }}
+        <x-editable name="product_text" pk="{{ $product->id }}" value="{{ $product->product_text }}" url="{{ route('product.update.column') }}" />
     </td>
 
     <td class="align-middle">{{ $product->color_name  }} {{$product->color_sub_class }}</td>
