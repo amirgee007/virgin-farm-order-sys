@@ -67,7 +67,7 @@
                                 <a href="javascript:void(0)" id="import_excel_products"
                                    class="btn btn-danger btn-sm mr-2 mb-1"
                                    title="Upload Web Item Masters with Class" data-toggle="tooltip">
-                                    <i class="fas fa-upload"></i> Import Products
+                                    <i class="fas fa-upload"></i> Import Master
                                 </a>
                                 <a href="javascript:void(0)" id="bulk_delete_excel"
                                    class="btn btn-danger btn-sm mr-2 mb-1"
@@ -97,7 +97,13 @@
                                 <a href="javascript:void(0)" id="import_excel_inventory"
                                    class="btn btn-success btn-sm mr-1 mb-1"
                                    title="Refresh inventory via Excel file" data-toggle="tooltip">
-                                    <i class="fas fa-upload"></i> Refresh
+                                    <i class="fas fa-upload"></i> Update Ranges
+                                </a>
+
+                                <a href="javascript:void(0)" id="reset_delete_inventory"
+                                   class="btn btn-danger btn-sm mr-1 mb-1"
+                                   title="Reset or delete a specific inventory entry" data-toggle="tooltip">
+                                    <i class="fas fa-trash"></i> Delete Ranges
                                 </a>
 
                                 <a href="javascript:void(0)" id="import_excel_inventory_bulk"
@@ -106,22 +112,25 @@
                                     <i class="fas fa-upload"></i> Bulk Upload
                                 </a>
 
-                                <a href="{{route('inventory.reset.clear')}}"
-                                   class="btn btn-warning btn-sm mr-1 mb-1"
-                                   data-toggle="tooltip"
-                                   title="Reset or clear current inventory"
-                                   data-method="GET"
-                                   data-confirm-title="@lang('Please Confirm')"
-                                   data-confirm-text="@lang('Are you sure that you want to Reset,Refresh or Clear the inventory availability?')"
-                                   data-confirm-delete="@lang('Yes, delete it!')">
-                                    <i class="fas fa-sync"></i> Reset All
-                                </a>
+{{--                                <a href="{{route('inventory.reset.clear')}}"--}}
+{{--                                   class="btn btn-warning btn-sm mr-1 mb-1"--}}
+{{--                                   data-toggle="tooltip"--}}
+{{--                                   title="Reset or clear current inventory"--}}
+{{--                                   data-method="GET"--}}
+{{--                                   data-confirm-title="@lang('Please Confirm')"--}}
+{{--                                   data-confirm-text="@lang('Are you sure that you want to Reset,Refresh or Clear the inventory availability?')"--}}
+{{--                                   data-confirm-delete="@lang('Yes, delete it!')">--}}
+{{--                                    <i class="fas fa-sync"></i> Reset All--}}
+{{--                                </a>--}}
 
-                                <a href="javascript:void(0)" id="reset_delete_inventory"
-                                   class="btn btn-danger btn-sm mr-1 mb-1"
-                                   title="Reset or delete a specific inventory entry" data-toggle="tooltip">
-                                    <i class="fas fa-trash"></i> Delete Few
-                                </a>
+                                <button type="button"
+                                        title="Reset or clear current inventory"
+                                        class="btn btn-warning btn-sm mr-1 mb-1"
+                                        data-toggle="modal"
+                                        data-target="#confirmResetModal">
+                                    <i class="fas fa-sync"></i> Reset Inventory
+                                </button>
+
                             </div>
 
                         </div>
@@ -228,6 +237,38 @@
     </div>
 
     {!! $products->render() !!}
+
+    <!-- Confirmation Modal -->
+    <div class="modal fade" id="confirmResetModal" tabindex="-1" role="dialog" aria-labelledby="confirmResetLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-warning">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title" id="confirmResetLabel">@lang('Confirm Inventory Reset')</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="text-danger"><i class="fas fa-exclamation-triangle"></i>
+                        This will permanently clear all current inventory availability. After this action, you will need to upload the full inventory again.
+                    </p>
+                    <p><b>@lang('To confirm, please type') <code>DELETE</code>:</b></p>
+                    <input type="text" id="confirm-delete-input" class="form-control" placeholder="Type DELETE to confirm">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@lang('Cancel')</button>
+                    <a href="{{ route('inventory.reset.clear') }}"
+                       id="confirm-delete-btn"
+                       class="btn btn-danger"
+                       style="display: none;">
+                        <i class="fas fa-trash-alt"></i> @lang('Yes, Reset It')
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="modal" id="upload_excel_inventory_bulk" type="">
         <div class="modal-dialog modal-lg">
@@ -718,6 +759,26 @@
 
     <script>
         $(function() {
+            const $input = $('#confirm-delete-input');
+            const $deleteBtn = $('#confirm-delete-btn');
+
+            $input.on('input', function () {
+                const val = $.trim($input.val());
+                if (val === 'DELETE') {
+                    $deleteBtn.show();
+                    toastr.success('You are now authorized to reset the inventory. Click "YES" to proceed..');
+                } else {
+                    if (val.toUpperCase() === 'DELETE') {
+                        toastr.warning('Please type DELETE in all capital letters to reset.');
+                    }
+                    $deleteBtn.hide();
+                }
+            });
+
+            $('#confirmResetModal').on('hidden.bs.modal', function () {
+                $input.val('');
+                $deleteBtn.hide();
+            });
 
             document.getElementById('showModalBtn').addEventListener('click', function () {
                 // Show the modal programmatically
