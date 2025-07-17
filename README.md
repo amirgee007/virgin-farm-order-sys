@@ -1,44 +1,36 @@
-## Virgin Farms Order System 
-####The project will be based on the Solé Farms system and will create the workflow required by Virgin Farms.
++-----------------------------+
+|     Carrier-Based Rules     |
++-----------------------------+
 
-   
-- Client Area:
-• Access to Inventory by dates.
-• Inventory search.
-• Placing orders.
-• Pre-orders (Prebook Summary).
-• Review of previous orders.
-• Review of purchased products.
+    ┌───────────────────────────────────────────────┐
+    │ FedEx Customer                                │
+    │ - Friday = ❌ Not Allowed                     │
+    │ - Show: “Not Available”                       │
+    │ - Suggest selecting Mon–Thu only ✅           │
+    └───────────────────────────────────────────────┘
+ 
+    ┌───────────────────────────────────────────────┐
+    │ Delivery (Virgin Farms)                       │
+    │ - Tuesday Delivery ✅                         │
+    │ - Must order by Monday deadline ⏰            │
+    │ - After Monday → ❌ Hide inventory or show:   │
+    │   “Too late for this week’s delivery”         │
+    └───────────────────────────────────────────────┘
+ 
+    ┌───────────────────────────────────────────────┐
+    │ All Others (Pickup, etc.)                     │
+    │ - Monday–Friday ✅                            │
+    │ - No shipping restrictions                    │
+    └───────────────────────────────────────────────┘
 
-- Administrator Area:
-• All of the above access.
-• Order approval.
-• Order editing.
-• Order deletion.
-• User management.
-• Creation, deletion, and editing of clients.
+FedEx: No Friday shipping (unchanged)
+Delivery:
+Shows Tuesday delivery only
+Allows shopping only if today is Monday
+All Others: Full week access
 
-- Inventory Upload:
-• User-friendly screen for uploading inventory from an Excel file with the necessary fields and conditions.
-
-- Client Area - Administrator View:
-• List of clients and order summaries.
-• Client data.
-
-- Orders Area - Administrator View:
-• List of orders.
-• Order value.
-• Carrier, etc.
-
-- Products Area - Administrator View:
-• List of products and their photos.
-• Function to bulk upload products from Excel and their photos.
-• Ability to add products one by one.
-
-- Email Notification System:
-• Notifications to clients: Orders, Order Status.
-• Notifications to administrators: Orders, Order Status.
-
-- Calculation of Minimum Order by Value, Weight, and Volume:
-• List of shipping boxes, volume, and weight.
-• Each product will have an assigned weight and/or volume, and the sum of products (cubic weight) will add up to the shipping box's capacity.
+Virgin Farms (ID 17): Only Monday is allowed. Otherwise, it blocks and shows an error.
+FedEx (IDs 19, 20, 23): Friday is not allowed, and a clear message is returned.
+FedEx Priority Overnight + Pick Up (IDs 23, 32): If ordering today after 3:30 PM with no cart yet, block the order.
+All other carriers (e.g., Armellini, Prime, etc.): No special restrictions
+This is now logic for now.

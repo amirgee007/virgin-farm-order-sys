@@ -160,7 +160,7 @@ class OrdersController extends Controller
     public function dateCarrierValidation(Request $request)
     {
         $user = auth()->user();
-        $dateShipped = $request->input('date_shipped', $user->last_ship_date);
+        $dateShipped = $request->input('date_shipped', null); #$user->last_ship_date
         $usersCarrierId = $request->input('carrier_id', $user->carrier_id_default);
         $lastShipDate = $user->last_ship_date;
 
@@ -172,29 +172,43 @@ class OrdersController extends Controller
             'cartExist' => $cartExist,
         ];
 
-        // Get the day of the week for the selected ship date
         $dayOfWeek = Carbon::parse($dateShipped)->dayOfWeekIso; // 1 = Monday, 7 = Sunday
+        $today = now()->toDateString();
+        $currentTime = now();
+        $cutoffTime = Carbon::createFromTimeString('15:30:00'); // 3:30 PM cutoff time
 
-        // 🚫 Disable VF Carrier (ID 17) only can order on monday before east time
-        if ($usersCarrierId == 17 && $dayOfWeek != 1) {
-            $response['error'] = true;
-            $response['VFNotAllowed'] = "Choose Monday as your ship date for Tuesday delivery with Virgin Farms. Alternatively, FedEx is available.";
-            return response()->json($response);
-        }
-
-        // If the date has changed to today and no cart exists, check cutoff conditions
-        if (!$cartExist && $dateShipped === now()->toDateString()) {
-            $currentTime = now();
-            $cutoffTime = Carbon::createFromTimeString('15:30:00'); // 3:30 PM cutoff time
-            $restrictedCarriers = [23, 32]; // PU and FedEx
-
-            // If current time is past cutoff and carrier is in the restricted list
-            if ($currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $restrictedCarriers)) {
+        // Carrier Rule: Virgin Farms (ID 17) – only allow Monday for Tuesday delivery
+        if ($usersCarrierId == 17) {
+            if ($dayOfWeek != 1) {
                 $response['error'] = true;
                 $response['old_ship_date'] = $lastShipDate;
+                $response['message'] = "Choose Monday as your ship date for Tuesday delivery with Virgin Farms. Alternatively, FedEx is available.";
+                return response()->json($response);
             }
         }
 
+        // Carrier Rule: FedEx (Customer Acct = 19, Ecuador = 20, Priority Overnight = 23)
+        $fedexCarrierIds = [19, 20, 23];
+        if (in_array($usersCarrierId, $fedexCarrierIds)) {
+            if ($dayOfWeek == 5) { // 5 = Friday
+                $response['error'] = true;
+                $response['old_ship_date'] = $lastShipDate;
+                $response['message'] = "FedEx does not ship on Fridays. Please select a Monday–Thursday ship date.";
+                return response()->json($response);
+            }
+        }
+
+        // Carrier Rule: Pick Up (32) and FedEx Priority Overnight (23) cutoff for same-day shipping
+        $restrictedCarriers = [23, 32];
+        if (!$cartExist && $dateShipped === $today && $currentTime->greaterThan($cutoffTime) && in_array($usersCarrierId, $restrictedCarriers)) {
+            $response['error'] = true;
+            $response['old_ship_date'] = $lastShipDate;
+            $response['CutoffPassed'] = "The cutoff time (3:30 PM) has passed for this carrier today. Please select a future ship date.";
+        }
+
+        #////////////////////This above logic is used at two places plz keep noted so one change also do second change.
+
         return response()->json($response);
     }
+
 }

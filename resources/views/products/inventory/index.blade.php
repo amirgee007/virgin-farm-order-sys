@@ -427,8 +427,12 @@
                                 </div>
                             </form>
                         </div>
-
                     </div>
+                    @if(isset($autoCorrected) && $autoCorrected)
+                        <div class="alert alert-warning mt-2">
+                            <strong>Notice:</strong> Your selected ship date was adjusted to meet carrier shipping rules.
+                        </div>
+                    @endif
                     <hr>
                     {!! $products->render() !!}
                     @if($user->last_ship_date && $user->carrier_id)
@@ -728,17 +732,11 @@
                 },
                 success: function(response) {
                     if (response.error) {
-                        if (response.cartExist) {
-                            swal("Carrier Change Restricted", "To change the carrier, please empty your cart or complete your order first.", "error");
-                        } else if (response.VFNotAllowed) {
-                            // Show the custom message returned from backend (like for VF carrier)
-                            swal("Carrier Not Allowed", response.VFNotAllowed, "error");
-                        } else {
-                            swal("Unavailable for Ship Date & Carrier", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
-                        }
+                        handleCarrierValidationError(response, true);
                         $('#changeCarrier').val(previousCarrier);
                         return;
-                    } else {
+                    }
+                     else {
                         $.ajax({
                             url: '{{route('carriers.create.update')}}',
                             data: {carrier_id},
@@ -757,6 +755,15 @@
                     console.error('AJAX Error:', status, error);
                 }
             });
+        }
+        function handleCarrierValidationError(response) {
+            if (response.cartExist) {
+                swal("Carrier Change Restricted", "To change the carrier, please empty your cart or complete your order first.", "error");
+            } else if (response.message) {
+                swal("Carrier Not Allowed", response.message, "error");
+            } else {
+                swal("Unavailable for Ship Date & Carrier", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
+            }
         }
 
         $('#date_shipped, #category').change(function (event) {
@@ -782,9 +789,10 @@
                     },
                     success: function(response) {
                         if (response.error) {
-                            swal("Unavailable for Ship Date & Carrier.", "Please select a later date or change the carrier or contact your sales representative for assistance.", "error");
+                            handleCarrierValidationError(response);
                             $('#date_shipped').val(response.old_ship_date);
-                            return '';
+                            $('.bs-tooltip-top').remove();//just for toolTip
+                           return '';
                         }
                         else{
                             let shippedDate = $('#date_shipped').val();
