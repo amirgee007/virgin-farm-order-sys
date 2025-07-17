@@ -177,6 +177,8 @@
                             <td colspan="7"><em>@lang('No records found.')</em></td>
                         </tr>
                     @endif
+
+                    {{ $users->appends(request()->query())->links() }}
                 </tbody>
             </table>
         </div>

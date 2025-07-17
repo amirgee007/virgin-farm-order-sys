@@ -36,7 +36,7 @@
                 {{ Form::close() }}
             </div>
 
-            <div class="card-body">
+            <div class="card-body" style="padding: 9px;">
                 {!! Form::open(['route' => 'settings.general.update', 'id' => 'minimum-order-settings-form']) !!}
                 <input type="hidden" name="minimum_order_setting" value="YES">
 

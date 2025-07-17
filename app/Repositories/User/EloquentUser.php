@@ -139,22 +139,8 @@ class EloquentUser implements UserRepository
         // Pagination
         $result = $query->paginate($perPage);
 
-        // Preserve query string
-        if ($search) {
-            $result->appends(['search' => $search]);
-        }
-
-        if ($status) {
-            $result->appends(['status' => $status]);
-        }
-
-        if ($sort_by) {
-            $result->appends(['sort_by' => $sort_by]);
-        }
-
         return $result;
     }
-
 
 
     /**

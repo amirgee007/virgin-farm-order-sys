@@ -25,6 +25,10 @@
             margin: 5px;
             margin-top: 10px;
         }
+        .btn-sm {
+            padding: 0.25rem 0.5rem; /* override for more compact size */
+            font-size: 0.75rem;
+        }
     </style>
 
 @endsection
@@ -35,66 +39,93 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
+                    <!-- Header bar with product count and toggle -->
+                    <div class="notes-success p-2 d-flex justify-content-between align-items-center" style="background-color: #d4f8d4; border-radius: 5px;">
+                        <div>
+                            <span>Total products in the system are: <strong>{{$count}}</strong></span>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary btn-sm" type="button" data-toggle="collapse" data-target="#actionGroups" aria-expanded="false" aria-controls="actionGroups">
+                                <i class="fas fa-cogs"></i> Show/Hide Actions <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+                    </div>
 
-                    <div class="notes-success" style="">
-                        <p>Total products in the system are.
-                            <b>
-                                {{$count}}
-                            </b>
+                    <!-- Collapsible Action Section -->
+                    <div class="collapse mt-3" id="actionGroups">
+                        <div class="p-3 border rounded bg-light shadow-sm">
+                            <div class="row">
 
-                            <a href="javascript:void(0)" title="Create New Product" data-toggle="modal"
-                               data-target="#createProductModal" class="btn btn-primary btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-plus-circle"></i>
-                            </a>
+                            <!-- Product Management -->
+                            <div class="col-md-4 mb-3">
+                                <strong>Product Management:</strong><br>
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#createProductModal"
+                                   class="btn btn-success btn-sm mr-2 mb-1"
+                                   title="Create a new product" data-toggle="tooltip">
+                                    <i class="fas fa-plus-circle"></i> New Product
+                                </a>
+                                <a href="javascript:void(0)" id="import_excel_products"
+                                   class="btn btn-danger btn-sm mr-2 mb-1"
+                                   title="Upload Web Item Masters with Class" data-toggle="tooltip">
+                                    <i class="fas fa-upload"></i> Import Products
+                                </a>
+                                <a href="javascript:void(0)" id="bulk_delete_excel"
+                                   class="btn btn-danger btn-sm mr-2 mb-1"
+                                   title="Bulk delete products via Excel" data-toggle="tooltip">
+                                    <i class="fas fa-times"></i> Bulk Delete
+                                </a>
+                            </div>
 
-                            <a href="javascript:void(0)" id="import_excel_images" title="Upload products images file as zip with SKU name" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-warning btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
+                            <!-- Image Management -->
+                            <div class="col-md-4 mb-3">
+                                <strong>Image Management:</strong><br>
+                                <a href="javascript:void(0)" id="import_excel_images"
+                                   class="btn btn-warning btn-sm mr-2 mb-1"
+                                   title="Upload product images ZIP with SKU" data-toggle="tooltip">
+                                    <i class="fas fa-upload"></i> Upload Images
+                                </a>
+                                <a href="javascript:void(0)" id="copy_multiple_img"
+                                   class="btn btn-success btn-sm mr-2 mb-1"
+                                   title="Bulk assign images to products" data-toggle="tooltip">
+                                    <i class="fas fa-puzzle-piece"></i> Bulk Assign Images
+                                </a>
+                            </div>
 
-                            <a href="javascript:void(0)" id="import_excel_products" title="Upload products file i.e Web item Masters with Class This is the basis of all products." data-toggle="tooltip" data-placement="left"
-                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
+                            <!-- Inventory Management -->
+                            <div class="col-md-4 mb-3">
+                                <strong>Inventory Management:</strong><br>
+                                <a href="javascript:void(0)" id="import_excel_inventory"
+                                   class="btn btn-success btn-sm mr-1 mb-1"
+                                   title="Refresh inventory via Excel file" data-toggle="tooltip">
+                                    <i class="fas fa-upload"></i> Refresh
+                                </a>
 
-                            <a href="javascript:void(0)" id="import_excel_inventory" title="Upload excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-primary btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
+                                <a href="javascript:void(0)" id="import_excel_inventory_bulk"
+                                   class="btn btn-secondary btn-sm mr-1 mb-1"
+                                   title="Bulk inventory upload from Excel" data-toggle="tooltip">
+                                    <i class="fas fa-upload"></i> Bulk Upload
+                                </a>
 
-                            <a href="{{route('inventory.reset.clear')}}"
-                               data-toggle="tooltip"
-                               data-placement="top"
-                               data-method="GET"
-                               data-confirm-title="@lang('Please Confirm')"
-                               data-confirm-text="@lang('Are you sure that you want to Reset,Refresh or Clear the inventory availability?')"
-                               data-confirm-delete="@lang('Yes, delete it!')"
-                               title="Reset,Refresh or Clear the inventory availability."
-                               class="btn btn-warning btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-sync"></i>
-                            </a>
+                                <a href="{{route('inventory.reset.clear')}}"
+                                   class="btn btn-warning btn-sm mr-1 mb-1"
+                                   data-toggle="tooltip"
+                                   title="Reset or clear current inventory"
+                                   data-method="GET"
+                                   data-confirm-title="@lang('Please Confirm')"
+                                   data-confirm-text="@lang('Are you sure that you want to Reset,Refresh or Clear the inventory availability?')"
+                                   data-confirm-delete="@lang('Yes, delete it!')">
+                                    <i class="fas fa-sync"></i> Reset All
+                                </a>
 
-                            <a href="javascript:void(0)" id="reset_delete_inventory" title="Reset/Delete a specified inventory" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                                <a href="javascript:void(0)" id="reset_delete_inventory"
+                                   class="btn btn-danger btn-sm mr-1 mb-1"
+                                   title="Reset or delete a specific inventory entry" data-toggle="tooltip">
+                                    <i class="fas fa-trash"></i> Delete Few
+                                </a>
+                            </div>
 
-                            <a href="javascript:void(0)" id="copy_multiple_img" title="Bulk assign feature: copy to more than one image" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-primary btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-puzzle-piece"></i>
-                            </a>
-
-                            <a href="javascript:void(0)" id="import_excel_inventory_bulk" title="Upload BULK excel file to refresh inventory" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-secondary btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-upload"></i>
-                            </a>
-
-                            <a href="javascript:void(0)" id="bulk_delete_excel" title="BULK delete products by excel file" data-toggle="tooltip" data-placement="left"
-                               class="btn btn-danger btn-sm float-right ml-2 mr-1">
-                                <i class="fas fa-trash"></i>
-                            </a>
-
-                        </p>
+                        </div>
+                        </div>
                     </div>
 
                     <form action="" method="GET" id="product-form" class="pb-2 mb-3 border-bottom-light">
