@@ -236,7 +236,11 @@ class ProductsController extends Controller
 
         // Check current user's carrier ID
         $user = itsMeUser();
-        $isCarrierVF = $user && $user->carrier_id == 17; #!$date->isMonday()
+        $carrierId = $user ? $user->carrier_id : null;
+
+        $isCarrierVF = $carrierId == 17;
+        $fedexCarrierIds = [19, 20, 23];
+        $isFedexCarrier = in_array($carrierId, $fedexCarrierIds);
 
         $productQuantities = $query->select('date_in', 'date_out')
             ->whereDate('date_out', '>=', Carbon::today())
@@ -245,13 +249,20 @@ class ProductsController extends Controller
         foreach ($productQuantities as $productQuantity) {
             $period = \Carbon\CarbonPeriod::create($productQuantity->date_in, $productQuantity->date_out);
             foreach ($period as $date) {
-                // If carrier is 23, only allow Mondays
+                // If carrier is 17 (VF), only allow Mondays
                 if ($isCarrierVF && !$date->isMonday()) {
                     continue;
                 }
+
+                // If carrier is in FedEx list, skip Fridays
+                if ($isFedexCarrier && $date->isFriday()) {
+                    continue;
+                }
+
                 $highlightedDates[] = $date->format('Y-m-d');
             }
         }
+
         // Ensure the dates are unique
         return array_unique($highlightedDates);
     }

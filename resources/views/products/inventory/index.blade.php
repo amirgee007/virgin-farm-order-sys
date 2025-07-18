@@ -785,7 +785,8 @@
                     method: 'POST',
                     data: {
                         _token: $('meta[name="csrf-token"]').attr('content'),
-                        date_shipped: dateShipped
+                        date_shipped: dateShipped,
+                        carrier_id: previousCarrier,
                     },
                     success: function(response) {
                         if (response.error) {
