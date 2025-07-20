@@ -6,7 +6,7 @@
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted d-flex align-items-center flex-wrap" style="cursor: pointer;">
-        @lang('See Boxes detail')
+        @lang('Boxes detail')
         <i class="fas fa-box text-danger ml-2" data-toggle="modal" data-target="#boxesModal"></i>
 
         <div class="form-check form-check-inline ml-4"
@@ -35,11 +35,23 @@
                 {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
             <label class="form-check-label bg-warning text-white p-2 radius" for="radioSpecialDesktop">Seasonal</label>
         </div>
+        <div class="form-check form-check-inline ml-5"
+             title="Change Inventory to Farm Direct Tab - boxed flowers shipped directly from the farm."
+             data-trigger="hover"
+             data-toggle="tooltip">
+            <input class="form-check-input radio-desktop" type="radio" name="radioGroupDesktop" id="radioFarmDirect" value="4"
+                {{ auth()->user()->supplier_id == 4 ? 'checked' : '' }}>
+            <label class="form-check-label bg-choc text-white p-2 radius" for="radioFarmDirect">Farm-Direct</label>
+        </div>
     </li>
 @stop
 
 @section ('styles')
     <style>
+
+        .bg-choc {
+            background-color: #6f2a0c !important;
+        }
 
         input[disabled] + .calendar-icon {
             background-color: #f0f0f0; /* Light grey background to indicate it's disabled */
@@ -98,7 +110,7 @@
             border-radius: 2.5px;
             border-style: outset;
             cursor: pointer;
-            font-size: 9px;
+            font-size: 7px;
         }
         .highlighted-date {
             background-color: rgb(219, 31, 45) !important;
@@ -322,6 +334,14 @@
                     {{ auth()->user()->supplier_id == 3 ? 'checked' : '' }}>
                 Seasonal
             </label>
+
+            <label class="ml-3" title="Change Inventory to Farm Direct Tab - boxed flowers shipped directly from the farm." data-trigger="hover" data-toggle="tooltip">
+                <input type="radio" name="radioGroupMobile" id="radioFarmDirectMobile" value="4" class="custom-radio-btn radio-mobile"
+                    {{ auth()->user()->supplier_id == 4 ? 'checked' : '' }}>
+                <i>Farm-Direct</i>
+            </label>
+
+
         </div>
 
         <div class="col-md-12">
@@ -469,6 +489,12 @@
                                                      class="img-thumbnail" alt="Virgin Farm">
                                                 {{ $product->product_text }}
 
+                                                @if($product->has_breakdown)
+                                                    <button class="btn btn-sm btn-info breakdown-btn" data-id="{{ $product->id }}">
+                                                        ⭐
+                                                    </button>
+                                                @endif
+
                                                 {!!  $product->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
 
@@ -609,6 +635,14 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="breakdownModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="breakdownModalContent">
+                <!-- content loaded here -->
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('scripts')
@@ -620,6 +654,15 @@
             swal("",
                 "Only a few more steps to start shopping! Your sales manager will reach out to establish your account in our system.",
                 "warning");
+        });
+
+        $(document).on('click', '.breakdown-btn', function () {
+            const productId = $(this).data('id');
+
+            $.get('/products/' + productId + '/breakdown', function (res) {
+                $('#breakdownModalContent').html(res.html);
+                $('#breakdownModal').modal('show');
+            });
         });
 
         // Array of dates to be highlighted
@@ -665,9 +708,11 @@
             $('#largeImgModal').modal('show');
         });
 
-        $(".form-check-input ,.custom-radio-btn").change(function() {
+        $(".form-check-input, .custom-radio-btn").change(function (e) {
+            var selectedInput = $(this);
+            var selectedSupplier = selectedInput.val();
+            var previousChecked = $("input[name='supplier']:checked"); // store current checked input
 
-            var selectedSupplier = $(this).val();
             $.ajax({
                 url: '{{ route('update.supplier') }}',
                 type: 'POST',
@@ -676,14 +721,28 @@
                     supplier: selectedSupplier
                 },
                 success: function (response) {
+                    // If no error, proceed
                     toastr.success(response.message);
                     window.location.href = response.href;
                 },
-                error: function () {
-                    toastr.error('Something went wrong please check with admin.');
-                },
+                error: function (xhr) {
+                    // Prevent switching the selection
+                    e.preventDefault();
+
+                    // Revert the change by re-checking the old one
+                    previousChecked.prop("checked", true);
+                    selectedInput.prop("checked", false);
+
+                    // Show error message
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        toastr.error(xhr.responseJSON.message);
+                    } else {
+                        toastr.error('An error occurred. Please try again.');
+                    }
+                }
             });
         });
+
 
         previousCarrier = $('#changeCarrier').val();
         $('#changeCarrier').on('change', function () {

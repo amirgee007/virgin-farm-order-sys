@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\Cart;
 use Vanguard\Models\Order;
 use Vanguard\Models\ProductQuantity;
 use DB;
@@ -57,6 +58,19 @@ class DashboardController extends Controller
 
     public function updateSupplier(Request $request)
     {
+        $user = auth()->user();
+
+        // Check if the user has items in the cart
+        $cartExists = Cart::mineCart()->exists();
+
+        // If the cart has items, block the supplier switch
+        if ($cartExists && $user->supplier_id == 4 && $request->input('supplier') != 4) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Cannot switch supplier while your cart has items. Please empty your cart first.',
+            ], 400); // 400 Bad Request
+        }
+
         // Store the selected supplier in the user preferences
         $user = auth()->user();
         $user->supplier_id = $request->input('supplier');
@@ -90,7 +104,8 @@ class DashboardController extends Controller
         }
     }
 
-    public function salesRepInfo(){
+    public function salesRepInfo()
+    {
 
         return view('dashboard.sales-rep');
     }

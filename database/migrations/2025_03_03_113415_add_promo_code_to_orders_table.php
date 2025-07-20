@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreignId('promo_code_id')->nullable()->constrained('promo_codes');
-            $table->decimal('discount_applied', 8, 2)->default(0);
+//            $table->foreignId('promo_code_id')->nullable()->constrained('promo_codes');
+//            $table->decimal('discount_applied', 8, 2)->default(0);
         });
     }
 

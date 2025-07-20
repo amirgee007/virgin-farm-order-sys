@@ -46,6 +46,7 @@ class ProductsController extends Controller
 
     public function inventoryIndex(Request $request)
     {
+        #if supplier is 4 then no need any charges, box weight requirments
         $date_shipped = trim($request->date_shipped);
         $category_id = trim($request->category);
         $searching = trim($request->searching);
@@ -172,6 +173,8 @@ class ProductsController extends Controller
             ->orderBy('category_id') // Sort by category_id first
             ->orderBy('product_text') // Then sort by product_text within the same category
             ->selectRaw('
+                EXISTS ( SELECT 1 FROM product_group_product
+            WHERE product_group_product .product_id = products.id LIMIT 1 ) as has_breakdown,
             supplier_id,
             category_id,
             product_quantities.id as p_qty_id,
@@ -188,8 +191,8 @@ class ProductsController extends Controller
             price_fedex,
             price_hawaii,
             colors_class.sub_class as color_sub_class,
-            colors_class.color as color_name')
-            ->paginate(100);
+            colors_class.color as color_name'
+            )->paginate(100);
 
         // Orders list
         $fixed = [

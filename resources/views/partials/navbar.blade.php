@@ -141,7 +141,7 @@
                     @endif
                 </div>
 
-                Order Total: <span class="text-danger"><b>${{$total}}</b></span>
+                Total: <span class="text-danger"><b>${{$total}}</b></span>
             </div>
 
             @hook('navbar:items')

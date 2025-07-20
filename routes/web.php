@@ -70,6 +70,14 @@ Route::get('abc/{id?}', 'TestAmirController@index2')->name('test-amir');
 Route::get('test-cubes', 'TestAmirController@index3')->name('test-cubes');
 Route::get('amir/{size}', 'TestAmirController@findBoxes');
 
+Route::resource('product-groups', \Vanguard\Http\Controllers\Web\ProductGroupController::class);
+Route::get('api/products/by-item-no/{item_no}', function ($item_no) {
+    return \Vanguard\Models\Product::where('item_no', $item_no)
+        ->select('id', 'item_no', 'product_text')
+        ->firstOrFail();
+});
+Route::get('/products/{id}/breakdown', [\Vanguard\Http\Controllers\Web\ProductGroupController::class, 'getBreakdown']);
+
 /**
  * Two-Factor Authentication
  */
