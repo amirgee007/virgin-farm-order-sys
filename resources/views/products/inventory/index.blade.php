@@ -499,7 +499,8 @@
                                             </td>
 
                                             <td class="align-middle">
-                                                <span class="color-circle" style="background-color: {{ strtolower($product->color_name) }};"></span>
+                                                <span title="{{$product->color_description}}" data-toggle="tooltip" data-placement="top"
+                                                      class="color-circle " style="cursor: pointer; background-color: {{ strtolower($product->color_name) }};"></span>
                                             </td>
 
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp

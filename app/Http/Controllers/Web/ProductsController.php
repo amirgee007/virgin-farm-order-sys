@@ -190,7 +190,7 @@ class ProductsController extends Controller
             price_fob,
             price_fedex,
             price_hawaii,
-            colors_class.sub_class as color_sub_class,
+            colors_class.description as color_description,
             colors_class.color as color_name'
             )->paginate(100);
 

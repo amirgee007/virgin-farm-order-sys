@@ -184,7 +184,7 @@ function getCubeRangesV2($size, $orderTotal = 0)
     $user = itsMeUser();
 
     // List of carriers that are exempt from the minimum order requirement
-    $excludedCarrierIds = [17, 23]; // Delivery VF and FedEx Overnight
+    $excludedCarrierIds = [17, 19, 20, 23, 32]; // Delivery VF, FedEx (all 3), and pick up
 
     // Nullify minimum order setting if the user's carrier is excluded
     if (in_array($user->carrier_id, $excludedCarrierIds)) {
