@@ -17,7 +17,7 @@ class ProductGroupController extends Controller
 
     public function create()
     {
-        $products = Product::all();
+        $products = Product::where('is_combo_product' , 1)->get();
         return view('product-groups.create', compact('products'));
     }
 
@@ -57,7 +57,7 @@ class ProductGroupController extends Controller
 
     public function edit(ProductGroup $productGroup)
     {
-        $products = Product::all();
+        $products = Product::where('is_combo_product' , 1)->get();
         $selected = $productGroup->products->pluck('pivot.stems', 'id')->toArray();
         return view('product-groups.edit', compact('productGroup', 'products', 'selected'));
     }

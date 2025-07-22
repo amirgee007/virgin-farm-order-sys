@@ -121,7 +121,7 @@
                 </a>
             </li>
             @endpermission
-            
+
 
             @permission('manage.combo.groups')
             <li class="nav-item">
