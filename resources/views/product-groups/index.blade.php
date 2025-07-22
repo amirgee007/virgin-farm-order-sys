@@ -71,7 +71,7 @@
 
     <!-- Product Breakdown Modal -->
     <div class="modal fade" id="breakdownModal" tabindex="-1" aria-labelledby="breakdownModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="breakdownModalLabel">Product Breakdown</h5>
