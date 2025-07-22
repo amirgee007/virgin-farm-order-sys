@@ -17,7 +17,13 @@ class ProductGroupController extends Controller
 
     public function create()
     {
-        $products = Product::where('is_combo_product' , 1)->get();
+        $products = Product::where('is_combo_product', 1)
+            ->whereNotIn('id', function ($query) {
+                $query->select('parent_product_id')
+                    ->from('product_groups')
+                    ->whereNotNull('parent_product_id');
+            })
+            ->get();
         return view('product-groups.create', compact('products'));
     }
 
@@ -25,12 +31,16 @@ class ProductGroupController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'parent_product_id' => 'nullable|exists:products,id',
+            'parent_product_id' => [
+                'nullable',
+                'exists:products,id',
+                'unique:product_groups,parent_product_id'
+            ],
             'products' => 'array',
             'products.*.item_no' => 'required|string',
+            'products.*.product_text_temp' => 'required|string',
             'products.*.stems' => 'required|integer|min:1',
         ]);
-
 
         // Create the group first
         $group = ProductGroup::create([
@@ -44,14 +54,17 @@ class ProductGroupController extends Controller
             $product = Product::where('item_no', $row['item_no'])->first();
 
             if ($product) {
-                $attach[$product->id] = ['stems' => $row['stems']];
+                $attach[$product->id] = [
+                    'stems' => $row['stems'],
+                    'product_text_temp' => $row['product_text_temp'],
+                ];
             }
             // If product not found by item_no, we skip it (as per your instruction)
         }
 
         $group->products()->attach($attach);
 
-        return redirect()->route('product-groups.index')->with('success', 'Group created successfully.');
+        return redirect()->route('product-groups.index')->with('success', 'Combo products added with others successfully.');
     }
 
 
@@ -75,7 +88,7 @@ class ProductGroupController extends Controller
 
         $productGroup->update([
             'name' => $request->name,
-            'parent_product_id' => $request->parent_product_id,
+//            'parent_product_id' => $request->parent_product_id,
         ]);
 
         $sync = [];
@@ -83,13 +96,17 @@ class ProductGroupController extends Controller
         foreach ($request->products as $row) {
             $product = Product::where('item_no', $row['item_no'])->first();
             if ($product) {
-                $sync[$product->id] = ['stems' => $row['stems']];
+                $sync[$product->id] = [
+                    'stems' => $row['stems'],
+                    'product_text_temp' => $row['product_text_temp'],
+                ];
             }
         }
 
+       
         $productGroup->products()->sync($sync);
 
-        return redirect()->route('product-groups.index')->with('success', 'Group updated successfully.');
+        return redirect()->route('product-groups.index')->with('success', 'Group combo products updated successfully.');
     }
 
 
@@ -98,33 +115,6 @@ class ProductGroupController extends Controller
         $productGroup->delete();
         return redirect()->route('product-groups.index')->with('success', 'Group deleted');
     }
-
-    public function getBreakdownOLD($id)
-    {
-        $product = Product::with('groups')->findOrFail($id);
-
-        // Gather all products from all groups this product belongs to
-        $linkedProducts = collect();
-
-        foreach ($product->groups as $group) {
-            $groupProducts = $group->products()
-                ->withPivot('stems')
-                ->get();
-
-            $linkedProducts = $linkedProducts->merge($groupProducts);
-        }
-
-        // Optional: remove duplicates (if a product is in multiple groups)
-        $linkedProducts = $linkedProducts->unique('id');
-
-        return response()->json([
-            'html' => view('products._partial.breakdown_modal', [
-                'product' => $product,
-                'linkedProducts' => $linkedProducts,
-            ])->render()
-        ]);
-    }
-
 
     public function getBreakdown($product_id)
     {

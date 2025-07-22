@@ -2,15 +2,16 @@ $(document).ready(function () {
     let productIndex = $('.product-row').length;
     let addedItemNos = new Set();
 
-    // Collect preloaded item numbers (edit mode)
+    // Collect item_nos from existing rows (edit mode)
     $('.product-row input[name*="[item_no]"]').each(function () {
-        const existingItemNo = $(this).val().trim().toUpperCase();
-        addedItemNos.add(existingItemNo);
+        const itemNo = $(this).val().trim().toUpperCase();
+        if (itemNo) {
+            addedItemNos.add(itemNo);
+        }
     });
 
-    // Search product by item_no
     $('#item_no').on('input', function () {
-        const itemNo = $(this).val().trim().toUpperCase();
+        const itemNo = $(this).val().trim();
 
         if (!itemNo) {
             $('#product_name').val('');
@@ -33,19 +34,18 @@ $(document).ready(function () {
         });
     });
 
-    // Add product row
     $('#add-product').click(function () {
         const itemNo = $('#item_no').val().trim().toUpperCase();
         const name = $('#product_name').val().trim();
         const stems = $('#stems').val().trim();
 
         if (!itemNo || !name || !stems) {
-            alert('Please enter a valid item number and stem count.');
+            toastr.error('Please enter a valid item number and stem count.');
             return;
         }
 
         if (addedItemNos.has(itemNo)) {
-            alert('Product already added.');
+            toastr.error('Product already added.');
             return;
         }
 
@@ -55,7 +55,9 @@ $(document).ready(function () {
                     <input type="hidden" name="products[${productIndex}][item_no]" value="${itemNo}">
                     ${itemNo}
                 </td>
-                <td>${name}</td>
+                <td>
+                    <input type="text" name="products[${productIndex}][product_text_temp]" value="${name}" class="form-control" required>
+                </td>
                 <td>
                     <input type="number" name="products[${productIndex}][stems]" value="${stems}" class="form-control" required>
                 </td>
@@ -69,25 +71,21 @@ $(document).ready(function () {
         addedItemNos.add(itemNo);
         productIndex++;
 
-        // Reset form
         $('#item_no').val('').focus();
         $('#product_name').val('');
         $('#stems').val('');
         $('#search-status').text('Waiting for input...');
     });
 
-    // Remove row
     $(document).on('click', '.remove-row', function () {
         const itemNo = $(this).closest('tr').find('input[type="hidden"]').val().trim().toUpperCase();
         addedItemNos.delete(itemNo);
         $(this).closest('tr').remove();
     });
 
-    // Prevent Enter key from submitting the form accidentally
     $('#group-form').on('keydown', function (e) {
         if (e.key === 'Enter' && !$(e.target).is('textarea') && !$(e.target).is('button')) {
             e.preventDefault();
-            return false;
         }
     });
 });
