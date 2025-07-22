@@ -1,15 +1,15 @@
 <table class="table table-bordered">
     <thead>
     <tr>
-        <th>Product/Stems</th>
-{{--        <th>Stems</th>--}}
+        <th>Product</th>
+        <th>Stems</th>
     </tr>
     </thead>
     <tbody>
     @foreach($group->products as $product)
         <tr>
             <td>{{ $product->product_text }}</td>
-{{--            <td>{{ $product->pivot->stems }}</td>--}}
+            <td>{{ $product->pivot->stems }}</td>
         </tr>
     @endforeach
     </tbody>
