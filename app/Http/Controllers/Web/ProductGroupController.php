@@ -103,7 +103,7 @@ class ProductGroupController extends Controller
             }
         }
 
-       
+
         $productGroup->products()->sync($sync);
 
         return redirect()->route('product-groups.index')->with('success', 'Group combo products updated successfully.');

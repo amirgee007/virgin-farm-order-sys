@@ -34,8 +34,16 @@
                             @foreach($groups as $group)
                                 <tr>
                                     <td>{{ $group->name }}</td>
-                                    <td>
-                                        {{ $group->parentProduct?->item_no ?? '—' }}
+                                    <td style="background-color: #f4f8fb;">
+                                        @if($group->parentProduct)
+                                            <a target="_blank" href="{{ route('products.index.manage', ['search' => $group->parentProduct->item_no]) }}"
+                                               title="Click to see detail on manage products page."
+                                               class="badge badge-lg badge-primary text-decoration-none">
+                                                {{ $group->parentProduct->item_no }}
+                                            </a>
+                                        @else
+                                            —
+                                        @endif
                                     </td>
                                     <td>
                                         @foreach($group->products as $product)
