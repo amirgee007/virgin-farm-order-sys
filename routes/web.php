@@ -169,6 +169,11 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'uses' => 'ProductsController@resetProduct'
         ]);
 
+        Route::delete('/mark-group-product/{id}', [
+            'as' => 'products.mark.group',
+            'uses' => 'ProductsController@markAsGroupProduct'
+        ]);
+
         Route::post('/product-update-column', [
             'as' => 'product.update.column',
             'uses' => 'ProductsController@productUpdateColumn'

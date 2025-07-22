@@ -1,6 +1,6 @@
 @php $prodQty = $product->prodQty; @endphp
 
-<tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable">
+<tr data-toggle="collapse" data-target="#accordion{{$product->id}}" class="clickable {{$product->is_combo_product ? 'groupProd' : ''}}">
     <td>
         <input type="checkbox" class="product-checkbox" name="product_ids[]" value="{{ $product->id }}">
     </td>
@@ -59,7 +59,17 @@
            data-confirm-delete="@lang('Yes, delete it!')">
             <i class="fas fa-trash text-danger"></i>
         </a>
-
+        <a href="{{ route('products.reset', $product->id) }}"
+           class="btn btn-icon"
+           title="@lang('Mark Product as Combo Group Product')"
+           data-toggle="tooltip"
+           data-placement="top"
+           data-method="DELETE"
+           data-confirm-title="@lang('Please Confirm')"
+           data-confirm-text="@lang('Are you sure that you want to make this product as combo group product so later we can add many products into it?')"
+           data-confirm-delete="@lang('Yes, make it!')">
+            <i class="fas fa-arrow-circle-right text-danger"></i>
+        </a>
         <a href="{{ route('products.reset', $product->id) }}"
            class="btn btn-icon"
            title="@lang('Reset Product Image')"

@@ -29,6 +29,9 @@
             padding: 0.25rem 0.5rem; /* override for more compact size */
             font-size: 0.75rem;
         }
+        .groupProd {
+            background: rgb(211, 246, 211) !important;
+        }
     </style>
 
 @endsection
@@ -137,7 +140,7 @@
                         </div>
                     </div>
 
-                    <form action="" method="GET" id="product-form" class="pb-2 mb-3 border-bottom-light">
+                    <form action="" method="GET" id="product-form" class="pb-2 mb-1 border-bottom-light">
                         <div class="row my-2 flex-md-row flex-column-reverse">
                             <div class="col-md-6 mt-md-0 mt-2">
                                 <div class="input-group custom-search-form">
@@ -190,10 +193,11 @@
                     <form method="POST" action="{{ route('products.bulk.delete') }}" id="bulkDeleteForm">
                         @csrf
                         <div class="mb-2">
+                            <small class="text-gray-500">Hi, products with a green background are combo products.</small>
+                            <br/>
                             <button type="submit" id="bulkDeleteBtn" class="btn btn-danger btn-sm d-none">
                                 <i class="fas fa-trash"></i> Delete  <span id="selectedCountValue">0</span> Selected Products
                             </button>
-
                         </div>
                         <div class="table-responsive mt-2" id="users-table-wrapper">
                         <table class="table table-borderless table-striped products-list-table">

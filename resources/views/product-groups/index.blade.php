@@ -24,6 +24,8 @@
                             <thead class="table-light">
                             <tr>
                                 <th>Group Name</th>
+                                <th>Parent Product</th>
+
                                 <th>Products (with Stems)</th>
                                 <th>Actions</th>
                             </tr>
@@ -32,6 +34,9 @@
                             @foreach($groups as $group)
                                 <tr>
                                     <td>{{ $group->name }}</td>
+                                    <td>
+                                        {{ $group->parentProduct?->item_no ?? '—' }}
+                                    </td>
                                     <td>
                                         @foreach($group->products as $product)
                                             <div>

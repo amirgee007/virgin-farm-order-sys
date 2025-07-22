@@ -22,6 +22,19 @@
                             <form action="{{ route('product-groups.store') }}" method="POST" id="group-form">
                                 @csrf
 
+                                <div class="mb-4">
+                                    <label class="form-label">Parent Product</label>
+                                    <select name="parent_product_id" class="form-control" required>
+                                        <option value="">-- None --</option>
+                                        @foreach($products as $product)
+                                            <option value="{{ $product->id }}"
+                                                {{ old('parent_product_id') == $product->id ? 'selected' : '' }}>
+                                                {{ $product->item_no }} - {{ $product->product_text }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 {{-- GROUP NAME --}}
                                 <div class="mb-4">
                                     <label for="group-name" class="form-label">Group Name</label>

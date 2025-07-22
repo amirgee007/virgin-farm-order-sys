@@ -360,6 +360,15 @@ class ProductsController extends Controller
         return back();
     }
 
+    public function markAsGroupProduct($id)
+    {
+        Product::where('id', $id)->update([
+            'is_combo_product' => 1
+        ]);
+        session()->flash('success', 'Product has been successfully marked as a combo.');
+        return back();
+    }
+
 
     public function indexManageProducts()
     {

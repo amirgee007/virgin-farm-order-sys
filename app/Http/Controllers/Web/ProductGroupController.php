@@ -25,13 +25,17 @@ class ProductGroupController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'parent_product_id' => 'nullable|exists:products,id',
             'products' => 'array',
             'products.*.item_no' => 'required|string',
             'products.*.stems' => 'required|integer|min:1',
         ]);
 
         // Create the group first
-        $group = ProductGroup::create(['name' => $request->name]);
+        $group = ProductGroup::create([
+            'name' => $request->name,
+            'parent_product_id' => $request->parent_product_id,
+        ]);
 
         $attach = [];
 
@@ -61,12 +65,16 @@ class ProductGroupController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'parent_product_id' => 'nullable|exists:products,id',
             'products' => 'array',
             'products.*.item_no' => 'required|string',
             'products.*.stems' => 'required|integer|min:1',
         ]);
 
-        $productGroup->update(['name' => $request->name]);
+        $productGroup->update([
+            'name' => $request->name,
+            'parent_product_id' => $request->parent_product_id,
+        ]);
 
         $sync = [];
 
