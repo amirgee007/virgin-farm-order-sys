@@ -50,6 +50,13 @@
                                             @csrf @method('DELETE')
                                             <button class="btn btn-sm btn-danger" onclick="return confirm('Delete group?')">Delete</button>
                                         </form>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-secondary view-breakdown"
+                                                data-url="{{ route('product-groups.breakdown', $group->parent_product_id) }}"
+                                                title="View Combo Breakdown">
+                                            👁️
+                                        </button>
                                     </td>
                                 </tr>
                             @endforeach
@@ -62,5 +69,46 @@
         </div>
     </div>
 
+    <!-- Product Breakdown Modal -->
+    <div class="modal fade" id="breakdownModal" tabindex="-1" aria-labelledby="breakdownModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="breakdownModalLabel">Product Breakdown</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="breakdown-modal-body">
+                    <!-- AJAX content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 @stop
+
+@section('scripts')
+    <script>
+        $(document).on('click', '.view-breakdown', function () {
+            const url = $(this).data('url');
+
+            // Clear old content
+            $('#breakdown-modal-body').html('Loading...');
+
+            // Fetch breakdown data via AJAX using named route
+            $.get(url, function (response) {
+                $('#breakdown-modal-body').html(response.html);
+                $('#breakdownModal').modal('show');
+            }).fail(() => {
+                $('#breakdown-modal-body').html('<p class="text-danger">Failed to load breakdown.</p>');
+                $('#breakdownModal').modal('show');
+            });
+        });
+    </script>
+
+
+@endsection
 

@@ -489,14 +489,19 @@
                                                      class="img-thumbnail" alt="Virgin Farm">
                                                 {{ $product->product_text }}
 
-                                                @if($product->has_breakdown)
-                                                    <button class="btn btn-sm btn-info breakdown-btn" data-id="{{ $product->id }}">
+                                                @if($product->parent_product_id)
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-info view-breakdown"
+                                                            data-url="{{ route('product-groups.breakdown', $product->parent_product_id) }}"
+                                                            title="Click to reveal the breakdown info box">
                                                         ⭐
                                                     </button>
                                                 @endif
 
                                                 {!!  $product->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
+
+
 
                                             <td class="align-middle">
                                                 <span title="{{$product->color_description}}" data-toggle="tooltip" data-placement="top"
@@ -637,13 +642,24 @@
         </div>
     </div>
 
-    <div class="modal fade" id="breakdownModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" id="breakdownModalContent">
-                <!-- content loaded here -->
+    <!-- Product Breakdown Modal -->
+    <div class="modal fade" id="breakdownModal" tabindex="-1" aria-labelledby="breakdownModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="breakdownModalLabel">Product Breakdown</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="breakdown-modal-body">
+                    <!-- AJAX content will be loaded here -->
+                </div>
+{{--                <div class="modal-footer">--}}
+{{--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>--}}
+{{--                </div>--}}
             </div>
         </div>
     </div>
+
 @stop
 
 @section('scripts')
@@ -655,6 +671,22 @@
             swal("",
                 "Only a few more steps to start shopping! Your sales manager will reach out to establish your account in our system.",
                 "warning");
+        });
+
+        $(document).on('click', '.view-breakdown', function () {
+            const url = $(this).data('url');
+
+            // Clear old content
+            $('#breakdown-modal-body').html('Loading...');
+
+            // Fetch breakdown data via AJAX using named route
+            $.get(url, function (response) {
+                $('#breakdown-modal-body').html(response.html);
+                $('#breakdownModal').modal('show');
+            }).fail(() => {
+                $('#breakdown-modal-body').html('<p class="text-danger">Failed to load breakdown.</p>');
+                $('#breakdownModal').modal('show');
+            });
         });
 
         $(document).on('click', '.breakdown-btn', function () {

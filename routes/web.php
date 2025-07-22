@@ -76,7 +76,8 @@ Route::get('api/products/by-item-no/{item_no}', function ($item_no) {
         ->select('id', 'item_no', 'product_text')
         ->firstOrFail();
 });
-Route::get('/products/{id}/breakdown', [\Vanguard\Http\Controllers\Web\ProductGroupController::class, 'getBreakdown']);
+Route::get('/products-groups/{id}/breakdown', [\Vanguard\Http\Controllers\Web\ProductGroupController::class, 'getBreakdown'])
+    ->name('product-groups.breakdown');
 
 /**
  * Two-Factor Authentication
@@ -173,6 +174,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'products.mark.group',
             'uses' => 'ProductsController@markAsGroupProduct'
         ]);
+
 
         Route::post('/product-update-column', [
             'as' => 'product.update.column',

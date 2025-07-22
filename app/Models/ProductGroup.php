@@ -9,12 +9,16 @@ class ProductGroup extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name' , 'parent_product_id'];
 
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_group_product')
             ->withPivot('stems');
+    }
+
+    public function parentProduct() {
+        return $this->hasOne(Product::class , 'id' , 'parent_product_id');
     }
 }
 

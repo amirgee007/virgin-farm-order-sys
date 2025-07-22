@@ -31,6 +31,7 @@ class ProductGroupController extends Controller
             'products.*.stems' => 'required|integer|min:1',
         ]);
 
+
         // Create the group first
         $group = ProductGroup::create([
             'name' => $request->name,
@@ -71,6 +72,7 @@ class ProductGroupController extends Controller
             'products.*.stems' => 'required|integer|min:1',
         ]);
 
+
         $productGroup->update([
             'name' => $request->name,
             'parent_product_id' => $request->parent_product_id,
@@ -97,7 +99,7 @@ class ProductGroupController extends Controller
         return redirect()->route('product-groups.index')->with('success', 'Group deleted');
     }
 
-    public function getBreakdown($id)
+    public function getBreakdownOLD($id)
     {
         $product = Product::with('groups')->findOrFail($id);
 
@@ -120,6 +122,21 @@ class ProductGroupController extends Controller
                 'product' => $product,
                 'linkedProducts' => $linkedProducts,
             ])->render()
+        ]);
+    }
+
+
+    public function getBreakdown($product_id)
+    {
+        $group = ProductGroup::with('products')->where('parent_product_id', $product_id)->first();
+
+        $totalStems = 0;
+        foreach ($group->products as $product) {
+            $totalStems += $product->pivot->stems;
+        }
+
+        return response()->json([
+            'html' => view('product-groups._breakdown', compact('group', 'totalStems'))->render()
         ]);
     }
 

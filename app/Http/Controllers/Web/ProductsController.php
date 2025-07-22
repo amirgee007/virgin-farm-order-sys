@@ -112,6 +112,7 @@ class ProductsController extends Controller
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
             ->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id')
+            ->leftJoin('product_groups', 'product_groups.parent_product_id', '=', 'products.id')
             ->where('product_quantities.quantity', '>', 0);
 
         // Filter by supplier
@@ -173,8 +174,6 @@ class ProductsController extends Controller
             ->orderBy('category_id') // Sort by category_id first
             ->orderBy('product_text') // Then sort by product_text within the same category
             ->selectRaw('
-                EXISTS ( SELECT 1 FROM product_group_product
-            WHERE product_group_product .product_id = products.id LIMIT 1 ) as has_breakdown,
             supplier_id,
             category_id,
             product_quantities.id as p_qty_id,
@@ -191,7 +190,8 @@ class ProductsController extends Controller
             price_fedex,
             price_hawaii,
             colors_class.description as color_description,
-            colors_class.color as color_name'
+            colors_class.color as color_name,
+            product_groups.parent_product_id',
             )->paginate(100);
 
         // Orders list
