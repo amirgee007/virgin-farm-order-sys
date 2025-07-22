@@ -116,8 +116,17 @@
             @permission('manage.color.class')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('color-class*') ? 'active' : ''  }}" href="{{ route('colors_class.index') }}">
-                    <i class="fas fa-wine-glass"></i>
+                    <i class="fas fa-snowflake"></i>
                     <span>@lang('Manage Colors')</span>
+                </a>
+            </li>
+            @endpermission
+
+            @permission('manage.combo.groups')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('product-groups*') ? 'active' : ''  }}" href="{{ route('product-groups.index') }}">
+                    <i class="fas fa-object-group"></i>
+                    <span>@lang('Manage Combo Item')</span>
                 </a>
             </li>
             @endpermission
