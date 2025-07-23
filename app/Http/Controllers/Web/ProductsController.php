@@ -117,11 +117,11 @@ class ProductsController extends Controller
 
         // Filter by supplier
         if (in_array($user->supplier_id, [1, 2])) {
-            $query->where('products.supplier_id', $user->supplier_id);
+            $query->where('products.supplier_id', $user->supplier_id)
+                ->where('product_quantities.is_special', '<>', 2); #remove these farms-direct from main Vfarms tab
         } elseif ($user->supplier_id == 3) {
             $query->where('product_quantities.is_special', 1);
-        }
-        elseif ($user->supplier_id == 4) {
+        } elseif ($user->supplier_id == 4) {
             $query->where('product_quantities.is_special', 2); #because we managed here its those cases i.e farms-direct
         }
 
@@ -684,8 +684,9 @@ class ProductsController extends Controller
                         $expiredtime = $this->excelSerialTimeToTime($row['6']);
                     }
 
+                    #inventory_type = 0,1,2 based on product types.
                     if ($index > 5) {
-                        $this->processProductRow($row, $expiredtime, $missing, $request->is_special);
+                        $this->processProductRow($row, $expiredtime, $missing, $request->inventory_type);
                     }
                 }
 
@@ -1061,11 +1062,13 @@ class ProductsController extends Controller
             ->whereDate('date_in', $date_in)
             ->whereDate('date_out', $date_out);
 
-        #1 = only virgin, 2= dutch and 3 = special
-        if (in_array($request->flower_type, [1, 2, 3])) {
+        #1 = only virgin, 2= dutch and 3 = special, 4 = farms-direct
+        if (in_array($request->flower_type, [1, 2, 3, 4])) {
 
             if ($request->flower_type == 3)
                 $query->where('product_quantities.is_special', 1);
+            elseif ($request->flower_type == 4)
+                $query->where('product_quantities.is_special', 2);
             else {
                 $query->whereHas('product', function ($subQuery) use ($request) {
                     $subQuery->where('products.supplier_id', $request->flower_type);

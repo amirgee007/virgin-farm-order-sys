@@ -373,6 +373,12 @@
                                     Special Seasonal
                                 </label>
                             </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" value="4" name="flower_type" id="farmsDirect">
+                                <label class="form-check-label" for="farmsDirect">
+                                    Farms-Direct
+                                </label>
+                            </div>
                         </div>
                         <hr>
                         <br>
@@ -424,7 +430,7 @@
                              title="Select the inventory type for the above selected dates."
                              data-toggle="tooltip" data-placement="top">
                             <label for="inventory_type" class="form-label">Inventory Type</label>
-                            <select class="form-control" id="inventory_type" name="inventory_type" required>
+                            <select class="form-control" id="inventory_type" name="inventory_type">
                                 <option value="" selected>Virgin Farms Default</option>
                                 <option value="1">Special Seasonal Inventory</option>
                                 <option value="2">Farms-Direct Inventory</option>
