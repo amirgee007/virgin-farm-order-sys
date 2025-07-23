@@ -350,8 +350,17 @@
                     <span>
                         <b>
                             1. Enter your shipping information
-                            <small class="text-primary">(** You are browsing <b>{{ $user->supplier_id == 1 ? 'Virgin Farms'  : ($user->supplier_id == 2 ? 'Dutch' : 'Special and Seasonal ') }}</b> flowers) </small>
-                             <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
+                            <small class="text-primary">
+                            (** You are browsing
+                            <b>
+                                {{
+                                    $user->supplier_id == 1 ? 'Virgin Farms' :
+                                    ($user->supplier_id == 2 ? 'Dutch' :
+                                    ($user->supplier_id == 4 ? 'Farms-Direct' : 'Special and Seasonal'))
+                                }}
+                            </b> flowers)
+                            </small>
+                            <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
                                  <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
                                     title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
                                          class="fas fa-plus-circle "></i>
@@ -360,7 +369,9 @@
                                  <select class="form-control form-control-md" id="changeAddress"
                                          title="Where do you want your product to be shipped?"
                                          data-trigger="hover"
-                                         data-toggle="tooltip">
+                                         data-toggle="tooltip"
+                                         style="background-color: beige"
+                                 >
                                      <option selected value="0">Default Address</option>
                                      @foreach($address as $add)
                                          <option
@@ -373,7 +384,9 @@
                                  <select class="form-control form-control-md" id="changeCarrier"
                                          title="Click to change carrier how you want to ship the items?"
                                          data-trigger="hover"
-                                         data-toggle="tooltip">
+                                         data-toggle="tooltip"
+                                         style="background-color: aliceblue"
+                                 >
                                      <option hidden value="">Select Shipping Carrier </option>
                                     @foreach($carriers AS $key => $name)
                                          <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
@@ -741,10 +754,16 @@
             $('#largeImgModal').modal('show');
         });
 
-        $(".form-check-input, .custom-radio-btn").change(function (e) {
-            var selectedInput = $(this);
-            var selectedSupplier = selectedInput.val();
-            var previousChecked = $("input[name='supplier']:checked"); // store current checked input
+        let previousChecked = null;
+
+        // Capture the previously checked radio BEFORE user changes it
+        $(document).on('focusin', '.form-check-input, .custom-radio-btn', function () {
+            previousChecked = $('.form-check-input:checked, .custom-radio-btn:checked');
+        });
+
+        $('.form-check-input, .custom-radio-btn').on('change', function (e) {
+            const selectedInput = $(this);
+            const selectedSupplier = selectedInput.val();
 
             $.ajax({
                 url: '{{ route('update.supplier') }}',
@@ -754,19 +773,16 @@
                     supplier: selectedSupplier
                 },
                 success: function (response) {
-                    // If no error, proceed
                     toastr.success(response.message);
                     window.location.href = response.href;
                 },
                 error: function (xhr) {
-                    // Prevent switching the selection
-                    e.preventDefault();
+                    // Revert to previous checked radio button
+                    if (previousChecked && previousChecked.length) {
+                        previousChecked.prop('checked', true);
+                    }
+                    selectedInput.prop('checked', false); // Uncheck the one that caused the error
 
-                    // Revert the change by re-checking the old one
-                    previousChecked.prop("checked", true);
-                    selectedInput.prop("checked", false);
-
-                    // Show error message
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         toastr.error(xhr.responseJSON.message);
                     } else {
@@ -775,6 +791,7 @@
                 }
             });
         });
+
 
 
         previousCarrier = $('#changeCarrier').val();

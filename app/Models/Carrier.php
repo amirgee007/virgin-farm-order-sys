@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Carrier extends Model
 {
     use HasFactory;
+
     protected $table = 'carriers';
     protected $guarded = [];
+
+    #FedEx Ecuador  and  Pick Up
+    public static $farmsDirectIds = [
+        20, 32
+    ];
 }

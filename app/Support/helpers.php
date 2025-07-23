@@ -49,7 +49,7 @@ function myPriceColumn()
     $prices = getPrices();
 
     # if user is non-americal then use the price always price_fob
-    if ($user->state > 52)
+    if ($user->state > 52 || $user->supplier_id == 4) #as for farms-direct we only do FOB prices
         return 'price_fob';
 
     $column = $user->price_list ? $prices[$user->price_list] : 'price_fedex';
@@ -87,9 +87,12 @@ function isDeliveryChargesApply()
 
 function getCubeSizeTax($size)
 {
-
     #PU(32), Federal Express(23) , DLV(17)
     $user = itsMeUser();
+
+    #no fees boxes for the farms-direct
+    if($user->supplier_id == 4)
+        return 0;
 
     $salesRepExtra = in_array($user->sales_rep, ['Robert', 'Mario', 'Joe']);
 

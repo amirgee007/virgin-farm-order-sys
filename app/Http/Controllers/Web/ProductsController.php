@@ -121,6 +121,9 @@ class ProductsController extends Controller
         } elseif ($user->supplier_id == 3) {
             $query->where('product_quantities.is_special', 1);
         }
+        elseif ($user->supplier_id == 4) {
+            $query->where('product_quantities.is_special', 2); #because we managed here its those cases i.e farms-direct
+        }
 
         $query->distinct('products.id');
 
@@ -155,7 +158,11 @@ class ProductsController extends Controller
         }
 
         // Carriers for dropdown
-        $carriers = getCarriers($user->state > 52 ? 1 : 0);
+        if ($user->supplier_id == 4) {#FedEx Ecuador and Pick Up
+            $typeList = Carrier::$farmsDirectIds;
+            $carriers = Carrier::whereIn('id', $typeList)->pluck('carrier_name', 'id')->toArray();
+        } else
+            $carriers = getCarriers($user->state > 52 ? 1 : 0);
 
         // Category filtering
         $categoriesQuery = Category::query();
@@ -702,6 +709,7 @@ class ProductsController extends Controller
         }
     }
 
+    #$isSpecial = 1 for special, 2 for the farms-direct
     private function processProductRow($row, $expiredtime, &$missing, $isSpecial = false)
     {
         $cleaned_string = str_replace(",", "", trim($row[0])); // Cleaned SKU
@@ -718,11 +726,11 @@ class ProductsController extends Controller
             $data = $this->buildProductData($row, $product); // Build product data done price fedex 2
             if ($expiredtime) {
                 $data['expired_at'] = $expiredtime;
-                Log::debug($expiredtime);
+                Log::debug($product->item_no . ' item and time is ' . $expiredtime);
             }
             if ($isSpecial) {
-                $data['is_special'] = 1;
-                Log::notice($product->item_no . ' becomes special now for date ' . $this->dateIn . ' to ' . $this->dateOut);
+                $data['is_special'] = $isSpecial;
+                Log::notice($isSpecial . ' specail or direct ' . $product->item_no . ' becomes special now for date ' . $this->dateIn . ' to ' . $this->dateOut);
             }
 
             // Update or create product quantity

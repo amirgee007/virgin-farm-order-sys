@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Models\Carrier;
 use Vanguard\Models\Cart;
 use Vanguard\Models\Order;
 use Vanguard\Models\ProductQuantity;
@@ -71,9 +72,23 @@ class DashboardController extends Controller
             ], 400); // 400 Bad Request
         }
 
+        // If the cart has items, block the supplier switch
+        if ($cartExists && $request->input('supplier') == 4) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Cannot switch Farm-Direct while your cart has other items. Please empty your cart first.',
+            ], 400); // 400 Bad Request
+        }
+
         // Store the selected supplier in the user preferences
         $user = auth()->user();
         $user->supplier_id = $request->input('supplier');
+
+        #dd($request->input('supplier'));
+        if ($request->input('supplier') == 4) {
+            $user->carrier_id = 20; #change user carrier to this one.
+        }
+
         $user->save();
 
         #, You will be redirected to inventory page.

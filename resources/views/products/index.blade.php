@@ -420,13 +420,15 @@
                             <label for="expired_at" class="form-label">Expiry Time</label>
                             <input class="form-control" required id="expired_at" type="time" name="expired_at">
                         </div>
-                        <br>
-                        <div class="form-check"
-                             title="Please confirm if you would like to mark all these products as special seasonal items for the above selected dates." data-toggle="tooltip" data-placement="left" >
-                            <input class="form-check-input" type="checkbox" value="1" id="is_special" name="is_special">
-                            <label class="form-check-label" for="is_special">
-                                Is Special Seasonal Inventory?
-                            </label>
+                        <div class="form-group mt-3"
+                             title="Select the inventory type for the above selected dates."
+                             data-toggle="tooltip" data-placement="top">
+                            <label for="inventory_type" class="form-label">Inventory Type</label>
+                            <select class="form-control" id="inventory_type" name="inventory_type" required>
+                                <option value="" selected>Virgin Farms Default</option>
+                                <option value="1">Special Seasonal Inventory</option>
+                                <option value="2">Farms-Direct Inventory</option>
+                            </select>
                         </div>
                         <br>
                         <input type="submit" value="Upload Inventory" class="btn btn-primary btn-sm float-right">
@@ -776,6 +778,19 @@
                         toastr.warning('Please type DELETE in all capital letters to reset.');
                     }
                     $deleteBtn.hide();
+                }
+            });
+
+            $('#inventory_type').on('change', function () {
+                var selected = $(this).val();
+                if (selected === '1' || selected === '2') {
+                    var msg = 'Please check with the admin about the correct inventory type before uploading.';
+                    toastr.warning(msg);
+                    // Speak the alert message
+                    if ('speechSynthesis' in window) {
+                        var msg = new SpeechSynthesisUtterance(msg);
+                        window.speechSynthesis.speak(msg);
+                    }
                 }
             });
 
