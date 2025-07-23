@@ -798,7 +798,7 @@ class ProductsController extends Controller
                 $expiredtime = $request->expired_at;
                 $this->dateIn = $date_in;
                 $this->dateOut = $date_out;
-                $this->processProductRow($row, $expiredtime, $missing, $request->is_special);
+                $this->processProductRow($row, $expiredtime, $missing, $request->inventory_type);
             }
         }
 

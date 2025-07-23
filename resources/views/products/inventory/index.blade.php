@@ -511,7 +511,7 @@
                                                     </button>
                                                 @endif
 
-                                                {!!  $product->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
+                                                {!!  $product->is_special == 1 ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
 
 
