@@ -90,6 +90,7 @@ class ProductGroupController extends Controller
 
     public function update(Request $request, ProductGroup $productGroup)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'parent_product_id' => 'nullable|exists:products,id',

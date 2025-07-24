@@ -1,0 +1,28 @@
+ #product-suggestions .list-group-item {
+     background-color: #f9f9f9;
+     border: none;
+     padding: 0.5rem 0.75rem;
+     cursor: pointer;
+ }
+
+#product-suggestions .list-group-item:hover {
+    background-color: #e9ecef;
+}
+
+#product-suggestions {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.product-row-added {
+    animation: fadeIn 0.5s ease-in-out;
+    background-color: #f8f9fa;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

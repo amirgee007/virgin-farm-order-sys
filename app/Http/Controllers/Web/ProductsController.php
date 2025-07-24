@@ -49,7 +49,8 @@ class ProductsController extends Controller
         $q = $request->input('q');
         $products = Product::where('item_no', 'like', "%$q%")
             ->orWhere('product_text', 'like', "%$q%")
-            ->limit(10)
+            ->where('is_combo_product', 0)
+            ->limit(15)
             ->get(['id', 'item_no', 'product_text']);
 
         return response()->json($products);
@@ -445,7 +446,7 @@ class ProductsController extends Controller
 //                    ->where('quantity', '>', 0)
 //                    ->whereDate('date_out', '>', now()->toDateString())
                     ->pluck('product_id')->toArray();
-                $query->whereIn('products.id' , $ids);
+                $query->whereIn('products.id', $ids);
             }
         }
 
