@@ -63,7 +63,7 @@
                             <div class="col-md-4 mb-3">
                                 <strong>Product Management:</strong><br>
                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#createProductModal"
-                                   class="btn btn-success btn-sm mr-2 mb-1"
+                                   class="btn btn-primary btn-sm mr-2 mb-1"
                                    title="Create a new product">
                                     <i class="fas fa-plus-circle"></i> New Product
                                 </a>
@@ -88,7 +88,7 @@
                                     <i class="fas fa-upload"></i> Upload Images
                                 </a>
                                 <a href="javascript:void(0)" id="copy_multiple_img"
-                                   class="btn btn-success btn-sm mr-2 mb-1"
+                                   class="btn btn-primary btn-sm mr-2 mb-1"
                                    title="Bulk assign images to products" data-toggle="tooltip">
                                     <i class="fas fa-puzzle-piece"></i> Bulk Assign Images
                                 </a>
@@ -98,7 +98,7 @@
                             <div class="col-md-4 mb-3">
                                 <strong>Inventory Management:</strong><br>
                                 <a href="javascript:void(0)" id="import_excel_inventory"
-                                   class="btn btn-success btn-sm mr-1 mb-1"
+                                   class="btn btn-primary btn-sm mr-1 mb-1"
                                    title="Refresh inventory via Excel file" data-toggle="tooltip">
                                     <i class="fas fa-upload"></i> Update Ranges
                                 </a>
@@ -726,7 +726,7 @@
                         </div>
 
 
-                        <button type="submit" class="btn btn-success">Generate Report</button>
+                        <button type="submit" class="btn btn-primary">Generate Report</button>
                     </form>
                 </div>
             </div>

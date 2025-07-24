@@ -78,7 +78,7 @@
                             </table>
 
                             <div class="mt-4">
-                                <button type="submit" class="btn btn-success">💾 Save Group</button>
+                                <button type="submit" class="btn btn-primary">💾 Save Group</button>
                             </div>
                         </form>
                     </div>

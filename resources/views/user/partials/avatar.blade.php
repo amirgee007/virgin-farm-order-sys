@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <button type="submit" id="save-photo" class="btn btn-success btn-block text-center">
+                <button type="submit" id="save-photo" class="btn btn-primary btn-block text-center">
                     <i class="fa fa-check"></i> @lang('Save')
                 </button>
             </div>

@@ -137,7 +137,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-success" onclick="savePromoCode()">Save</button>
+                        <button type="button" class="btn btn-primary" onclick="savePromoCode()">Save</button>
                     </form>
                 </div>
             </div>

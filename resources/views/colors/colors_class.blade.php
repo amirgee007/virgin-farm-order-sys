@@ -69,7 +69,7 @@
                             <input type="text" class="form-control form-control-color" name="color" id="color" required>
                         </div>
 
-                        <button type="button" class="btn btn-success" onclick="saveColorClass()">Save</button>
+                        <button type="button" class="btn btn-primary" onclick="saveColorClass()">Save</button>
                     </form>
                 </div>
             </div>
