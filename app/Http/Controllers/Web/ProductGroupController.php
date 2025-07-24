@@ -9,10 +9,14 @@ use Vanguard\Models\ProductGroup;
 
 class ProductGroupController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:manage.combo.groups')->except('getBreakdown');
+    }
     public function index()
     {
         $search = \Request::get('search');
-        $query = ProductGroup::with('products');
+        $query = ProductGroup::with('products')->latest();
 
         if ($search) {
             $query->where(function ($q) use ($search) {

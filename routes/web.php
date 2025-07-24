@@ -10,8 +10,6 @@ use Vanguard\Http\Controllers\Web\Auth\VerificationController;
 
 //Route::emailVerification();
 
-Route::get('/products/search', [ProductsController::class, 'search']);
-
 
 Route::post('/email/resend', [VerificationController::class, 'resend'])
     ->middleware('auth')
@@ -73,7 +71,6 @@ Route::get('abc/{id?}', 'TestAmirController@index2')->name('test-amir');
 Route::get('test-cubes', 'TestAmirController@index3')->name('test-cubes');
 Route::get('amir/{size}', 'TestAmirController@findBoxes');
 
-Route::resource('product-groups', \Vanguard\Http\Controllers\Web\ProductGroupController::class);
 
 Route::get('/products-groups/{id}/breakdown', [\Vanguard\Http\Controllers\Web\ProductGroupController::class, 'getBreakdown'])
     ->name('product-groups.breakdown');
@@ -97,6 +94,10 @@ Route::get('auth/{provider}/callback', 'Auth\SocialAuthController@handleProvider
  */
 Route::group(['middleware' => 'auth'], function () {
     Route::impersonate();
+
+    Route::resource('product-groups', \Vanguard\Http\Controllers\Web\ProductGroupController::class);
+    Route::get('/products/search', [ProductsController::class, 'search']);
+
 });
 
 ///Promocodes routes.

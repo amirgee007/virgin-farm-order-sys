@@ -63,9 +63,10 @@
                         <table class="table table- table-bordered products-list-table">
                             <thead>
                             <tr>
-                                <th>Group Name</th>
                                 <th>Parent Product</th>
+                                <th>Group Name</th>
                                 <th>Products (with Stems)</th>
+                                <th>Last Update</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -78,8 +79,6 @@
 
                                         <!-- Main Row -->
                                     <tr>
-                                        <td>{{ $group->name }}</td>
-
                                         <td style="background-color: #f4f8fb;">
                                             @if($group->parentProduct)
                                                 <a target="_blank"
@@ -93,6 +92,7 @@
                                                 —
                                             @endif
                                         </td>
+                                        <td>{{ $group->name }}</td>
 
                                         <td>
                                             <strong>Total:</strong> {{ $totalStems }} stems
@@ -103,6 +103,8 @@
                                                 <i class="fa fa-arrow-down"></i>
                                             </a>
                                         </td>
+
+                                        <td>{{ diff4Human($group->created_at) }}</td>
 
                                         <td class="d-flex gap-1">
                                             <a href="{{ route('product-groups.edit', $group->id) }}" class="btn btn-sm btn-info">Edit</a>
