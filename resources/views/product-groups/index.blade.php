@@ -60,12 +60,11 @@
 {{--                    </form>--}}
 
                     <div class="table-responsive mt-2" id="users-table-wrapper">
-                        <table class="table table-borderless table-striped products-list-table">
+                        <table class="table table- table-bordered products-list-table">
                             <thead>
-                                <tr>
+                            <tr>
                                 <th>Group Name</th>
                                 <th>Parent Product</th>
-
                                 <th>Products (with Stems)</th>
                                 <th>Actions</th>
                             </tr>
@@ -73,52 +72,81 @@
                             <tbody>
                             @if (count($groups))
                                 @foreach($groups as $group)
+                                    @php
+                                        $totalStems = $group->products->sum(fn($p) => $p->pivot->stems);
+                                    @endphp
+
+                                        <!-- Main Row -->
                                     <tr>
                                         <td>{{ $group->name }}</td>
+
                                         <td style="background-color: #f4f8fb;">
                                             @if($group->parentProduct)
-                                                <a target="_blank" href="{{ route('products.index.manage', ['search' => $group->parentProduct->item_no]) }}"
-                                                   title="Click to see detail on manage products page."
-                                                   class="badge badge-lg badge-primary text-decoration-none">
+                                                <a target="_blank"
+                                                   href="{{ route('products.index.manage', ['search' => $group->parentProduct->item_no]) }}"
+                                                   class="badge badge-lg badge-primary text-decoration-none"
+                                                   data-toggle="tooltip" data-placement="left"
+                                                   title="Click to see detail on manage products page.">
                                                     {{ $group->parentProduct->item_no }}
                                                 </a>
                                             @else
                                                 —
                                             @endif
                                         </td>
+
                                         <td>
-                                            @foreach($group->products as $product)
-                                                <div>
-                                                    <strong>{{ $product->item_no }}</strong> ({{ $product->pivot->stems }} stems)
-                                                </div>
-                                            @endforeach
+                                            <strong>Total:</strong> {{ $totalStems }} stems
+                                            <br>
+                                            <a href="javascript:void(0);" onclick="toggleDetails({{ $group->id }})" class="text-primary"
+                                               title="Click  to show more detail about stems" data-toggle="tooltip" data-placement="left">
+                                                Show Details
+                                                <i class="fa fa-arrow-down"></i>
+                                            </a>
                                         </td>
-                                        <td>
+
+                                        <td class="d-flex gap-1">
                                             <a href="{{ route('product-groups.edit', $group->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                            <form action="{{ route('product-groups.destroy', $group->id) }}" method="POST" class="d-inline">
-                                                @csrf @method('DELETE')
-                                                <button class="btn btn-sm btn-danger" onclick="return confirm('Delete group?')">Delete</button>
+
+                                            <form action="{{ route('product-groups.destroy', $group->id) }}" method="POST" onsubmit="return confirm('Delete group?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-danger ml-1">Delete</button>
                                             </form>
 
                                             <button type="button"
-                                                    class="btn btn-sm btn-secondary view-breakdown"
+                                                    class="btn btn-sm btn-secondary view-breakdown ml-1"
                                                     data-url="{{ route('product-groups.breakdown', $group->parent_product_id) }}"
-                                                    title="View Combo Breakdown">
+                                                    title="View Combo Breakdown"  data-toggle="tooltip" data-placement="left">
                                                 👁️
                                             </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Hidden Detail Row -->
+                                    <tr id="details-{{ $group->id }}" style="display: none;">
+                                        <td colspan="4">
+                                            <div class="border p-2 rounded bg-light">
+                                                <strong>Product Breakdown:</strong>
+                                                <ul class="mb-0">
+                                                    @foreach($group->products as $product)
+                                                        <li>
+                                                            {{ $product->item_no }} – {{ $product->pivot->stems }} stems
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="12">
-                                        No products found
-                                    </td>
+                                    <td colspan="4">No products found</td>
                                 </tr>
                             @endif
                             </tbody>
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -146,6 +174,10 @@
 
 @section('scripts')
     <script>
+        function toggleDetails(groupId) {
+            const row = document.getElementById('details-' + groupId);
+            row.style.display = row.style.display === 'none' ? '' : 'none';
+        }
         $(document).on('click', '.view-breakdown', function () {
             const url = $(this).data('url');
 

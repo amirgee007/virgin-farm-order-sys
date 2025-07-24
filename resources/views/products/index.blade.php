@@ -64,7 +64,7 @@
                                 <strong>Product Management:</strong><br>
                                 <a href="javascript:void(0)" data-toggle="modal" data-target="#createProductModal"
                                    class="btn btn-success btn-sm mr-2 mb-1"
-                                   title="Create a new product" data-toggle="tooltip">
+                                   title="Create a new product">
                                     <i class="fas fa-plus-circle"></i> New Product
                                 </a>
                                 <a href="javascript:void(0)" id="import_excel_products"
