@@ -59,7 +59,7 @@
            data-confirm-delete="@lang('Yes, delete it!')">
             <i class="fas fa-trash text-danger"></i>
         </a>
-        <a href="{{ route('products.reset', $product->id) }}"
+        <a href="{{ route('products.mark.group', $product->id) }}"
            class="btn btn-icon"
            title="@lang('Mark Product as Combo Group Product')"
            data-toggle="tooltip"
