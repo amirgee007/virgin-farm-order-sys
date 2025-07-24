@@ -10,37 +10,75 @@ $(document).ready(function () {
         }
     });
 
-    $('#item_no').on('input', function () {
-        const itemNo = $(this).val().trim();
+    // Search input & suggestions
+    const $searchInput = $('#search_product');
+    const $productName = $('#product_name');
+    const $productId = $('#product_id'); // Optional hidden field for actual product ID
+    const $suggestionsBox = $('#product-suggestions');
 
-        if (!itemNo) {
-            $('#product_name').val('');
+    $searchInput.on('input', function () {
+        const query = $(this).val().trim();
+        $('#search-status').text('Searching...');
+
+        if (query.length < 3) {
+            $suggestionsBox.empty();
             $('#search-status').text('Waiting for input...');
             return;
         }
 
-        $.get('/api/products/by-item-no/' + itemNo, function (data) {
-            if (data && data.product_text) {
-                $('#product_name').val(data.product_text);
-                $('#search-status').text('Product found');
-                $('#stems').focus();
-            } else {
-                $('#product_name').val('');
+        $.get('/products/search', { q: query }, function (products) {
+            $suggestionsBox.empty();
+
+            if (!products.length) {
+                $suggestionsBox.append('<div class="list-group-item disabled">No results found</div>');
                 $('#search-status').text('Not found');
+                return;
             }
-        }).fail(() => {
-            $('#product_name').val('');
-            $('#search-status').text('Error or not found');
+
+            $('#search-status').text('Select a product');
+
+            $.each(products, function (i, product) {
+                const item = $('<a href="#" class="list-group-item list-group-item-action"></a>')
+                    .text(product.item_no + ' - ' + product.product_text)
+                    .data('item_no', product.item_no)
+                    .data('name', product.product_text);
+
+                item.on('click', function (e) {
+                    e.preventDefault();
+
+                    const selectedItemNo = $(this).data('item_no');
+                    const selectedName = $(this).data('name');
+
+                    $searchInput.val(selectedItemNo);
+                    $productName.val(selectedName);
+                    $('#search-status').text('Product selected');
+                    $('#stems').focus();
+                    $suggestionsBox.empty();
+                });
+
+                $suggestionsBox.append(item);
+            });
+        }).fail(function () {
+            $('#search-status').text('Error searching');
+            $suggestionsBox.empty();
         });
     });
 
+    // Click outside to close suggestions
+    $(document).on('click', function (e) {
+        if (!$(e.target).closest('#search_product, #product-suggestions').length) {
+            $suggestionsBox.empty();
+        }
+    });
+
+    // Add product to table
     $('#add-product').click(function () {
-        const itemNo = $('#item_no').val().trim().toUpperCase();
-        const name = $('#product_name').val().trim();
+        const itemNo = $searchInput.val().trim().toUpperCase();
+        const name = $productName.val().trim();
         const stems = $('#stems').val().trim();
 
         if (!itemNo || !name || !stems) {
-            toastr.error('Please enter a valid item number and stem count.');
+            toastr.error('Please select a product and enter stem count.');
             return;
         }
 
@@ -71,18 +109,22 @@ $(document).ready(function () {
         addedItemNos.add(itemNo);
         productIndex++;
 
-        $('#item_no').val('').focus();
-        $('#product_name').val('');
+        // Reset fields
+        $searchInput.val('').focus();
+        $productName.val('');
         $('#stems').val('');
         $('#search-status').text('Waiting for input...');
+        $suggestionsBox.empty();
     });
 
+    // Remove row
     $(document).on('click', '.remove-row', function () {
         const itemNo = $(this).closest('tr').find('input[type="hidden"]').val().trim().toUpperCase();
         addedItemNos.delete(itemNo);
         $(this).closest('tr').remove();
     });
 
+    // Prevent Enter key from submitting form unintentionally
     $('#group-form').on('keydown', function (e) {
         if (e.key === 'Enter' && !$(e.target).is('textarea') && !$(e.target).is('button')) {
             e.preventDefault();

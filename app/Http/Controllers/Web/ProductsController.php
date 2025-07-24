@@ -44,6 +44,17 @@ class ProductsController extends Controller
         ]]);
     }
 
+    public function search(Request $request)
+    {
+        $q = $request->input('q');
+        $products = Product::where('item_no', 'like', "%$q%")
+            ->orWhere('product_text', 'like', "%$q%")
+            ->limit(10)
+            ->get(['id', 'item_no', 'product_text']);
+
+        return response()->json($products);
+    }
+
     public function inventoryIndex(Request $request)
     {
         #if supplier is 4 then no need any charges, box weight requirments

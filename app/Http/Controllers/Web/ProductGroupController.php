@@ -62,6 +62,7 @@ class ProductGroupController extends Controller
 
         $attach = [];
 
+        if($request->products)
         foreach ($request->products as $row) {
             $product = Product::where('item_no', $row['item_no'])->first();
 

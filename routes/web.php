@@ -10,6 +10,9 @@ use Vanguard\Http\Controllers\Web\Auth\VerificationController;
 
 //Route::emailVerification();
 
+Route::get('/products/search', [ProductsController::class, 'search']);
+
+
 Route::post('/email/resend', [VerificationController::class, 'resend'])
     ->middleware('auth')
     ->name('verification.resend');
@@ -71,11 +74,7 @@ Route::get('test-cubes', 'TestAmirController@index3')->name('test-cubes');
 Route::get('amir/{size}', 'TestAmirController@findBoxes');
 
 Route::resource('product-groups', \Vanguard\Http\Controllers\Web\ProductGroupController::class);
-Route::get('api/products/by-item-no/{item_no}', function ($item_no) {
-    return \Vanguard\Models\Product::where('item_no', $item_no)
-        ->select('id', 'item_no', 'product_text')
-        ->firstOrFail();
-});
+
 Route::get('/products-groups/{id}/breakdown', [\Vanguard\Http\Controllers\Web\ProductGroupController::class, 'getBreakdown'])
     ->name('product-groups.breakdown');
 
