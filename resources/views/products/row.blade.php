@@ -115,7 +115,7 @@
                             <td scope="row">{{++$index}}</td>
                             <td scope="row">
                                 {{$prod->item_no}}
-                                {!!  $prod->is_special ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
+                                {!!  $prod->is_special == 1 ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                             </td>
 
                             <td class="align-middle"><x-editable name="price_fob" type="number" step="any" empty="0" pk="{{ $prod->id }}" url="{{ route('product.qty.update.column') }}" value="{{ $prod->price_fob }}" /></td>

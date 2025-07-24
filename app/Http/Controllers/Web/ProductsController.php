@@ -385,6 +385,7 @@ class ProductsController extends Controller
             2 => 'Sorty by item Z-A',
             3 => 'Products with images',
             4 => 'Products without images',
+            5 => 'Show Group/Combo Products',
         ];
 
         $query = Product::query()->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id');
@@ -427,6 +428,14 @@ class ProductsController extends Controller
                 $query->whereNotNull('image_url');
             elseif ($filter == 4) #without images
                 $query->whereNull('image_url');
+            elseif ($filter == 5) #only show combo products.
+            {
+                $ids = ProductQuantity::where('is_special', 2)
+//                    ->where('quantity', '>', 0)
+//                    ->whereDate('date_out', '>', now()->toDateString())
+                    ->pluck('product_id')->toArray();
+                $query->whereIn('products.id' , $ids);
+            }
         }
 
         $products = (clone $query)->select(

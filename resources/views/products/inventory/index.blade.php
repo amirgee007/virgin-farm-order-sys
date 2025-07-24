@@ -504,7 +504,8 @@
 
                                                 @if($product->parent_product_id)
                                                     <button type="button"
-                                                            class="btn btn-sm btn-info view-breakdown"
+                                                            class="btn-info view-breakdown"
+                                                            data-toggle="tooltip"
                                                             data-url="{{ route('product-groups.breakdown', $product->parent_product_id) }}"
                                                             title="Click to reveal the breakdown info box">
                                                         ⭐
