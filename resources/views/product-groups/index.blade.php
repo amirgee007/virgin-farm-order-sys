@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('page-title', __('Product Groups'))
-@section('page-heading', __('Products Groups'))
+@section('page-title', __('Product Groups Combos'))
+@section('page-heading', __('Products Groups Combos'))
 
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted">
@@ -9,20 +9,60 @@
     </li>
 @stop
 
+
+@section('styles')
+
+@endsection
+
 @section('content')
     @include('partials.messages')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
+                    <div class="notes-success p-2 d-flex justify-content-between align-items-center" style="background-color: #d4f8d4; border-radius: 5px;">
+                        <div>
+                            <span>Total Products Groups Combos in the system are: <strong>{{@$count}}</strong></span>
+                        </div>
+                        <div>
+                            <a href="{{ route('product-groups.create') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus-circle"></i>
+                                Create New Group
+                            </a>
+                        </div>
+                    </div>
 
-                    <div class="container">
-                        <h2>Product Groups</h2>
-                        <a href="{{ route('product-groups.create') }}" class="btn btn-primary mb-3">➕ Create New Group</a>
+{{--                    <form action="" method="GET" id="product-form" class="pb-2 mb-1 border-bottom-light">--}}
+{{--                        <div class="row my-2 flex-md-row flex-column-reverse">--}}
+{{--                            <div class="col-md-6 mt-md-0 mt-2">--}}
+{{--                                <div class="input-group custom-search-form">--}}
+{{--                                    <input type="text"--}}
+{{--                                           class="form-control input-solid"--}}
+{{--                                           name="search"--}}
+{{--                                           value="{{ Request::get('search') }}"--}}
+{{--                                           placeholder="Search by Item, Description">--}}
 
-                        <table class="table table-bordered table-striped">
-                            <thead class="table-light">
-                            <tr>
+{{--                                    <span class="input-group-append">--}}
+{{--                                        @if (Request::has('search') && Request::get('search') != '')--}}
+{{--                                            <a href="{{ route('inventory.index') }}"--}}
+{{--                                               class="btn btn-light d-flex align-items-center text-muted"--}}
+{{--                                               role="button">--}}
+{{--                                                    <i class="fas fa-times"></i>--}}
+{{--                                            </a>--}}
+{{--                                        @endif--}}
+{{--                                        <button class="btn btn-light" type="submit"> <i class="fas fa-search text-muted"></i></button>--}}
+{{--                                    </span>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+
+
+{{--                        </div>--}}
+{{--                    </form>--}}
+
+                    <div class="table-responsive mt-2" id="users-table-wrapper">
+                        <table class="table table-borderless table-striped products-list-table">
+                            <thead>
+                                <tr>
                                 <th>Group Name</th>
                                 <th>Parent Product</th>
 
@@ -31,53 +71,61 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($groups as $group)
-                                <tr>
-                                    <td>{{ $group->name }}</td>
-                                    <td style="background-color: #f4f8fb;">
-                                        @if($group->parentProduct)
-                                            <a target="_blank" href="{{ route('products.index.manage', ['search' => $group->parentProduct->item_no]) }}"
-                                               title="Click to see detail on manage products page."
-                                               class="badge badge-lg badge-primary text-decoration-none">
-                                                {{ $group->parentProduct->item_no }}
-                                            </a>
-                                        @else
-                                            —
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @foreach($group->products as $product)
-                                            <div>
-                                                <strong>{{ $product->item_no }}</strong> ({{ $product->pivot->stems }} stems)
-                                            </div>
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        <a href="{{ route('product-groups.edit', $group->id) }}" class="btn btn-sm btn-info">Edit</a>
-                                        <form action="{{ route('product-groups.destroy', $group->id) }}" method="POST" class="d-inline">
-                                            @csrf @method('DELETE')
-                                            <button class="btn btn-sm btn-danger" onclick="return confirm('Delete group?')">Delete</button>
-                                        </form>
+                            @if (count($groups))
+                                @foreach($groups as $group)
+                                    <tr>
+                                        <td>{{ $group->name }}</td>
+                                        <td style="background-color: #f4f8fb;">
+                                            @if($group->parentProduct)
+                                                <a target="_blank" href="{{ route('products.index.manage', ['search' => $group->parentProduct->item_no]) }}"
+                                                   title="Click to see detail on manage products page."
+                                                   class="badge badge-lg badge-primary text-decoration-none">
+                                                    {{ $group->parentProduct->item_no }}
+                                                </a>
+                                            @else
+                                                —
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @foreach($group->products as $product)
+                                                <div>
+                                                    <strong>{{ $product->item_no }}</strong> ({{ $product->pivot->stems }} stems)
+                                                </div>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('product-groups.edit', $group->id) }}" class="btn btn-sm btn-info">Edit</a>
+                                            <form action="{{ route('product-groups.destroy', $group->id) }}" method="POST" class="d-inline">
+                                                @csrf @method('DELETE')
+                                                <button class="btn btn-sm btn-danger" onclick="return confirm('Delete group?')">Delete</button>
+                                            </form>
 
-                                        <button type="button"
-                                                class="btn btn-sm btn-secondary view-breakdown"
-                                                data-url="{{ route('product-groups.breakdown', $group->parent_product_id) }}"
-                                                title="View Combo Breakdown">
-                                            👁️
-                                        </button>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-secondary view-breakdown"
+                                                    data-url="{{ route('product-groups.breakdown', $group->parent_product_id) }}"
+                                                    title="View Combo Breakdown">
+                                                👁️
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="12">
+                                        No products found
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Product Breakdown Modal -->
+    {!! $groups->render() !!}
+
     <div class="modal fade" id="breakdownModal" tabindex="-1" aria-labelledby="breakdownModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
@@ -94,8 +142,6 @@
             </div>
         </div>
     </div>
-
-
 @stop
 
 @section('scripts')
@@ -119,4 +165,3 @@
 
 
 @endsection
-

@@ -11,8 +11,19 @@ class ProductGroupController extends Controller
 {
     public function index()
     {
-        $groups = ProductGroup::with('products')->get();
-        return view('product-groups.index', compact('groups'));
+        $search = \Request::get('search');
+        $query = ProductGroup::with('products');
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->orWhere('name', 'like', "%{$search}%");
+            });
+        }
+
+        $groups = $query->paginate(100);
+
+        $count = ProductGroup::count();
+        return view('product-groups.index', compact('groups', 'count'));
     }
 
     public function create()
@@ -71,7 +82,7 @@ class ProductGroupController extends Controller
 
     public function edit(ProductGroup $productGroup)
     {
-        $products = Product::where('is_combo_product' , 1)->orderBy('item_no')->get();
+        $products = Product::where('is_combo_product', 1)->orderBy('item_no')->get();
         $selected = $productGroup->products->pluck('pivot.stems', 'id')->toArray();
         return view('product-groups.edit', compact('productGroup', 'products', 'selected'));
     }
