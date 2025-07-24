@@ -23,6 +23,7 @@ class ProductGroupController extends Controller
                     ->from('product_groups')
                     ->whereNotNull('parent_product_id');
             })
+            ->orderBy('item_no')
             ->get();
         return view('product-groups.create', compact('products'));
     }
@@ -70,7 +71,7 @@ class ProductGroupController extends Controller
 
     public function edit(ProductGroup $productGroup)
     {
-        $products = Product::where('is_combo_product' , 1)->get();
+        $products = Product::where('is_combo_product' , 1)->orderBy('item_no')->get();
         $selected = $productGroup->products->pluck('pivot.stems', 'id')->toArray();
         return view('product-groups.edit', compact('productGroup', 'products', 'selected'));
     }
