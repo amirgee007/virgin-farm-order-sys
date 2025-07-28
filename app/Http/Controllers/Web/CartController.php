@@ -9,6 +9,7 @@ use Vanguard\Http\Controllers\Controller;
 use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\Cart;
+use Vanguard\Models\CartSnapshot;
 use Vanguard\Models\Order;
 use Vanguard\Models\OrderItem;
 use Vanguard\Models\Product;
@@ -167,6 +168,21 @@ class CartController extends Controller
             $user = $shipAddress = itsMeUser();
             $carts = getMyCart();
             $address_id = $user->address_id;
+
+            if ($carts->isEmpty()) {
+                session()->flash('app_error', 'Your cart is empty. Please add items before checking out.');
+                return back();
+            }
+
+            try {
+                CartSnapshot::create([
+                    'user_id' => $user->id,
+                    'cart_data' => $carts->toJson(),
+                ]);
+            } catch (\Exception $exx) {
+                Log::error('Error in placing order adding carts summary: ' . $exx->getMessage());
+
+            }
 
             if ($address_id) {
                 $shipAddress = ShippingAddress::find($address_id);

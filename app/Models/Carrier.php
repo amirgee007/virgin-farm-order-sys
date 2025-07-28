@@ -16,4 +16,9 @@ class Carrier extends Model
     public static $farmsDirectIds = [
         20, 32
     ];
+
+    #FedEx Ecuador  Hide from all except farmsDirect
+    public static $hideCarriersExceptFarmsDirect = [
+        20
+    ];
 }

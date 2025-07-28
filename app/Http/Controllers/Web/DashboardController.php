@@ -60,12 +60,13 @@ class DashboardController extends Controller
     public function updateSupplier(Request $request)
     {
         $user = auth()->user();
+        $oldSupplier = $user->supplier_id;
 
         // Check if the user has items in the cart
         $cartExists = Cart::mineCart()->exists();
 
         // If the cart has items, block the supplier switch
-        if ($cartExists && $user->supplier_id == 4 && $request->input('supplier') != 4) {
+        if ($cartExists && $oldSupplier == 4 && $request->input('supplier') != 4) {
             return response()->json([
                 'error' => true,
                 'message' => 'Cannot switch supplier while your cart has items. Please empty your cart first.',
@@ -83,11 +84,10 @@ class DashboardController extends Controller
         // Store the selected supplier in the user preferences
         $user = auth()->user();
         $user->supplier_id = $request->input('supplier');
-
-        #dd($request->input('supplier'));
         if ($request->input('supplier') == 4) {
             $user->carrier_id = 20; #change user carrier to this one.
-        }
+        } elseif($oldSupplier == 4)
+            $user->carrier_id = $user->carrier_id_default;
 
         $user->save();
 

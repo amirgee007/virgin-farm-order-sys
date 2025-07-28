@@ -173,8 +173,11 @@ class ProductsController extends Controller
         if ($user->supplier_id == 4) {#FedEx Ecuador and Pick Up
             $typeList = Carrier::$farmsDirectIds;
             $carriers = Carrier::whereIn('id', $typeList)->pluck('carrier_name', 'id')->toArray();
-        } else
+        } else{
+            $skipThese = Carrier::$hideCarriersExceptFarmsDirect; #for now its one if they need we can add more here
             $carriers = getCarriers($user->state > 52 ? 1 : 0);
+            unset($carriers[20]); #its 20 id here
+        }
 
         // Category filtering
         $categoriesQuery = Category::query();
