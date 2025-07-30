@@ -69,6 +69,28 @@
             vertical-align: middle;
         }
 
+        /* MIX - All 6 colors */
+        .MIX {
+            background: conic-gradient(
+                orange 0% 16.66%,
+                pink 16.66% 33.33%,
+                brown 33.33% 50%,
+                green 50% 66.66%,
+                blue 66.66% 83.33%,
+                yellow 83.33% 100%
+            );
+        }
+
+        /* ASSORTED - Only 4 colors */
+        .ASSORTED {
+            background: conic-gradient(
+                red 0% 25%,
+                yellow 25% 50%,
+                green 50% 75%,
+                blue 75% 100%
+            );
+        }
+
         [role=main] {
             padding-top: 75px;
         }
@@ -515,11 +537,18 @@
                                                 {!!  $product->is_special == 1 ? '<i class="fas fa-bolt text-danger blink" data-toggle="tooltip" data-placement="bottom" title="Special and Seasonal offers"></i>' :'' !!}
                                             </td>
 
-
+                                            @php
+                                                $isSpecial = in_array($product->color_name, ['MIX', 'ASSORTED']);
+                                            @endphp
 
                                             <td class="align-middle">
-                                                <span title="{{$product->color_description}}" data-toggle="tooltip" data-placement="top"
-                                                      class="color-circle " style="cursor: pointer; background-color: {{ strtolower($product->color_name) }};"></span>
+                                                <span
+                                                    title="{{ $product->color_description }}"
+                                                    data-toggle="tooltip"
+                                                    data-placement="top"
+                                                    class="color-circle {{ $isSpecial ? $product->color_name : '' }}"
+                                                    style="cursor: pointer; {{ !$isSpecial ? 'background-color: ' . strtolower($product->color_name) . ';' : '' }}">
+                                                </span>
                                             </td>
 
                                             @php $priceNow = round2Digit($product->$priceCol); @endphp

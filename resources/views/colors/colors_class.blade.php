@@ -9,6 +9,41 @@
     </li>
 @stop
 
+@section('styles')
+<style>
+    .color-block {
+        width: 100%;
+        height: 30px;
+        border: 1px solid #ccc;
+        color: black;
+        font-weight: bold;
+        text-align: center;
+        line-height: 30px;
+    }
+
+    .color-block.MIX {
+        background: conic-gradient(
+            orange 0% 16.66%,
+            pink 16.66% 33.33%,
+            brown 33.33% 50%,
+            green 50% 66.66%,
+            blue 66.66% 83.33%,
+            yellow 83.33% 100%
+        );
+    }
+
+    .color-block.ASSORTED {
+        background: conic-gradient(
+            red 0% 25%,
+            yellow 25% 50%,
+            green 50% 75%,
+            blue 75% 100%
+        );
+    }
+
+</style>
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-md-12">
@@ -66,7 +101,8 @@
 
                         <div class="form-group">
                             <label>Color</label>
-                            <input type="text" class="form-control form-control-color" name="color" id="color" required>
+                            <input type="text" style="text-transform: uppercase;" class="form-control form-control-color" name="color" id="color" required>
+                            <small>ASSORTED and MIX also available .</small>
                         </div>
 
                         <button type="button" class="btn btn-primary" onclick="saveColorClass()">Save</button>
@@ -81,6 +117,7 @@
     @include('partials.toaster-js')
 
     <script>
+
         function fetchColorClass() {
             $.ajax({
                 url: "{{ route('colors_class.list') }}",
@@ -88,19 +125,30 @@
                 success: function (data) {
                     $('#colorTableBody').empty();
                     data.forEach(item => {
+                        const color = item.color.toUpperCase();
+                        let colorHtml = '';
+
+                        if (color === 'MIX') {
+                            colorHtml = `<td><div class="color-block MIX">MIX</div></td>`;
+                        } else if (color === 'ASSORTED') {
+                            colorHtml = `<td><div class="color-block ASSORTED">ASSORTED</div></td>`;
+                        } else {
+                            colorHtml = `<td style="background-color: ${item.color}; color: black;">${item.color}</td>`;
+                        }
+
                         $('#colorTableBody').append(`
-                        <tr>
-                            <td>${item.id}</td>
-                            <td>${item.class_id}</td>
-                            <td>${item.sub_class}</td>
-                            <td>${item.description}</td>
-                            <td style="background-color: ${item.color};">${item.color}</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="editColorClass(${item.id})">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteColorClass(${item.id})">Delete</button>
-                            </td>
-                        </tr>
-                    `);
+                    <tr>
+                        <td>${item.id}</td>
+                        <td>${item.class_id}</td>
+                        <td>${item.sub_class}</td>
+                        <td>${item.description}</td>
+                        ${colorHtml}
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editColorClass(${item.id})">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteColorClass(${item.id})">Delete</button>
+                        </td>
+                    </tr>
+                `);
                     });
                 }
             });
