@@ -1077,31 +1077,58 @@ class ProductsController extends Controller
 
     public function resetSpecificInventory(Request $request)
     {
+        $user = auth()->user(); // make sure we get current user
 
         $dates = dateRangeConverter($request->range);
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
 
+        // Start query on ProductQuantity
         $query = ProductQuantity::query()
             ->whereDate('date_in', $date_in)
             ->whereDate('date_out', $date_out);
 
         #1 = only virgin, 2= dutch and 3 = special, 4 = farms-direct
+        // Filter by flower type if selected
         if (in_array($request->flower_type, [1, 2, 3, 4])) {
 
-            if ($request->flower_type == 3)
-                $query->where('product_quantities.is_special', 1);
-            elseif ($request->flower_type == 4)
-                $query->where('product_quantities.is_special', 2);
-            else {
-                $query->whereHas('product', function ($subQuery) use ($request) {
-                    $subQuery->where('products.supplier_id', $request->flower_type);
-                })->where('product_quantities.is_special', 0);
+            // Special flowers
+            if ($request->flower_type == 3) {
+                $query->where('is_special', 1);
+
+                // Farms-direct
+            } elseif ($request->flower_type == 4) {
+                $query->where('is_special', 2);
+
+                // Virgin or Dutch (regular only)
+            } else {
+                $query->where('is_special', 0)
+                    ->whereHas('product', function ($subQuery) use ($request) {
+                        $subQuery->where('supplier_id', $request->flower_type);
+                    });
+            }
+        } else {
+            // If no flower_type specified, filter by supplier (logged-in user)
+            if (in_array($user->supplier_id, [1, 2])) {
+                // VF or Dutch: regular only, exclude farms-direct
+                $query->where('is_special', '<>', 2)
+                    ->whereHas('product', function ($subQuery) use ($user) {
+                        $subQuery->where('supplier_id', $user->supplier_id);
+                    });
+
+            } elseif ($user->supplier_id == 3) {
+                // Specials only
+                $query->where('is_special', 1);
+
+            } elseif ($user->supplier_id == 4) {
+                // Farms-direct only
+                $query->where('is_special', 2);
             }
         }
 
+        // Delete or reset
         if ($request->flag == 'delete') {
-            $query->delete();
+            $query->delete(); // ONLY deletes matching inventory rows, not the products
         } else {
             $query->update([
                 'quantity' => 0,
@@ -1111,19 +1138,10 @@ class ProductsController extends Controller
             ]);
         }
 
-        if ($request->flag == 'delete')
-            $query->delete();
-        else
-            $query->update([
-                'quantity' => 0,
-                'date_in' => null,
-                'date_out' => null,
-                'is_special' => 0,
-            ]);
-
         session()->flash('app_message', 'Your selected inventory has been reset/deleted successfully.');
         return back();
     }
+
 
     public static function getStorageBackupPath($for, $ext = '.xls')
     {

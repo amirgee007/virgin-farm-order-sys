@@ -50,25 +50,32 @@ class ColorClassController extends Controller
     {
         $colorClass = ColorClass::findOrFail($id);
 
-        $validator = \Validator::make($request->all(), [
-            'class_id' => 'required|integer',
-            'sub_class' => 'required|string|max:10',
+        $data = \Validator::make($request->all(), [
+            'class_id'    => 'required|integer',
+            'sub_class'   => 'required|string|max:10',
             'description' => 'required|string|max:255',
-            'color' => 'required|string|max:50',
-        ]);
+            'color'       => 'required|string|max:50',
+        ])->validate();
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+        // Make color uppercase only if it's "mix" or "assorted"
+        if (in_array(strtolower($data['color']), ['mix', 'assorted'])) {
+            $data['color'] = strtoupper($data['color']);
         }
 
-        $colorClass->update($request->all());
+        // Update this record
+        $colorClass->update($data);
 
-        ColorClass::where('sub_class' , $request->sub_class)->update([
-            'color' => $request->color
+        // Keep all records with the same sub_class in sync
+        ColorClass::where('sub_class', $data['sub_class'])->update([
+            'color' => $data['color'],
         ]);
 
-        return response()->json(['message' => 'Color Class Updated', 'data' => $colorClass]);
+        return response()->json([
+            'message' => 'Color Class Updated',
+            'data' => $colorClass->fresh()
+        ]);
     }
+
 
     public function destroy($id)
     {
