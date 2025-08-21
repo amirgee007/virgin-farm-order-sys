@@ -22,11 +22,11 @@
     | <strong>Summary</strong>   |    |  |  |
     |    |    |  <small>Subtotal:</small>| <small>${{round2Digit($order->sub_total) }}</small> |
     |    |    |  <small>Service/Transportation:</small>| <small>${{round2Digit($order->shipping_cost)}}</small> |
-    |    |    |  <small>Import Tarrif:</small>| <small>${{round2Digit($order->tarrif_tax)}}</small> |
+    |    |    |  <small>Import Tariff:</small>| <small>${{round2Digit($order->tarrif_tax)}}</small> |
     @if($order->discount_applied > 0)
     |    |    |  <small>Promo Code Applied:</small> | <small class="text-success">- ${{ round2Digit($order->discount_applied) }}</small> |
     @endif
-    |    |    |  <strong>Total</strong> | <strong>${{ round2Digit($order->total - $order->discount_applied) }}</strong> |
+    |    |    |  <strong>Total</strong> | <strong>${{ round2Digit($order->total) }}</strong> |
     @if(isDeliveryChargesApply())
     |    |    |      <small>**Delivery charges may apply.</small> |     |
     @endif
