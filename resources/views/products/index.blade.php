@@ -281,7 +281,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title">
-                        Upload Bulk Inventory
+                        Upload Bulk Inventory(ONLY VF)
                         <a href="javascript:void(0)" title="Sync Inventory From FTP" data-toggle="tooltip" data-placement="left" id="inventory_sync_ftp" >
                             <i class="fas fa-sync text-primary"></i>
                         </a>

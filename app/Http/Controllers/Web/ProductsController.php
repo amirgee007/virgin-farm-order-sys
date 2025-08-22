@@ -173,7 +173,7 @@ class ProductsController extends Controller
         if ($user->supplier_id == 4) {#FedEx Ecuador and Pick Up
             $typeList = Carrier::$farmsDirectIds;
             $carriers = Carrier::whereIn('id', $typeList)->pluck('carrier_name', 'id')->toArray();
-        } else{
+        } else {
             $skipThese = Carrier::$hideCarriersExceptFarmsDirect; #for now its one if they need we can add more here
             $carriers = getCarriers($user->state > 52 ? 1 : 0);
             unset($carriers[20]); #its 20 id here
@@ -753,18 +753,21 @@ class ProductsController extends Controller
                 $data['expired_at'] = $expiredtime;
                 Log::debug($product->item_no . ' item and time is ' . $expiredtime);
             }
+
+            $data['is_special'] = 0;
             if ($isSpecial) {
                 $data['is_special'] = $isSpecial;
                 Log::notice($isSpecial . ' specail or direct ' . $product->item_no . ' becomes special now for date ' . $this->dateIn . ' to ' . $this->dateOut);
             }
 
-            // Update or create product quantity
+            // Update or create product quantity todo
             ProductQuantity::updateOrCreate(
                 [
                     'product_id' => $product->id,
                     'item_no' => $product->item_no,
                     'date_in' => $this->dateIn,
                     'date_out' => $this->dateOut,
+                    'is_special' => $data['is_special'],
                 ],
                 $data
             );
@@ -787,6 +790,7 @@ class ProductsController extends Controller
             'price_fedex' => $product->def_price_fedex,
             'price_fob' => $product->def_price_fob,
             'price_hawaii' => $product->def_price_hawaii,
+            'price_fedex_2' => $product->price_fedex_2,
         ];
 
         // Conditionally add prices to the data array if they are greater than zero
@@ -1026,6 +1030,7 @@ class ProductsController extends Controller
                                 'price_fedex' => $product->def_price_fedex,
                                 'price_fob' => $product->def_price_fob,
                                 'price_hawaii' => $product->def_price_hawaii,
+                                'price_fedex_2' => $product->price_fedex_2,
                             ];
 
                             // Update prices if provided in the file and greater than zero
@@ -1038,13 +1043,17 @@ class ProductsController extends Controller
                             if (floatval(trim($row[4])) > 0) {
                                 $data['price_hawaii'] = trim($row[4]);
                             }
+                            if (floatval(trim($row[5])) > 0) {
+                                $data['price_fedex_2'] = trim($row[5]);
+                            }
 
-                            // Create or update product quantities
+                            // Create or update product quantities todo
                             ProductQuantity::updateOrCreate([
                                 'product_id' => $product->id,
                                 'item_no' => $product->item_no,
                                 'date_in' => $this->dateIn,
                                 'date_out' => $this->dateOut,
+                                'is_special' => 0,
                             ], $data);
 
                         } else
