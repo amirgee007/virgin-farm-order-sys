@@ -1024,7 +1024,7 @@ class ProductsController extends Controller
                             $data = [
                                 'product_id' => $product->id,
                                 'item_no' => $product->item_no,
-                                'quantity' => $row[5] ? trim($row[5]) : 0,
+                                'quantity' => $row[6] ? trim($row[6]) : 0,
                                 'date_in' => $this->dateIn,
                                 'date_out' => $this->dateOut,
                                 'price_fedex' => $product->def_price_fedex,
@@ -1043,9 +1043,9 @@ class ProductsController extends Controller
                             if (floatval(trim($row[4])) > 0) {
                                 $data['price_hawaii'] = trim($row[4]);
                             }
-//                            if (floatval(trim($row[5])) > 0) {
-//                                $data['price_fedex_2'] = trim($row[5]);
-//                            }
+                            if (floatval(trim($row[5])) > 0) {
+                                $data['price_fedex_2'] = trim($row[5]);
+                            }
 
                             // Create or update product quantities todo
                             ProductQuantity::updateOrCreate([
