@@ -790,7 +790,7 @@ class ProductsController extends Controller
             'price_fedex' => $product->def_price_fedex,
             'price_fob' => $product->def_price_fob,
             'price_hawaii' => $product->def_price_hawaii,
-            'price_fedex_2' => $product->price_fedex_2,
+            'price_fedex_2' => $product->price_fedex_2 ?? 0,
         ];
 
         // Conditionally add prices to the data array if they are greater than zero
@@ -1030,7 +1030,7 @@ class ProductsController extends Controller
                                 'price_fedex' => $product->def_price_fedex,
                                 'price_fob' => $product->def_price_fob,
                                 'price_hawaii' => $product->def_price_hawaii,
-                                'price_fedex_2' => $product->price_fedex_2,
+                                'price_fedex_2' => $product->price_fedex_2 ?? 0,
                             ];
 
                             // Update prices if provided in the file and greater than zero
@@ -1043,9 +1043,9 @@ class ProductsController extends Controller
                             if (floatval(trim($row[4])) > 0) {
                                 $data['price_hawaii'] = trim($row[4]);
                             }
-                            if (floatval(trim($row[5])) > 0) {
-                                $data['price_fedex_2'] = trim($row[5]);
-                            }
+//                            if (floatval(trim($row[5])) > 0) {
+//                                $data['price_fedex_2'] = trim($row[5]);
+//                            }
 
                             // Create or update product quantities todo
                             ProductQuantity::updateOrCreate([
