@@ -137,12 +137,14 @@ class ProductsController extends Controller
             $query->where('product_quantities.is_special', 2); #because we managed here its those cases i.e farms-direct
         }
 
+
         $query->distinct('products.id');
+
 
         $highlightedDates = $this->getHighlightedDates($query);
 
         if ($date_shipped) {
-            $query->whereRaw('"' . $date_shipped . '" between `date_in` and `date_out`');
+            $query->whereRaw('"' . $date_shipped . '" between product_quantities.date_in and product_quantities.date_out');
         } else {
             $query->where('product_quantities.quantity', '<', 0); // Ignore results
         }
@@ -179,6 +181,8 @@ class ProductsController extends Controller
             unset($carriers[20]); #its 20 id here
         }
 
+
+
         // Category filtering
         $categoriesQuery = Category::query();
         $dutchCats = Category::dutchCategories();
@@ -191,30 +195,45 @@ class ProductsController extends Controller
 
         $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
 
-        // Product selection
-        $products = (clone $query)->groupBy('products.id')
-            ->orderBy('category_id') // Sort by category_id first
-            ->orderBy('product_text') // Then sort by product_text within the same category
+
+        $sub = \DB::table('product_quantities as pq1')
+            ->select('pq1.id')
+            ->whereRaw('pq1.product_id = pq.product_id')
+            ->whereRaw('pq1.date_in = pq.date_in AND pq1.date_out = pq.date_out')
+            ->orderByDesc('pq1.is_special') // prefer specials
+            ->orderBy('pq1.id')             // fallback if tie
+            ->limit(1);
+
+        $products = (clone $query)
+            ->join('product_quantities as pq', function ($join) {
+                $join->on('pq.product_id', '=', 'products.id');
+            })
+            ->whereRaw('pq.id = ('.$sub->toSql().')')
+            ->mergeBindings($sub) // keep bindings from subquery
             ->selectRaw('
-            supplier_id,
-            category_id,
-            product_quantities.id as p_qty_id,
-            product_quantities.is_special,
-            products.id as id,
-            product_text,
-            image_url,
-            unit_of_measure,
-            products.stems,
-            product_quantities.quantity - COALESCE(SUM(carts.quantity), 0) as quantity,
-            weight,
-            products.size,
-            price_fob,
-            price_fedex,
-            price_hawaii,
-            colors_class.description as color_description,
-            colors_class.color as color_name,
-            product_groups.parent_product_id',
-            )->paginate(100);
+        supplier_id,
+        category_id,
+        pq.id as p_qty_id,
+        pq.is_special,
+        products.id as id,
+        product_text,
+        image_url,
+        unit_of_measure,
+        products.stems,
+        pq.quantity - COALESCE(SUM(carts.quantity), 0) as quantity,
+        weight,
+        products.size,
+        pq.price_fob,
+        pq.price_fedex,
+        pq.price_hawaii,
+        colors_class.description as color_description,
+        colors_class.color as color_name,
+        product_groups.parent_product_id
+    ')
+            ->groupBy('products.id', 'pq.id')
+            ->orderBy('category_id')
+            ->orderBy('product_text')
+            ->paginate(100);
 
         // Orders list
         $fixed = [
@@ -267,7 +286,8 @@ class ProductsController extends Controller
         $fedexCarrierIds = [19, 20, 23];
         $isFedexCarrier = in_array($carrierId, $fedexCarrierIds);
 
-        $productQuantities = $query->select('date_in', 'date_out')
+        $productQuantities = (clone $query)
+            ->select('date_in', 'date_out')
             ->whereDate('date_out', '>=', Carbon::today())
             ->get();
 
@@ -761,16 +781,17 @@ class ProductsController extends Controller
             }
 
             // Update or create product quantity todo
-            ProductQuantity::updateOrCreate(
-                [
-                    'product_id' => $product->id,
-                    'item_no' => $product->item_no,
-                    'date_in' => $this->dateIn,
-                    'date_out' => $this->dateOut,
-                    'is_special' => $data['is_special'],
-                ],
-                $data
-            );
+            if ($data['quantity'] > 0)
+                ProductQuantity::updateOrCreate(
+                    [
+                        'product_id' => $product->id,
+                        'item_no' => $product->item_no,
+                        'date_in' => $this->dateIn,
+                        'date_out' => $this->dateOut,
+                        'is_special' => $data['is_special'],
+                    ],
+                    $data
+                );
         } else {
             // Log the missing product and add it to the missing array
             $missing[] = $cleaned_string;
@@ -1048,13 +1069,14 @@ class ProductsController extends Controller
                             }
 
                             // Create or update product quantities todo
-                            ProductQuantity::updateOrCreate([
-                                'product_id' => $product->id,
-                                'item_no' => $product->item_no,
-                                'date_in' => $this->dateIn,
-                                'date_out' => $this->dateOut,
-                                'is_special' => 0,
-                            ], $data);
+                            if ($data['quantity'] > 0)
+                                ProductQuantity::updateOrCreate([
+                                    'product_id' => $product->id,
+                                    'item_no' => $product->item_no,
+                                    'date_in' => $this->dateIn,
+                                    'date_out' => $this->dateOut,
+                                    'is_special' => 0,
+                                ], $data);
 
                         } else
                             $missing[] = $row[0];
