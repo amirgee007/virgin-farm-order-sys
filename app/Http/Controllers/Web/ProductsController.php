@@ -58,12 +58,12 @@ class ProductsController extends Controller
 
     public function inventoryIndex(Request $request)
     {
-        #if supplier is 4 then no need any charges, box weight requirments
+        #if supplier is 4 then no need any charges, box weight requirements
         $date_shipped = trim($request->date_shipped);
-        $category_id = trim($request->category);
-        $searching = trim($request->searching);
-        $user = itsMeUser();
-        $address = $user->shipAddress;
+        $category_id  = trim($request->category);
+        $searching    = trim($request->searching);
+        $user         = itsMeUser();
+        $address      = $user->shipAddress;
         $autoCorrected = false; // ✅ Track if the system corrected the ship date
 
         // Ensure user has a carrier set
@@ -72,10 +72,10 @@ class ProductsController extends Controller
         }
 
         // Check current user's carrier ID
-        $isCarrierVF = $user && $user->carrier_id == 17;
-        $today = now()->toDateString();
-        $currentTime = now();
-        $cutoffTime = Carbon::createFromTimeString('15:30:00');
+        $isCarrierVF   = $user && $user->carrier_id == 17;
+        $today         = now()->toDateString();
+        $currentTime   = now();
+        $cutoffTime    = Carbon::createFromTimeString('15:30:00');
         $shipDateCarbon = $date_shipped ? Carbon::parse($date_shipped) : null;
 
         // 🚫 Virgin Farms (ID 17): Only Monday allowed
@@ -110,8 +110,7 @@ class ProductsController extends Controller
         } else {
             if ($date_shipped) {
                 $user->update(['last_ship_date' => $date_shipped]);
-            }
-
+            } #dont change it ever ever.
         }
 
         // If editing order, override ship date from order
@@ -120,7 +119,7 @@ class ProductsController extends Controller
             $date_shipped = $order->date_shipped ?? $date_shipped;
         }
 
-        // Product query
+        // Base product query
         $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
             ->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id')
@@ -130,21 +129,20 @@ class ProductsController extends Controller
         // Filter by supplier
         if (in_array($user->supplier_id, [1, 2])) {
             $query->where('products.supplier_id', $user->supplier_id)
-                ->where('product_quantities.is_special', '<>', 2); #remove these farms-direct from main Vfarms tab
+                ->where('product_quantities.is_special', '<>', 2); // remove farms-direct
         } elseif ($user->supplier_id == 3) {
             $query->where('product_quantities.is_special', 1);
         } elseif ($user->supplier_id == 4) {
-            $query->where('product_quantities.is_special', 2); #because we managed here its those cases i.e farms-direct
+            $query->where('product_quantities.is_special', 2); // farms-direct
         }
 
-
         $query->distinct('products.id');
-
 
         $highlightedDates = $this->getHighlightedDates($query);
 
         if ($date_shipped) {
-            $query->whereRaw('"' . $date_shipped . '" between product_quantities.date_in and product_quantities.date_out');
+            // Main filter for shipping date
+            $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
         } else {
             $query->where('product_quantities.quantity', '<', 0); // Ignore results
         }
@@ -172,16 +170,14 @@ class ProductsController extends Controller
         }
 
         // Carriers for dropdown
-        if ($user->supplier_id == 4) {#FedEx Ecuador and Pick Up
+        if ($user->supplier_id == 4) { // FedEx Ecuador and Pick Up
             $typeList = Carrier::$farmsDirectIds;
             $carriers = Carrier::whereIn('id', $typeList)->pluck('carrier_name', 'id')->toArray();
         } else {
-            $skipThese = Carrier::$hideCarriersExceptFarmsDirect; #for now its one if they need we can add more here
+            $skipThese = Carrier::$hideCarriersExceptFarmsDirect;
             $carriers = getCarriers($user->state > 52 ? 1 : 0);
-            unset($carriers[20]); #its 20 id here
+            unset($carriers[20]); // remove carrier id 20
         }
-
-
 
         // Category filtering
         $categoriesQuery = Category::query();
@@ -195,12 +191,12 @@ class ProductsController extends Controller
 
         $categories = $categoriesQuery->orderBy('description')->pluck('description', 'category_id')->toArray();
 
-
+        // Subquery: pick best row (special > normal) only for this date
         $sub = \DB::table('product_quantities as pq1')
             ->select('pq1.id')
             ->whereRaw('pq1.product_id = pq.product_id')
-            ->whereRaw('pq1.date_in = pq.date_in AND pq1.date_out = pq.date_out')
-            ->orderByDesc('pq1.is_special') // prefer specials
+            ->whereRaw('? BETWEEN pq1.date_in AND pq1.date_out', [$date_shipped]) // ✅ apply ship date filter here too
+            ->orderByDesc('pq1.is_special') // prefer special
             ->orderBy('pq1.id')             // fallback if tie
             ->limit(1);
 
@@ -251,8 +247,8 @@ class ProductsController extends Controller
         if ($date_shipped || $category_id || $searching) {
             $products->appends([
                 'date_shipped' => $date_shipped,
-                'searching' => $searching,
-                'category' => $category_id,
+                'searching'    => $searching,
+                'category'     => $category_id,
             ]);
         }
 
