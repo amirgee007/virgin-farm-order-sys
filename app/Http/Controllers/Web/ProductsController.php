@@ -535,21 +535,19 @@ class ProductsController extends Controller
 
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 600); //600 seconds = 10 minutes
-
-
+        
         $UOM = UnitOfMeasure::pluck('total', 'unit')->toArray();
 
         #11 COLUMNS FROM 0 TO 1.
         #0 Item Class,	1Item No., 2Description,	3UOM, 4colorClass,	5Price1, 6Price2, 7Price3,8Price4, 9Weight, 10Size
-        if (isset($products[0]))
+        if (isset($products[0])){
+            \Log::debug('uploadCreateProducts called for products having count '.count($products[0]));
             foreach ($products[0] as $index => $row) {
                 try {
-
 
                     if ($index < 2) continue;
                     $uomTrim = trim($row[3]);
                     $category_id = trim($row[0]); #class_id
-
 
                     $subclass = trim($row[4]); #sub_class
 
@@ -590,7 +588,6 @@ class ProductsController extends Controller
 
                     $product = Product::where('item_no', trim($row[1]))->first();
 
-
                     if ($product) {
                         #USED not this BUT save mater file price here in ths table and use default prices.
                         foreach ($prices as $key => $value) {
@@ -615,8 +612,9 @@ class ProductsController extends Controller
                     return back();
                 }
             }
+        }
 
-        session()->flash('app_message', 'Inventory file has been imported in the system.');
+        session()->flash('app_message', 'Master Inventory file has been imported in the system.');
         return back();
     }
 
