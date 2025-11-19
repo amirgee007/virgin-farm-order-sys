@@ -181,7 +181,6 @@ class CartController extends Controller
                 ]);
             } catch (\Exception $exx) {
                 Log::error('Error in placing order adding carts summary: ' . $exx->getMessage());
-
             }
 
             if ($address_id) {

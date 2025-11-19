@@ -60,10 +60,10 @@ class ProductsController extends Controller
     {
         #if supplier is 4 then no need any charges, box weight requirements
         $date_shipped = trim($request->date_shipped);
-        $category_id  = trim($request->category);
-        $searching    = trim($request->searching);
-        $user         = itsMeUser();
-        $address      = $user->shipAddress;
+        $category_id = trim($request->category);
+        $searching = trim($request->searching);
+        $user = itsMeUser();
+        $address = $user->shipAddress;
         $autoCorrected = false; // ✅ Track if the system corrected the ship date
 
         // Ensure user has a carrier set
@@ -72,10 +72,10 @@ class ProductsController extends Controller
         }
 
         // Check current user's carrier ID
-        $isCarrierVF   = $user && $user->carrier_id == 17;
-        $today         = now()->toDateString();
-        $currentTime   = now();
-        $cutoffTime    = Carbon::createFromTimeString('15:30:00');
+        $isCarrierVF = $user && $user->carrier_id == 17;
+        $today = now()->toDateString();
+        $currentTime = now();
+        $cutoffTime = Carbon::createFromTimeString('15:30:00');
         $shipDateCarbon = $date_shipped ? Carbon::parse($date_shipped) : null;
 
         // 🚫 Virgin Farms (ID 17): Only Monday allowed
@@ -204,7 +204,7 @@ class ProductsController extends Controller
             ->join('product_quantities as pq', function ($join) {
                 $join->on('pq.product_id', '=', 'products.id');
             })
-            ->whereRaw('pq.id = ('.$sub->toSql().')')
+            ->whereRaw('pq.id = (' . $sub->toSql() . ')')
             ->mergeBindings($sub) // keep bindings from subquery
             ->selectRaw('
         supplier_id,
@@ -247,8 +247,8 @@ class ProductsController extends Controller
         if ($date_shipped || $category_id || $searching) {
             $products->appends([
                 'date_shipped' => $date_shipped,
-                'searching'    => $searching,
-                'category'     => $category_id,
+                'searching' => $searching,
+                'category' => $category_id,
             ]);
         }
 
@@ -536,6 +536,7 @@ class ProductsController extends Controller
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 600); //600 seconds = 10 minutes
 
+
         $UOM = UnitOfMeasure::pluck('total', 'unit')->toArray();
 
         #11 COLUMNS FROM 0 TO 1.
@@ -544,9 +545,11 @@ class ProductsController extends Controller
             foreach ($products[0] as $index => $row) {
                 try {
 
+
                     if ($index < 2) continue;
                     $uomTrim = trim($row[3]);
                     $category_id = trim($row[0]); #class_id
+
 
                     $subclass = trim($row[4]); #sub_class
 
@@ -587,14 +590,15 @@ class ProductsController extends Controller
 
                     $product = Product::where('item_no', trim($row[1]))->first();
 
+
                     if ($product) {
                         #USED not this BUT save mater file price here in ths table and use default prices.
                         foreach ($prices as $key => $value) {
                             if ((float)$value <= 0) {
                                 unset($prices[$key]);
+                                \Log::debug('Product price removed from master file: ' . $product->id);
                             }
                         }
-
                         if ($prices)
                             $product->update($prices);
 
