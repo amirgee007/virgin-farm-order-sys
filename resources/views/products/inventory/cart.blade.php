@@ -327,7 +327,7 @@
                                         </td>
                                     </tr>
                                     @php
-//                                        $tarifTax = getImportTariffTax($total);
+                                        $tarifTax = getImportTariffTax($total);
 
                                         $promoData = getApplicablePromoDiscount(auth()->user(), $total , $size);
 
