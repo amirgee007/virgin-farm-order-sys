@@ -380,6 +380,7 @@ function getSalesReps()
         'Nestor' => 'Nestor',
         'Peter' => 'Peter',
         'Robert' => 'Robert',
+        'Adele' => 'Adele',
     ];
 }
 
@@ -461,6 +462,7 @@ function getSalesRepsNameEmail($name)
         'Robert' => 'robertm@virginfarms.com',
         'Joe' => 'joep@virginfarms.com',
         'Nestor' => 'nestorn@virginfarms.com',
+        'Adele' => 'adeleo@virginfarms.com'
     ];
 
     # Return the email associated with the name, or a default email if the name is not found.

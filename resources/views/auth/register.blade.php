@@ -118,16 +118,13 @@
 
                         <div class="form-row">
                             <div class="form-group col-12">
-                                <select name="sales_rep"
-                                        id="sales_rep"
-                                        class="form-control input-solid">
+                                <select name="sales_rep" id="sales_rep" class="form-control input-solid">
                                     <option value="">Indicate Sales Representative</option>
-                                    <option value="Mario">Mario</option>
-                                    <option value="Robert">Robert</option>
-                                    <option value="Joe">Joe</option>
-                                    <option value="Nestor">Nestor</option>
-                                    <option value="Peter">Peter</option>
-                                    <option value="Esteban">Esteban</option>
+                                    @foreach (getSalesReps() as $key => $value)
+                                        @if ($key !== '0')
+                                            <option value="{{ $key }}">{{ $value }}</option>
+                                        @endif
+                                    @endforeach
                                 </select>
                                 <p id="new_customer_message" class="text-danger" style="display: none;"><b>Sales Representative will be assigned upon confirmation.</b></p>
                             </div>

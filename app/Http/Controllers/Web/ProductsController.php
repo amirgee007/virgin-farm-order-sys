@@ -535,7 +535,7 @@ class ProductsController extends Controller
 
         ini_set('memory_limit', -1);
         ini_set('max_execution_time', 600); //600 seconds = 10 minutes
-        
+
         $UOM = UnitOfMeasure::pluck('total', 'unit')->toArray();
 
         #11 COLUMNS FROM 0 TO 1.
