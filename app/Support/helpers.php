@@ -373,7 +373,7 @@ function getSalesReps()
 {
     #if any change plz check this too 1,2,3 getCubeSizeTax
     return [
-        '0' => 'Select Sales Rep',
+        '0' => 'Indicate Sales Representative',
         'Esteban' => 'Esteban',
         'Joe' => 'Joe',
         'Mario' => 'Mario',

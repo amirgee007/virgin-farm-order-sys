@@ -119,7 +119,6 @@
                         <div class="form-row">
                             <div class="form-group col-12">
                                 <select name="sales_rep" id="sales_rep" class="form-control input-solid">
-                                    <option value="">Indicate Sales Representative</option>
                                     @foreach (getSalesReps() as $key => $value)
                                         @if ($key !== '0')
                                             <option value="{{ $key }}">{{ $value }}</option>
