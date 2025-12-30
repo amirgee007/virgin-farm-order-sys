@@ -22,7 +22,6 @@
     | <strong>Summary</strong>   |    |  |  |
     |    |    |  <small>Subtotal:</small>| <small>${{round2Digit($order->sub_total) }}</small> |
     |    |    |  <small>Service/Transportation:</small>| <small>${{round2Digit($order->shipping_cost)}}</small> |
-    |    |    |  <small>Import Tariff:</small>| <small>${{round2Digit($order->tarrif_tax)}}</small> |
     @if($order->discount_applied > 0)
     |    |    |  <small>Promo Code Applied:</small> | <small class="text-success">- ${{ round2Digit($order->discount_applied) }}</small> |
     @endif

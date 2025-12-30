@@ -327,7 +327,7 @@
                                         </td>
                                     </tr>
                                     @php
-                                        $tarifTax = getImportTariffTax($total);
+//                                        $tarifTax = getImportTariffTax($total);
 
                                         $promoData = getApplicablePromoDiscount(auth()->user(), $total , $size);
 
@@ -351,11 +351,11 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
-                                        <td colspan="5" class="text-right" title="A tariff (often called a tariff tax) is a tax imposed by a government on imports or exports of goods. It's basically a way to control trade between countries.">
-                                            <h5 ><strong>Import Tariff: ${{$tarifTax}}</strong></h5>
-                                        </td>
-                                    </tr>
+{{--                                    <tr>--}}
+{{--                                        <td colspan="5" class="text-right" title="A tariff (often called a tariff tax) is a tax imposed by a government on imports or exports of goods. It's basically a way to control trade between countries.">--}}
+{{--                                            <h5 ><strong>Import Tariff: ${{$tarifTax}}</strong></h5>--}}
+{{--                                        </td>--}}
+{{--                                    </tr>--}}
 
                                     <tr>
                                         <td colspan="2">

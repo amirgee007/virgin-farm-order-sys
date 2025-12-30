@@ -159,6 +159,8 @@ function getCubeSizeTax($size)
 
 function getImportTariffTax($total)
 {
+    return 0;
+    
     #FOB price (Also carriers All others, not fedex) = 6% FedEx and HI/AK prices: 5%
     $price = myPriceColumn();
     $user = itsMeUser();
