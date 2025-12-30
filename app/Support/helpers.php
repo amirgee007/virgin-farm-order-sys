@@ -116,12 +116,14 @@ function getCubeSizeTax($size)
             $tax = 34;
         } elseif ($size >= 27 && $size <= 30) {
             $tax = 35;
-        } elseif ($size >= 40) {  // Combined the last two conditions
+        } elseif ($size >= 38) {  // Combined the last two conditions
             $tax = 37;
         }
 
-        if ($size / 45 > 1) {
-            $countMore45 = ((int)ceil($size / 45) - 1);
+        #max box is 40-45 now they want me to change 38-40 max box
+
+        if ($size / 40 > 1) {
+            $countMore45 = ((int)ceil($size / 40) - 1);
             $additional = 33 * $countMore45;
         }
     }
@@ -160,7 +162,7 @@ function getCubeSizeTax($size)
 function getImportTariffTax($total)
 {
     return 0;
-    
+
     #FOB price (Also carriers All others, not fedex) = 6% FedEx and HI/AK prices: 5%
     $price = myPriceColumn();
     $user = itsMeUser();

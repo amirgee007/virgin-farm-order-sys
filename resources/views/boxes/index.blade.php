@@ -62,6 +62,7 @@
         </form>
 
         <div class="table-responsive" id="users-table-wrapper">
+            <small class="text-danger"><b>For any changes here, inform Amir — this table isn’t part of the core logic yet.</b></small>
             <table class="table table-borderless table-striped">
                 <thead>
                 <tr>
