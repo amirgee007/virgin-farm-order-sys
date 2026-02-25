@@ -190,7 +190,7 @@
 
 @env('production')
     <script src="https://cdn.logr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>
-    <script>window.LogRocket && window.LogRocket.init('bszrrw/virginfarms');</script>
+    <script>window.LogRocket && window.LogRocket.init('virginfarmsv2/virginfarmsv2');</script>
 @endenv
 
 <script>
