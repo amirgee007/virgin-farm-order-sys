@@ -61,7 +61,14 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Promo Disc. Class</label>
+                                    <label>
+                                        Promo Disc. Class
+                                        <i class="fa fa-info-circle text-primary"
+                                           data-toggle="tooltip"
+                                           data-placement="right"
+                                           title="Enter any discount class name (e.g., 3, 5, 6). Users assigned to this class will automatically receive the related discount when placing an order.">
+                                        </i>
+                                    </label>
                                     <input type="text" class="form-control" id="promo_disc_class" name="promo_disc_class">
                                 </div>
                             </div>
