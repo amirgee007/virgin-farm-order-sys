@@ -89,6 +89,7 @@
             <i class="fas fa-edit"></i>
         </a>
 
+        @if($showAll)
         <a href="{{ route('users.destroy', $user) }}"
            class="btn btn-icon"
            title="@lang('Delete User')"
@@ -100,5 +101,6 @@
            data-confirm-delete="@lang('Yes, delete him!')">
             <i class="fas fa-trash"></i>
         </a>
+        @endif
     </td>
 </tr>

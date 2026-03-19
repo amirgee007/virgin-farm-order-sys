@@ -47,7 +47,7 @@ class UsersController extends Controller
         ];
 
         $salesReps = getSalesReps(); #sales_reps All as default
-
+        $showAll = true;
         #its just for custom users to login in accounts.
         if (myRoleName() == 'SalesRep') {
             $userSalesRep = $request->sales_rep = auth()->user()->sales_rep;
@@ -56,6 +56,8 @@ class UsersController extends Controller
             $salesReps = array_filter($salesReps, function ($rep) use ($userSalesRep) {
                 return $rep === $userSalesRep;
             });
+
+            $showAll = false;
         }
 
         $states = \DB::table('users')
@@ -81,6 +83,7 @@ class UsersController extends Controller
             'salesReps',
             'sortBy',
             'states',
+            'showAll',
         ));
     }
 
@@ -245,6 +248,13 @@ class UsersController extends Controller
 
     public function adminLogin(User $user)
     {
+
+        #its just for custom users to login in accounts.
+        if (myRoleName() == 'SalesRep') {
+            if ($user->sales_rep != auth()->user()->sales_rep)
+                abort(403, "Forbidden.");
+        }
+
         auth()->loginUsingId($user->id);
 
 //        $user->update([
