@@ -46,7 +46,19 @@ class UsersController extends Controller
             'state_id' => 'Client State'
         ];
 
-        $states =\DB::table('users')
+        $salesReps = getSalesReps(); #sales_reps All as default
+
+        #its just for custom users to login in accounts.
+        if (myRoleName() == 'SalesRep') {
+            $userSalesRep = $request->sales_rep = auth()->user()->sales_rep;
+
+            // Keep only the matching sales rep
+            $salesReps = array_filter($salesReps, function ($rep) use ($userSalesRep) {
+                return $rep === $userSalesRep;
+            });
+        }
+
+        $states = \DB::table('users')
             ->join('us_states', 'users.state', '=', 'us_states.id')
             ->select('us_states.id', 'us_states.state_name')
             ->distinct()
@@ -54,21 +66,19 @@ class UsersController extends Controller
             ->pluck('us_states.state_name', 'us_states.id')
             ->toArray();
 
-        $users = $this->users->paginate($perPage = 25, $request->search, $request->status , $request->sort_by , $request->state, $request->sales_rep);
+        $users = $this->users->paginate($perPage = 25, $request->search, $request->status, $request->sort_by, $request->state, $request->sales_rep);
 
         $statuses = ['' => __('All')] + UserStatus::lists();
         #for user is_approved
         $statuses['Approved'] = 'Approved';
         $statuses['NotApproved'] = 'Not-Approved';
 
-        $salesReps = getSalesReps(); #sales_rep
-
         return view('user.list', compact(
             'users',
             'statuses',
             'carriers',
             'prices',
-            'salesReps' ,
+            'salesReps',
             'sortBy',
             'states',
         ));
@@ -129,7 +139,7 @@ class UsersController extends Controller
         if ($request->is_approved) {
             // Send email notification approval
             $promo = PromoCode::first();
-            $content = view('mail.email-approval-alert', compact('promo' , 'user'))->render();
+            $content = view('mail.email-approval-alert', compact('promo', 'user'))->render();
 
             \Mail::to($user->email)
                 ->send(new VirginFarmGlobalMail('Your Account is Approved - Start Shopping Now!', $content));
