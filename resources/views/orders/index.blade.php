@@ -87,7 +87,7 @@
                                 {!!
                                     Form::select(
                                         'sales_rep',
-                                        $salesRep,
+                                        $salesReps,
                                         Request::get('sales_rep'),
                                         ['id' => 'sales_rep', 'class' => 'form-control input-solid']
                                     )

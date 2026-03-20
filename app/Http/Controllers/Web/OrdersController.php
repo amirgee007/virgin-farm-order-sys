@@ -31,6 +31,18 @@ class OrdersController extends Controller
         $user_id = myRoleName() == 'Admin' ? null : auth()->id();
         #for clients show only client but for admin show ALL.
 
+        $salesReps = getSalesReps(); #sales_reps All as default
+
+        #its just for custom users to login in accounts.
+        if (myRoleName() == 'SalesRep') {
+            $sales_rep = auth()->user()->sales_rep;
+
+            // Keep only the matching sales rep
+            $salesReps = array_filter($salesReps, function ($rep) use ($sales_rep) {
+                return $rep === $sales_rep;
+            });
+        }
+
         $query = Order::with('items')->latest();
 
         $users = [$user_id => auth()->user()->first_name];
@@ -80,8 +92,15 @@ class OrdersController extends Controller
         }
 
         $isAdmin = myRoleName() == 'Admin';
-        $salesRep = getSalesReps();
-        return view('orders.index', compact('orders', 'count', 'user_id', 'users', 'isAdmin', 'salesRep'));
+
+        return view('orders.index', compact(
+            'orders',
+            'count',
+            'user_id',
+            'users',
+            'isAdmin',
+            'salesReps'
+        ));
     }
 
     public function updateOrder($id, $type)
