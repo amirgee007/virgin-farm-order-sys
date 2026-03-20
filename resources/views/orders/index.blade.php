@@ -83,6 +83,7 @@
                                 </div>
                                 <small class="text-danger"><b>Note:</b> Click on any order below to see more detailed view.</small>
                             </div>
+                            @if($isAdmin)
                             <div class="col-md-2 mt-2 mt-md-0">
                                 {!!
                                     Form::select(
@@ -93,6 +94,7 @@
                                     )
                                 !!}
                             </div>
+                             @endif
 
                         </div>
                     </form>

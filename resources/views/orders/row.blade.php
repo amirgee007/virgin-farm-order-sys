@@ -63,7 +63,6 @@
                    data-placement="left"
                    data-orderid="{{$order->id}}"
                    data-email="{{$order->email_address}}" style="cursor:pointer;"></i>
-
                 <a href="{{ route('orders.update', [$order->id , 'delete']) }}"
                    class="btn btn-icon"
                    title="@lang('Delete order')"

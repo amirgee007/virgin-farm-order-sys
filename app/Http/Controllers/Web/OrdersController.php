@@ -43,6 +43,7 @@ class OrdersController extends Controller
             });
         }
 
+
         $query = Order::with('items')->latest();
 
         $users = [$user_id => auth()->user()->first_name];
@@ -64,7 +65,7 @@ class OrdersController extends Controller
         }
 
         if ($sales_rep) {
-            $query->where('sales_rep', $sales_rep);
+            $query->orWhere('sales_rep', $sales_rep);
         }
 
         if ($yesId) {
