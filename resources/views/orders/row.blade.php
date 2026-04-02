@@ -90,7 +90,7 @@
                     <th class="min-width-100">@lang('Quantity')</th>
                     <th class="min-width-100">@lang('Price')</th>
 {{--                    <th class="min-width-100">@lang('Size')</th>--}}
-                    <th class="min-width-100">@lang('Stem')</th>
+                    <th class="min-width-100">@lang('Stem/Unit')</th>
                     <th class="min-width-100">@lang('SubTotal')</th>
                 </tr>
                 </thead>
