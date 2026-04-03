@@ -91,7 +91,7 @@ function getCubeSizeTax($size)
     $user = itsMeUser();
 
     #no fees boxes for the farms-direct
-    if($user->supplier_id == 4)
+    if ($user->supplier_id == 4)
         return 0;
 
     $salesRepExtra = in_array($user->sales_rep, ['Robert', 'Mario', 'Joe']);
@@ -135,12 +135,13 @@ function getCubeSizeTax($size)
     $extra = 0;
 
     try {
-
         #{"date_in":"2025-01-27","date_out":"2025-02-13"}
         #checked if week is during the PRICES then up it too.
         $found = Setting::where('key', 'extra-fees-date')->where('value', '>', 0)->first();
+
         if ($found) {
             $dates = json_decode($found->label, true);
+            $carriers = $found->extra_info ? json_decode($found->extra_info, true) : null;
 
             $start = Carbon::parse($dates['date_in']);
             $end = Carbon::parse($dates['date_out']);
@@ -148,14 +149,17 @@ function getCubeSizeTax($size)
             $user = itsMeUser();
             $date_shipped = Carbon::parse($user->last_ship_date);
 
-            if ($date_shipped->between($start, $end)) {
-                $extra = round2Digit(($found->value / 100) * $total);
+            #carriers too check here for extra fees
+            if ($date_shipped->between($start, $end) && (is_null($carriers) || in_array($user->carrier_id, $carriers))) {
+                $extra = $found->value;
+
+                Log::info($extra . ' amount added for the user during transportation plz check user: ' . $user->id);
             }
         }
     } catch (\Exception $ex) {
         Log::error($ex->getMessage() . ' error calcualting extra percentage data/values etc during transportation. ');
     }
-
+    
     return $total + $extra;
 }
 

@@ -35,17 +35,17 @@ class BoxesController extends Controller
         $selected['start'] = $start_date->toDayDateTimeString();
         $selected['end'] = $end_date->toDayDateTimeString();
 
-        $found = Setting::where('key' , 'extra-fees-date')->first();
-        if($found){
-            $dates = json_decode($found->label , true);
-
+        $found = Setting::where('key', 'extra-fees-date')->first();
+        if ($found) {
+            $dates = json_decode($found->label, true);
             $selected = [
                 'start' => Carbon::parse($dates['date_in'])->toDayDateTimeString(),
                 'end' => Carbon::parse($dates['date_out'])->toDayDateTimeString(),
+                'carriers' => $found->extra_info ? json_decode($found->extra_info, true) : []
             ];
         }
 
-        if($search){
+        if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->orWhere('description', 'like', "%{$search}%");
                 $q->orWhere('width', 'like', "%{$search}%");
@@ -59,7 +59,14 @@ class BoxesController extends Controller
         $boxes = $query->paginate(100);
 
         $unitOfMeasure = UnitOfMeasure::all();
-        return view('boxes.index' , compact('boxes' , 'unitOfMeasure' , 'selected' , 'found'));
+        $carriers = getCarriers();
+        return view('boxes.index', compact(
+            'boxes',
+            'unitOfMeasure',
+            'selected',
+            'found',
+            'carriers'
+        ));
     }
 
     public function deleteBox($id)
@@ -74,7 +81,7 @@ class BoxesController extends Controller
 
     public function createAndUpdate(Request $request)
     {
-        try{
+        try {
 
             if ($request->_token) {
                 $box = Box::create($request->except('_token'));
@@ -86,7 +93,7 @@ class BoxesController extends Controller
 
             return ['Done'];
 
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             session()->flash('app_error', 'Something went wrong plz try again later.');
             return back();
         }
@@ -96,7 +103,7 @@ class BoxesController extends Controller
     {
         try {
 
-            if($request->is_adding_new){
+            if ($request->is_adding_new) {
                 $request->validate([
                     'unit' => 'required|string|max:255',
                     'detail' => 'required|string|max:255',
@@ -111,8 +118,7 @@ class BoxesController extends Controller
 
                 return response()->json(['success' => true]);
 
-            }
-            else{
+            } else {
                 UnitOfMeasure::where('id', $request['pk'])->update([$request['name'] => $request['value']]);
                 return ['Done'];
             }
@@ -123,8 +129,8 @@ class BoxesController extends Controller
 
     }
 
-    public function updateExtraFeesDates(Request $request){
-
+    public function updateExtraFeesDates(Request $request)
+    {
         $dates = dateRangeConverter($request->range);
         $date_in = $dates['date_in'];
         $date_out = $dates['date_out'];
@@ -137,8 +143,11 @@ class BoxesController extends Controller
             ], [
                 'value' => $request->fees,
                 'label' => json_encode($dates),
+                'extra_info' => $request->carriers ? json_encode($request->carriers) : null,
                 'done_by' => auth()->id(),
             ]);
+
+            $carriers = json_decode($found->extra_info, true);
         }
 
         session()->flash('app_message', 'Your value,date for extra fees has been updated successfully.');

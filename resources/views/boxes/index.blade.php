@@ -12,7 +12,7 @@
 @section ('styles')
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/x-editable/bootstrap-editable.css') }}">
     <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/daterangepicker/daterangepicker.css') }}">
-
+    <link media="all" type="text/css" rel="stylesheet" href="{{ url('assets/plugins/select2/select2.min.css') }}">
 @stop
 
 @section('content')
@@ -326,26 +326,42 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
                 <form action="{{route('update.extra.fees.date')}}" method="POST" enctype="multipart/form-data">
                     {{csrf_field()}}
-
+                    <div class="form-group">
+                        <label for="carriers">Select Carriers</label>
+                        <select name="carriers[]" id="carriers" class="form-control carriers-select2" multiple>
+                            @foreach($carriers as $id => $name)
+                                <option value="{{ $id }}" {{in_array($id, $selected['carriers']) ? 'selected': ''}}>
+                                    {{ $name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <small class="text-muted">Leave blank to apply to all carriers.</small>
+                    </div>
                     <div class="form-group">
                         <input type="hidden" name="range" value="" class="dateRangeVal">
-                        <label for="dateRange" class="form-label mt-3">Date Range</label>
+                        <label for="dateRange" class="form-label mt-1">Date Range</label>
                         <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
                             <i class="fa fa-calendar"></i>&nbsp;
                             <span></span>
                             &nbsp;<i class="fa fa-caret-down"></i>
                         </div>
                     </div>
-
                     <br/>
-                    <br/>
-                    <div class="form-group">
-                        <label for="extraFees">Extra Fees %</label>
-                        <input type="number" name="fees" min="0" value="{{$found ? $found->value : ''}}"  max="100" class="form-control" id="extraFees" placeholder="1-100">
-                        <small class="text-danger">If want to reset just put 0 fees here.</small>
+                    <div class="form-group mt-3">
+                        <label for="extraFees">Dollar Increase</label>
+                        <input type="number" name="fees" min="0"
+                            max="1000" step="0.01"
+                            oninput="this.value = this.value ? parseFloat(this.value).toFixed(2) : ''"
+                            value="{{ $found ? number_format((float)$found->value, 2, '.', '') : '' }}"
+                            class="form-control"
+                            id="extraFees"
+                            placeholder="1.00-1000.00 Maximum"
+                        >
+                        <small class="text-danger">If want to reset just put 0.00 fees here.</small>
                     </div>
                     <br>
                     <input type="submit" value="Update Dates Fees" class="btn btn-primary btn-sm float-right">
@@ -354,6 +370,7 @@
         </div>
     </div>
 </div>
+
 @stop
 
 @section('scripts')
@@ -361,6 +378,7 @@
     @include('partials.toaster-js')
     <script src="{{ url('assets/plugins/daterangepicker/daterangepicker.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('assets/plugins/x-editable/bootstrap-editable.min.js') }}" ></script>
+    <script src="{{ url('assets/plugins/select2/select2.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -415,6 +433,11 @@
 
         $('.editable').editable();
 
+        $('.carriers-select2').select2({
+            placeholder: 'Select carriers',
+            width: '100%',
+            dropdownParent: $('#changeExtraFees')
+        });
         $("#user_id").change(function () {
             $("#users-form").submit();
         });
