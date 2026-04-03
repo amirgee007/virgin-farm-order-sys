@@ -358,7 +358,6 @@
                         <label for="extraFees">Dollar Increase % (Same as Before)</label>
                         <input type="number" name="fees" min="0"
                             max="1000" step="0.01"
-                            oninput="this.value = this.value ? parseFloat(this.value).toFixed(2) : ''"
                             value="{{ $found ? number_format((float)$found->value, 2, '.', '') : '' }}"
                             class="form-control"
                             id="extraFees"
