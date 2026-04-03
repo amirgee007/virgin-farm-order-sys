@@ -151,7 +151,9 @@ function getCubeSizeTax($size)
 
             #carriers too check here for extra fees
             if ($date_shipped->between($start, $end) && (is_null($carriers) || in_array($user->carrier_id, $carriers))) {
-                $extra = $found->value;
+                #$extra = $found->value;
+
+                $extra = round2Digit(($found->value / 100) * $total);
 
                 Log::info($extra . ' amount added for the user during transportation plz check user: ' . $user->id);
             }
@@ -159,7 +161,7 @@ function getCubeSizeTax($size)
     } catch (\Exception $ex) {
         Log::error($ex->getMessage() . ' error calcualting extra percentage data/values etc during transportation. ');
     }
-    
+
     return $total + $extra;
 }
 

@@ -352,7 +352,7 @@
                     </div>
                     <br/>
                     <div class="form-group mt-3">
-                        <label for="extraFees">Dollar Increase</label>
+                        <label for="extraFees">Dollar Increase % (Same as Before)</label>
                         <input type="number" name="fees" min="0"
                             max="1000" step="0.01"
                             oninput="this.value = this.value ? parseFloat(this.value).toFixed(2) : ''"
