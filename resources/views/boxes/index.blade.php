@@ -365,6 +365,12 @@
                         >
                         <small class="text-danger">If want to reset just put 0.00 fees here.</small>
                     </div>
+
+                    <select name="type" class="form-control">
+                        <option value="fixed" {{ @$selected['type'] == 'fixed' ? 'selected' : '' }}>Fixed Dollar Increase</option>
+                        <option value="percentage" {{ @$selected['type'] == 'percentage' ? 'selected' : '' }}>Percentage % </option>
+                    </select>
+
                     <br>
                     <input type="submit" value="Update Dates Fees" class="btn btn-primary btn-sm float-right">
                 </form>

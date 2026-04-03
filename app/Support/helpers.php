@@ -156,6 +156,12 @@ function getCubeSizeTax($size)
                 $extra = round2Digit(($found->value / 100) * $total);
 
                 Log::info($extra . ' amount added for the user during transportation plz check user: ' . $user->id);
+
+//                if ($selected['type'] === 'percentage') {
+//                    $fee = ($orderAmount * $selected['value']) / 100;
+//                } else {
+//                    $fee = $selected['value'];
+//                }
             }
         }
     } catch (\Exception $ex) {

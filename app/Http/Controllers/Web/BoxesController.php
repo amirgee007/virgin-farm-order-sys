@@ -38,10 +38,12 @@ class BoxesController extends Controller
         $found = Setting::where('key', 'extra-fees-date')->first();
         if ($found) {
             $dates = json_decode($found->label, true);
+            $extraInfo = $found->extra_info ? json_decode($found->extra_info, true) : [];
             $selected = [
                 'start' => Carbon::parse($dates['date_in'])->toDayDateTimeString(),
                 'end' => Carbon::parse($dates['date_out'])->toDayDateTimeString(),
-                'carriers' => $found->extra_info ? json_decode($found->extra_info, true) : []
+                'carriers' => $extraInfo['carriers'] ?? [],
+                'type' => $extraInfo['type'] ?? [], #fixed OR %
             ];
         }
 
