@@ -287,9 +287,24 @@ class ProductsController extends Controller
             ->whereDate('date_out', '>=', Carbon::today())
             ->get();
 
+        $today = Carbon::today();
+
         foreach ($productQuantities as $productQuantity) {
-            $period = \Carbon\CarbonPeriod::create($productQuantity->date_in, $productQuantity->date_out);
+            $startDate = Carbon::parse($productQuantity->date_in)->lt($today)
+                ? $today->copy()
+                : Carbon::parse($productQuantity->date_in);
+
+            $endDate = Carbon::parse($productQuantity->date_out);
+
+            #because due to date in it makes trouble sometime and shows previous dates for user too
+            if ($startDate->gt($endDate)) {
+                continue;
+            }
+
+            $period = \Carbon\CarbonPeriod::create($startDate, $endDate);
+
             foreach ($period as $date) {
+
                 // If carrier is 17 (VF), only allow Mondays
                 if ($isCarrierVF && !$date->isMonday()) {
                     continue;
