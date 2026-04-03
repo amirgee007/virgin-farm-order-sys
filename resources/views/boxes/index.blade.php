@@ -331,10 +331,13 @@
                 <form action="{{route('update.extra.fees.date')}}" method="POST" enctype="multipart/form-data">
                     {{csrf_field()}}
                     <div class="form-group">
+                        @php
+                            $selectedCarriers = $selected['carriers'] ?? [];
+                        @endphp
                         <label for="carriers">Select Carriers</label>
                         <select name="carriers[]" id="carriers" class="form-control carriers-select2" multiple>
                             @foreach($carriers as $id => $name)
-                                <option value="{{ $id }}" {{in_array($id, $selected['carriers']) ? 'selected': ''}}>
+                                <option value="{{ $id }}" {{in_array($id, $selectedCarriers) ? 'selected': ''}}>
                                     {{ $name }}
                                 </option>
                             @endforeach
