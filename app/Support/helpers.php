@@ -121,7 +121,6 @@ function getCubeSizeTax($size)
         }
 
         #max box is 40-45 now they want me to change 38-40 max box
-
         if ($size / 40 > 1) {
             $countMore45 = ((int)ceil($size / 40) - 1);
             $additional = 33 * $countMore45;
@@ -155,7 +154,9 @@ function getCubeSizeTax($size)
 
                 $extra = round2Digit(($found->value / 100) * $total);
 
-                Log::info($extra . ' amount added for the user during transportation plz check user: ' . $user->id);
+                Log::info(
+                    "User {$user->id} | Transportation Extra: {$extra} | Additional *33: {$additional} | Tax: {$tax}"
+                );
             }
         }
     } catch (\Exception $ex) {
