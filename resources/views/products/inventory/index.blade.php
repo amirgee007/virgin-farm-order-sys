@@ -291,6 +291,13 @@
                 right: 5% !important; /* Add padding on the sides */
             }
 
+            /* Fix date input size */
+            #date_shipped {
+                height: 32px !important;
+                font-size: 13px !important;
+                padding: 4px 30px 4px 8px !important;
+            }
+
 
             /* 🔥 Compact mobile layout for filters */
             .custom-search-form.mobile-compact {
@@ -338,6 +345,41 @@
             /* Tighten search input */
             .custom-search-form.mobile-compact #searching {
                 margin-left: 0 !important;
+            }
+
+            /* Force them in one row */
+            .card-body .d-flex.align-items-center.gap-2.flex-wrap {
+                flex-wrap: nowrap !important;
+                gap: 6px !important;
+            }
+
+            /* Each block takes half width */
+            .card-body .d-flex.align-items-center.gap-2.flex-wrap > div {
+                flex: 1;
+                min-width: 0; /* prevent overflow */
+            }
+
+            /* Make selects compact */
+            #changeCarrier,
+            #changeAddress {
+                width: 100% !important;
+                min-width: unset !important;
+                height: 30px !important;
+                font-size: 12px !important;
+                padding: 2px 6px !important;
+            }
+
+            /* Labels smaller */
+            .card-body small {
+                font-size: 11px !important;
+                margin-bottom: 2px;
+            }
+
+            /* Fix plus icon spacing */
+            #changeAddress + a,
+            .card-body a.ml-1 {
+                margin-left: 3px !important;
+                font-size: 14px;
             }
 
         }
