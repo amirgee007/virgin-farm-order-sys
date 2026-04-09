@@ -290,6 +290,56 @@
                 left: 5% !important;  /* Center it horizontally */
                 right: 5% !important; /* Add padding on the sides */
             }
+
+
+            /* 🔥 Compact mobile layout for filters */
+            .custom-search-form.mobile-compact {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6px;
+            }
+
+            /* Reduce input size */
+            .custom-search-form.mobile-compact .form-control {
+                height: 32px !important;
+                padding: 4px 8px !important;
+                font-size: 13px !important;
+                margin-bottom: 0 !important;
+            }
+
+            /* First row (order + date) */
+            .custom-search-form.mobile-compact .d-flex {
+                display: flex;
+                gap: 6px;
+            }
+
+            .custom-search-form.mobile-compact .d-flex > * {
+                flex: 1;
+            }
+
+            /* Buttons row */
+            .custom-search-form.mobile-compact .btn {
+                height: 32px;
+                font-size: 13px;
+                padding: 0;
+            }
+
+            /* Reset + search buttons side by side */
+            .custom-search-form.mobile-compact .btn + .btn {
+                margin-left: 6px;
+            }
+
+            /* Remove extra spacing from old styles */
+            .custom-search-form.mobile-compact .input-group-append {
+                width: 100%;
+                display: flex;
+            }
+
+            /* Tighten search input */
+            .custom-search-form.mobile-compact #searching {
+                margin-left: 0 !important;
+            }
+
         }
 
         /* Further improvements for very small screens */
@@ -329,6 +379,21 @@
                 width: 90% !important; /* Make it fit within the screen */
                 left: 5% !important;  /* Center it horizontally */
                 right: 5% !important; /* Add padding on the sides */
+            }
+
+            /* Extra tight spacing for small phones */
+            .custom-search-form.mobile-compact {
+                gap: 5px;
+            }
+
+            .custom-search-form.mobile-compact .form-control {
+                height: 30px !important;
+                font-size: 12px !important;
+            }
+
+            .custom-search-form.mobile-compact .btn {
+                height: 30px;
+                font-size: 12px;
             }
 
         }
@@ -445,7 +510,7 @@
                     <div class="row my-2 flex-md-row flex-column-reverse">
                         <div class="col-md-12 col-sm-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
-                                <div class="input-group custom-search-form">
+                                <div class="input-group custom-search-form mobile-compact">
 {{--                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>--}}
                                     <select class="form-control form-control-md mr-2" id="add-on-order" style="border:3px solid #cccccc; border-style:dashed"
                                             title="Choose an order to edit, or select 'Add New Order' to proceed?"
