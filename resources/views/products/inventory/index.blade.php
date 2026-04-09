@@ -1201,43 +1201,54 @@
 
             $('#searching').parent().append(suggestionBox);
 
-            // On typing
-            $('#searching').on('keyup', function () {
-                let query = $(this).val();
-                if (!query) return;
+            let xhr = null; // 👈 track previous request
 
+            $('#searching').on('keyup', function () {
+                let query = $(this).val().trim();
+
+                // reset UI
                 suggestionBox.hide().empty();
                 activeIndex = -1;
 
-                // 👇 only search after 2 chars (change to 3 if you want)
-                if (query.length < 3) return;
+                if (!query || query.length < 3) return;
 
-                $.ajax({
+                // ✅ cancel previous request (fix old results issue)
+                if (xhr) {
+                    xhr.abort();
+                }
+
+                xhr = $.ajax({
                     url: "{{ route('search.autocomplete') }}",
                     type: "GET",
                     data: { q: query },
                     success: function (data) {
+                        if (!data || !data.length) {
+                            suggestionBox.hide();
+                            return;
+                        }
 
-                        if (!data.length) return;
+                        // ✅ remove duplicates safely
+                        let uniqueData = [...new Set(data.map(item => item.trim()))];
 
-                        // data.forEach(item => {
-                        //     suggestionBox.append(
-                        //         `<div class="autocomplete-item" >${item}</div>`
-                        //     );
-                        // });
+                        // ✅ clear again (extra safety)
+                        suggestionBox.empty();
 
-                        data.forEach(item => {
+                        uniqueData.forEach(item => {
                             let isCategory = item.startsWith('cat::');
                             let text = isCategory ? item.replace('cat::', '') : item;
-                            suggestionBox.append(
-                                `<div style="padding:3px; cursor:pointer;" class="autocomplete-item ${isCategory ? 'category-item' : ''}">${text}</div>`
-                            );
+                            suggestionBox.append(`<div style="padding:3px; cursor:pointer;" class="autocomplete-item ${isCategory ? 'category-item' : ''}">${text}</div>`);
                         });
 
                         suggestionBox.show();
+                    },
+                    error: function (xhrObj) {
+                        if (xhrObj.status !== 0) { // ignore aborted requests
+                            console.error('Autocomplete error due to too many request...!');
+                        }
                     }
                 });
             });
+
             // Click suggestion
             $(document).on('click', '.autocomplete-item', function () {
                 $('#searching').val($(this).text());
