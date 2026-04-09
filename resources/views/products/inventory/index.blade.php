@@ -49,6 +49,10 @@
 @section ('styles')
     <style>
 
+        #autocomplete-box div:hover {
+            background-color: #e2e0e0;
+        }
+
         .bg-choc {
             background-color: #6f2a0c !important;
         }
@@ -457,12 +461,16 @@
                                         @endforeach
                                     </select>
 
-                                    <input type="text"
-                                           id="searching"
-                                           class="form-control rounded ml-2"
-                                           placeholder="Search by name, item, category, text etc"
-                                           name="searching"
-                                           value="{{\Request::get('searching')}}">
+                                    <div style="position: relative;">
+                                        <input type="text"
+                                               id="searching"
+                                               class="form-control rounded ml-2"
+                                               autocomplete="off"
+                                               placeholder="Search by name, item, category, text etc"
+                                               name="searching"
+                                               value="{{\Request::get('searching')}}"
+                                        >
+                                    </div>
 
                                     <span class="input-group-append">
                                         @if (\Request::get('category') || \Request::get('searching'))
@@ -1168,6 +1176,66 @@
                 var selectedValue = $('input[name="radioGroupMobile"]:checked').val();
                 $('input[name="radioGroupDesktop"][value="' + selectedValue + '"]').prop('checked', true);
             });
+
+
+            // Create suggestion box
+            let suggestionBox = $('<div id="autocomplete-box"></div>').css({
+                position: 'absolute',
+                top: $('#searching').outerHeight(), // pushes it below input
+                left: 9,
+                background: 'aliceblue',
+                border: '1px dotted  #ccc',
+                width: '100%',
+                zIndex: 9999,
+                display: 'none'
+            });
+
+            $('#searching').parent().append(suggestionBox);
+
+            // On typing
+            $('#searching').on('keyup', function () {
+                let query = $(this).val();
+
+                suggestionBox.hide().empty();
+                activeIndex = -1;
+
+                if (!query) return;
+
+                $.ajax({
+                    url: "{{ route('search.autocomplete') }}",
+                    type: "GET",
+                    data: { q: query },
+                    success: function (data) {
+
+                        if (!data.length) return;
+
+                        data.forEach(item => {
+                            suggestionBox.append(
+                                `<div class="autocomplete-item" style="padding:8px; cursor:pointer;">${item}</div>`
+                            );
+                        });
+
+                        suggestionBox.show();
+                    }
+                });
+            });
+            // Click suggestion
+            $(document).on('click', '.autocomplete-item', function () {
+                $('#searching').val($(this).text());
+                suggestionBox.hide();
+
+                $('#filters-form').submit(); // auto search
+            });
+
+            // Hide on outside click
+            $(document).click(function (e) {
+                if (!$(e.target).closest('#searching, #autocomplete-box').length) {
+                    suggestionBox.hide();
+                }
+            });
         });
     </script>
+
+
+
 @endsection

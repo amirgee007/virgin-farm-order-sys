@@ -10,7 +10,6 @@ use Vanguard\Http\Controllers\Web\Auth\VerificationController;
 
 //Route::emailVerification();
 
-
 Route::post('/email/resend', [VerificationController::class, 'resend'])
     ->middleware('auth')
     ->name('verification.resend');
@@ -148,6 +147,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'inventory.index',
             'uses' => 'ProductsController@inventoryIndex'
         ]);
+
+        Route::get('/inventory/search-autocomplete', [
+            'as' => 'search.autocomplete',
+            'uses' => 'ProductsController@autoCompleteSearch'
+        ]);
+
         #client side ended here....!
 
         Route::get('/manage', [

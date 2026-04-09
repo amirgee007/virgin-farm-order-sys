@@ -44,6 +44,23 @@ class ProductsController extends Controller
         ]]);
     }
 
+    public function autoCompleteSearch(Request $request)
+    {
+        $query = $request->get('q');
+
+        if (!$query) {
+            return response()->json([]);
+        }
+
+        $products = Product::where('item_no', 'like', "%$query%")
+            ->orWhere('product_text', 'like', "%$query%")
+            ->where('is_combo_product', 0)
+            ->limit(15)
+            ->pluck('product_text');
+
+        return response()->json($products);
+    }
+
     public function search(Request $request)
     {
         $q = $request->input('q');
