@@ -74,7 +74,8 @@ class ProductsController extends Controller
 
         // Merge both arrays
         $results = array_merge($categories, $products);
-
+        $results = array_unique($results);
+        
         return response()->json($results);
     }
 
