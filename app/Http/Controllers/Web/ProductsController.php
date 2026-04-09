@@ -142,7 +142,7 @@ class ProductsController extends Controller
         }
 
         // Base product query
-        $query = $this->getInventoryBaseQuery($user, $date_shipped)
+        $query = $this->getInventoryBaseQuery($user, null)
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
             ->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id')
             ->leftJoin('product_groups', 'product_groups.parent_product_id', '=', 'products.id');
@@ -281,7 +281,7 @@ class ProductsController extends Controller
         ));
     }
 
-    private function getInventoryBaseQuery($user, $date_shipped)
+    private function getInventoryBaseQuery($user, $date_shipped = null)
     {
         return Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->where('product_quantities.quantity', '>', 0)
@@ -295,7 +295,9 @@ class ProductsController extends Controller
             ->when($user->supplier_id == 4, function ($q) {
                 $q->where('product_quantities.is_special', 2);
             })
-            ->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped])
+            ->when($date_shipped, function ($q) use ($date_shipped) {
+                $q->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
+            })
             ->distinct('products.id');
     }
 
