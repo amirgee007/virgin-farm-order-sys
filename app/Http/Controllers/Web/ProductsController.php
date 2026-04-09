@@ -59,6 +59,7 @@ class ProductsController extends Controller
                 $q2->where('products.item_no', 'like', "%$query%")
                     ->orWhere('product_text', 'like', "%$query%");
             })
+            ->distinct() // 👈 remove duplicates from DB
             ->limit(10)
             ->pluck('product_text')
             ->toArray();
@@ -68,14 +69,14 @@ class ProductsController extends Controller
             ->limit(3)
             ->pluck('description')
             ->map(function ($item) {
-                return 'cat::' . ucfirst($item); // 👈 mark as category
+                return 'cat::' . $item; // 👈 mark as category
             })
             ->toArray();
 
+        $products = array_unique($products);
+
         // Merge both arrays
         $results = array_merge($categories, $products);
-        $results = array_unique($results);
-        
         return response()->json($results);
     }
 
