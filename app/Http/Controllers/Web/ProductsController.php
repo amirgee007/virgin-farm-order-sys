@@ -55,10 +55,23 @@ class ProductsController extends Controller
         $products = Product::where('item_no', 'like', "%$query%")
             ->orWhere('product_text', 'like', "%$query%")
             ->where('is_combo_product', 0)
-            ->limit(15)
-            ->pluck('product_text');
+            ->limit(10)
+            ->pluck('product_text')
+            ->toArray();
 
-        return response()->json($products);
+        // Get category descriptions
+        $categories = Category::where('description', 'LIKE', "%{$query}%")
+            ->limit(3)
+            ->pluck('description')
+            ->map(function($item){
+                return 'cat::' . ucfirst($item); // 👈 mark as category
+            })
+            ->toArray();
+
+        // Merge both arrays
+        $results = array_merge($categories , $products);
+
+        return response()->json($results);
     }
 
     public function search(Request $request)

@@ -52,6 +52,12 @@
         #autocomplete-box div:hover {
             background-color: #e2e0e0;
         }
+        #autocomplete-box .category-item {
+            font-weight: bold;
+        }
+        #autocomplete-box .category-item:hover {
+            background-color: #e6f0ff;
+        }
 
         .bg-choc {
             background-color: #6f2a0c !important;
@@ -1187,6 +1193,9 @@
                 border: '1px dotted  #ccc',
                 width: '100%',
                 zIndex: 9999,
+                maxHeight: '200px',   // 👈 limit height
+                overflowY: 'auto',    // 👈 THIS enables scroll
+                overflowX: 'hidden',
                 display: 'none'
             });
 
@@ -1195,11 +1204,13 @@
             // On typing
             $('#searching').on('keyup', function () {
                 let query = $(this).val();
+                if (!query) return;
 
                 suggestionBox.hide().empty();
                 activeIndex = -1;
 
-                if (!query) return;
+                // 👇 only search after 2 chars (change to 3 if you want)
+                if (query.length < 3) return;
 
                 $.ajax({
                     url: "{{ route('search.autocomplete') }}",
@@ -1209,9 +1220,17 @@
 
                         if (!data.length) return;
 
+                        // data.forEach(item => {
+                        //     suggestionBox.append(
+                        //         `<div class="autocomplete-item" >${item}</div>`
+                        //     );
+                        // });
+
                         data.forEach(item => {
+                            let isCategory = item.startsWith('cat::');
+                            let text = isCategory ? item.replace('cat::', '') : item;
                             suggestionBox.append(
-                                `<div class="autocomplete-item" style="padding:8px; cursor:pointer;">${item}</div>`
+                                `<div style="padding:3px; cursor:pointer;" class="autocomplete-item ${isCategory ? 'category-item' : ''}">${text}</div>`
                             );
                         });
 
