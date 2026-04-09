@@ -47,43 +47,35 @@ class ProductsController extends Controller
     public function autoCompleteSearch(Request $request)
     {
         $query = $request->get('q');
+        $user = itsMeUser();
+        $date_shipped = $user->last_ship_date;
 
         if (!$query) {
             return response()->json([]);
         }
 
-        $products = Product::where('item_no', 'like', "%$query%")
-            ->orWhere('product_text', 'like', "%$query%")
-            ->where('is_combo_product', 0)
+        $products = $this->getInventoryBaseQuery($user, $date_shipped)
+            ->where(function ($q2) use ($query) {
+                $q2->where('products.item_no', 'like', "%$query%")
+                    ->orWhere('product_text', 'like', "%$query%");
+            })
             ->limit(10)
             ->pluck('product_text')
             ->toArray();
 
         // Get category descriptions
-        $categories = Category::where('description', 'LIKE', "%{$query}%")
+        $categories = Category::where('description', $query)
             ->limit(3)
             ->pluck('description')
-            ->map(function($item){
+            ->map(function ($item) {
                 return 'cat::' . ucfirst($item); // 👈 mark as category
             })
             ->toArray();
 
         // Merge both arrays
-        $results = array_merge($categories , $products);
+        $results = array_merge($categories, $products);
 
         return response()->json($results);
-    }
-
-    public function search(Request $request)
-    {
-        $q = $request->input('q');
-        $products = Product::where('item_no', 'like', "%$q%")
-            ->orWhere('product_text', 'like', "%$q%")
-            ->where('is_combo_product', 0)
-            ->limit(15)
-            ->get(['id', 'item_no', 'product_text']);
-
-        return response()->json($products);
     }
 
     public function inventoryIndex(Request $request)
@@ -150,21 +142,10 @@ class ProductsController extends Controller
         }
 
         // Base product query
-        $query = Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
+        $query = $this->getInventoryBaseQuery($user, $date_shipped)
             ->leftJoin('carts', 'carts.product_id', '=', 'products.id')
             ->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id')
-            ->leftJoin('product_groups', 'product_groups.parent_product_id', '=', 'products.id')
-            ->where('product_quantities.quantity', '>', 0);
-
-        // Filter by supplier
-        if (in_array($user->supplier_id, [1, 2])) {
-            $query->where('products.supplier_id', $user->supplier_id)
-                ->where('product_quantities.is_special', '<>', 2); // remove farms-direct
-        } elseif ($user->supplier_id == 3) {
-            $query->where('product_quantities.is_special', 1);
-        } elseif ($user->supplier_id == 4) {
-            $query->where('product_quantities.is_special', 2); // farms-direct
-        }
+            ->leftJoin('product_groups', 'product_groups.parent_product_id', '=', 'products.id');
 
         $query->distinct('products.id');
 
@@ -298,6 +279,24 @@ class ProductsController extends Controller
             'highlightedDates',
             'autoCorrected'
         ));
+    }
+
+    private function getInventoryBaseQuery($user, $date_shipped)
+    {
+        return Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
+            ->where('product_quantities.quantity', '>', 0)
+            ->when(in_array($user->supplier_id, [1, 2]), function ($q) use ($user) {
+                $q->where('products.supplier_id', $user->supplier_id)
+                    ->where('product_quantities.is_special', '<>', 2);
+            })
+            ->when($user->supplier_id == 3, function ($q) {
+                $q->where('product_quantities.is_special', 1);
+            })
+            ->when($user->supplier_id == 4, function ($q) {
+                $q->where('product_quantities.is_special', 2);
+            })
+            ->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped])
+            ->distinct('products.id');
     }
 
     public function getHighlightedDates($query)
@@ -585,8 +584,8 @@ class ProductsController extends Controller
 
         #11 COLUMNS FROM 0 TO 1.
         #0 Item Class,	1Item No., 2Description,	3UOM, 4colorClass,	5Price1, 6Price2, 7Price3,8Price4, 9Weight, 10Size
-        if (isset($products[0])){
-            \Log::debug('uploadCreateProducts called for products having count '.count($products[0]));
+        if (isset($products[0])) {
+            \Log::debug('uploadCreateProducts called for products having count ' . count($products[0]));
             foreach ($products[0] as $index => $row) {
                 try {
 
@@ -1334,4 +1333,17 @@ class ProductsController extends Controller
         }
 
     }
+
+    public function searchForGroup(Request $request)
+    {
+        $q = $request->input('q');
+        $products = Product::where('item_no', 'like', "%$q%")
+            ->orWhere('product_text', 'like', "%$q%")
+            ->where('is_combo_product', 0)
+            ->limit(15)
+            ->get(['id', 'item_no', 'product_text']);
+
+        return response()->json($products);
+    }
+
 }

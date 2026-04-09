@@ -95,8 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::impersonate();
 
     Route::resource('product-groups', \Vanguard\Http\Controllers\Web\ProductGroupController::class);
-    Route::get('/products/search', [ProductsController::class, 'search']);
-
+    Route::get('/products/search-for-group', [ProductsController::class, 'searchForGroup']);
 });
 
 ///Promocodes routes.

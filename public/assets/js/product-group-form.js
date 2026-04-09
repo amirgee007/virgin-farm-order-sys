@@ -26,7 +26,7 @@ $(document).ready(function () {
             return;
         }
 
-        $.get('/products/search', { q: query }, function (products) {
+        $.get('/products/search-for-group', { q: query }, function (products) {
             $suggestionsBox.empty();
 
             if (!products.length) {
