@@ -379,56 +379,69 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
-                    <span>
-                        <b>
-                            1. Enter your shipping information
-                            <small class="text-primary">
-                            (** You are browsing
-                            <b>
-                                {{
-                                    $user->supplier_id == 1 ? 'Virgin Farms' :
-                                    ($user->supplier_id == 2 ? 'Dutch' :
-                                    ($user->supplier_id == 4 ? 'Farms-Direct' : 'Special and Seasonal'))
-                                }}
-                            </b> flowers)
+                    <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+
+                        <!-- LEFT TITLE -->
+                        <div>
+                            <b style="font-size: 15px;">
+                                1. Enter your shipping information
+                            </b>
+                            <small class="text-primary d-block" style="font-size: 12px;">
+                                (** You are browsing
+                                <b>
+                                    {{
+                                        $user->supplier_id == 1 ? 'Virgin Farms' :
+                                        ($user->supplier_id == 2 ? 'Dutch' :
+                                        ($user->supplier_id == 4 ? 'Farms-Direct' : 'Special and Seasonal'))
+                                    }}
+                                </b> flowers)
                             </small>
-                            <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
-                                 <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
-                                    title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
-                                         class="fas fa-plus-circle "></i>
-                                 </a>
+                        </div>
 
-                                 <select class="form-control form-control-md" id="changeAddress"
-                                         title="Where do you want your product to be shipped?"
-                                         data-trigger="hover"
-                                         data-toggle="tooltip"
-                                         style="background-color: beige"
-                                 >
-                                     <option selected value="0">Default Address</option>
-                                     @foreach($address as $add)
-                                         <option
-                                             {{$user->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
-                                     @endforeach
-                                 </select>
-                             </label>
+                        <!-- RIGHT SIDE CONTROLS -->
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                            <label class="form-check-label float-right mt-2 text-danger" title="{{$user->carrier_id}}">Select Carrier
-                                 <select class="form-control form-control-md" id="changeCarrier"
-                                         title="Click to change carrier how you want to ship the items?"
-                                         data-trigger="hover"
-                                         data-toggle="tooltip"
-                                         style="background-color: aliceblue"
-                                 >
-                                     <option hidden value="">Select Shipping Carrier </option>
+                            <!-- Carrier -->
+                            <div>
+                                <small class="text-danger d-block">Carrier</small>
+                                <select class="form-control form-control-sm"
+                                        id="changeCarrier"
+                                        style="min-width: 140px; background-color: aliceblue;">
                                     @foreach($carriers AS $key => $name)
-                                         <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
-                                     @endforeach
-                                 </select>
-                             </label>
+                                        <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}>
+                                            {{$name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        </b>
-                    </span>
+                            <!-- Address -->
+                            <div>
+                                <small class="text-danger d-block">Ship-To</small>
+                                <div class="d-flex align-items-center">
+                                    <select class="form-control form-control-sm"
+                                            id="changeAddress"
+                                            style="min-width: 160px; background-color: beige;">
+                                        <option value="0">Default</option>
+                                        @foreach($address as $add)
+                                            <option {{$user->address_id == $add->id ? 'selected' : '' }}
+                                                    value="{{$add->id}}">
+                                                {{$add->address}}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
+                                    <a target="_blank"
+                                       href="{{route('shipping.address.index')}}"
+                                       class="ml-1 text-success"
+                                       title="Add New">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                     <div class="row my-2 flex-md-row flex-column-reverse">
                         <div class="col-md-12 col-sm-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
