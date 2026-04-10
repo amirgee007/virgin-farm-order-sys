@@ -133,7 +133,7 @@ class ProductsController extends Controller
             #$date_shipped = $user->last_ship_date;
 
             // Only assign if last_ship_date is today or future
-            if ($user->last_ship_date && Carbon::parse($user->last_ship_date)->gte(Carbon::today())) {
+            if (false && $user->last_ship_date && Carbon::parse($user->last_ship_date)->gte(Carbon::today())) {
                 $date_shipped = $user->last_ship_date;
             }
             else
@@ -160,6 +160,7 @@ class ProductsController extends Controller
 
         $highlightedDates = $this->getHighlightedDates($query);
 
+
         if ($date_shipped) {
             // Main filter for shipping date
             $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
@@ -169,6 +170,7 @@ class ProductsController extends Controller
 
             #default Show Default inventory: Show first available date inventory list upon opening products>inventory page
             $date_shipped = collect($highlightedDates)->min();
+            $user->update(['last_ship_date' => $date_shipped]);
             $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
         }
 
