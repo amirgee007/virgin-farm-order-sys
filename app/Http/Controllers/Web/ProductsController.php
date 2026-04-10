@@ -130,14 +130,13 @@ class ProductsController extends Controller
 
         // Set default or persist last ship date
         if (!$date_shipped) {
-            #$date_shipped = $user->last_ship_date;
-
-            // Only assign if last_ship_date is today or future
-            if (false && $user->last_ship_date && Carbon::parse($user->last_ship_date)->gte(Carbon::today())) {
-                $date_shipped = $user->last_ship_date;
-            }
-            else
-                $date_shipped = null;
+            $date_shipped = $user->last_ship_date;
+//            // Only assign if last_ship_date is today or future
+//            if (false && $user->last_ship_date && Carbon::parse($user->last_ship_date)->gte(Carbon::today())) {
+//                $date_shipped = $user->last_ship_date;
+//            }
+//            else
+//                $date_shipped = null;
         } else {
             if ($date_shipped) {
                 $user->update(['last_ship_date' => $date_shipped]);
@@ -159,7 +158,6 @@ class ProductsController extends Controller
         $query->distinct('products.id');
 
         $highlightedDates = $this->getHighlightedDates($query);
-
 
         if ($date_shipped) {
             // Main filter for shipping date
