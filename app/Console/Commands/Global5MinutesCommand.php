@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Vanguard\Models\Cart;
 use Vanguard\Models\ProductQuantity;
+use Illuminate\Support\Facades\DB;
 
 class Global5MinutesCommand extends Command
 {
@@ -51,10 +52,12 @@ class Global5MinutesCommand extends Command
             $productQuantity->delete();
         }
 
+        $this->emptyCartIf1HourPassed(); #need to improve please.
+        $this->removeShipDateIfNoActive();
 
-        $this->emptyCartIf1HourPassed();
+        Log::info('Job running every 10 minutes to update supplier ID and delete old records.');
 
-        Log::info('Job running every 10 minutes to update supplier ID and delete old records. 8 november 2024');
+
         #Cart::where('user_id', auth()->id())->delete();
     }
 
@@ -77,5 +80,38 @@ class Global5MinutesCommand extends Command
         }
 
         #Log::info('Deleted cart items for users whose first cart item was created more than an hour ago.');
+    }
+
+
+    public function removeShipDateIfNoActive()
+    {
+        $now = now();
+        // run only around 3:30 AM
+        if ($now->format('H:i') < '03:30' || $now->format('H:i') > '03:40') {
+            return 0;
+        }
+
+        $activeSessionCutoff = now()->subMinutes(config('session.lifetime'))->timestamp;
+
+        User::query()
+            ->whereNotNull('last_ship_date')
+            ->whereNotNull('last_login')
+            ->where('last_login', '<=', now()->subDays(5))
+            ->whereNotExists(function ($q) use ($activeSessionCutoff) {
+                $q->select(DB::raw(1))
+                    ->from('sessions')
+                    ->whereColumn('sessions.user_id', 'users.id')
+                    ->where('sessions.last_activity', '>=', $activeSessionCutoff);
+            })
+            ->whereNotExists(function ($q) {
+                $q->select(DB::raw(1))
+                    ->from('carts')
+                    ->whereColumn('carts.user_id', 'users.id');
+            })
+            ->update([
+                'last_ship_date' => null,
+            ]);
+
+        return 0;
     }
 }
