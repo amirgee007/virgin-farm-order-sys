@@ -90,7 +90,7 @@ class ProductsController extends Controller
         $address = $user->shipAddress;
         $autoCorrected = false; // ✅ Track if the system corrected the ship date
 
-        $hasActiveCart = count(getMyCart());
+        $hasActiveCart = isCartExist();
 
         // Ensure user has a carrier set
         if (!$user->carrier_id) {
@@ -128,18 +128,18 @@ class ProductsController extends Controller
         }
         #////////////////////This above logic is used at two places plz keep updated if above logi changed. dateCarrierValidation in Orders Controller
 
-
         // If request has date, save it. Otherwise use saved user date.
-        if ($date_shipped) {
-            $user->update(['last_ship_date' => $date_shipped]);
+        if ($date_shipped && $user->last_ship_date !== $date_shipped) {
+            $user->last_ship_date = $date_shipped;
+            $user->save();
         } else {
             $date_shipped = $user->last_ship_date;
         }
 
         // If editing order, override ship date from order
         if ($user->edit_order_id) {
-            $order = Order::find($user->edit_order_id);
-            $date_shipped = $order->date_shipped ?? $date_shipped;
+            $orderDate = Order::whereKey($user->edit_order_id)->value('date_shipped');
+            $date_shipped = $orderDate ?? $date_shipped;
         }
 
         // Base product query
@@ -152,14 +152,11 @@ class ProductsController extends Controller
 
         $highlightedDates = $this->getHighlightedDates($query);
 
-        $firstAvailableDate = collect($highlightedDates)
-            ->filter()
-            ->sort()
-            ->first();
+        $highlightedDates = array_values(array_unique(array_filter($highlightedDates)));
+        sort($highlightedDates);
 
-        $isValidDate = $date_shipped && collect($highlightedDates)->contains(function ($d) use ($date_shipped) {
-                return \Carbon\Carbon::parse($d)->toDateString() === \Carbon\Carbon::parse($date_shipped)->toDateString();
-            });
+        $firstAvailableDate = $highlightedDates[0] ?? null;
+        $isValidDate = $date_shipped && in_array($date_shipped, $highlightedDates, true);
 
         // Fallback to first available date only if cart is NOT active
         if ((!$date_shipped || !$isValidDate) && !$hasActiveCart) {

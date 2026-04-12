@@ -443,7 +443,7 @@
                                         @endforeach
                                     </select>
 
-                                    @php $cartFound = count(getMyCart()); @endphp
+                                    @php $cartFound = isCartExist(); @endphp
                                     <div class="date-input-container">
                                         <input type="text"
                                                readonly
