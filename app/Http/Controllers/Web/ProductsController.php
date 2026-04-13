@@ -90,6 +90,7 @@ class ProductsController extends Controller
         $address = $user->shipAddress;
         $autoCorrected = false; // ✅ Track if the system corrected the ship date
 
+
         $hasActiveCart = isCartExist();
 
         // Ensure user has a carrier set
@@ -99,8 +100,8 @@ class ProductsController extends Controller
 
         // Check current user's carrier ID
         $isCarrierVF = $user && $user->carrier_id == 17;
-        $today = now()->toDateString();
-        $currentTime = now();
+        $now = now();
+        $today = $now->toDateString();
         $cutoffTime = '15:30'; // 3:30 PM cutoff time
         $cutoffTime = ($user->id == 1) ? '14:00' : '15:30'; #just for testing purposes....!
         $shipDateCarbon = $date_shipped ? Carbon::parse($date_shipped) : null;
@@ -118,11 +119,6 @@ class ProductsController extends Controller
             $autoCorrected = true;
         }
 
-        if ($date_shipped == now()->toDateString() && now()->format('H:i') >= $cutoffTime) {
-            $date_shipped = now()->addDay()->toDateString();
-            $autoCorrected = true;
-        }
-
         // Pickup / Priority Overnight id 23,32: no same-day after cutoff
 //        $restrictedCarriers = [23, 32];
 //        if (in_array($user->carrier_id, $restrictedCarriers)) {
@@ -135,12 +131,7 @@ class ProductsController extends Controller
         #////////////////////This above logic is used at two places plz keep updated if above logi changed. dateCarrierValidation in Orders Controller
 
         // If request has date, save it. Otherwise use saved user date.
-        if ($date_shipped && $user->last_ship_date !== $date_shipped) {
-            $user->last_ship_date = $date_shipped;
-            $user->save();
-        } else {
-            $date_shipped = $user->last_ship_date;
-        }
+        $date_shipped = $date_shipped ?: $user->last_ship_date;
 
         // If editing order, override ship date from order
         if ($user->edit_order_id) {
@@ -156,10 +147,17 @@ class ProductsController extends Controller
 
         $query->distinct('products.id');
 
-        $highlightedDates = $this->getHighlightedDates($query);
+        $cacheKey = 'highlighted_dates_user_' . $user->id . '_carrier_' . $user->carrier_id;
 
-        $highlightedDates = array_values(array_unique(array_filter($highlightedDates)));
-        sort($highlightedDates);
+        #300 seconds (5 min)
+        $highlightedDates = cache()->remember($cacheKey, 300, function () use ($query) {
+            $dates = $this->getHighlightedDates($query);
+            $dates = array_values(array_filter($dates));
+            sort($dates);
+            return $dates;
+        });
+
+        #$highlightedDates = $this->getHighlightedDates($query);
 
         $firstAvailableDate = $highlightedDates[0] ?? null;
         $isValidDate = $date_shipped && in_array($date_shipped, $highlightedDates, true);
@@ -167,14 +165,21 @@ class ProductsController extends Controller
         #todo to make this very very faster we should use cache here so it will be very fast instead of DB calls all the time.
         // Fallback to first available date only if cart is NOT active
         if ((!$date_shipped || !$isValidDate) && !$hasActiveCart) {
-
             $date_shipped = $firstAvailableDate;
             $autoCorrected = true;
-
-            if ($date_shipped) {
-                $user->update(['last_ship_date' => $date_shipped]);
-            }
         }
+
+        // ✅ FINAL STEP: Apply cutoff to ALL cases
+        if ($date_shipped == $today && $now->format('H:i') >= $cutoffTime) {
+            $date_shipped = $now->copy()->addDay()->toDateString();
+            $autoCorrected = true;
+        }
+
+        // ✅ FINAL STEP: Sync with DB
+        if ($date_shipped && $user->last_ship_date !== $date_shipped && ($autoCorrected || !$hasActiveCart)) {
+            $user->update(['last_ship_date' => $date_shipped]);
+        }
+
 
         if ($date_shipped) {
             $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);

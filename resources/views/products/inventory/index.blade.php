@@ -499,7 +499,8 @@
                     </div>
                     @if(isset($autoCorrected) && $autoCorrected)
                         <div class="alert alert-warning mt-2">
-                            <strong>Notice:</strong> Your selected ship date was adjusted to meet carrier shipping rules.
+                            <strong>Notice:</strong> Your selected ship date date adjusted due to carrier rules or cutoff time.
+{{--                        <strong>Notice:</strong> Your selected ship date was adjusted to meet carrier shipping rules.--}}
                         </div>
                     @endif
                     <hr>
@@ -723,6 +724,13 @@
     @include('partials.toaster-js')
 
     <script>
+        const dateShipped = @json($date_shipped);
+
+        if (dateShipped) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('date_shipped', dateShipped);
+            window.history.replaceState({}, '', url);
+        }
 
         $(".show-warning").on("click", function () {
             swal("",
@@ -835,8 +843,6 @@
                 }
             });
         });
-
-
 
         previousCarrier = $('#changeCarrier').val();
         $('#changeCarrier').on('change', function () {
