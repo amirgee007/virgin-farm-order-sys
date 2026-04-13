@@ -19,6 +19,7 @@ use Vanguard\Mail\CartDetailMail;
 use Vanguard\Mail\OrderConfirmationMail;
 use Vanguard\Models\Box;
 use Vanguard\Models\Carrier;
+use Vanguard\Models\Cart;
 use Vanguard\Models\Category;
 use Vanguard\Models\ColorClass;
 use Vanguard\Models\Order;
@@ -172,6 +173,7 @@ class ProductsController extends Controller
         // ✅ FINAL STEP: Apply cutoff to ALL cases
         if ($date_shipped == $today && $now->format('H:i') >= $cutoffTime) {
             $date_shipped = $now->copy()->addDay()->toDateString();
+            Cart::mineCart()->delete();
             $autoCorrected = true;
         }
 
