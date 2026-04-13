@@ -18,6 +18,11 @@ function getMyCart()
     return Cart::mineCart()->get();
 }
 
+function isCartExist()
+{
+    return Cart::mineCart()->exists();
+}
+
 function cartTimeLeftSec()
 {
     $user = itsMeUser();

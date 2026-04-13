@@ -296,6 +296,7 @@ class CartController extends Controller
             auth()->user()->update([
                 'edit_order_id' => null,
                 'carrier_id' => null,
+                'last_ship_date' => null,
             ]);
 
             Cache::forget("promo_code_" . auth()->id());

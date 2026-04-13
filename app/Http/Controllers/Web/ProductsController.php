@@ -90,6 +90,8 @@ class ProductsController extends Controller
         $address = $user->shipAddress;
         $autoCorrected = false; // ✅ Track if the system corrected the ship date
 
+        $hasActiveCart = isCartExist();
+
         // Ensure user has a carrier set
         if (!$user->carrier_id) {
             $user->update(['carrier_id' => $user->carrier_id_default]);
@@ -102,22 +104,20 @@ class ProductsController extends Controller
         $cutoffTime = Carbon::createFromTimeString('15:30:00');
         $shipDateCarbon = $date_shipped ? Carbon::parse($date_shipped) : null;
 
-        // 🚫 Virgin Farms (ID 17): Only Monday allowed
+        // 🚫 Virgin Farms (ID 17): Only Monday allowed $isCarrierVF calculated above.
         if ($isCarrierVF && $shipDateCarbon && !$shipDateCarbon->isMonday()) {
-            // Force next Monday
             $date_shipped = $shipDateCarbon->startOfWeek()->addWeek()->toDateString();
             $autoCorrected = true;
         }
 
-        // 🚫 FedEx Carrier IDs: No Friday shipping
+        // 🚫 All FedEx Carrier IDs: No Friday shipping
         $fedexCarrierIds = [19, 20, 23];
         if (in_array($user->carrier_id, $fedexCarrierIds) && $shipDateCarbon && $shipDateCarbon->isFriday()) {
-            // Force to next Monday
             $date_shipped = $shipDateCarbon->startOfWeek()->addWeek()->toDateString();
             $autoCorrected = true;
         }
 
-        // 🚫 Pick Up (32) & FedEx Priority Overnight (23): No same-day shipping after cutoff
+        // Pickup / Priority Overnight id 23,32: no same-day after cutoff
         $restrictedCarriers = [23, 32];
         if (in_array($user->carrier_id, $restrictedCarriers)) {
             if ($shipDateCarbon && $shipDateCarbon->toDateString() === $today && $currentTime->greaterThan($cutoffTime)) {
@@ -126,28 +126,20 @@ class ProductsController extends Controller
                 $autoCorrected = true;
             }
         }
-        #////////////////////This above logic is used at two places plz keep noted
+        #////////////////////This above logic is used at two places plz keep updated if above logi changed. dateCarrierValidation in Orders Controller
 
-        // Set default or persist last ship date
-        if (!$date_shipped) {
-            $date_shipped = $user->last_ship_date;
-
-            // Only assign if last_ship_date is today or future
-//            if ($user->last_ship_date && Carbon::parse($user->last_ship_date)->gte(Carbon::today())) {
-//                $date_shipped = $user->last_ship_date;
-//            }
-//            else
-//                $date_shipped = null;
+        // If request has date, save it. Otherwise use saved user date.
+        if ($date_shipped && $user->last_ship_date !== $date_shipped) {
+            $user->last_ship_date = $date_shipped;
+            $user->save();
         } else {
-            if ($date_shipped) {
-                $user->update(['last_ship_date' => $date_shipped]);
-            } #dont change it ever ever.
+            $date_shipped = $user->last_ship_date;
         }
 
         // If editing order, override ship date from order
         if ($user->edit_order_id) {
-            $order = Order::find($user->edit_order_id);
-            $date_shipped = $order->date_shipped ?? $date_shipped;
+            $orderDate = Order::whereKey($user->edit_order_id)->value('date_shipped');
+            $date_shipped = $orderDate ?? $date_shipped;
         }
 
         // Base product query
@@ -160,24 +152,33 @@ class ProductsController extends Controller
 
         $highlightedDates = $this->getHighlightedDates($query);
 
-        if ($date_shipped) {
-            // Main filter for shipping date
-            $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
-        } else {
+        $highlightedDates = array_values(array_unique(array_filter($highlightedDates)));
+        sort($highlightedDates);
 
-            $query->where('product_quantities.quantity', '<', 0); // Ignore results
+        $firstAvailableDate = $highlightedDates[0] ?? null;
+        $isValidDate = $date_shipped && in_array($date_shipped, $highlightedDates, true);
 
-            #default Show Default inventory: Show first available date inventory list upon opening products>inventory page
-            #$date_shipped = collect($highlightedDates)->min();
-            #$query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
+        // Fallback to first available date only if cart is NOT active
+        if ((!$date_shipped || !$isValidDate) && !$hasActiveCart) {
+
+            $date_shipped = $firstAvailableDate;
+            $autoCorrected = true;
+
+            if ($date_shipped) {
+                $user->update(['last_ship_date' => $date_shipped]);
+            }
         }
 
-        // Filter by category
+        if ($date_shipped) {
+            $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
+        } else {
+            $query->where('product_quantities.quantity', '<', 0);
+        }
+
         if ($category_id) {
             $query->where('category_id', $category_id);
         }
 
-        // Search logic
         if ($searching) {
             $catIds = Category::where('description', 'like', "%{$searching}%")
                 ->pluck('category_id')
@@ -194,17 +195,15 @@ class ProductsController extends Controller
             });
         }
 
-        // Carriers for dropdown
-        if ($user->supplier_id == 4) { // FedEx Ecuador and Pick Up
+        if ($user->supplier_id == 4) {
             $typeList = Carrier::$farmsDirectIds;
             $carriers = Carrier::whereIn('id', $typeList)->pluck('carrier_name', 'id')->toArray();
         } else {
             $skipThese = Carrier::$hideCarriersExceptFarmsDirect;
             $carriers = getCarriers($user->state > 52 ? 1 : 0);
-            unset($carriers[20]); // remove carrier id 20
+            unset($carriers[20]);
         }
 
-        // Category filtering
         $categoriesQuery = Category::query();
         $dutchCats = Category::dutchCategories();
 
@@ -230,37 +229,37 @@ class ProductsController extends Controller
                 $join->on('pq.product_id', '=', 'products.id');
             })
             ->whereRaw('pq.id = (' . $sub->toSql() . ')')
-            ->mergeBindings($sub) // keep bindings from subquery
+            ->mergeBindings($sub)
             ->selectRaw('
-        supplier_id,
-        category_id,
-        pq.id as p_qty_id,
-        pq.is_special,
-        products.id as id,
-        product_text,
-        image_url,
-        unit_of_measure,
-        products.stems,
-        pq.quantity - COALESCE(SUM(carts.quantity), 0) as quantity,
-        weight,
-        products.size,
-        pq.price_fob,
-        pq.price_fedex,
-        pq.price_hawaii,
-        colors_class.description as color_description,
-        colors_class.color as color_name,
-        product_groups.parent_product_id
-    ')
+            supplier_id,
+            category_id,
+            pq.id as p_qty_id,
+            pq.is_special,
+            products.id as id,
+            product_text,
+            image_url,
+            unit_of_measure,
+            products.stems,
+            pq.quantity - COALESCE(SUM(carts.quantity), 0) as quantity,
+            weight,
+            products.size,
+            pq.price_fob,
+            pq.price_fedex,
+            pq.price_hawaii,
+            colors_class.description as color_description,
+            colors_class.color as color_name,
+            product_groups.parent_product_id
+        ')
             ->groupBy('products.id', 'pq.id')
             ->orderBy('category_id')
             ->orderBy('product_text')
             ->paginate(100);
 
-        // Orders list
         $fixed = [
             0 => 'New Order',
             1 => 'Add-On General',
         ];
+
         $myOrders = $fixed + Order::where('user_id', auth()->id())
                 ->whereDate('date_shipped', '>', now()->toDateString())
                 ->where('is_active', 1)
@@ -268,7 +267,6 @@ class ProductsController extends Controller
                 ->pluck('id', 'id')
                 ->toArray();
 
-        // Append filters to pagination
         if ($date_shipped || $category_id || $searching) {
             $products->appends([
                 'date_shipped' => $date_shipped,
