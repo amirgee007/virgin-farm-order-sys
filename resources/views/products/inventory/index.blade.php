@@ -618,8 +618,12 @@
                                     <tr>
                                         <td colspan="12" style="text-align: center">
                                             <b class="text-danger noRecordText">Choose a Ship date to shop available inventory.</b>
+                                            @if($searching)
+                                                <div id="alt-result" class="mt-2 text-success"></div>
+                                            @endif
                                         </td>
                                     </tr>
+
                                 @endif
                                 </tbody>
                             </table>
@@ -1088,6 +1092,71 @@
             });
         });
 
+            let search = @json($searching);
+
+            if (search) {
+                $('#alt-result').html('Checking availability...!');
+
+                $.get("{{ route('inventory.altSearch') }}", {q: search}, function (res) {
+
+                    if (!res.length) {
+                        $('#alt-result').html('');
+                        return;
+                    }
+
+                    let html = 'Available in:<br>';
+
+                    $.each(res, function (i, item) {
+                        html += `<div>
+                            ${item.supplier_name} - ${item.date}
+                            <button class="btn btn-sm btn-primary ms-1 view-alt"
+                                data-supplier="${item.supplier_id}"
+                                data-date="${item.date}">
+                                View
+                            </button>
+                        </div>`;
+                    });
+
+                    $('#alt-result').html(html);
+
+                    if (res.length > 0) {
+                        $('.noRecordText').hide();          // hide it
+                    }
+                });
+            }
+
+            // Handle click
+        $(document).on('click', '.view-alt', function () {
+            let supplier = $(this).data('supplier');
+
+            let date = $(this).data('date');
+            // 👉 get value from existing search input
+            let search = $('#searching').val();
+
+            $.ajax({
+                url: '{{ route('update.supplier') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    supplier: supplier
+                },
+                success: function (response) {
+                    // ✅ Redirect to inventory.index with params
+                    let url = `{{ route('inventory.index') }}`
+                        + `?date_shipped=${date}`
+                        + `&searching=${search}`;
+                    toastr.success('Your supplier might be changed due to this redirect.');
+
+                    window.location.href = url;
+                },
+                error: function (xhr) {
+                    toastr.error('An error occurred. Please try again.');
+                }
+            });
+
+        });
+
+
         $(window).on('load', function () {
             $(function(){
                 setTimeout(function(){
@@ -1189,7 +1258,6 @@
                 $('input[name="radioGroupDesktop"][value="' + selectedValue + '"]').prop('checked', true);
             });
 
-
             // Create suggestion box
             let suggestionBox = $('<div id="autocomplete-box"></div>').css({
                 position: 'absolute',
@@ -1271,7 +1339,5 @@
             });
         });
     </script>
-
-
 
 @endsection

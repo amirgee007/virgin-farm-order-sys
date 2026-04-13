@@ -30,6 +30,8 @@ use Vanguard\Models\Setting;
 use Vanguard\Models\ShippingAddress;
 use Vanguard\Models\UnitOfMeasure;
 use Vanguard\User;
+use Illuminate\Support\Facades\DB;
+
 
 class ProductsController extends Controller
 {
@@ -43,6 +45,35 @@ class ProductsController extends Controller
         $this->middleware('permission:products.manage', ['only' => [
             'indexManageProducts',
         ]]);
+    }
+
+    public function altSearch(Request $request)
+    {
+
+        $search = $request->q;
+
+        $results = DB::table('products')
+            ->join('product_quantities as pq', 'pq.product_id', '=', 'products.id')
+            ->where(function ($q) use ($search) {
+                $q->where('products.item_no', 'like', "%{$search}%")
+                    ->orWhere('products.product_text', 'like', "%{$search}%");
+            })
+            ->where('pq.quantity', '>', 0)
+            ->whereDate('pq.date_out', '>=', now())
+            ->select(
+                'products.supplier_id',
+                DB::raw('MIN(pq.date_in) as date')
+            )
+            ->groupBy('products.supplier_id')
+            ->orderBy('date')
+            ->limit(3)
+            ->get();
+
+        // 👉 Attach supplier name from config
+        return $results->map(function ($item) {
+            $item->supplier_name = config('vfsuppliers.' . $item->supplier_id) ?? 'Unknown';
+            return $item;
+        });
     }
 
     public function autoCompleteSearch(Request $request)
@@ -147,7 +178,7 @@ class ProductsController extends Controller
             ->leftJoin('product_groups', 'product_groups.parent_product_id', '=', 'products.id');
 
         $query->distinct('products.id');
-        
+
         $cacheKey = "hd_{$user->id}_{$user->carrier_id}_{$user->supplier_id}";
         #300 seconds (5 min)
         $highlightedDates = cache()->remember($cacheKey, 300, function () use ($query) {
@@ -180,7 +211,6 @@ class ProductsController extends Controller
         if ($date_shipped && $user->last_ship_date !== $date_shipped && ($autoCorrected || !$hasActiveCart)) {
             $user->update(['last_ship_date' => $date_shipped]);
         }
-
 
         if ($date_shipped) {
             $query->whereRaw('? BETWEEN product_quantities.date_in AND product_quantities.date_out', [$date_shipped]);
@@ -302,7 +332,8 @@ class ProductsController extends Controller
             'user',
             'myOrders',
             'highlightedDates',
-            'autoCorrected'
+            'autoCorrected',
+            'searching'
         ));
     }
 
