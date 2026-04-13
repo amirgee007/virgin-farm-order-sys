@@ -147,9 +147,8 @@ class ProductsController extends Controller
             ->leftJoin('product_groups', 'product_groups.parent_product_id', '=', 'products.id');
 
         $query->distinct('products.id');
-
-        $cacheKey = 'highlighted_dates_user_' . $user->id . '_carrier_' . $user->carrier_id;
-
+        
+        $cacheKey = "hd_{$user->id}_{$user->carrier_id}_{$user->supplier_id}";
         #300 seconds (5 min)
         $highlightedDates = cache()->remember($cacheKey, 300, function () use ($query) {
             $dates = $this->getHighlightedDates($query);
