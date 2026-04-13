@@ -101,7 +101,7 @@ class ProductsController extends Controller
         $isCarrierVF = $user && $user->carrier_id == 17;
         $today = now()->toDateString();
         $currentTime = now();
-        $cutoffTime = Carbon::createFromTimeString('15:30:00');
+        $cutoffTime = '15:30'; // 3:30 PM cutoff time
         $shipDateCarbon = $date_shipped ? Carbon::parse($date_shipped) : null;
 
         // 🚫 Virgin Farms (ID 17): Only Monday allowed $isCarrierVF calculated above.
@@ -117,15 +117,20 @@ class ProductsController extends Controller
             $autoCorrected = true;
         }
 
-        // Pickup / Priority Overnight id 23,32: no same-day after cutoff
-        $restrictedCarriers = [23, 32];
-        if (in_array($user->carrier_id, $restrictedCarriers)) {
-            if ($shipDateCarbon && $shipDateCarbon->toDateString() === $today && $currentTime->greaterThan($cutoffTime)) {
-                // Force to tomorrow
-                $date_shipped = now()->addDay()->toDateString();
-                $autoCorrected = true;
-            }
+        if ($date_shipped == now()->toDateString() && now()->format('H:i') >= $cutoffTime) {
+            $date_shipped = now()->addDay()->toDateString();
+            $autoCorrected = true;
         }
+
+        // Pickup / Priority Overnight id 23,32: no same-day after cutoff
+//        $restrictedCarriers = [23, 32];
+//        if (in_array($user->carrier_id, $restrictedCarriers)) {
+//            if ($shipDateCarbon && $shipDateCarbon->toDateString() === $today && $currentTime->greaterThan($cutoffTime)) {
+//                // Force to tomorrow
+//                $date_shipped = now()->addDay()->toDateString();
+//                $autoCorrected = true;
+//            }
+//        }
         #////////////////////This above logic is used at two places plz keep updated if above logi changed. dateCarrierValidation in Orders Controller
 
         // If request has date, save it. Otherwise use saved user date.
