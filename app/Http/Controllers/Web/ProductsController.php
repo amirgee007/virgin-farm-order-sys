@@ -158,6 +158,7 @@ class ProductsController extends Controller
         $firstAvailableDate = $highlightedDates[0] ?? null;
         $isValidDate = $date_shipped && in_array($date_shipped, $highlightedDates, true);
 
+        #todo to make this very very faster we should use cache here so it will be very fast instead of DB calls all the time.
         // Fallback to first available date only if cart is NOT active
         if ((!$date_shipped || !$isValidDate) && !$hasActiveCart) {
 
