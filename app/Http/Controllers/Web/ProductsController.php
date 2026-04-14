@@ -58,7 +58,7 @@ class ProductsController extends Controller
                 $q->where('products.item_no', 'like', "%{$search}%")
                     ->orWhere('products.product_text', 'like', "%{$search}%");
             })
-            ->where('pq.quantity', '>', 0)
+            ->where('pq.quantity', '>', 10000)
             ->whereDate('pq.date_out', '>=', now())
             ->select(
                 'products.supplier_id',
