@@ -54,11 +54,10 @@ class ProductsController extends Controller
         $date_ship = null;
 
         if (isCartExist()) {
-            return [];
+            #return []; #its extra logic here
             $user = itsMeUser();
             $date_ship = $user->last_ship_date;
         }
-        #Fortune
 
         $results = DB::table('products')
             ->join('product_quantities as pq', 'pq.product_id', '=', 'products.id')

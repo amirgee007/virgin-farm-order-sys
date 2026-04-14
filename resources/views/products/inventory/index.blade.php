@@ -1119,7 +1119,7 @@
                             <button class="btn btn-xs btn-primary ms-1 view-alt"
                                 data-supplier="${item.supplier_id}"
                                 data-date="${item.date_in}">
-                                Check This Date
+                                View Item
                             </button>
                         </div>`;
                     });
