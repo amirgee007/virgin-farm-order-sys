@@ -49,11 +49,16 @@ class ProductsController extends Controller
 
     public function altSearch(Request $request)
     {
-        $hasActiveCart = isCartExist();
-
-        if ($hasActiveCart) return [];
-
         $search = $request->q;
+
+        $date_ship = null;
+
+        if (isCartExist()) {
+            return [];
+            $user = itsMeUser();
+            $date_ship = $user->last_ship_date;
+        }
+        #Fortune
 
         $results = DB::table('products')
             ->join('product_quantities as pq', 'pq.product_id', '=', 'products.id')
@@ -62,17 +67,22 @@ class ProductsController extends Controller
                     ->orWhere('products.product_text', 'like', "%{$search}%");
             })
             ->where('pq.quantity', '>', 0)
-            ->whereDate('pq.date_out', '>=', now())
+            ->when($date_ship, function ($q) use ($date_ship) {
+                $q->whereDate('pq.date_in', '<=', $date_ship)
+                    ->whereDate('pq.date_out', '>=', $date_ship);
+            }, function ($q) {
+                $q->whereDate('pq.date_out', '>=', now());
+            })
             ->select(
                 'products.supplier_id',
+                'pq.date_in',
                 DB::raw("DATE_FORMAT(pq.date_in, '%d %b %Y') as date")
             )
-            ->groupBy('pq.date_in', 'products.supplier_id')
+            ->groupBy('products.supplier_id', 'pq.date_in')
             ->orderBy('pq.date_in')
             ->limit(3)
             ->get();
 
-        
         // 👉 Attach supplier name from config
         return $results->map(function ($item) {
             $item->supplier_name = config('vfsuppliers.' . $item->supplier_id) ?? 'Unknown';
