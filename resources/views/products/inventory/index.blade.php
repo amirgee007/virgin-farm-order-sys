@@ -63,6 +63,13 @@
             background-color: #6f2a0c !important;
         }
 
+        .btn-xs {
+            padding: 2px 6px;
+            font-size: 12px;
+            line-height: 1.2;
+            border-radius: 3px;
+        }
+
         input[disabled] + .calendar-icon {
             background-color: #f0f0f0; /* Light grey background to indicate it's disabled */
             color: #a0a0a0;            /* Grey text to indicate it's disabled */
@@ -1104,15 +1111,15 @@
                         return;
                     }
 
-                    let html = 'Available in:<br>';
+                    let html = '<b>Available in:</b><br>';
 
                     $.each(res, function (i, item) {
                         html += `<div>
-                            ${item.supplier_name} - ${item.date}
-                            <button class="btn btn-sm btn-primary ms-1 view-alt"
+                            <b>${item.supplier_name} - ${item.date}</b>
+                            <button class="btn btn-xs btn-primary ms-1 view-alt"
                                 data-supplier="${item.supplier_id}"
                                 data-date="${item.date}">
-                                View
+                                Check This Date
                             </button>
                         </div>`;
                     });

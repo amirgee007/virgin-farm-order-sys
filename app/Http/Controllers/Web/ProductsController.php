@@ -49,6 +49,9 @@ class ProductsController extends Controller
 
     public function altSearch(Request $request)
     {
+        $hasActiveCart = isCartExist();
+
+        if ($hasActiveCart) return [];
 
         $search = $request->q;
 
@@ -58,17 +61,18 @@ class ProductsController extends Controller
                 $q->where('products.item_no', 'like', "%{$search}%")
                     ->orWhere('products.product_text', 'like', "%{$search}%");
             })
-            ->where('pq.quantity', '>', 10000)
+            ->where('pq.quantity', '>', 0)
             ->whereDate('pq.date_out', '>=', now())
             ->select(
                 'products.supplier_id',
-                DB::raw('MIN(pq.date_in) as date')
+                DB::raw("DATE_FORMAT(pq.date_in, '%d %b %Y') as date")
             )
-            ->groupBy('products.supplier_id')
-            ->orderBy('date')
+            ->groupBy('pq.date_in', 'products.supplier_id')
+            ->orderBy('pq.date_in')
             ->limit(3)
             ->get();
 
+        
         // 👉 Attach supplier name from config
         return $results->map(function ($item) {
             $item->supplier_name = config('vfsuppliers.' . $item->supplier_id) ?? 'Unknown';
