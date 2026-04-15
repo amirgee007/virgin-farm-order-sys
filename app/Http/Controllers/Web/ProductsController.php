@@ -646,6 +646,7 @@ class ProductsController extends Controller
     {
         #products master file.
         Storage::put('temp/import_products.xlsx', file_get_contents($request->file('file_products')->getRealPath()));
+
         $products = Excel::toArray(new ImportExcelFiles(), storage_path('app/temp/import_products.xlsx'));
 
         ini_set('memory_limit', -1);

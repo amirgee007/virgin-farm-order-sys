@@ -214,6 +214,7 @@
 
                                 <th class="min-width-80">@lang('Weight')</th>
                                 <th class="min-width-80">@lang('Size')</th>
+                                <th class="min-width-80">@lang('Default Prices')</th>
                                 <th class="min-width-80">@lang('Action')</th>
 
                             </tr>
@@ -221,7 +222,6 @@
                             <tbody>
                             @if (count($products))
                                 @foreach ($products as $index => $product)
-
                                     @include('products.row')
                                 @endforeach
                             @else

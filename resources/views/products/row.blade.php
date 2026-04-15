@@ -48,6 +48,15 @@
     </td>
 
     <td class="align-middle">
+        <div>
+            <small>FOB: {{ $product->def_price_fob }}</small><br>
+            <small>FedEx: {{ $product->def_price_fedex }}</small><br>
+            <small>HI & AK: {{ $product->def_price_hawaii }}</small><br>
+            <small>FedEx+: {{ $product->def_price_fedex_2 }}</small>
+        </div>
+    </td>
+
+    <td class="align-middle">
         <a href="{{ route('products.delete', $product->id) }}"
            class="btn btn-icon"
            title="@lang('Delete Product')"

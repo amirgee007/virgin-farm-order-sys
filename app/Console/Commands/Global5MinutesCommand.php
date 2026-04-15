@@ -94,7 +94,6 @@ class Global5MinutesCommand extends Command
 
         $activeSessionCutoff = now()->subMinutes(config('session.lifetime'))->timestamp;
 
-
         User::query()
             ->whereNotNull('last_ship_date')
             ->whereNotNull('last_login')
