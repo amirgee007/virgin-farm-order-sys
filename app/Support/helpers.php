@@ -146,8 +146,6 @@ function getCubeSizeTax($size)
                     # Others → % increase
                     $extraMultiplier = $allOthersFee;
                 }
-
-                Log::info("User {$user->id} | Carrier {$user->carrier_id} | Extra applied");
             }
         }
 
@@ -192,6 +190,8 @@ function getCubeSizeTax($size)
     $tax = $size * $rate;
 
     $total = round2Digit($additional + $tax);
+
+    Log::info("User {$user->id} | Carrier {$user->carrier_id} | Extra multiplier {$extraMultiplier} and dollar increase {$extraDollarIncrease}");
 
     # DLV gets +30 here
     return $total + $extraDollarIncrease;
