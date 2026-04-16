@@ -359,7 +359,7 @@
                                value="{{ $allOthers !== null ? number_format((float)$allOthers, 2, '.', '') : '' }}"
                                placeholder="Enter increase (e.g. 0.06)">
                         <small class="text-muted">
-                            Applies to all carriers except FedEx (multiplier-based).
+                            Applies to all carriers except FedEx (multiplier-based i.e 0.06)
                         </small>
                     </div>
 
@@ -375,7 +375,7 @@
                                value="{{ $fedex !== null ? number_format((float)$fedex, 2, '.', '') : '' }}"
                                placeholder="Enter amount (e.g. 30.00)">
                         <small class="text-muted">
-                            Flat dollar increase for FedEx (e.g. box fees).
+                            Dollar increase for FedEx (e.g. box fees) i.e 5$
                         </small>
                     </div>
                     <hr>

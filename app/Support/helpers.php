@@ -92,6 +92,9 @@ function isDeliveryChargesApply()
 
 function getCubeSizeTax($size)
 {
+    #If carrier is not fedex then apply 24% for now
+    #Carrier is fedex then apply BOX CHARGES ONLY one case
+
     # PU(32), FedEx(23), DLV(17)
     $user = itsMeUser();
 
@@ -101,16 +104,61 @@ function getCubeSizeTax($size)
     }
 
     $tax = $additional = 0;
-    #If carrier is not Federal Express then apply 24% for now
-    $serviceTransportFees24 = ($user->carrier_id != 23); // non-FedEx
 
-    #Carrier is fedex then apply BOX CHARGES ONLY one case
-    $boxChargesApply = ($user->carrier_id == 23);        // FedEx only
+    # Flags
+    $isFedex = ($user->carrier_id == 23);
+    $isDLV = ($user->carrier_id == 17);
+    $isNonFedex = !$isFedex;
+
+    # -----------------------------
+    # EXTRA FEES (DATE BASED)
+    # -----------------------------
+    $extraMultiplier = 0;      // for non-fedex (adds into 0.24)
+    $extraDollarIncrease = 0;  // for fedex / DLV
+
+    try {
+        $found = Setting::where('key', 'extra-fees-date')->first();
+
+        if ($found) {
+
+            $dates = json_decode($found->label, true);
+            $start = Carbon::parse($dates['date_in']);
+            $end = Carbon::parse($dates['date_out']);
+
+            $value = json_decode($found->value, true);
+
+            $allOthersFee = $value['all_others'] ?? 0;
+            $fedexFee = $value['fedex'] ?? 0;
+
+            $date_shipped = Carbon::parse($user->last_ship_date);
+
+            if ($date_shipped->between($start, $end)) {
+
+                if ($isFedex) {
+                    # FedEx → used in box + additional boxes
+                    $extraDollarIncrease = $fedexFee;
+                } elseif ($isDLV) {
+                    # DLV → fixed +30
+                    $extraDollarIncrease = 30;
+                    $extraMultiplier = 0;
+
+                } else {
+                    # Others → % increase
+                    $extraMultiplier = $allOthersFee;
+                }
+
+                Log::info("User {$user->id} | Carrier {$user->carrier_id} | Extra applied");
+            }
+        }
+
+    } catch (\Exception $ex) {
+        Log::error($ex->getMessage() . ' error calculating extra fees.');
+    }
 
     # -----------------------------
     # FEDEX BOX CHARGES
     # -----------------------------
-    if ($boxChargesApply) {
+    if ($isFedex) {
 
         if ($size >= 12 && $size <= 16) {
             $tax = 32;
@@ -124,71 +172,31 @@ function getCubeSizeTax($size)
             $tax = 37;
         }
 
-        # Additional boxes but #max box is 40-45 now they want me to change 38-40 max box
+        # Additional boxes
         if ($size / 40 > 1) {
-            $countMore = ((int) ceil($size / 40) - 1);
-            $additional = 33 * $countMore;
-        }
-    }
+            $countMore = ((int)ceil($size / 40) - 1);
 
-    # -----------------------------
-    # EXTRA FEES (DATE BASED)
-    # -----------------------------
-    $extraMultiplier = 0; // for non-fedex (adds into 0.24)
-    $extraFlat = 0;       // for fedex / DLV
-
-    try {
-        $found = Setting::where('key', 'extra-fees-date')->first();
-
-        if ($found) {
-
-            $dates = json_decode($found->label, true);
-            $start = Carbon::parse($dates['date_in']);
-            $end   = Carbon::parse($dates['date_out']);
-
-            $value = json_decode($found->value, true);
-
-            $allOthersFee = $value['all_others'] ?? 0; // e.g. 0.6
-            $fedexFee     = $value['fedex'] ?? 0;
-
-            $date_shipped = Carbon::parse($user->last_ship_date);
-
-            if ($date_shipped->between($start, $end)) {
-
-                if ($user->carrier_id == 23) {
-                    # FedEx → flat
-                    $extraFlat = $fedexFee;
-                } elseif ($user->carrier_id == 17) {
-                    # DLV → fixed 30
-                    $extraFlat = 30;
-                } else {
-                    # Others → add into 0.24
-                    $extraMultiplier = $allOthersFee;
-                }
-
-                Log::info("User {$user->id} | Carrier {$user->carrier_id} | Extra applied");
-            }
+            # 👇 KEY CHANGE: add extraDollarIncrease into 33
+            $extraBoxRate = 33 + $extraDollarIncrease;
+            $additional = $countMore * $extraBoxRate;
         }
 
-    } catch (\Exception $ex) {
-        Log::error($ex->getMessage() . ' error calculating extra fees.');
+        # 👇 IMPORTANT: do NOT add extraDollarIncrease again
+        return round2Digit($additional + $tax);
     }
 
     # -----------------------------
     # NON-FEDEX CALCULATION
     # -----------------------------
-    if ($serviceTransportFees24) {
-        $rate = 0.24 + $extraMultiplier; // 👈 key logic
-        $tax = $size * $rate;
-    }
+    $rate = 0.24 + $extraMultiplier;
+    $tax = $size * $rate;
 
-    # -----------------------------
-    # FINAL TOTAL
-    # -----------------------------
     $total = round2Digit($additional + $tax);
 
-    return $total + $extraFlat;
+    # DLV gets +30 here
+    return $total + $extraDollarIncrease;
 }
+
 function getImportTariffTax($total)
 {
     return 0;
@@ -206,7 +214,6 @@ function getImportTariffTax($total)
     }
     return round2Digit($tax);
 }
-
 
 function getCubeRangesV2($size, $orderTotal = 0)
 {
