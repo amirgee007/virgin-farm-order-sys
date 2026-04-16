@@ -373,7 +373,7 @@
                                step="0.01"
                                min="0"
                                value="{{ $fedex !== null ? number_format((float)$fedex, 2, '.', '') : '' }}"
-                               placeholder="Enter amount (e.g. 30.00)">
+                               placeholder="Enter amount (e.g. 5.00)">
                         <small class="text-muted">
                             Dollar increase for FedEx (e.g. box fees) i.e 5$
                         </small>

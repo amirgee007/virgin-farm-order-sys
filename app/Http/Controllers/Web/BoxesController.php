@@ -55,6 +55,11 @@ class BoxesController extends Controller
 
             $allOthers = $value['all_others'] ?? null;
             $fedex = $value['fedex'] ?? null;
+        } else {
+            $selected = [
+                'start' => now()->startOfMonth()->toDayDateTimeString(),
+                'end'   => now()->endOfMonth()->toDayDateTimeString(),
+            ];
         }
 
 
