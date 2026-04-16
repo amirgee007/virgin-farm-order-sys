@@ -170,6 +170,8 @@ function getCubeSizeTax($size)
             $tax = 37;
         }
 
+        $tax = $tax + $extraDollarIncrease; #also apply for each box too
+
         # Additional boxes
         if ($size / 40 > 1) {
             $countMore = ((int)ceil($size / 40) - 1);
@@ -178,7 +180,7 @@ function getCubeSizeTax($size)
             $extraBoxRate = 33 + $extraDollarIncrease;
             $additional = $countMore * $extraBoxRate;
         }
-
+        
         # 👇 IMPORTANT: do NOT add extraDollarIncrease again
         return round2Digit($additional + $tax);
     }
