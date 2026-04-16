@@ -92,25 +92,24 @@ function isDeliveryChargesApply()
 
 function getCubeSizeTax($size)
 {
-    #PU(32), Federal Express(23) , DLV(17)
+    # PU(32), FedEx(23), DLV(17)
     $user = itsMeUser();
 
-    #no fees boxes for the farms-direct
-    if ($user->supplier_id == 4)
+    # No fees for farms-direct
+    if ($user->supplier_id == 4) {
         return 0;
+    }
 
-    $salesRepExtra = in_array($user->sales_rep, ['Robert', 'Mario', 'Joe']);
-
-    $tax = $boxChargesApply = $serviceTransportFees24 = $additional = $extraTax = 0;
-
-    #If carrier is not Federal Express then apply 24%
-    if ($user->carrier_id != 23)
-        $serviceTransportFees24 = true;
+    $tax = $additional = 0;
+    #If carrier is not Federal Express then apply 24% for now
+    $serviceTransportFees24 = ($user->carrier_id != 23); // non-FedEx
 
     #Carrier is fedex then apply BOX CHARGES ONLY one case
-    if ($user->carrier_id == 23)
-        $boxChargesApply = true;
+    $boxChargesApply = ($user->carrier_id == 23);        // FedEx only
 
+    # -----------------------------
+    # FEDEX BOX CHARGES
+    # -----------------------------
     if ($boxChargesApply) {
 
         if ($size >= 12 && $size <= 16) {
@@ -121,22 +120,22 @@ function getCubeSizeTax($size)
             $tax = 34;
         } elseif ($size >= 27 && $size <= 30) {
             $tax = 35;
-        } elseif ($size >= 38) {  // Combined the last two conditions
+        } elseif ($size >= 38) {
             $tax = 37;
         }
 
-        #max box is 40-45 now they want me to change 38-40 max box
+        # Additional boxes but #max box is 40-45 now they want me to change 38-40 max box
         if ($size / 40 > 1) {
-            $countMore45 = ((int)ceil($size / 40) - 1);
-            $additional = 33 * $countMore45;
+            $countMore = ((int) ceil($size / 40) - 1);
+            $additional = 33 * $countMore;
         }
     }
 
-    if ($serviceTransportFees24) #FOB fee charge formula
-        $tax = $size * 0.24; #fixed 0.24 Example: 45 cubes * 0.24 = $10.80
-
-    $total = round2Digit($additional + $tax);
-    $extra = 0;
+    # -----------------------------
+    # EXTRA FEES (DATE BASED)
+    # -----------------------------
+    $extraMultiplier = 0; // for non-fedex (adds into 0.24)
+    $extraFlat = 0;       // for fedex / DLV
 
     try {
         $found = Setting::where('key', 'extra-fees-date')->first();
@@ -145,32 +144,29 @@ function getCubeSizeTax($size)
 
             $dates = json_decode($found->label, true);
             $start = Carbon::parse($dates['date_in']);
-            $end = Carbon::parse($dates['date_out']);
+            $end   = Carbon::parse($dates['date_out']);
 
-            // Feeses
             $value = json_decode($found->value, true);
 
-            $allOthersFee = $value['all_others'] ?? 0;
-            $fedexFee = $value['fedex'] ?? 0;
+            $allOthersFee = $value['all_others'] ?? 0; // e.g. 0.6
+            $fedexFee     = $value['fedex'] ?? 0;
 
-            $user = itsMeUser();
             $date_shipped = Carbon::parse($user->last_ship_date);
 
-            // Check date range
             if ($date_shipped->between($start, $end)) {
 
-                $extra = $allOthersFee;
-
-                #ID: (23)	FEDEX	FedEx Priority Overnight
                 if ($user->carrier_id == 23) {
-                    $extra = $fedexFee;
+                    # FedEx → flat
+                    $extraFlat = $fedexFee;
                 } elseif ($user->carrier_id == 17) {
-                    $extra = 30; #VF 30$ Delivery 	(DLV	Delivery (Virgin Farms-WPB) Christ said)
+                    # DLV → fixed 30
+                    $extraFlat = 30;
+                } else {
+                    # Others → add into 0.24
+                    $extraMultiplier = $allOthersFee;
                 }
 
-                Log::info(
-                    "User {$user->id} | Carrier {$user->carrier_id} | Extra: {$extra}"
-                );
+                Log::info("User {$user->id} | Carrier {$user->carrier_id} | Extra applied");
             }
         }
 
@@ -178,9 +174,21 @@ function getCubeSizeTax($size)
         Log::error($ex->getMessage() . ' error calculating extra fees.');
     }
 
-    return $total + $extra;
-}
+    # -----------------------------
+    # NON-FEDEX CALCULATION
+    # -----------------------------
+    if ($serviceTransportFees24) {
+        $rate = 0.24 + $extraMultiplier; // 👈 key logic
+        $tax = $size * $rate;
+    }
 
+    # -----------------------------
+    # FINAL TOTAL
+    # -----------------------------
+    $total = round2Digit($additional + $tax);
+
+    return $total + $extraFlat;
+}
 function getImportTariffTax($total)
 {
     return 0;
