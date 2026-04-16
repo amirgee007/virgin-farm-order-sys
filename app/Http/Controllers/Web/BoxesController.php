@@ -35,15 +35,28 @@ class BoxesController extends Controller
         $selected['start'] = $start_date->toDayDateTimeString();
         $selected['end'] = $end_date->toDayDateTimeString();
 
+        #for the boxes fees
         $found = Setting::where('key', 'extra-fees-date')->first();
+
+        $selected = $allOthers = $fedex = null;
+
         if ($found) {
+
+            // ✅ Decode dates (same as before)
             $dates = json_decode($found->label, true);
+
             $selected = [
                 'start' => Carbon::parse($dates['date_in'])->toDayDateTimeString(),
                 'end' => Carbon::parse($dates['date_out'])->toDayDateTimeString(),
-                'carriers' => $found->extra_info ? json_decode($found->extra_info, true) : []
             ];
+
+            // ✅ NEW: Decode value JSON
+            $value = json_decode($found->value, true);
+
+            $allOthers = $value['all_others'] ?? null;
+            $fedex = $value['fedex'] ?? null;
         }
+
 
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -59,13 +72,15 @@ class BoxesController extends Controller
         $boxes = $query->paginate(100);
 
         $unitOfMeasure = UnitOfMeasure::all();
-        $carriers = getCarriers();
+        #$carriers = getCarriers();
+
         return view('boxes.index', compact(
             'boxes',
             'unitOfMeasure',
             'selected',
             'found',
-            'carriers'
+            'allOthers',
+            'fedex'
         ));
     }
 
@@ -132,25 +147,29 @@ class BoxesController extends Controller
     public function updateExtraFeesDates(Request $request)
     {
         $dates = dateRangeConverter($request->range);
-        $date_in = $dates['date_in'];
-        $date_out = $dates['date_out'];
 
-        if ($request->fees == 0) {
+        // If both are 0 → delete (reset case)
+        if ($request->all_others_fee == 0 && $request->fedex_fee == 0) {
             Setting::where('key', 'extra-fees-date')->delete();
         } else {
-            $found = Setting::updateOrCreate([
-                'key' => 'extra-fees-date'
-            ], [
-                'value' => $request->fees,
-                'label' => json_encode($dates),
-                'extra_info' => $request->carriers ? json_encode($request->carriers) : null,
-                'done_by' => auth()->id(),
-            ]);
 
-            $carriers = json_decode($found->extra_info, true);
+            $value = [
+                'all_others' => (float)$request->all_others_fee,
+                'fedex' => (float)$request->fedex_fee,
+            ];
+
+            Setting::updateOrCreate(
+                ['key' => 'extra-fees-date'],
+                [
+                    'value' => json_encode($value),
+                    'label' => json_encode($dates),
+                    'extra_info' => null,
+                    'done_by' => auth()->id(),
+                ]
+            );
         }
 
-        session()->flash('app_message', 'Your value,date for extra fees has been updated successfully.');
+        session()->flash('app_message', 'Extra fee dates updated successfully.');
         return back();
     }
 }

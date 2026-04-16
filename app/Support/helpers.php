@@ -139,33 +139,43 @@ function getCubeSizeTax($size)
     $extra = 0;
 
     try {
-        #{"date_in":"2025-01-27","date_out":"2025-02-13"}
-        #checked if week is during the PRICES then up it too.
-        $found = Setting::where('key', 'extra-fees-date')->where('value', '>', 0)->first();
+        $found = Setting::where('key', 'extra-fees-date')->first();
 
         if ($found) {
-            $dates = json_decode($found->label, true);
-            $carriers = $found->extra_info ? json_decode($found->extra_info, true) : null;
 
+            $dates = json_decode($found->label, true);
             $start = Carbon::parse($dates['date_in']);
             $end = Carbon::parse($dates['date_out']);
+
+            // Feeses
+            $value = json_decode($found->value, true);
+
+            $allOthersFee = $value['all_others'] ?? 0;
+            $fedexFee = $value['fedex'] ?? 0;
 
             $user = itsMeUser();
             $date_shipped = Carbon::parse($user->last_ship_date);
 
-            #carriers too check here for extra fees
-            if ($date_shipped->between($start, $end) && (is_null($carriers) || in_array($user->carrier_id, $carriers))) {
-                #$extra = $found->value;
+            // Check date range
+            if ($date_shipped->between($start, $end)) {
 
-                $extra = round2Digit(($found->value / 100) * $total);
+                $extra = $allOthersFee;
+
+                #ID: (23)	FEDEX	FedEx Priority Overnight
+                if ($user->carrier_id == 23) {
+                    $extra = $fedexFee;
+                } elseif ($user->carrier_id == 17) {
+                    $extra = 30; #VF 30$ Delivery 	(DLV	Delivery (Virgin Farms-WPB) Christ said)
+                }
 
                 Log::info(
-                    "User {$user->id} | Transportation Extra: {$extra} | Additional *33: {$additional} | Tax: {$tax}"
+                    "User {$user->id} | Carrier {$user->carrier_id} | Extra: {$extra}"
                 );
             }
         }
+
     } catch (\Exception $ex) {
-        Log::error($ex->getMessage() . ' error calcualting extra percentage data/values etc during transportation. ');
+        Log::error($ex->getMessage() . ' error calculating extra fees.');
     }
 
     return $total + $extra;

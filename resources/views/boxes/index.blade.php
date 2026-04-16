@@ -317,58 +317,83 @@
     </div>
 </div>
 
-<div class="modal fade" id="changeExtraFees" tabindex="-1" role="dialog" aria-labelledby="createBoxModal" aria-hidden="true">
+<div class="modal fade" id="changeExtraFees" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
+
+            <!-- HEADER -->
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update Extra Fee Dates</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                <h5 class="modal-title">Update Extra Fee Dates (VF 30$ Delivery)</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                 </button>
             </div>
 
+            <!-- BODY -->
             <div class="modal-body">
-                <form action="{{route('update.extra.fees.date')}}" method="POST" enctype="multipart/form-data">
+                <form action="{{route('update.extra.fees.date')}}" method="POST">
                     {{csrf_field()}}
+
+                    <!-- DATE RANGE -->
                     <div class="form-group">
-                        @php
-                            $selectedCarriers = $selected['carriers'] ?? [];
-                        @endphp
-                        <label for="carriers">Select Carriers</label>
-                        <select name="carriers[]" id="carriers" class="form-control carriers-select2" multiple>
-                            @foreach($carriers as $id => $name)
-                                <option value="{{ $id }}" {{in_array($id, $selectedCarriers) ? 'selected': ''}}>
-                                    {{ $name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <small class="text-muted">Leave blank to apply to all carriers.</small>
-                    </div>
-                    <div class="form-group">
-                        <input type="hidden" name="range" value="" class="dateRangeVal">
-                        <label for="dateRange" class="form-label mt-1">Date Range</label>
-                        <div id="dateRange" class="form-control float-right dateRanges" style="cursor: pointer; ">
-                            <i class="fa fa-calendar"></i>&nbsp;
+                        <input type="hidden" name="range" class="dateRangeVal">
+                        <label><strong>Date Range</strong></label>
+                        <div id="dateRange" class="form-control dateRanges" style="cursor:pointer;">
+                            <i class="fa fa-calendar"></i>
                             <span></span>
-                            &nbsp;<i class="fa fa-caret-down"></i>
+                            <i class="fa fa-caret-down float-right mt-1"></i>
                         </div>
                     </div>
-                    <br/>
-                    <div class="form-group mt-3">
-                        <label for="extraFees">Dollar Increase % (Same as Before)</label>
-                        <input type="number" name="fees" min="0"
-                            max="1000" step="0.01"
-                            value="{{ $found ? number_format((float)$found->value, 2, '.', '') : '' }}"
-                            class="form-control"
-                            id="extraFees"
-                            placeholder="1.00-1000.00 Maximum"
-                        >
-                        <small class="text-danger">If want to reset just put 0.00 fees here.</small>
+
+                    <hr>
+
+                    <!-- ALL OTHER CARRIERS -->
+                    <div class="form-group">
+                        <label><strong>All Other Carriers</strong></label>
+                        <input type="number"
+                               required
+                               name="all_others_fee"
+                               class="form-control"
+                               step="0.01"
+                               min="0"
+                               value="{{ $allOthers !== null ? number_format((float)$allOthers, 2, '.', '') : '' }}"
+                               placeholder="Enter increase (e.g. 0.06)">
+                        <small class="text-muted">
+                            Applies to all carriers except FedEx (multiplier-based).
+                        </small>
                     </div>
+
+                    <!-- FEDEX -->
+                    <div class="form-group mt-3">
+                        <label><strong>FedEx</strong></label>
+                        <input type="number"
+                               required
+                               name="fedex_fee"
+                               class="form-control"
+                               step="0.01"
+                               min="0"
+                               value="{{ $fedex !== null ? number_format((float)$fedex, 2, '.', '') : '' }}"
+                               placeholder="Enter amount (e.g. 30.00)">
+                        <small class="text-muted">
+                            Flat dollar increase for FedEx (e.g. box fees).
+                        </small>
+                    </div>
+                    <hr>
+
+                    <!-- NOTE -->
+                    <small class="text-danger">
+                        To reset a fee, enter 0.00 for both inputs above
+                    </small>
                     <br>
-                    <input type="submit" value="Update Dates Fees" class="btn btn-primary btn-sm float-right">
+
+                    <!-- SUBMIT -->
+                    <button type="submit" class="btn btn-primary btn-sm float-right">
+                        Update Dates Fees
+                    </button>
+
                 </form>
             </div>
+
         </div>
     </div>
 </div>
