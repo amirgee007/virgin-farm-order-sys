@@ -140,7 +140,7 @@ function getCubeSizeTax($size)
                 } elseif ($isDLV) {
                     # DLV → fixed +30
                     $extraDollarIncrease = 30;
-                    $extraMultiplier = 0;
+                    $extraMultiplier = $allOthersFee;
 
                 } else {
                     # Others → % increase
