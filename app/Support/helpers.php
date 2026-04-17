@@ -138,10 +138,8 @@ function getCubeSizeTax($size)
                     # FedEx → used in box + additional boxes
                     $extraDollarIncrease = $fedexFee;
                 } elseif ($isDLV) {
-                    # DLV → fixed +30
-                    $extraDollarIncrease = 30;
+                    # DLV gets BOTH: +30 AND multiplier
                     $extraMultiplier = $allOthersFee;
-
                 } else {
                     # Others → % increase
                     $extraMultiplier = $allOthersFee;
@@ -157,7 +155,6 @@ function getCubeSizeTax($size)
     # FEDEX BOX CHARGES
     # -----------------------------
     if ($isFedex) {
-
         if ($size >= 12 && $size <= 16) {
             $tax = 32;
         } elseif ($size >= 18 && $size <= 21) {
@@ -180,9 +177,13 @@ function getCubeSizeTax($size)
             $extraBoxRate = 33 + $extraDollarIncrease;
             $additional = $countMore * $extraBoxRate;
         }
-        
+
         # 👇 IMPORTANT: do NOT add extraDollarIncrease again
         return round2Digit($additional + $tax);
+    }
+    elseif ($isDLV){
+        $extraDollarIncrease = 30;
+        # NOTE: DLV intentionally gets BOTH flat +  30 and % multiplier
     }
 
     # -----------------------------
