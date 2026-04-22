@@ -192,9 +192,12 @@ class ProductsController extends Controller
 
         $query->distinct('products.id');
 
-        $cacheKey = "hd_{$user->id}_{$user->carrier_id}_{$user->supplier_id}";
-        #300 seconds (5 min)
-        $highlightedDates = cache()->remember($cacheKey, 300, function () use ($query) {
+        $version = cache()->get('inventory_version', 1);
+        $cacheKey = "hd_v{$version}_{$user->id}_{$user->carrier_id}_{$user->supplier_id}";
+
+        Log::notice($cacheKey. ' cache has been set for the user to make it fast');
+        #600 seconds (10 min)
+        $highlightedDates = cache()->remember($cacheKey, 600, function () use ($query) {
             $dates = $this->getHighlightedDates($query);
             $dates = array_values(array_filter($dates));
             sort($dates);
@@ -808,7 +811,6 @@ class ProductsController extends Controller
 
     public function uploadInventory(Request $request)
     {
-
         ini_set('max_execution_time', 18000);
 
         // Reset and delete zero quantity products
@@ -855,6 +857,8 @@ class ProductsController extends Controller
                 updateSystemStatus(0);
 
                 $this->sendEmailIfPriceNotCorrect();
+
+                cache()->increment('inventory_version');
                 Log::info($this->dateIn . ' date in and date out BULK imported successfully ' . $this->dateOut . ' uploaded BY ' . auth()->user()->first_name);
                 return response()->json(['message' => 'File uploaded and imported successfully'], 200);
 
@@ -971,6 +975,8 @@ class ProductsController extends Controller
         $this->sendEmailIfPriceNotCorrect();
 
         updateSystemStatus(0);
+
+        cache()->increment('inventory_version');
         session()->flash('app_message', 'Inventory file has been imported into the system.');
         return back();
     }
@@ -1076,7 +1082,6 @@ class ProductsController extends Controller
 
     public function copyImageToOtherProduct(Request $request)
     {
-
         #load_img_modal
         if ($request->load_img_modal) {
 
@@ -1114,7 +1119,6 @@ class ProductsController extends Controller
 
     public function iventoryReset()
     {
-
         ProductQuantity::query()->update([
             'quantity' => 0,
             'date_in' => null,
@@ -1122,6 +1126,7 @@ class ProductsController extends Controller
             'is_special' => 0,
         ]);
 
+        cache()->increment('inventory_version');
         session()->flash('app_message', 'Inventory has been reset successfully.');
         return back();
     }
@@ -1282,6 +1287,8 @@ class ProductsController extends Controller
                 'is_special' => 0,
             ]);
         }
+
+        cache()->increment('inventory_version');
 
         session()->flash('app_message', 'Your selected inventory has been reset/deleted successfully.');
         return back();
