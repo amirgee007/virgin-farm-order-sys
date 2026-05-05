@@ -148,7 +148,7 @@ class ProductsController extends Controller
         $now = now();
         $today = $now->toDateString();
         $cutoffTime = '15:30'; // 3:30 PM cutoff time
-        $cutoffTime = ($user->id == 1) ? '14:00' : '15:30'; #just for testing purposes....!
+        #$cutoffTime = ($user->id == 1) ? '14:00' : '15:30'; #just for testing purposes....!
         $shipDateCarbon = $date_shipped ? Carbon::parse($date_shipped) : null;
 
         // 🚫 Virgin Farms (ID 17): Only Monday allowed $isCarrierVF calculated above.
