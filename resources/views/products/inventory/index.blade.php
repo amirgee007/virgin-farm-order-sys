@@ -61,6 +61,46 @@
             min-width: auto !important;
         }
 
+        .img-hover-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .img-hover-container img.large {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 200px;
+            border: 1px solid #ccc;
+            background: #fff;
+            z-index: 100;
+        }
+
+        .img-hover-container:hover img.large {
+            display: block;
+        }
+        
+        .img-hover-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .img-hover-container img.large {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 200px;
+            border: 1px solid #ccc;
+            background: #fff;
+            z-index: 100;
+        }
+
+        .img-hover-container:hover img.large {
+            display: block;
+        }
+
 
         #autocomplete-box div:hover {
             background-color: #e2e0e0;
@@ -686,15 +726,15 @@
                                     @foreach ($products as $index => $product)
                                         <tr>
                                             <td class="align-middle">
-                                                <img style="max-width: 35px; cursor: pointer;"
-                                                     id="{{$product->id}}imgTD"
-                                                     data-id="{{$product->id}}"
-                                                     title="Click to show Larger image"
-                                                     data-info="{{$product->product_text}}"
-                                                     data-toggle="tooltip" data-placement="bottom"
-                                                     data-largeimg="{{$product->image_url}}"
-                                                     src="{{ asset('assets\img\no-image.png') }}"
-                                                     class="img-thumbnail" alt="Virgin Farm">
+                                                <div class="img-hover-container">
+                                                    <img src="{{ $product->image_url }}"
+                                                         id="{{$product->id}}imgTD"
+                                                         data-id="{{$product->id}}"
+                                                         data-largeimg="{{$product->image_url}}"
+                                                         class="img-thumbnail" width="35">
+                                                    <img src="{{ $product->image_url }}" class="large">
+                                                </div>
+
                                                 {{ $product->product_text }}
 
                                                 @if($product->parent_product_id)
@@ -1494,6 +1534,36 @@
                 if (!$(e.target).closest('#searching, #autocomplete-box').length) {
                     suggestionBox.hide();
                 }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.hover-img').hover(function (e) {
+                var img = $('<img>', {
+                    src: $(this).data('largeimg'),
+                    class: 'hover-preview'
+                }).css({
+                    position: 'absolute',
+                    top: e.pageY + 10,
+                    left: e.pageX + 10,
+                    width: '200px',
+                    border: '1px solid #ccc',
+                    background: '#fff',
+                    zIndex: 9999
+                });
+
+                $('body').append(img);
+            }, function () {
+                $('.hover-preview').remove();
+            });
+
+            $('.hover-img').mousemove(function (e) {
+                $('.hover-preview').css({
+                    top: e.pageY + 10,
+                    left: e.pageX + 10
+                });
             });
         });
     </script>
