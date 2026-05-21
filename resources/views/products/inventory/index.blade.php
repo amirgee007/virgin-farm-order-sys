@@ -68,39 +68,21 @@
 
         .img-hover-container img.large {
             display: none;
-            position: absolute;
-            top: 0;
-            left: 40px;
-            width: 200px;
+        }
+
+        .hover-preview {
+            position: fixed;
+            width: 220px;
             border: 1px solid #ccc;
             background: #fff;
-            z-index: 100;
+            z-index: 999999;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+            pointer-events: none;
         }
 
         .img-hover-container:hover img.large {
             display: block;
         }
-        
-        .img-hover-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .img-hover-container img.large {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 40px;
-            width: 200px;
-            border: 1px solid #ccc;
-            background: #fff;
-            z-index: 100;
-        }
-
-        .img-hover-container:hover img.large {
-            display: block;
-        }
-
 
         #autocomplete-box div:hover {
             background-color: #e2e0e0;
@@ -727,12 +709,11 @@
                                         <tr>
                                             <td class="align-middle">
                                                 <div class="img-hover-container">
-                                                    <img src="{{ $product->image_url }}"
+                                                    <img src="{{ asset('assets\img\no-image.png') }}"
                                                          id="{{$product->id}}imgTD"
                                                          data-id="{{$product->id}}"
                                                          data-largeimg="{{$product->image_url}}"
                                                          class="img-thumbnail" width="35">
-                                                    <img src="{{ $product->image_url }}" class="large">
                                                 </div>
 
                                                 {{ $product->product_text }}
@@ -1290,9 +1271,9 @@
             });
         });
 
-            let search = @json($searching);
+        let search = @json($searching);
 
-            if (search) {
+        if (search) {
                 $('#alt-result').html('Checking availability...!');
 
                 $.get("{{ route('inventory.altSearch') }}", {q: search}, function (res) {
@@ -1323,37 +1304,54 @@
                 });
             }
 
-            // Handle click
+       // Handle click
         $(document).on('click', '.view-alt', function () {
-            let supplier = $(this).data('supplier');
 
+            let supplier = $(this).data('supplier');
             let date = $(this).data('date');
-            // 👉 get value from existing search input
             let search = $('#searching').val();
 
-            $.ajax({
-                url: '{{ route('update.supplier') }}',
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    supplier: supplier
-                },
-                success: function (response) {
-                    // ✅ Redirect to inventory.index with params
-                    let url = `{{ route('inventory.index') }}`
-                        + `?date_shipped=${date}`
-                        + `&searching=${search}`;
-                    toastr.success('Your supplier might be changed due to this redirect.');
-
-                    window.location.href = url;
-                },
-                error: function (xhr) {
-                    toastr.error('An error occurred. Please try again.');
+            swal({
+                title: "Switch Inventory?",
+                text: "This item is available on another shipping date. Would you like to proceed?",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        text: "No",
+                        visible: true
+                    },
+                    confirm: {
+                        text: "Yes, Continue",
+                        visible: true
+                    }
                 }
+            }).then((willContinue) => {
+                if (!willContinue) {
+                    return;
+                }
+                $.ajax({
+                    url: '{{ route('update.supplier') }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        supplier: supplier
+                    },
+                    success: function (response) {
+
+                        let url = `{{ route('inventory.index') }}`
+                            + `?date_shipped=${date}`
+                            + `&searching=${search}`;
+
+                        toastr.success('Inventory changed successfully.');
+
+                        window.location.href = url;
+                    },
+                    error: function () {
+                        toastr.error('An error occurred. Please try again.');
+                    }
+                });
             });
-
         });
-
 
         $(window).on('load', function () {
             $(function(){
@@ -1540,31 +1538,47 @@
 
     <script>
         $(document).ready(function () {
-            $('.hover-img').hover(function (e) {
-                var img = $('<img>', {
-                    src: $(this).data('largeimg'),
+
+            // REMOVE old preview if exists
+            $(document).on('mouseenter', '.img-hover-container', function (e) {
+
+                $('.hover-preview').remove();
+
+                let imgSrc = $(this).find('.img-thumbnail').attr('src');
+
+                let img = $('<img>', {
+                    src: imgSrc,
                     class: 'hover-preview'
                 }).css({
-                    position: 'absolute',
-                    top: e.pageY + 10,
-                    left: e.pageX + 10,
-                    width: '200px',
+                    position: 'fixed',
+                    top: e.clientY - 80,
+                    left: e.clientX + 40,
+                    width: '220px',
                     border: '1px solid #ccc',
                     background: '#fff',
-                    zIndex: 9999
+                    zIndex: 999999,
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                    pointerEvents: 'none'
                 });
 
                 $('body').append(img);
-            }, function () {
+            });
+
+            // MOVE image with mouse
+            $(document).on('mousemove', '.img-hover-container', function (e) {
+
+                $('.hover-preview').css({
+                    top: e.clientY - 80,
+                    left: e.clientX + 40
+                });
+
+            });
+
+            // REMOVE on mouse leave
+            $(document).on('mouseleave', '.img-hover-container', function () {
                 $('.hover-preview').remove();
             });
 
-            $('.hover-img').mousemove(function (e) {
-                $('.hover-preview').css({
-                    top: e.pageY + 10,
-                    left: e.pageX + 10
-                });
-            });
         });
     </script>
 
