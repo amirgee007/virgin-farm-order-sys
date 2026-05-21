@@ -823,24 +823,24 @@
         </div>
     </div>
 
-    <div class="modal" id="largeImgModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imagePreviewTitle">Large Image</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <img src="" id="imagePreviewId" style="width: 450px; height: 450px;">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+{{--    <div class="modal" id="largeImgModal" tabindex="-1" role="dialog">--}}
+{{--        <div class="modal-dialog modal-md" role="document">--}}
+{{--            <div class="modal-content">--}}
+{{--                <div class="modal-header">--}}
+{{--                    <h5 class="modal-title" id="imagePreviewTitle">Large Image</h5>--}}
+{{--                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                        <span aria-hidden="true">&times;</span>--}}
+{{--                    </button>--}}
+{{--                </div>--}}
+{{--                <div class="modal-body">--}}
+{{--                    <img src="" id="imagePreviewId" style="width: 450px; height: 450px;">--}}
+{{--                </div>--}}
+{{--                <div class="modal-footer">--}}
+{{--                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
 
     <div class="modal fade" id="boxesModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -983,11 +983,11 @@
             trigger: 'hover'
         });
 
-        $('.img-thumbnail').click(function () {
-            $('#imagePreviewId').attr('src', $(this).data('largeimg'));
-            $('#imagePreviewTitle').text($(this).data('info'));
-            $('#largeImgModal').modal('show');
-        });
+        // $('.img-thumbnail').click(function () {
+        //     $('#imagePreviewId').attr('src', $(this).data('largeimg'));
+        //     $('#imagePreviewTitle').text($(this).data('info'));
+        //     $('#largeImgModal').modal('show');
+        // });
 
         let previousChecked = null;
 
