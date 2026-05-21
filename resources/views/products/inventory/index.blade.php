@@ -49,6 +49,19 @@
 @section ('styles')
     <style>
 
+        .pagination .page-link {
+            padding: 4px 10px !important;
+            font-size: 12px !important;
+            line-height: 1.2;
+        }
+        .pagination {
+            margin-bottom: 10 !important;
+        }
+        .pagination li {
+            min-width: auto !important;
+        }
+
+
         #autocomplete-box div:hover {
             background-color: #e2e0e0;
         }
@@ -202,14 +215,14 @@
             display: inline-block;
         }
 
-        #date_shipped {
-            width: 100%;
-            padding: 8px 35px 8px 10px; /* Add padding to the right for the icon */
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
+        /*#date_shipped {*/
+        /*    width: 100%;*/
+        /*    padding: 8px 35px 8px 10px; !* Add padding to the right for the icon *!*/
+        /*    font-size: 16px;*/
+        /*    border: 1px solid #ccc;*/
+        /*    border-radius: 4px;*/
+        /*    box-sizing: border-box;*/
+        /*}*/
 
         .calendar-icon {
             position: absolute;
@@ -497,7 +510,6 @@
                         </div>
 
                         <div class="d-flex align-items-center gap-2 flex-wrap">
-
                             <div>
                                 <small class="text-danger d-block">Carrier</small>
                                 <select class="form-control form-control-sm"
@@ -511,9 +523,9 @@
                                 </select>
                             </div>
 
-                            <div>
+                            <div class="ml-2">
                                 <small class="text-danger d-block">Ship-To</small>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center ">
                                     <select class="form-control form-control-sm"
                                             id="changeAddress"
                                             style="min-width: 160px; background-color: beige;">
@@ -534,77 +546,115 @@
                                     </a>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="row my-2 flex-md-row flex-column-reverse">
-                        <div class="col-md-12 col-sm-12 mt-md-0 mt-1">
+                        <div class="col-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
-                                <div class="input-group custom-search-form mobile-compact">
-{{--                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>--}}
-                                    <select class="form-control form-control-md mr-2" id="add-on-order" style="border:3px solid #cccccc; border-style:dashed"
-                                            title="Choose an order to edit, or select 'Add New Order' to proceed?"
-                                            data-trigger="hover"
-                                            data-toggle="tooltip">
-                                        @foreach($myOrders AS $key => $value)
-                                            <option value="{{$key}}" {{ $user->edit_order_id == $key ? 'selected' : '' }}>{{$key > 1 ? '#W - ' : '' }} {{$value}} </option>
-                                        @endforeach
-                                    </select>
+                                <div class="row mx-0 align-items-center">
+
+                                    {{-- ORDER --}}
+                                    <div class="col-12 col-md-3 px-1 mb-1 mb-md-0">
+                                        <select class="form-control form-control-sm"
+                                                id="add-on-order"
+                                                style="border:3px dashed #cccccc;"
+                                                title="Choose an order to edit, or select 'Add New Order' to proceed?"
+                                                data-trigger="hover"
+                                                data-toggle="tooltip">
+
+                                            @foreach($myOrders AS $key => $value)
+                                                <option value="{{$key}}"
+                                                    {{ $user->edit_order_id == $key ? 'selected' : '' }}>
+                                                    {{$key > 1 ? '#W - ' : '' }} {{$value}}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
 
                                     @php $cartFound = isCartExist(); @endphp
-                                    <div class="date-input-container">
-                                        <input type="text"
-                                               readonly
-                                               {{$cartFound || $user->edit_order_id ? 'disabled' : ''}}
-                                              id="date_shipped"
-                                               placeholder="When to Ship?"
-                                               name="date_shipped"
-                                               title="{{$cartFound ? 'You may only add products available in the inventory for the ship date selected for your current session. To change the date you must empty the cart to begin a new shopping session.' : 'When do you want your product to be shipped?'}}"
-                                               data-trigger="hover"
-                                               data-toggle="tooltip"
-                                               value="{{ $date_shipped }}">
-                                        <span class="calendar-icon">&#x1F4C5;</span> <!-- Unicode calendar icon -->
+
+                                    {{-- DATE --}}
+                                    <div class="col-12 col-md-2 px-1 mb-1 mb-md-0">
+
+                                        <div class="date-input-container w-100">
+
+                                            <input type="text"
+                                                   readonly
+                                                   {{$cartFound || $user->edit_order_id ? 'disabled' : ''}}
+                                                   id="date_shipped"
+                                                   class="form-control form-control-sm"
+                                                   placeholder="When to Ship?"
+                                                   name="date_shipped"
+                                                   title="{{$cartFound ? 'You may only add products available in the inventory for the ship date selected for your current session. To change the date you must empty the cart to begin a new shopping session.' : 'When do you want your product to be shipped?'}}"
+                                                   data-trigger="hover"
+                                                   data-toggle="tooltip"
+                                                   value="{{ $date_shipped }}">
+
+                                            <span class="calendar-icon">&#x1F4C5;</span>
+
+                                        </div>
+
                                     </div>
 
-                                    <select class="form-control rounded ml-3" name="category" id="category">
-                                        <option selected value="">All Categories</option>
-                                        @foreach($categories AS $key => $val)
-                                            <option value="{{$key}}"
-                                                {{ (\Request::get('category') == $key) ? 'selected': ''  }}
-                                            >{{$val}}</option>
-                                        @endforeach
-                                    </select>
+                                    {{-- CATEGORY --}}
+                                    <div class="col-12 col-md-2 px-1 mb-1 mb-md-0">
 
-                                    <div style="position: relative;">
-                                        <input type="text"
-                                               id="searching"
-                                               class="form-control rounded ml-2"
-                                               autocomplete="off"
-                                               placeholder="Search by name, item, category, text etc"
-                                               name="searching"
-                                               value="{{\Request::get('searching')}}"
-                                        >
+                                        <select class="form-control form-control-sm"
+                                                name="category"
+                                                id="category">
+
+                                            <option selected value="">All Categories</option>
+
+                                            @foreach($categories AS $key => $val)
+                                                <option value="{{$key}}"
+                                                    {{ (\Request::get('category') == $key) ? 'selected': ''  }}>
+                                                    {{$val}}
+                                                </option>
+                                            @endforeach
+
+                                        </select>
+
                                     </div>
 
-                                    <span class="input-group-append">
+                                    {{-- SEARCH --}}
+                                    <div class="col-12 col-md-4 px-1 mb-1 mb-md-0">
+                                        <div style="position: relative;">
+                                            <input type="text"
+                                                   id="searching"
+                                                   class="form-control form-control-sm"
+                                                   autocomplete="off"
+                                                   placeholder="Search by name, item, category..."
+                                                   name="searching"
+                                                   value="{{\Request::get('searching')}}">
+                                        </div>
+                                    </div>
+
+                                    {{-- BUTTONS --}}
+                                    <div class="col-12 col-md-1 px-1 d-flex">
                                         @if (\Request::get('category') || \Request::get('searching'))
                                             <a href="{{ route('inventory.index') }}"
                                                title="Reset Filters"
                                                data-trigger="hover"
                                                data-toggle="tooltip"
-                                               class="btn btn-light d-flex align-items-center text-muted ml-2"
+                                               class="btn btn-light btn-sm mr-1 d-flex align-items-center"
                                                role="button">
+
                                                 <i class="fas fa-times"></i>
-                                        </a>
+                                            </a>
                                         @endif
-                                        <button class="btn btn-secondary ml-2" type="submit" id="search-products-btn">
-                                        <i class="fas fa-search "></i>
-                                    </button>
-                                </span>
+                                        <button class="btn btn-secondary btn-sm"
+                                                type="submit"
+                                                id="search-products-btn">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+
                                 </div>
                             </form>
                         </div>
                     </div>
+
                     @if(isset($autoCorrected) && $autoCorrected)
                         <div class="alert alert-warning mt-2">
                             <strong>Notice:</strong> Your selected ship date date adjusted due to carrier rules or cutoff time.
