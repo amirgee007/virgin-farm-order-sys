@@ -253,7 +253,7 @@
             transform: translateY(-50%);
             cursor: pointer;
             color: #888;
-            font-size: 18px;
+            font-size: 14px;
         }
 
         /* Mobile responsiveness */
@@ -1312,18 +1312,12 @@
             let search = $('#searching').val();
 
             swal({
-                title: "Switch Inventory?",
+                title: "📅 Switch Ship Date?",
                 text: "This item is available on another shipping date. Would you like to proceed?",
-                icon: "warning",
+                icon: "info",
                 buttons: {
-                    cancel: {
-                        text: "No",
-                        visible: true
-                    },
-                    confirm: {
-                        text: "Yes, Continue",
-                        visible: true
-                    }
+                    cancel: "No",
+                    confirm: "Yes, Proceed"
                 }
             }).then((willContinue) => {
                 if (!willContinue) {
