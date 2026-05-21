@@ -48,7 +48,13 @@
 
 @section ('styles')
     <style>
-
+        .swal-modal {
+            text-align: center;
+        }
+        .swal-title,
+        .swal-text {
+            text-align: center;
+        }
         .pagination .page-link {
             padding: 4px 10px !important;
             font-size: 12px !important;
