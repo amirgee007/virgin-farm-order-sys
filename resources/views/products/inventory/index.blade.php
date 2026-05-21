@@ -297,6 +297,86 @@
                 left: 5% !important;  /* Center it horizontally */
                 right: 5% !important; /* Add padding on the sides */
             }
+
+
+            #date_shipped {
+                height: 32px !important;
+                font-size: 13px !important;
+                padding: 4px 30px 4px 8px !important;
+            }
+
+            .custom-search-form.mobile-compact {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 6px;
+            }
+
+            .custom-search-form.mobile-compact .form-control {
+                height: 32px !important;
+                padding: 4px 8px !important;
+                font-size: 13px !important;
+                margin-bottom: 0 !important;
+            }
+
+            .custom-search-form.mobile-compact .d-flex {
+                display: flex;
+                gap: 6px;
+            }
+
+            .custom-search-form.mobile-compact .d-flex > * {
+                flex: 1;
+            }
+
+            .custom-search-form.mobile-compact .btn {
+                height: 32px;
+                font-size: 13px;
+                padding: 0;
+            }
+
+            .custom-search-form.mobile-compact .btn + .btn {
+                margin-left: 6px;
+            }
+
+            .custom-search-form.mobile-compact .input-group-append {
+                width: 100%;
+                display: flex;
+            }
+
+            .custom-search-form.mobile-compact #searching {
+                margin-left: 0 !important;
+            }
+
+            .card-body .d-flex.align-items-center.gap-2.flex-wrap {
+                flex-wrap: nowrap !important;
+                gap: 6px !important;
+            }
+
+            .card-body .d-flex.align-items-center.gap-2.flex-wrap > div {
+                flex: 1;
+                min-width: 0;
+            }
+
+            #changeCarrier,
+            #changeAddress {
+                width: 100% !important;
+                min-width: unset !important;
+                height: 30px !important;
+                font-size: 12px !important;
+                padding: 2px 6px !important;
+            }
+
+            .card-body small {
+                font-size: 11px !important;
+                margin-bottom: 2px;
+            }
+
+            #changeAddress + a,
+            .card-body a.ml-1 {
+                margin-left: 3px !important;
+                font-size: 14px;
+            }
+
+
         }
 
         /* Further improvements for very small screens */
@@ -336,6 +416,20 @@
                 width: 90% !important; /* Make it fit within the screen */
                 left: 5% !important;  /* Center it horizontally */
                 right: 5% !important; /* Add padding on the sides */
+            }
+
+            .custom-search-form.mobile-compact {
+                gap: 5px;
+            }
+
+            .custom-search-form.mobile-compact .form-control {
+                height: 30px !important;
+                font-size: 12px !important;
+            }
+
+            .custom-search-form.mobile-compact .btn {
+                height: 30px;
+                font-size: 12px;
             }
 
         }
@@ -379,67 +473,74 @@
                     {{ auth()->user()->supplier_id == 4 ? 'checked' : '' }}>
                 <i>Farm-Direct</i>
             </label>
-
-
         </div>
 
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
-                    <span>
-                        <b>
-                            1. Enter your shipping information
-                            <small class="text-primary">
-                            (** You are browsing
-                            <b>
-                                {{
-                                    $user->supplier_id == 1 ? 'Virgin Farms' :
-                                    ($user->supplier_id == 2 ? 'Dutch' :
-                                    ($user->supplier_id == 4 ? 'Farms-Direct' : 'Special and Seasonal'))
-                                }}
-                            </b> flowers)
+                    <div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
+
+                        <div>
+                            <b style="font-size: 15px;">
+                                1. Enter your shipping information
+                            </b>
+                            <small class="text-primary d-block" style="font-size: 12px;">
+                                (** You are browsing
+                                <b>
+                                    {{
+                                        $user->supplier_id == 1 ? 'Virgin Farms' :
+                                        ($user->supplier_id == 2 ? 'Dutch' :
+                                        ($user->supplier_id == 4 ? 'Farms-Direct' : 'Special and Seasonal'))
+                                    }}
+                                </b> flowers)
                             </small>
-                            <label class="form-check-label float-right mt-2 ml-2 text-danger">Ship-To Address
-                                 <a target="_blank" class="btn btn-icon" href="{{route('shipping.address.index')}}"
-                                    title="@lang('Add New Address')" data-toggle="tooltip" data-placement="top"><i
-                                         class="fas fa-plus-circle "></i>
-                                 </a>
+                        </div>
 
-                                 <select class="form-control form-control-md" id="changeAddress"
-                                         title="Where do you want your product to be shipped?"
-                                         data-trigger="hover"
-                                         data-toggle="tooltip"
-                                         style="background-color: beige"
-                                 >
-                                     <option selected value="0">Default Address</option>
-                                     @foreach($address as $add)
-                                         <option
-                                             {{$user->address_id == $add->id ? 'selected' : '' }} value="{{$add->id}}">{{$add->address}}</option>
-                                     @endforeach
-                                 </select>
-                             </label>
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                            <label class="form-check-label float-right mt-2 text-danger" title="{{$user->carrier_id}}">Select Carrier
-                                 <select class="form-control form-control-md" id="changeCarrier"
-                                         title="Click to change carrier how you want to ship the items?"
-                                         data-trigger="hover"
-                                         data-toggle="tooltip"
-                                         style="background-color: aliceblue"
-                                 >
-                                     <option hidden value="">Select Shipping Carrier </option>
+                            <div>
+                                <small class="text-danger d-block">Carrier</small>
+                                <select class="form-control form-control-sm"
+                                        id="changeCarrier"
+                                        style="min-width: 140px; background-color: aliceblue;">
                                     @foreach($carriers AS $key => $name)
-                                         <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}> {{$name}} </option>
-                                     @endforeach
-                                 </select>
-                             </label>
+                                        <option value="{{$key}}" {{ $user->carrier_id == $key ? 'selected' : '' }}>
+                                            {{$name}}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                        </b>
-                    </span>
+                            <div>
+                                <small class="text-danger d-block">Ship-To</small>
+                                <div class="d-flex align-items-center">
+                                    <select class="form-control form-control-sm"
+                                            id="changeAddress"
+                                            style="min-width: 160px; background-color: beige;">
+                                        <option value="0">Default</option>
+                                        @foreach($address as $add)
+                                            <option {{$user->address_id == $add->id ? 'selected' : '' }}
+                                                    value="{{$add->id}}">
+                                                {{$add->address}}
+                                            </option>
+                                        @endforeach
+                                    </select>
 
+                                    <a target="_blank"
+                                       href="{{route('shipping.address.index')}}"
+                                       class="ml-1 text-success"
+                                       title="Add New">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                     <div class="row my-2 flex-md-row flex-column-reverse">
                         <div class="col-md-12 col-sm-12 mt-md-0 mt-1">
                             <form action="" method="GET" id="filters-form" class="border-bottom-light">
-                                <div class="input-group custom-search-form">
+                                <div class="input-group custom-search-form mobile-compact">
 {{--                                    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>--}}
                                     <select class="form-control form-control-md mr-2" id="add-on-order" style="border:3px solid #cccccc; border-style:dashed"
                                             title="Choose an order to edit, or select 'Add New Order' to proceed?"
