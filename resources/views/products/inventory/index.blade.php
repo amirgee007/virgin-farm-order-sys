@@ -1313,7 +1313,7 @@
 
             swal({
                 title: "📅 Switch Ship Date?",
-                text: "This item is available on another shipping date. Would you like to proceed?",
+                text: "This item is available for a later shipping date. You can still proceed—would you like to continue?",
                 icon: "info",
                 buttons: {
                     cancel: "No",
