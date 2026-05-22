@@ -536,4 +536,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'as' => 'generate.report',
         'uses' => 'ReportsController@generateReport'
     ]);
+
+    Route::get('/vf-reportings', [
+        'as' => 'vf-reportings.index',
+        'uses' => 'ReportsController@vfReportings',
+        'middleware' => 'permission:manage.reportings'
+    ]);
 });

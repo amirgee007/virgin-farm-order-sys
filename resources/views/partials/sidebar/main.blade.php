@@ -104,6 +104,16 @@
                 </ul>
             </li>
             @endpermission
+
+            @permission('manage.reportings')
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('vf-reportings*') ? 'active' : ''  }}" href="{{ route('vf-reportings.index') }}">
+                    <i class="fas fa-chart-line"></i>
+                    <span>@lang('VF Reportings')</span>
+                </a>
+            </li>
+            @endpermission
+
             @permission('manage.promo.codes')
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('promo-codes*') ? 'active' : ''  }}" href="{{ route('promo_codes.index') }}">
@@ -217,4 +227,3 @@
         </ul>
     </div>
 </nav>
-
