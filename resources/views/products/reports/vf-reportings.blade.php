@@ -153,7 +153,7 @@
 
                     <div class="notes-success">
                         <p>
-                            Total Items: <b>{{ $reportItems->count() }}</b> |
+                            Total Orders: <b>{{ count($reportItems) }}</b> |
                             Total Sales: <b>${{ number_format($reportItems->sum('total_sales'), 2) }}</b>
                         </p>
                     </div>

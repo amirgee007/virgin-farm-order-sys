@@ -76,7 +76,7 @@
 
     {{-- Summary --}}
     <div class="summary-box">
-        Total Items: <strong>{{ $reportItems->count() }}</strong>
+        Total Orders: <strong>{{ count($reportItems) }}</strong>
         &nbsp; | &nbsp;
         Total Sales:
         <strong>${{ number_format($reportItems->sum('total_sales'), 2) }}</strong>

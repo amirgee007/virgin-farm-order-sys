@@ -19,7 +19,7 @@ class ReportsController extends Controller
 
     public function vfReportings(Request $request)
     {
-        $search = trim((string) $request->get('search', ''));
+        $search = trim((string)$request->get('search', ''));
         $period = $request->get('period', 'monthly');
         $salesRep = $request->get('sales_rep');
         $sort = $request->get('sort', 'most_sold');
@@ -32,6 +32,10 @@ class ReportsController extends Controller
         );
 
         $query = $this->soldItemsReportQuery($search, $salesRep, $dateIn, $dateOut, $sort);
+
+        $totalOrders = DB::query()
+            ->fromSub(clone $query, 'report_items')
+            ->count();
 
         $filters = [
             'search' => $search,
@@ -47,6 +51,7 @@ class ReportsController extends Controller
         unset($salesReps[0]);
 
         if (in_array($export, ['pdf', 'excel'], true)) {
+
             $reportItems = $query->get();
             $fileName = 'VF-Reportings-' . $dateIn . '-to-' . $dateOut;
 
@@ -98,7 +103,8 @@ class ReportsController extends Controller
             'suppliers',
             'salesReps',
             'periods',
-            'sortOptions'
+            'sortOptions',
+            'totalOrders'
         ));
     }
 
@@ -180,6 +186,7 @@ class ReportsController extends Controller
 
     public function generateReport(Request $request)
     {
+        #This is from products page Reports.
         $validated = $request->validate([
             'columns' => 'required|array',
             'date_in' => 'required|date',
@@ -216,6 +223,9 @@ class ReportsController extends Controller
         if ($supplier)
             $query->where('products.supplier_id', $supplier);
 
+        $totalOrders = DB::query()
+            ->fromSub(clone $query, 'report_items')
+            ->count();
 //            ->orderBy('products.product_text') // Then sort by product_text
         $data = $query->get(array_merge($columnsWithTableNames, ['categories.description as category_name', 'product_quantities.is_special'])); // Include category_name in the result
 
