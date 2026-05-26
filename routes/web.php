@@ -97,7 +97,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('product-groups', \Vanguard\Http\Controllers\Web\ProductGroupController::class);
     Route::get('/products/search-for-group', [ProductsController::class, 'searchForGroup']);
 
-    
+
     Route::get('/inventory/alt-search', [ProductsController::class, 'altSearch'])
         ->name('inventory.altSearch');
 });
@@ -532,9 +532,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     ]);
 
 
-    Route::post('/generate-report', [
-        'as' => 'generate.report',
-        'uses' => 'ReportsController@generateReport'
+    Route::post('/generate-products-report', [
+        'as' => 'generate.products.report',
+        'uses' => 'ReportsController@generateProductsReport'
     ]);
 
     Route::get('/vf-reportings', [

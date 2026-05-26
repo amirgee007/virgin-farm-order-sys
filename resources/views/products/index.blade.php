@@ -677,7 +677,7 @@
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <form id="generateReportForm" method="POST" action="{{ route('generate.report') }}">
+                    <form id="generateReportForm" method="POST" action="{{ route('generate.products.report') }}">
                         @csrf
 
                         <div class="form-group">

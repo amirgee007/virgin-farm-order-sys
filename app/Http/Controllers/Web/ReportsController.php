@@ -184,7 +184,7 @@ class ReportsController extends Controller
         };
     }
 
-    public function generateReport(Request $request)
+    public function generateProductsReport(Request $request)
     {
         #This is from products page Reports.
         $validated = $request->validate([
@@ -223,9 +223,13 @@ class ReportsController extends Controller
         if ($supplier)
             $query->where('products.supplier_id', $supplier);
 
-        $totalOrders = DB::query()
-            ->fromSub(clone $query, 'report_items')
-            ->count();
+        $totalOrders = (clone $query)
+            ->distinct()
+            ->count('product_quantities.id');
+
+//        $totalOrders = DB::query()
+//            ->fromSub(clone $query, 'report_items')
+//            ->count();
 //            ->orderBy('products.product_text') // Then sort by product_text
         $data = $query->get(array_merge($columnsWithTableNames, ['categories.description as category_name', 'product_quantities.is_special'])); // Include category_name in the result
 
