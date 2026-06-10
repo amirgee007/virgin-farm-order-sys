@@ -79,7 +79,7 @@
         Total Orders: <strong>{{ count($reportItems) }}</strong>
         &nbsp; | &nbsp;
         Total Sales:
-        <strong>${{ number_format($reportItems->sum('total_sales'), 2) }}</strong>
+        <strong>${{ number_format($totalSales ?? $reportItems->sum('total_sales'), 2) }}</strong>
     </div>
 
     @include('products.reports._vf-reportings-table', [

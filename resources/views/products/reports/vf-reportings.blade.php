@@ -154,7 +154,7 @@
                     <div class="notes-success">
                         <p>
                             Total Orders: <b>{{ @$totalOrders }}</b> |
-                            Total Sales: <b>${{ number_format($reportItems->sum('total_sales'), 2) }}</b>
+                            Total Sales: <b>${{ number_format($totalSales, 2) }}</b>
                         </p>
                     </div>
 

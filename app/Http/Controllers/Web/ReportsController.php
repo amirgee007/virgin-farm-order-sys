@@ -37,6 +37,10 @@ class ReportsController extends Controller
             ->fromSub(clone $query, 'report_items')
             ->count();
 
+        $totalSales = DB::query()
+            ->fromSub(clone $query, 'report_items')
+            ->sum('total_sales');
+
         $filters = [
             'search' => $search,
             'period' => $period,
@@ -66,7 +70,8 @@ class ReportsController extends Controller
                 'reportItems',
                 'filters',
                 'suppliers',
-                'salesReps'
+                'salesReps',
+                'totalSales'
             ))->setPaper('a4', 'landscape');
 
             return $pdf->download("{$fileName}.pdf");
@@ -104,7 +109,8 @@ class ReportsController extends Controller
             'salesReps',
             'periods',
             'sortOptions',
-            'totalOrders'
+            'totalOrders',
+            'totalSales'
         ));
     }
 
