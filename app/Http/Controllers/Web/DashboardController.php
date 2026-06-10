@@ -6,10 +6,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Vanguard\Http\Controllers\Controller;
-use Vanguard\Models\Carrier;
 use Vanguard\Models\Cart;
 use Vanguard\Models\Order;
-use Vanguard\Models\ProductQuantity;
 use DB;
 use Vanguard\Models\Setting;
 
@@ -58,7 +56,7 @@ class DashboardController extends Controller
         return view('dashboard.index', compact('orders', 'futureInventory', 'lowInventory'));
     }
 
-    public function updateSupplier(Request $request)
+    public function updateSupplier(Request $request, ProductsController $productsController)
     {
         $user = auth()->user();
         $oldSupplier = $user->supplier_id;
@@ -81,6 +79,18 @@ class DashboardController extends Controller
                 'error' => true,
                 'message' => 'Cannot switch Farm-Direct while your cart has other items. Please empty your cart first.',
             ], 400); // 400 Bad Request
+        }
+
+        $requestedShipDate = $request->input('date_shipped', $user->last_ship_date);
+        $nextShipDate = $productsController->getShipDateAfterSupplierSwitch($user, $supplier, $requestedShipDate);
+
+        if ($oldSupplier != $supplier && !$request->boolean('confirm_date_change') && $requestedShipDate && $nextShipDate && $requestedShipDate !== $nextShipDate) {
+            return response()->json([
+                'requires_confirmation' => true,
+                'message' => "Switching supplier will change your ship date from {$requestedShipDate} to {$nextShipDate}. Do you want to continue?",
+                'current_date' => $requestedShipDate,
+                'new_date' => $nextShipDate,
+            ]);
         }
 
         // Store the selected supplier in the user preferences

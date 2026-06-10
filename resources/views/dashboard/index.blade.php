@@ -288,31 +288,67 @@
     <script>
         $(document).ready(function () {
             $('.supplier-card').click(function () {
+                const selectedCard = $(this);
+                const previousCard = $('.supplier-card.selected');
+
                 $('.supplier-card').removeClass('selected');
-                $(this).addClass('selected');
+                selectedCard.addClass('selected');
 
                 var selectedSupplier = $('.supplier-card.selected').data('supplier');
 
                 if (selectedSupplier) {
-                    $.ajax({
-                        url: '{{ route('update.supplier') }}',
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                            supplier: selectedSupplier
-                        },
-                        success: function (response) {
-                            toastr.success(response.message);
-                            window.location.href = response.href;
-                        },
-                        error: function () {
-                            toastr.error('Something went wrong please check with admin.');
-                        },
-                    });
+                    updateSupplier(selectedSupplier, previousCard, selectedCard, false);
                 } else {
                     alert('Please select a supplier.');
                 }
             });
+
+            function updateSupplier(selectedSupplier, previousCard, selectedCard, confirmDateChange) {
+                $.ajax({
+                    url: '{{ route('update.supplier') }}',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        supplier: selectedSupplier,
+                        confirm_date_change: confirmDateChange ? 1 : 0
+                    },
+                    success: function (response) {
+                        if (response.requires_confirmation) {
+                            swal({
+                                title: "Switch Ship Date?",
+                                text: response.message,
+                                icon: "info",
+                                buttons: {
+                                    cancel: "No",
+                                    confirm: "Yes, Proceed"
+                                }
+                            }).then((willContinue) => {
+                                if (willContinue) {
+                                    updateSupplier(selectedSupplier, previousCard, selectedCard, true);
+                                } else {
+                                    selectedCard.removeClass('selected');
+                                    previousCard.addClass('selected');
+                                }
+                            });
+
+                            return;
+                        }
+
+                        toastr.success(response.message);
+                        window.location.href = response.href;
+                    },
+                    error: function (xhr) {
+                        selectedCard.removeClass('selected');
+                        previousCard.addClass('selected');
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            toastr.error(xhr.responseJSON.message);
+                        } else {
+                            toastr.error('Something went wrong please check with admin.');
+                        }
+                    },
+                });
+            }
         });
     </script>
 @stop

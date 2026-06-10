@@ -1006,23 +1006,45 @@
             const selectedInput = $(this);
             const selectedSupplier = selectedInput.val();
 
+            submitSupplierChange(selectedInput, selectedSupplier, false);
+        });
+
+        function submitSupplierChange(selectedInput, selectedSupplier, confirmDateChange) {
             $.ajax({
                 url: '{{ route('update.supplier') }}',
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    supplier: selectedSupplier
+                    supplier: selectedSupplier,
+                    date_shipped: $('#date_shipped').val(),
+                    confirm_date_change: confirmDateChange ? 1 : 0
                 },
                 success: function (response) {
+                    if (response.requires_confirmation) {
+                        swal({
+                            title: "Switch Ship Date?",
+                            text: response.message,
+                            icon: "info",
+                            buttons: {
+                                cancel: "No",
+                                confirm: "Yes, Proceed"
+                            }
+                        }).then((willContinue) => {
+                            if (willContinue) {
+                                submitSupplierChange(selectedInput, selectedSupplier, true);
+                            } else {
+                                revertSupplierSelection(selectedInput);
+                            }
+                        });
+
+                        return;
+                    }
+
                     toastr.success(response.message);
                     window.location.href = response.href;
                 },
                 error: function (xhr) {
-                    // Revert to previous checked radio button
-                    if (previousChecked && previousChecked.length) {
-                        previousChecked.prop('checked', true);
-                    }
-                    selectedInput.prop('checked', false); // Uncheck the one that caused the error
+                    revertSupplierSelection(selectedInput);
 
                     if (xhr.responseJSON && xhr.responseJSON.message) {
                         toastr.error(xhr.responseJSON.message);
@@ -1031,7 +1053,21 @@
                     }
                 }
             });
-        });
+        }
+
+        function revertSupplierSelection(selectedInput) {
+            if (previousChecked && previousChecked.length) {
+                previousChecked.prop('checked', true);
+            }
+
+            selectedInput.prop('checked', false);
+
+            const previousValue = previousChecked && previousChecked.length ? previousChecked.val() : null;
+            if (previousValue) {
+                $('input[name="radioGroupDesktop"][value="' + previousValue + '"]').prop('checked', true);
+                $('input[name="radioGroupMobile"][value="' + previousValue + '"]').prop('checked', true);
+            }
+        }
 
         previousCarrier = $('#changeCarrier').val();
         $('#changeCarrier').on('change', function () {
@@ -1334,7 +1370,8 @@
                     type: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        supplier: supplier
+                        supplier: supplier,
+                        confirm_date_change: 1
                     },
                     success: function (response) {
 

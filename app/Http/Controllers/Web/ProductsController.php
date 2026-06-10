@@ -353,7 +353,46 @@ class ProductsController extends Controller
         ));
     }
 
-    private function getInventoryBaseQuery($user, $date_shipped = null)
+    public function getShipDateAfterSupplierSwitch($user, $supplier, $dateShipped)
+    {
+        $supplierUser = clone $user;
+        $supplierUser->supplier_id = $supplier;
+        $supplierUser->carrier_id = $this->getCarrierAfterSupplierSwitch($user, $supplier);
+
+        $query = $this->getInventoryBaseQuery($supplierUser);
+        $highlightedDates = $this->getHighlightedDates($query, $supplierUser->carrier_id);
+        $highlightedDates = array_values(array_filter($highlightedDates));
+        sort($highlightedDates);
+
+        $dateShipped = $dateShipped ?: $user->last_ship_date;
+        $firstAvailableDate = $highlightedDates[0] ?? null;
+
+        if (!$dateShipped || !in_array($dateShipped, $highlightedDates, true)) {
+            $dateShipped = $firstAvailableDate;
+        }
+
+        $now = now();
+        if ($dateShipped == $now->toDateString() && $now->format('H:i') >= '15:30') {
+            $dateShipped = $now->copy()->addDay()->toDateString();
+        }
+
+        return $dateShipped;
+    }
+
+    private function getCarrierAfterSupplierSwitch($user, $supplier)
+    {
+        if ($supplier == 4) {
+            return 20;
+        }
+
+        if ($user->supplier_id == 4) {
+            return $user->carrier_id_default;
+        }
+
+        return $user->carrier_id ?: $user->carrier_id_default;
+    }
+
+    public function getInventoryBaseQuery($user, $date_shipped = null)
     {
         return Product::join('product_quantities', 'product_quantities.product_id', '=', 'products.id')
             ->where('product_quantities.quantity', '>', 0)
@@ -373,13 +412,13 @@ class ProductsController extends Controller
             ->distinct('products.id');
     }
 
-    public function getHighlightedDates($query)
+    public function getHighlightedDates($query, $carrierId = null)
     {
         $highlightedDates = [];
 
         // Check current user's carrier ID
         $user = itsMeUser();
-        $carrierId = $user ? $user->carrier_id : null;
+        $carrierId = $carrierId ?: ($user ? $user->carrier_id : null);
 
         $isCarrierVF = $carrierId == 17;
         $fedexCarrierIds = [19, 20, 23];
