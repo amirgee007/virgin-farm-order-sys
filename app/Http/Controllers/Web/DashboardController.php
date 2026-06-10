@@ -62,12 +62,13 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $oldSupplier = $user->supplier_id;
+        $supplier = (int) $request->input('supplier');
 
         // Check if the user has items in the cart
         $cartExists = Cart::mineCart()->exists();
 
         // If the cart has items, block the supplier switch
-        if ($cartExists && $oldSupplier == 4 && $request->input('supplier') != 4) {
+        if ($cartExists && $oldSupplier == 4 && $supplier != 4) {
             return response()->json([
                 'error' => true,
                 'message' => 'Cannot switch supplier while your cart has items. Please empty your cart first.',
@@ -75,7 +76,7 @@ class DashboardController extends Controller
         }
 
         // If the cart has items, block the supplier switch
-        if ($cartExists && $request->input('supplier') == 4) {
+        if ($cartExists && $oldSupplier != 4 && $supplier == 4) {
             return response()->json([
                 'error' => true,
                 'message' => 'Cannot switch Farm-Direct while your cart has other items. Please empty your cart first.',
@@ -83,9 +84,8 @@ class DashboardController extends Controller
         }
 
         // Store the selected supplier in the user preferences
-        $user = auth()->user();
-        $user->supplier_id = $request->input('supplier');
-        if ($request->input('supplier') == 4) {
+        $user->supplier_id = $supplier;
+        if ($supplier == 4) {
             $user->carrier_id = 20; #change user carrier to this one.
         } elseif($oldSupplier == 4)
             $user->carrier_id = $user->carrier_id_default;
