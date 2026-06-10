@@ -14,7 +14,7 @@
     <td class="align-middle" colspan="3">
         {{ $inventory->supplier_name }}
     </td>
-    <td class="align-middle" colspan="3">
-        {{ $inventory->updated_at }}
+    <td class="align-middle" colspan="3" title="{{ diff4Human($inventory->updated_at) }}">
+        {{ $inventory->created_at }}
     </td>
 </tr>

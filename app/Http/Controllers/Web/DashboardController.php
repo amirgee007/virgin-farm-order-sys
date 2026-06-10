@@ -40,6 +40,7 @@ class DashboardController extends Controller
     SELECT pq.date_in,
            pq.date_out,
            MAX(pq.updated_at) AS updated_at,
+           MAX(pq.created_at) AS created_at,
            p.supplier_id,
            CASE
                WHEN p.supplier_id = 1 THEN "VF"
