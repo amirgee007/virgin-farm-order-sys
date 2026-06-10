@@ -195,7 +195,7 @@ class ProductsController extends Controller
         $version = cache()->get('inventory_version', 1);
         $cacheKey = "hd_v{$version}_{$user->id}_{$user->carrier_id}_{$user->supplier_id}";
 
-        Log::notice($cacheKey. ' cache has been set for the user to make it fast');
+        Log::notice($cacheKey . ' cache has been set for the user to make it fast');
         #600 seconds (10 min)
         $highlightedDates = cache()->remember($cacheKey, 600, function () use ($query) {
             $dates = $this->getHighlightedDates($query);
@@ -900,16 +900,20 @@ class ProductsController extends Controller
 
             // Update or create product quantity todo
             if ($data['quantity'] > 0)
-                ProductQuantity::updateOrCreate(
-                    [
-                        'product_id' => $product->id,
-                        'item_no' => $product->item_no,
-                        'date_in' => $this->dateIn,
-                        'date_out' => $this->dateOut,
-                        'is_special' => $data['is_special'],
-                    ],
-                    $data
-                );
+                if ($data['quantity'] > 0) {
+                    ProductQuantity::updateOrCreate(
+                        [
+                            'product_id' => $product->id,
+                            'item_no' => $product->item_no,
+                            'date_in' => $this->dateIn,
+                            'date_out' => $this->dateOut,
+                            'is_special' => $data['is_special'],
+                        ],
+                        array_merge($data, [
+                            'created_at' => now(),
+                        ])
+                    );
+                }
         } else {
             // Log the missing product and add it to the missing array
             $missing[] = $cleaned_string;
