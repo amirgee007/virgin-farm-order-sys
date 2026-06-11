@@ -153,7 +153,7 @@
 
                     <div class="notes-success">
                         <p>
-                            Total Orders: <b>{{ @$totalOrders }}</b> |
+                            Total Items Ordered: <b>{{ @$totalOrders }}</b> |
                             Total Sales: <b>${{ number_format($totalSales, 2) }}</b>
                         </p>
                     </div>
