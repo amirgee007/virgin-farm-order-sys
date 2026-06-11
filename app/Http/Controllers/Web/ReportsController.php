@@ -119,7 +119,7 @@ class ReportsController extends Controller
     {
         $query = DB::table('order_items')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->leftJoin('products', 'products.id', '=', 'order_items.product_id')
+            ->leftJoin('products', 'products.item_no', '=', 'order_items.item_no')
             ->leftJoin('categories', 'categories.category_id', '=', 'products.category_id')
             ->whereDate('orders.date_shipped', '>=', $dateIn)
             ->whereDate('orders.date_shipped', '<=', $dateOut)
