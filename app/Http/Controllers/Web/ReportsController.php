@@ -35,7 +35,7 @@ class ReportsController extends Controller
 
         $totalOrders = DB::query()
             ->fromSub(clone $query, 'report_items')
-            ->count();
+            ->sum('order_count');
 
         $totalSales = DB::query()
             ->fromSub(clone $query, 'report_items')
@@ -71,6 +71,7 @@ class ReportsController extends Controller
                 'filters',
                 'suppliers',
                 'salesReps',
+                'totalOrders',
                 'totalSales'
             ))->setPaper('a4', 'landscape');
 
