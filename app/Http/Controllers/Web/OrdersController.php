@@ -32,6 +32,7 @@ class OrdersController extends Controller
         #for clients show only client but for admin show ALL.
 
         $salesReps = getSalesReps(); #sales_reps All as default
+        $salesRepIds = getSalesReps(true);
 
         #its just for custom users to login in accounts.
         if (myRoleName() == 'SalesRep') {
@@ -41,6 +42,18 @@ class OrdersController extends Controller
             $salesReps = array_filter($salesReps, function ($rep) use ($sales_rep) {
                 return $rep === $sales_rep;
             });
+        }
+
+        $salesRepName = null;
+        $salesRepId = null;
+        if ($sales_rep && $sales_rep !== '0') {
+            if (is_numeric($sales_rep)) {
+                $salesRepId = (int) $sales_rep;
+                $salesRepName = array_search($salesRepId, $salesRepIds, true) ?: User::whereKey($salesRepId)->value('sales_rep');
+            } else {
+                $salesRepName = $sales_rep;
+                $salesRepId = $salesRepIds[$salesRepName] ?? null;
+            }
         }
 
 
@@ -64,8 +77,16 @@ class OrdersController extends Controller
             $query->where('user_id', $user);
         }
 
-        if ($sales_rep) {
-            $query->orWhere('sales_rep', $sales_rep);
+        if ($salesRepName || $salesRepId) {
+            $query->where(function ($q) use ($salesRepName, $salesRepId) {
+                if ($salesRepName) {
+                    $q->where('sales_rep', $salesRepName);
+                }
+
+                if ($salesRepId) {
+                    $q->orWhere('user_id', $salesRepId);
+                }
+            });
         }
 
         if ($yesId) {

@@ -413,9 +413,20 @@ function itsMeUser()
     return \Vanguard\User::find(auth()->id());
 }
 
-function getSalesReps()
+function getSalesReps($withIds = false)
 {
-    #if any change plz check this too 1,2,3 getCubeSizeTax
+    if ($withIds) {
+        return [
+            'Esteban' => 10,
+            'Joe' => 41,
+            'Mario' => 17,
+            'Nestor' => 18,
+            'Peter' => 0,
+            'Robert' => 16,
+            'Adele' => 417,
+        ];
+    }
+
     return [
         '0' => 'Indicate Sales Representative',
         'Esteban' => 'Esteban',
@@ -427,7 +438,6 @@ function getSalesReps()
         'Adele' => 'Adele',
     ];
 }
-
 
 /**
  * Get the applicable promo code and discount amount for a user and total.
