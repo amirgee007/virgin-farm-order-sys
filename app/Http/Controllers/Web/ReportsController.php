@@ -186,7 +186,13 @@ class ReportsController extends Controller
             'daily' => [$now->toDateString(), $now->toDateString()],
             'weekly' => [$now->copy()->startOfWeek()->toDateString(), $now->copy()->endOfWeek()->toDateString()],
             'quarterly' => [$now->copy()->startOfQuarter()->toDateString(), $now->copy()->endOfQuarter()->toDateString()],
-            'yearly' => [$now->copy()->startOfYear()->toDateString(), $now->copy()->endOfYear()->toDateString()],
+            'yearly' => (function () use ($now) {
+                // Fiscal year: Nov 1 – Oct 31
+                $fiscalStart = $now->month >= 11
+                    ? $now->copy()->month(11)->startOfMonth()
+                    : $now->copy()->subYear()->month(11)->startOfMonth();
+                return [$fiscalStart->toDateString(), $fiscalStart->copy()->addYear()->subDay()->toDateString()];
+            })(),
             default => [$now->copy()->startOfMonth()->toDateString(), $now->copy()->endOfMonth()->toDateString()],
         };
     }
