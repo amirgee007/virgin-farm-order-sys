@@ -328,6 +328,72 @@ class WishListController extends Controller
         }
     }
 
+    public function saveDecisions(Request $request, $id)
+    {
+        try {
+            if (!in_array(myRoleName(), ['Admin', 'SalesRep'])) {
+                abort(403);
+            }
+
+            $wishList = WishList::with('items')->findOrFail($id);
+
+            if (myRoleName() === 'SalesRep' && $wishList->sales_rep !== auth()->user()->sales_rep) {
+                abort(403);
+            }
+
+            $decisions = $request->input('decisions', []);
+
+            foreach ($wishList->items as $item) {
+                $row = $decisions[$item->id] ?? null;
+                if (!$row) {
+                    continue;
+                }
+
+                $status = in_array($row['approval_status'] ?? null, ['pending', 'approved', 'rejected'], true)
+                    ? $row['approval_status']
+                    : 'pending';
+
+                $item->update([
+                    'approval_status' => $status,
+                    'quoted_price'    => is_numeric($row['quoted_price'] ?? null) ? $row['quoted_price'] : null,
+                    'admin_note'      => isset($row['admin_note']) ? mb_substr((string) $row['admin_note'], 0, 500) : null,
+                ]);
+            }
+
+            $this->recalculateWishListStatus($wishList);
+
+            session()->flash('success', 'Decisions saved.');
+        } catch (\Exception $ex) {
+            Log::error('Error in saveDecisions: ' . $ex->getMessage());
+            session()->flash('app_error', 'Something went wrong saving decisions.');
+        }
+
+        return back();
+    }
+
+    private function recalculateWishListStatus(WishList $wishList): void
+    {
+        if ($wishList->status === 'closed') {
+            return;
+        }
+
+        $wishList->load('items');
+        $items = $wishList->items;
+
+        if ($items->isEmpty()) {
+            return;
+        }
+
+        $pending = $items->where('approval_status', 'pending')->count();
+        $touched = $items->whereIn('approval_status', ['approved', 'rejected'])->count();
+
+        if ($touched > 0 && $wishList->status !== 'quoted') {
+            $wishList->update(['status' => 'quoted']);
+        } elseif ($touched === 0 && $pending === $items->count()) {
+            $wishList->update(['status' => 'submitted']);
+        }
+    }
+
     public function updateStatus(Request $request, $id)
     {
         try {

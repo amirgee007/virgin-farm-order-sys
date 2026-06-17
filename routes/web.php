@@ -52,6 +52,7 @@ Route::prefix('wish-list')->name('wishlist.')->middleware('auth')->group(functio
     Route::get('manage', [WishListController::class, 'manage'])->name('manage');
     Route::get('{id}/show', [WishListController::class, 'show'])->name('show')->whereNumber('id');
     Route::post('{id}/status', [WishListController::class, 'updateStatus'])->name('status')->whereNumber('id');
+    Route::post('{id}/decisions', [WishListController::class, 'saveDecisions'])->name('decisions')->whereNumber('id');
 });
 
 Route::post('/check-popup-date', [\Vanguard\Http\Controllers\Web\SettingsController::class, 'checkPopupDate'])->name('check-popup-date');

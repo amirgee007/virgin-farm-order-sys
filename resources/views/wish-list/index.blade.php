@@ -34,6 +34,7 @@
                             <th>Request Date</th>
                             <th>Submitted</th>
                             <th>Notes</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,10 +62,17 @@
                                 {{ $wl->submitted_at ? $wl->submitted_at->format('Y-m-d H:i') : '-' }}
                             </td>
                             <td class="align-middle">{{ \Illuminate\Support\Str::limit((string) $wl->notes, 80) }}</td>
+                            <td class="align-middle">
+                                @if($wl->status !== 'draft')
+                                    <a href="{{ route('wishlist.show', $wl->id) }}" class="btn btn-icon" title="View">
+                                        <i class="fas fa-eye text-primary"></i>
+                                    </a>
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-4">
+                            <td colspan="7" class="text-center text-muted py-4">
                                 No wish lists yet.
                             </td>
                         </tr>
