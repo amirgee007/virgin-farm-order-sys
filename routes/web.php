@@ -2,6 +2,7 @@
 
 use Vanguard\Http\Controllers\Web\ProductsController;
 use Vanguard\Http\Controllers\Web\CartController;
+use Vanguard\Http\Controllers\Web\WishListController;
 use Vanguard\Http\Controllers\Web\TestAmirController;
 use Vanguard\Http\Controllers\Web\PromoCodeController;
 use Vanguard\Http\Controllers\Web\ColorClassController;
@@ -36,6 +37,22 @@ Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name(
 Route::post('update-cart-notes', [CartController::class, 'saveOrderNotes'])->name('cart.save.notes'); #done DB
 
 Route::post('/api/validate-cart-size', 'CartController@validateCartSelection');
+
+Route::prefix('wish-list')->name('wishlist.')->middleware('auth')->group(function () {
+    Route::get('/', [WishListController::class, 'view'])->name('view');
+    Route::get('browse', [WishListController::class, 'browse'])->name('browse');
+    Route::get('history', [WishListController::class, 'index'])->name('history');
+    Route::post('add', [WishListController::class, 'addToWishList'])->name('add');
+    Route::patch('qty', [WishListController::class, 'updateItemQty'])->name('qty');
+    Route::post('remove', [WishListController::class, 'removeItem'])->name('remove');
+    Route::get('empty', [WishListController::class, 'emptyWishList'])->name('empty');
+    Route::post('notes', [WishListController::class, 'saveNotes'])->name('notes');
+    Route::post('submit', [WishListController::class, 'submit'])->name('submit');
+
+    Route::get('manage', [WishListController::class, 'manage'])->name('manage');
+    Route::get('{id}/show', [WishListController::class, 'show'])->name('show')->whereNumber('id');
+    Route::post('{id}/status', [WishListController::class, 'updateStatus'])->name('status')->whereNumber('id');
+});
 
 Route::post('/check-popup-date', [\Vanguard\Http\Controllers\Web\SettingsController::class, 'checkPopupDate'])->name('check-popup-date');
 

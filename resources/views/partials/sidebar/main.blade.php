@@ -64,6 +64,15 @@
                     </li>
                     @endpermission
 
+                    @permission(['client.inventory', 'orders.manage'], false)
+                    <li class="nav-item">
+                        <a class="nav-link {{ Request::is('wish-list*') ? 'active' : ''  }}" href="{{ route('wishlist.view') }}">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Wish List</span>
+                        </a>
+                    </li>
+                    @endpermission
+
                     @permission('products.manage')
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('products/manage') ? 'active' : ''  }}" href="{{ route('products.index.manage') }}">
