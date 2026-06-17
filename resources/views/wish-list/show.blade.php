@@ -119,12 +119,41 @@
 
                                 <td class="align-middle">
                                     @if($canManage)
-                                        <input type="number"
-                                               name="decisions[{{ $item->id }}][quoted_price]"
-                                               value="{{ $item->quoted_price !== null ? $item->quoted_price : '' }}"
-                                               step="0.01" min="0"
-                                               placeholder="$"
-                                               class="form-control form-control-sm">
+                                        @php
+                                            $prod = $item->product;
+                                            $popover = '';
+                                            if ($prod) {
+                                                $fmt = fn ($v) => $v !== null ? '$'.number_format((float) $v, 2) : '-';
+                                                $popover = '<table class="table table-sm mb-0">'
+                                                    . '<tr><td>FedEx</td><td class="text-right">'.$fmt($prod->def_price_fedex).'</td></tr>'
+                                                    . '<tr><td>FOB</td><td class="text-right">'.$fmt($prod->def_price_fob).'</td></tr>'
+                                                    . '<tr><td>Hawaii</td><td class="text-right">'.$fmt($prod->def_price_hawaii).'</td></tr>'
+                                                    . '<tr><td>FedEx+</td><td class="text-right">'.$fmt($prod->def_price_fedex_2).'</td></tr>'
+                                                    . '</table>';
+                                            }
+                                        @endphp
+                                        <div class="input-group input-group-sm">
+                                            <input type="number"
+                                                   name="decisions[{{ $item->id }}][quoted_price]"
+                                                   value="{{ $item->quoted_price !== null ? $item->quoted_price : '' }}"
+                                                   step="0.01" min="0"
+                                                   placeholder="$"
+                                                   class="form-control form-control-sm">
+                                            @if($popover)
+                                                <div class="input-group-append">
+                                                    <button type="button"
+                                                            class="btn btn-light btn-sm wishlist-price-popover"
+                                                            data-toggle="popover"
+                                                            data-trigger="focus"
+                                                            data-html="true"
+                                                            data-placement="left"
+                                                            title="Default Prices"
+                                                            data-content="{{ $popover }}">
+                                                        <i class="fas fa-eye text-primary"></i>
+                                                    </button>
+                                                </div>
+                                            @endif
+                                        </div>
                                     @else
                                         {{ $item->quoted_price !== null ? '$'.number_format($item->quoted_price, 2) : '-' }}
                                     @endif
@@ -211,4 +240,15 @@
         </div>
     @endif
 
+@endsection
+
+@section('scripts')
+    <script>
+        $(function () {
+            $('[data-toggle="popover"].wishlist-price-popover').popover({
+                container: 'body',
+                html: true,
+            });
+        });
+    </script>
 @endsection

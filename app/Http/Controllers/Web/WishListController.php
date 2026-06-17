@@ -309,7 +309,7 @@ class WishListController extends Controller
     public function show($id)
     {
         try {
-            $wishList = WishList::with(['items', 'user'])->findOrFail($id);
+            $wishList = WishList::with(['items.product', 'user'])->findOrFail($id);
 
             $isAdmin = myRoleName() == 'Admin';
             $isSalesRep = myRoleName() == 'SalesRep';
