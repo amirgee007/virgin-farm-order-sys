@@ -516,6 +516,27 @@
             </label>
         </div>
 
+        {{-- Inline supplier-switch notice (replaces the swal popup) --}}
+        <div class="col-md-12" id="supplier-switch-notice" style="display:none;">
+            <div class="alert mb-2 d-flex align-items-center flex-wrap justify-content-between"
+                 style="background:#fff8e1; border:1px solid #ffe082; border-radius:6px; gap:10px;">
+                <div style="font-size:13px;">
+                    <i class="fas fa-info-circle text-warning mr-1"></i>
+                    <span id="switch-notice-supplier" style="font-weight:600;"></span>
+                    has no inventory for <b id="switch-notice-from"></b>.
+                    Next available: <b id="switch-notice-to"></b>
+                </div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button id="confirm-supplier-switch" class="btn btn-success btn-sm">
+                        Switch to <span id="switch-btn-date"></span>
+                    </button>
+                    <button id="cancel-supplier-switch" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-arrow-left"></i> Stay on current
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body mt-0 p-3">
@@ -996,6 +1017,19 @@
         // });
 
         let previousChecked = null;
+        let pendingConfirmInput    = null;
+        let pendingConfirmSupplier = null;
+
+        // Confirm: switch supplier + date
+        $(document).on('click', '#confirm-supplier-switch', function () {
+            $('#supplier-switch-notice').hide();
+            submitSupplierChange(pendingConfirmInput, pendingConfirmSupplier, true);
+        });
+
+        // Cancel: hide notice, radio already reverted
+        $(document).on('click', '#cancel-supplier-switch', function () {
+            $('#supplier-switch-notice').hide();
+        });
 
         // Capture the previously checked radio BEFORE user changes it
         $(document).on('focusin', '.form-check-input, .custom-radio-btn', function () {
@@ -1021,22 +1055,17 @@
                 },
                 success: function (response) {
                     if (response.requires_confirmation) {
-                        swal({
-                            title: "Switch Ship Date?",
-                            text: response.message,
-                            icon: "info",
-                            buttons: {
-                                cancel: "No",
-                                confirm: "Yes, Proceed"
-                            }
-                        }).then((willContinue) => {
-                            if (willContinue) {
-                                submitSupplierChange(selectedInput, selectedSupplier, true);
-                            } else {
-                                revertSupplierSelection(selectedInput);
-                            }
-                        });
+                        const supplierNames = {1: 'Virgin Farms', 2: 'Dutch Flowers', 3: 'Seasonal', 4: 'Farm-Direct'};
+                        pendingConfirmInput    = selectedInput;
+                        pendingConfirmSupplier = selectedSupplier;
 
+                        $('#switch-notice-supplier').text(supplierNames[selectedSupplier] || 'This supplier');
+                        $('#switch-notice-from').text(response.current_date);
+                        $('#switch-notice-to').text(response.new_date);
+                        $('#switch-btn-date').text(response.new_date);
+                        $('#supplier-switch-notice').show();
+
+                        revertSupplierSelection(selectedInput);
                         return;
                     }
 
