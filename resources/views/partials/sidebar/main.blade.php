@@ -49,11 +49,11 @@
                 <a href="#reports-dropdown"
                    class="nav-link"
                    data-toggle="collapse"
-                   aria-expanded="{{ Request::is('products*') ? 'true' : 'false' }}">
+                   aria-expanded="{{ (Request::is('products*') || Request::is('wish-list*')) ? 'true' : 'false' }}">
                     <i class="fa fa-chart-bar"></i>
                     <span>@lang('product.products')</span>
                 </a>
-                <ul class="{{ Request::is('products*')  ? '' : 'collapse' }} list-unstyled sub-menu" id="reports-dropdown">
+                <ul class="{{ (Request::is('products*') || Request::is('wish-list*'))  ? '' : 'collapse' }} list-unstyled sub-menu" id="reports-dropdown">
 
                     @permission('client.inventory')
                     <li class="nav-item">
