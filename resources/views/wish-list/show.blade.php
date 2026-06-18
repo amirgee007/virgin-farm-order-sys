@@ -122,7 +122,7 @@
                             @php
                                 $prod = $item->product;
                                 $stems = $item->stems ?: optional($prod)->stems;
-                                $unit  = optional($prod)->unit_of_measure;
+                                $unit  = optional(optional($prod)->stemsCount)->total;
                                 if ($canManage) {
                                     $attrs = array_filter([
                                         ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
