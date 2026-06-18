@@ -26,9 +26,15 @@ class WishListController extends Controller
             }
 
             $wishList = $this->getOrCreateDraft();
-            $items = $wishList->items()->orderByDesc('id')->get();
+            $items = $wishList->items()->with('product')->orderByDesc('id')->get();
 
-            return view('wish-list.view', compact('wishList', 'items'));
+            $pastWishLists = WishList::mine()
+                ->where('id', '!=', $wishList->id)
+                ->with('items')
+                ->orderByDesc('id')
+                ->paginate(10);
+
+            return view('wish-list.view', compact('wishList', 'items', 'pastWishLists'));
         } catch (\Exception $ex) {
             Log::error('Error in WishList view: ' . $ex->getMessage());
         }

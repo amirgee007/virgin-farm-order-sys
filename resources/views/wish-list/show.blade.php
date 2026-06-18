@@ -83,8 +83,10 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">Items ({{ $items->count() }})</h5>
                 <div>
-                    <span class="badge badge-success">{{ $approvedCount }} approved</span>
-                    <span class="badge badge-danger">{{ $rejectedCount }} rejected</span>
+                    <span class="badge badge-success">{{ $approvedCount }} available</span>
+                    @if($rejectedCount > 0)
+                        <span class="badge badge-danger">{{ $rejectedCount }} unavailable</span>
+                    @endif
                     <span class="badge badge-secondary">{{ $pendingCount }} pending</span>
                 </div>
             </div>
@@ -95,7 +97,9 @@
                     <table class="table table-bordered products-list-table align-middle">
                         <thead>
                             <tr>
-                                <th>Item #</th>
+                                @if($canManage)
+                                    <th>Item #</th>
+                                @endif
                                 <th style="width:30%">Product</th>
                                 <th>Qty</th>
                                 <th style="width:12%">Quoted Price</th>
@@ -105,15 +109,30 @@
                         </thead>
                         <tbody>
                         @forelse($items as $item)
+                            @php
+                                $prod = $item->product;
+                                $attrs = array_filter([
+                                    ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
+                                    ($item->stems ?: optional($prod)->stems) ? 'Stems: ' . ($item->stems ?: $prod->stems) : null,
+                                    optional($prod)->color ? 'Color: ' . $prod->color : null,
+                                    optional($prod)->unit_of_measure ? 'Unit: ' . $prod->unit_of_measure : null,
+                                ]);
+                            @endphp
                             <tr>
-                                <td class="align-middle">{{ (string) $item->item_no }}</td>
+                                @if($canManage)
+                                    <td class="align-middle">{{ (string) $item->item_no }}</td>
+                                @endif
                                 <td class="align-middle">
                                     @if($item->image && is_string($item->image))
                                         <img src="{{ asset('assets/img/no-image.png') }}"
                                              data-largeimg="{{ $item->image }}"
                                              class="img-thumbnail" width="35">
                                     @endif
-                                    {{ (string) $item->name }}
+                                    <strong>{{ (string) $item->name }}</strong>
+                                    @if(!empty($attrs))
+                                        <br>
+                                        <small class="text-muted">{{ implode(' | ', $attrs) }}</small>
+                                    @endif
                                 </td>
                                 <td class="align-middle">{{ (int) $item->quantity }}</td>
 
@@ -176,7 +195,7 @@
                                     @if($canManage)
                                         <select name="decisions[{{ $item->id }}][approval_status]"
                                                 class="form-control form-control-sm">
-                                            @foreach(['pending' => 'Pending', 'approved' => 'Approve', 'rejected' => 'Reject'] as $val => $label)
+                                            @foreach(['pending' => 'Pending', 'approved' => 'Available'] as $val => $label)
                                                 <option value="{{ $val }}" {{ $item->approval_status === $val ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
@@ -189,16 +208,21 @@
                                                 'rejected' => 'danger',
                                                 'pending'  => 'secondary',
                                             ][$item->approval_status] ?? 'secondary';
+                                            $decisionLabel = [
+                                                'approved' => 'Available',
+                                                'rejected' => 'Unavailable',
+                                                'pending'  => 'Pending',
+                                            ][$item->approval_status] ?? ucfirst($item->approval_status);
                                         @endphp
                                         <span class="badge badge-{{ $decisionBadge }}">
-                                            {{ ucfirst($item->approval_status) }}
+                                            {{ $decisionLabel }}
                                         </span>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted">No items.</td>
+                                <td colspan="{{ $canManage ? 6 : 5 }}" class="text-center text-muted">No items.</td>
                             </tr>
                         @endforelse
                         </tbody>

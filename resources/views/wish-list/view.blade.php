@@ -18,9 +18,6 @@
             <a href="{{ route('wishlist.browse') }}" class="btn btn-secondary btn-sm">
                 <i class="fas fa-plus"></i> Add More Items
             </a>
-            <a href="{{ route('wishlist.history') }}" class="btn btn-light btn-sm">
-                <i class="fas fa-history"></i> History
-            </a>
         </div>
         <div class="col-md-6 text-right">
             @if($items->isNotEmpty())
@@ -42,23 +39,34 @@
                 <table class="table table-bordered products-list-table">
                     <thead>
                         <tr>
-                            <th>Item #</th>
-                            <th style="width:50%">Product</th>
-                            <th style="width:14%">Quantity</th>
+                            <th style="width:55%">Product</th>
+                            <th style="width:18%">Quantity</th>
                             <th style="width:10%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     @forelse($items as $item)
+                        @php
+                            $prod = $item->product;
+                            $attrs = array_filter([
+                                ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
+                                ($item->stems ?: optional($prod)->stems) ? 'Stems: ' . ($item->stems ?: $prod->stems) : null,
+                                optional($prod)->color ? 'Color: ' . $prod->color : null,
+                                optional($prod)->unit_of_measure ? 'Unit: ' . $prod->unit_of_measure : null,
+                            ]);
+                        @endphp
                         <tr>
-                            <td class="align-middle">{{ (string) $item->item_no }}</td>
                             <td class="align-middle">
                                 @if($item->image && is_string($item->image))
                                     <img src="{{ asset('assets/img/no-image.png') }}"
                                          data-largeimg="{{ $item->image }}"
                                          class="img-thumbnail" width="35">
                                 @endif
-                                {{ (string) $item->name }}
+                                <strong>{{ (string) $item->name }}</strong>
+                                @if(!empty($attrs))
+                                    <br>
+                                    <small class="text-muted">{{ implode(' | ', $attrs) }}</small>
+                                @endif
                             </td>
                             <td class="align-middle">
                                 <form action="{{ route('wishlist.qty') }}" method="POST" class="form-inline">
@@ -86,7 +94,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-4">
+                            <td colspan="3" class="text-center text-muted py-4">
                                 Your wish list is empty.
                                 <a href="{{ route('wishlist.browse') }}">Browse products</a>
                             </td>
@@ -132,5 +140,64 @@
             @endif
         </div>
     </div>
+
+    @if(isset($pastWishLists) && $pastWishLists->count())
+        <div class="card mt-3">
+            <div class="card-body p-3">
+                <h5 class="mb-3">Past Wish Lists</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered products-list-table">
+                        <thead>
+                            <tr>
+                                <th>WL #</th>
+                                <th>Status</th>
+                                <th>Items</th>
+                                <th>Request Date</th>
+                                <th>Submitted</th>
+                                <th>Notes</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($pastWishLists as $wl)
+                            <tr>
+                                <td class="align-middle">WL-{{ $wl->id }}</td>
+                                <td class="align-middle">
+                                    @php
+                                        $statusBadge = [
+                                            'draft'     => 'secondary',
+                                            'submitted' => 'info',
+                                            'quoted'    => 'warning',
+                                            'closed'    => 'success',
+                                        ][$wl->status] ?? 'secondary';
+                                    @endphp
+                                    <span class="badge badge-{{ $statusBadge }}">{{ ucfirst($wl->status) }}</span>
+                                </td>
+                                <td class="align-middle">
+                                    {{ $wl->items->count() }} ({{ $wl->items->sum('quantity') }} qty)
+                                </td>
+                                <td class="align-middle">
+                                    {{ $wl->request_date ? $wl->request_date->format('Y-m-d') : '-' }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ $wl->submitted_at ? $wl->submitted_at->format('Y-m-d H:i') : '-' }}
+                                </td>
+                                <td class="align-middle">{{ \Illuminate\Support\Str::limit((string) $wl->notes, 80) }}</td>
+                                <td class="align-middle">
+                                    @if($wl->status !== 'draft')
+                                        <a href="{{ route('wishlist.show', $wl->id) }}" class="btn btn-icon" title="View">
+                                            <i class="fas fa-eye text-primary"></i>
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                {!! $pastWishLists->render() !!}
+            </div>
+        </div>
+    @endif
 
 @endsection
