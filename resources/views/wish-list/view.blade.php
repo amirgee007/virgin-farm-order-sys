@@ -82,7 +82,8 @@
                                 </form>
                             </td>
                             <td class="align-middle">
-                                <form action="{{ route('wishlist.remove') }}" method="POST">
+                                <form action="{{ route('wishlist.remove') }}" method="POST"
+                                      onsubmit="return confirm('Remove this item from your wish list?');">
                                     @csrf
                                     <input type="hidden" name="id" value="{{ $item->id }}">
                                     <button type="submit" class="btn btn-icon" title="Remove">

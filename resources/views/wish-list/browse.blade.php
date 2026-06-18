@@ -3,6 +3,26 @@
 @section('page-title', 'Wish List - Browse Products')
 @section('page-heading', 'Wish List - Browse Products')
 
+@section('styles')
+    <style>
+        .color-circle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 5px;
+            border: 1px solid #ccc;
+            vertical-align: middle;
+        }
+        .MIX {
+            background: conic-gradient(orange 0% 16.66%, pink 16.66% 33.33%, brown 33.33% 50%, green 50% 66.66%, blue 66.66% 83.33%, yellow 83.33% 100%);
+        }
+        .ASSORTED {
+            background: conic-gradient(red 0% 25%, yellow 25% 50%, green 50% 75%, blue 75% 100%);
+        }
+    </style>
+@endsection
+
 @section('breadcrumbs')
     <li class="breadcrumb-item text-muted">
         Add items to your Wish List. Sales will follow up with a quote.
@@ -63,7 +83,23 @@
                                      onerror="this.src='{{ asset('assets/img/no-image.png') }}'">
                                 {{ (string) $product->product_text }}
                             </td>
-                            <td class="align-middle">{{ (string) ($product->color_name ?? '-') ?: '-' }}</td>
+                            <td class="align-middle">
+                                @php
+                                    $colorName = (string) ($product->color_name ?? '');
+                                    $isSpecial = in_array($colorName, ['MIX', 'ASSORTED']);
+                                @endphp
+                                @if($colorName !== '')
+                                    <span
+                                        title="{{ $product->color_description ?? $colorName }}"
+                                        data-toggle="tooltip"
+                                        data-placement="top"
+                                        class="color-circle {{ $isSpecial ? $colorName : '' }}"
+                                        style="cursor: pointer; {{ !$isSpecial ? 'background-color: ' . strtolower($colorName) . ';' : '' }}">
+                                    </span>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="align-middle">{{ is_scalar($product->stems) ? $product->stems : '-' }}</td>
                             <form action="{{ route('wishlist.add') }}" method="POST">
                                 @csrf

@@ -50,6 +50,7 @@ class WishListController extends Controller
                 ->select([
                     'products.*',
                     'colors_class.color as color_name',
+                    'colors_class.description as color_description',
                 ])
                 ->when($search !== '', function ($q) use ($search) {
                     $q->where(function ($qq) use ($search) {
