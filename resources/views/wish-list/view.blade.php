@@ -57,11 +57,10 @@
                         @endphp
                         <tr>
                             <td class="align-middle">
-                                @if($item->image && is_string($item->image))
-                                    <img src="{{ asset('assets/img/no-image.png') }}"
-                                         data-largeimg="{{ $item->image }}"
-                                         class="img-thumbnail" width="35">
-                                @endif
+                                <img src="{{ $item->image ?: asset('assets/img/no-image.png') }}"
+                                     data-largeimg="{{ $item->image }}"
+                                     class="img-thumbnail" width="35"
+                                     onerror="this.src='{{ asset('assets/img/no-image.png') }}'">
                                 <strong>{{ (string) $item->name }}</strong>
                                 @if(!empty($inline))
                                     <small class="text-muted ml-2">({{ implode(' | ', $inline) }})</small>

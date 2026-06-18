@@ -142,11 +142,10 @@
                                     <td class="align-middle">{{ (string) $item->item_no }}</td>
                                 @endif
                                 <td class="align-middle">
-                                    @if($item->image && is_string($item->image))
-                                        <img src="{{ asset('assets/img/no-image.png') }}"
-                                             data-largeimg="{{ $item->image }}"
-                                             class="img-thumbnail" width="35">
-                                    @endif
+                                    <img src="{{ $item->image ?: asset('assets/img/no-image.png') }}"
+                                         data-largeimg="{{ $item->image }}"
+                                         class="img-thumbnail" width="35"
+                                         onerror="this.src='{{ asset('assets/img/no-image.png') }}'">
                                     <strong>{{ (string) $item->name }}</strong>
                                     @if(!empty($attrs))
                                         <small class="text-muted ml-2">({{ implode(' | ', $attrs) }})</small>
