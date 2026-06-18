@@ -46,9 +46,9 @@
                 <table class="table table-bordered products-list-table">
                     <thead>
                         <tr>
-                            <th style="width:10%">Item #</th>
                             <th style="width:50%">Product</th>
-                            <th>Unit</th>
+                            <th>Color</th>
+                            <th title="How many stems in a bunch UOM">Unit Pack</th>
                             <th style="width:12%">Quantity</th>
                             <th style="width:8%">Action</th>
                         </tr>
@@ -56,16 +56,15 @@
                     <tbody>
                     @forelse($products as $product)
                         <tr>
-                            <td class="align-middle">{{ (string) $product->item_no }}</td>
                             <td class="align-middle">
-                                @if($product->image_url && is_string($product->image_url))
-                                    <img src="{{ asset('assets/img/no-image.png') }}"
-                                         data-largeimg="{{ $product->image_url }}"
-                                         class="img-thumbnail" width="35">
-                                @endif
+                                <img src="{{ $product->image_url ?: asset('assets/img/no-image.png') }}"
+                                     data-largeimg="{{ $product->image_url }}"
+                                     class="img-thumbnail" width="35"
+                                     onerror="this.src='{{ asset('assets/img/no-image.png') }}'">
                                 {{ (string) $product->product_text }}
                             </td>
-                            <td class="align-middle">{{ is_scalar($product->unit_of_measure) ? $product->unit_of_measure : '-' }}</td>
+                            <td class="align-middle">{{ (string) ($product->color_name ?? '-') ?: '-' }}</td>
+                            <td class="align-middle">{{ is_scalar($product->stems) ? $product->stems : '-' }}</td>
                             <form action="{{ route('wishlist.add') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">

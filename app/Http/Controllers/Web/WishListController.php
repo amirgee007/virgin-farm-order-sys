@@ -46,13 +46,18 @@ class WishListController extends Controller
             $search = trim((string) $request->get('q'));
 
             $products = Product::query()
+                ->leftJoin('colors_class', 'products.color_id', '=', 'colors_class.id')
+                ->select([
+                    'products.*',
+                    'colors_class.color as color_name',
+                ])
                 ->when($search !== '', function ($q) use ($search) {
                     $q->where(function ($qq) use ($search) {
-                        $qq->where('item_no', 'like', "%{$search}%")
-                           ->orWhere('product_text', 'like', "%{$search}%");
+                        $qq->where('products.item_no', 'like', "%{$search}%")
+                           ->orWhere('products.product_text', 'like', "%{$search}%");
                     });
                 })
-                ->orderBy('product_text')
+                ->orderBy('products.product_text')
                 ->paginate(50)
                 ->withQueryString();
 
