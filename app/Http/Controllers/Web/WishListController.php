@@ -334,6 +334,52 @@ class WishListController extends Controller
         }
     }
 
+    public function customerDecisions(Request $request, $id)
+    {
+        try {
+            $wishList = WishList::with('items')->findOrFail($id);
+
+            if ($wishList->user_id !== auth()->id()) {
+                abort(403);
+            }
+
+            if (!in_array($wishList->status, ['quoted', 'confirmed'], true)) {
+                session()->flash('app_error', 'You can only respond after sales has marked items available.');
+                return back();
+            }
+
+            $decisions = $request->input('customer_decisions', []);
+            $changed = false;
+
+            foreach ($wishList->items as $item) {
+                if ($item->approval_status !== 'approved') {
+                    continue;
+                }
+
+                $choice = $decisions[$item->id] ?? null;
+                if (!in_array($choice, ['accepted', 'rejected'], true)) {
+                    continue;
+                }
+
+                $item->update([
+                    'customer_decision'   => $choice,
+                    'customer_decided_at' => now(),
+                ]);
+                $changed = true;
+            }
+
+            if ($changed) {
+                addOwnNotification('Customer responded on Wish List WL-' . $wishList->id, null);
+                session()->flash('success', 'Thanks — your response has been sent to sales.');
+            }
+        } catch (\Exception $ex) {
+            Log::error('Error in customerDecisions: ' . $ex->getMessage());
+            session()->flash('app_error', 'Something went wrong saving your response.');
+        }
+
+        return back();
+    }
+
     public function saveDecisions(Request $request, $id)
     {
         try {
@@ -404,7 +450,7 @@ class WishListController extends Controller
     {
         try {
             $request->validate([
-                'status' => 'required|in:submitted,quoted,closed',
+                'status' => 'required|in:submitted,quoted,confirmed,closed',
             ]);
 
             if (!in_array(myRoleName(), ['Admin', 'SalesRep'])) {

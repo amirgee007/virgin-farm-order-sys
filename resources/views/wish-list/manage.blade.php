@@ -46,7 +46,7 @@
                     <label class="small mb-1">Status</label>
                     <select name="status" class="form-control form-control-sm">
                         <option value="">All</option>
-                        @foreach(['submitted', 'quoted', 'closed'] as $st)
+                        @foreach(['submitted', 'quoted', 'confirmed', 'closed'] as $st)
                             <option value="{{ $st }}" {{ ($status ?? '') === $st ? 'selected' : '' }}>
                                 {{ ucfirst($st) }}
                             </option>
@@ -92,6 +92,7 @@
                                     $statusBadge = [
                                         'submitted' => 'info',
                                         'quoted'    => 'warning',
+                                        'confirmed' => 'primary',
                                         'closed'    => 'success',
                                     ][$wl->status] ?? 'secondary';
                                 @endphp

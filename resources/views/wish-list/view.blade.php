@@ -48,11 +48,11 @@
                     @forelse($items as $item)
                         @php
                             $prod = $item->product;
-                            $attrs = array_filter([
-                                ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
-                                ($item->stems ?: optional($prod)->stems) ? 'Stems: ' . ($item->stems ?: $prod->stems) : null,
-                                optional($prod)->color ? 'Color: ' . $prod->color : null,
-                                optional($prod)->unit_of_measure ? 'Unit: ' . $prod->unit_of_measure : null,
+                            $stems = $item->stems ?: optional($prod)->stems;
+                            $unit  = optional($prod)->unit_of_measure;
+                            $inline = array_filter([
+                                $stems ? 'Stems: ' . $stems : null,
+                                $unit ? 'Unit: ' . $unit : null,
                             ]);
                         @endphp
                         <tr>
@@ -63,9 +63,8 @@
                                          class="img-thumbnail" width="35">
                                 @endif
                                 <strong>{{ (string) $item->name }}</strong>
-                                @if(!empty($attrs))
-                                    <br>
-                                    <small class="text-muted">{{ implode(' | ', $attrs) }}</small>
+                                @if(!empty($inline))
+                                    <small class="text-muted ml-2">({{ implode(' | ', $inline) }})</small>
                                 @endif
                             </td>
                             <td class="align-middle">
@@ -168,6 +167,7 @@
                                             'draft'     => 'secondary',
                                             'submitted' => 'info',
                                             'quoted'    => 'warning',
+                                            'confirmed' => 'primary',
                                             'closed'    => 'success',
                                         ][$wl->status] ?? 'secondary';
                                     @endphp

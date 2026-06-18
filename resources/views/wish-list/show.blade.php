@@ -6,6 +6,13 @@
     $approvedCount = $items->where('approval_status', 'approved')->count();
     $rejectedCount = $items->where('approval_status', 'rejected')->count();
     $pendingCount  = $items->where('approval_status', 'pending')->count();
+
+    $availableItems = $items->where('approval_status', 'approved');
+    $customerRespondedCount = $availableItems->whereIn('customer_decision', ['accepted', 'rejected'])->count();
+    $customerCanRespond = !$canManage
+        && $wishList->user_id === auth()->id()
+        && $availableItems->isNotEmpty()
+        && in_array($wishList->status, ['quoted', 'confirmed'], true);
 @endphp
 
 @section('page-title', 'Wish List WL-' . $wishList->id)
@@ -29,36 +36,37 @@
     @include('partials.messages')
 
     <div class="row mb-3">
-        <div class="col-md-8">
-            <div class="card">
+        <div class="col-md-4">
+            <div class="card h-100">
                 <div class="card-body p-3">
-                    <h5>Customer</h5>
+                    <h6 class="text-muted mb-2">Customer</h6>
                     <p class="mb-1">
                         <strong>{{ optional($wishList->user)->first_name }} {{ optional($wishList->user)->last_name }}</strong>
                     </p>
-                    <p class="mb-1 text-muted">{{ optional($wishList->user)->email }}</p>
-                    <p class="mb-0 text-muted">Sales Rep: {{ (string) $wishList->sales_rep ?: '-' }}</p>
+                    <p class="mb-1 text-muted small">{{ optional($wishList->user)->email }}</p>
+                    <p class="mb-0 text-muted small">Sales Rep: {{ (string) $wishList->sales_rep ?: '-' }}</p>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card">
+            <div class="card h-100">
                 <div class="card-body p-3">
-                    <h5>Request</h5>
-                    <p class="mb-1">
+                    <h6 class="text-muted mb-2">Request</h6>
+                    <p class="mb-1 small">
                         <strong>Date:</strong>
                         {{ $wishList->request_date ? $wishList->request_date->format('Y-m-d') : '-' }}
                     </p>
-                    <p class="mb-1">
+                    <p class="mb-1 small">
                         <strong>Submitted:</strong>
                         {{ $wishList->submitted_at ? $wishList->submitted_at->format('Y-m-d H:i') : '-' }}
                     </p>
-                    <p class="mb-0">
+                    <p class="mb-0 small">
                         <strong>Status:</strong>
                         @php
                             $statusBadge = [
                                 'submitted' => 'info',
                                 'quoted'    => 'warning',
+                                'confirmed' => 'primary',
                                 'closed'    => 'success',
                             ][$wishList->status] ?? 'secondary';
                         @endphp
@@ -67,16 +75,17 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    @if($wishList->notes)
-        <div class="card mb-3">
-            <div class="card-body p-3">
-                <h6>Notes from Customer</h6>
-                <p class="mb-0">{{ (string) $wishList->notes }}</p>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body p-3">
+                    <h6 class="text-muted mb-2">Notes from Customer</h6>
+                    <p class="mb-0 small">
+                        {{ $wishList->notes ? (string) $wishList->notes : '—' }}
+                    </p>
+                </div>
             </div>
         </div>
-    @endif
+    </div>
 
     <div class="card mb-3">
         <div class="card-body p-3">
@@ -85,38 +94,48 @@
                 <div>
                     <span class="badge badge-success">{{ $approvedCount }} available</span>
                     @if($rejectedCount > 0)
-                        <span class="badge badge-danger">{{ $rejectedCount }} unavailable</span>
+                        <span class="badge badge-danger">{{ $rejectedCount }} not available</span>
                     @endif
-                    <span class="badge badge-secondary">{{ $pendingCount }} pending</span>
+                    <span class="badge badge-secondary">{{ $pendingCount }} in progress</span>
                 </div>
             </div>
 
-            <form action="{{ route('wishlist.decisions', $wishList->id) }}" method="POST">
+            <form action="{{ $canManage ? route('wishlist.decisions', $wishList->id) : route('wishlist.customer.decisions', $wishList->id) }}" method="POST">
                 @csrf
                 <div class="table-responsive">
-                    <table class="table table-bordered products-list-table align-middle">
+                    <table class="table table-bordered products-list-table align-middle {{ $canManage ? '' : 'table-sm wishlist-compact' }}">
                         <thead>
                             <tr>
                                 @if($canManage)
                                     <th>Item #</th>
                                 @endif
-                                <th style="width:30%">Product</th>
+                                <th style="width:28%">Product</th>
                                 <th>Qty</th>
                                 <th style="width:12%">Quoted Price</th>
-                                <th style="width:25%">Sales Note</th>
-                                <th style="width:18%">Decision</th>
+                                <th style="width:20%">Sales Note</th>
+                                <th style="width:14%">Sales Decision</th>
+                                <th style="width:14%">Customer Response</th>
                             </tr>
                         </thead>
                         <tbody>
                         @forelse($items as $item)
                             @php
                                 $prod = $item->product;
-                                $attrs = array_filter([
-                                    ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
-                                    ($item->stems ?: optional($prod)->stems) ? 'Stems: ' . ($item->stems ?: $prod->stems) : null,
-                                    optional($prod)->color ? 'Color: ' . $prod->color : null,
-                                    optional($prod)->unit_of_measure ? 'Unit: ' . $prod->unit_of_measure : null,
-                                ]);
+                                $stems = $item->stems ?: optional($prod)->stems;
+                                $unit  = optional($prod)->unit_of_measure;
+                                if ($canManage) {
+                                    $attrs = array_filter([
+                                        ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
+                                        $stems ? 'Stems: ' . $stems : null,
+                                        optional($prod)->color ? 'Color: ' . $prod->color : null,
+                                        $unit ? 'Unit: ' . $unit : null,
+                                    ]);
+                                } else {
+                                    $attrs = array_filter([
+                                        $stems ? 'Stems: ' . $stems : null,
+                                        $unit ? 'Unit: ' . $unit : null,
+                                    ]);
+                                }
                             @endphp
                             <tr>
                                 @if($canManage)
@@ -130,8 +149,7 @@
                                     @endif
                                     <strong>{{ (string) $item->name }}</strong>
                                     @if(!empty($attrs))
-                                        <br>
-                                        <small class="text-muted">{{ implode(' | ', $attrs) }}</small>
+                                        <small class="text-muted ml-2">({{ implode(' | ', $attrs) }})</small>
                                     @endif
                                 </td>
                                 <td class="align-middle">{{ (int) $item->quantity }}</td>
@@ -195,7 +213,7 @@
                                     @if($canManage)
                                         <select name="decisions[{{ $item->id }}][approval_status]"
                                                 class="form-control form-control-sm">
-                                            @foreach(['pending' => 'Pending', 'approved' => 'Available'] as $val => $label)
+                                            @foreach(['pending' => 'In Progress', 'approved' => 'Available', 'rejected' => 'Not Available'] as $val => $label)
                                                 <option value="{{ $val }}" {{ $item->approval_status === $val ? 'selected' : '' }}>
                                                     {{ $label }}
                                                 </option>
@@ -210,8 +228,8 @@
                                             ][$item->approval_status] ?? 'secondary';
                                             $decisionLabel = [
                                                 'approved' => 'Available',
-                                                'rejected' => 'Unavailable',
-                                                'pending'  => 'Pending',
+                                                'rejected' => 'Not Available',
+                                                'pending'  => 'In Progress',
                                             ][$item->approval_status] ?? ucfirst($item->approval_status);
                                         @endphp
                                         <span class="badge badge-{{ $decisionBadge }}">
@@ -219,10 +237,39 @@
                                         </span>
                                     @endif
                                 </td>
+
+                                <td class="align-middle">
+                                    @php
+                                        $cd = $item->customer_decision ?? 'pending';
+                                        $cdBadge = [
+                                            'accepted' => 'success',
+                                            'rejected' => 'danger',
+                                            'pending'  => 'secondary',
+                                        ][$cd] ?? 'secondary';
+                                        $cdLabel = [
+                                            'accepted' => 'Accepted',
+                                            'rejected' => 'Rejected',
+                                            'pending'  => 'Waiting',
+                                        ][$cd] ?? ucfirst($cd);
+                                    @endphp
+
+                                    @if($customerCanRespond && $item->approval_status === 'approved')
+                                        <select name="customer_decisions[{{ $item->id }}]"
+                                                class="form-control form-control-sm">
+                                            <option value="pending" {{ $cd === 'pending' ? 'selected' : '' }}>— Decide —</option>
+                                            <option value="accepted" {{ $cd === 'accepted' ? 'selected' : '' }}>Accept</option>
+                                            <option value="rejected" {{ $cd === 'rejected' ? 'selected' : '' }}>Reject</option>
+                                        </select>
+                                    @elseif($item->approval_status === 'approved')
+                                        <span class="badge badge-{{ $cdBadge }}">{{ $cdLabel }}</span>
+                                    @else
+                                        <span class="text-muted">—</span>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ $canManage ? 6 : 5 }}" class="text-center text-muted">No items.</td>
+                                <td colspan="{{ $canManage ? 7 : 6 }}" class="text-center text-muted">No items.</td>
                             </tr>
                         @endforelse
                         </tbody>
@@ -233,6 +280,16 @@
                     <div class="text-right mt-3">
                         <button type="submit" class="btn btn-success">
                             <i class="fas fa-save"></i> Save Decisions
+                        </button>
+                    </div>
+                @elseif($customerCanRespond)
+                    <div class="alert alert-info mt-3 mb-0">
+                        Sales has marked {{ $availableItems->count() }} item(s) as <strong>Available</strong>.
+                        Please <strong>Accept</strong> or <strong>Reject</strong> each one — sales will then confirm your order.
+                    </div>
+                    <div class="text-right mt-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-paper-plane"></i> Send My Response
                         </button>
                     </div>
                 @endif
@@ -247,7 +304,7 @@
                 <form action="{{ route('wishlist.status', $wishList->id) }}" method="POST" class="form-inline">
                     @csrf
                     <select name="status" class="form-control form-control-sm mr-2">
-                        @foreach(['submitted', 'quoted', 'closed'] as $st)
+                        @foreach(['submitted', 'quoted', 'confirmed', 'closed'] as $st)
                             <option value="{{ $st }}" {{ $wishList->status === $st ? 'selected' : '' }}>
                                 {{ ucfirst($st) }}
                             </option>
@@ -258,12 +315,38 @@
                     </button>
                 </form>
                 <small class="text-muted d-block mt-2">
-                    Status auto-updates to <strong>Quoted</strong> after any decision is saved. Set to <strong>Closed</strong> when the wish list is fully resolved.
+                    <strong>Quoted</strong> — sales has marked items Available.
+                    <strong>Confirmed</strong> — customer has accepted items; sales locks in the order.
+                    <strong>Closed</strong> — fully resolved.
                 </small>
+
+                @if($availableItems->isNotEmpty())
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            Customer response progress:
+                            <strong>{{ $customerRespondedCount }} / {{ $availableItems->count() }}</strong> Available items responded to.
+                        </small>
+                    </div>
+                @endif
             </div>
         </div>
     @endif
 
+@endsection
+
+@section('styles')
+    <style>
+        .wishlist-compact th,
+        .wishlist-compact td {
+            padding: 0.35rem 0.5rem !important;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+        .wishlist-compact .img-thumbnail {
+            width: 28px;
+            padding: 1px;
+        }
+    </style>
 @endsection
 
 @section('scripts')
