@@ -48,7 +48,7 @@
                     @forelse($items as $item)
                         @php
                             $prod = $item->product;
-                            $stems = $item->stems ?: optional($prod)->stems;
+                            $stems = optional($prod)->stems;
                             $unit  = optional(optional($prod)->stemsCount)->total;
                             $inline = array_filter([
                                 $stems ? 'Stems: ' . $stems : null,
@@ -57,8 +57,9 @@
                         @endphp
                         <tr>
                             <td class="align-middle">
-                                <img src="{{ $item->image ?: asset('assets/img/no-image.png') }}"
-                                     data-largeimg="{{ $item->image }}"
+                                @php $img = optional($prod)->image_url; @endphp
+                                <img src="{{ $img ?: asset('assets/img/no-image.png') }}"
+                                     data-largeimg="{{ $img }}"
                                      class="img-thumbnail" width="35"
                                      onerror="this.src='{{ asset('assets/img/no-image.png') }}'">
                                 <strong>{{ (string) $item->name }}</strong>

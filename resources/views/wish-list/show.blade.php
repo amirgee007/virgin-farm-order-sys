@@ -121,11 +121,11 @@
                         @forelse($items as $item)
                             @php
                                 $prod = $item->product;
-                                $stems = $item->stems ?: optional($prod)->stems;
+                                $stems = optional($prod)->stems;
                                 $unit  = optional(optional($prod)->stemsCount)->total;
                                 if ($canManage) {
                                     $attrs = array_filter([
-                                        ($item->size ?: optional($prod)->size) ? 'Size: ' . ($item->size ?: $prod->size) : null,
+                                        optional($prod)->size ? 'Size: ' . $prod->size : null,
                                         $stems ? 'Stems: ' . $stems : null,
                                         optional($prod)->color ? 'Color: ' . $prod->color : null,
                                         $unit ? 'Unit: ' . $unit : null,
@@ -142,8 +142,9 @@
                                     <td class="align-middle">{{ (string) $item->item_no }}</td>
                                 @endif
                                 <td class="align-middle">
-                                    <img src="{{ $item->image ?: asset('assets/img/no-image.png') }}"
-                                         data-largeimg="{{ $item->image }}"
+                                    @php $img = optional($prod)->image_url; @endphp
+                                    <img src="{{ $img ?: asset('assets/img/no-image.png') }}"
+                                         data-largeimg="{{ $img }}"
                                          class="img-thumbnail" width="35"
                                          onerror="this.src='{{ asset('assets/img/no-image.png') }}'">
                                     <strong>{{ (string) $item->name }}</strong>

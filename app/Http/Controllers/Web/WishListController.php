@@ -117,9 +117,6 @@ class WishListController extends Controller
                     'item_no'      => $product->item_no,
                     'name'         => $product->product_text,
                     'quantity'     => $request->quantity,
-                    'image'        => $product->image_url,
-                    'size'         => $product->size,
-                    'stems'        => $product->stems,
                 ]);
             }
         } catch (\Exception $ex) {
