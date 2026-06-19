@@ -85,13 +85,48 @@ Routes under `/wish-list` (prefix `wishlist.`), see `routes/web.php:42-58`.
 - Bootstrap classes + `@push('scripts')` stacks; main layout in `resources/views/layouts/`
 
 ## Recent feature work (context for current branch)
-Wish List (mid-Jun 2026), then standing-order checkout flow (Jun 19).
-Latest migrations:
+Wish List (mid-Jun 2026), then standing-order checkout flow (Jun 19), then notifications + wishlist emails (Jun 19).
+Latest migrations (all need `php artisan migrate`):
 - `2026_06_17_120000_create_wish_lists_table` — wish_lists + wish_list_items
 - `2026_06_18_120000_add_approval_to_wish_list_items`
 - `2026_06_18_140000_add_customer_decision_to_wish_lists`
-- `2026_06_19_010000_drop_snapshot_columns_from_wish_list_items`
-- `2026_06_19_120000_add_is_standing_order_to_orders_table` ← needs `php artisan migrate`
+- `2026_06_19_010000_drop_snapshot_columns_from_wish_list_items` — removed image/size/stems (read live from product)
+- `2026_06_19_120000_add_is_standing_order_to_orders_table`
+- `2026_06_19_130000_add_read_at_to_notifications_table`
+- `2026_06_19_140000_add_type_to_notifications_table` — `type` (default 'order'), index
+- `2026_06_19_150000_add_wish_list_id_to_notifications_table`
+
+## Notifications system
+- Table: `notifications`, model `Vanguard\Models\ClientNotification` (`app/Models/ClientNotification.php`).
+- Columns: id, order_id, wish_list_id, user_id, message, type, read_at, timestamps.
+- Scopes: `scopeMine()` — admin sees user_id=0, other users see user_id=auth()->id() (so ALL admins share admin notifications, including read_at).
+- `scopeUnread()` — whereNull('read_at').
+- Helper: `addOwnNotification($message, $order_id=0, $user_id=0, $type='order', $wish_list_id=null)` in `app/Support/helpers.php`. Uses `updateOrCreate` keyed on all fields — for messages that should always be fresh (re-trigger unread), call `ClientNotification::create([...])` directly instead.
+- Controller: `Users\UsersController` — `indexNotifications` (no auto-mark-read), `markNotificationRead($id)`, `markAllNotificationsRead`, `deleteNotifications($id)`.
+- Routes: `notifications.index`, `notification.delete`, `notification.markRead`, `notification.markAllRead`.
+- View: `resources/views/notifications/index.blade.php` — type filter (`?type=order|wishlist`), Type badge, Read At column with Unread badge, per-row "Mark Read" + "Mark all as Read".
+- Sidebar (`resources/views/partials/sidebar/main.blade.php`): Notifications tab shows total unread badge; Wish List tab shows badge filtered to `type='wishlist'`.
+
+## Wish list emails (via VirginFarmGlobalMail)
+Triggered from `WishListController` using private helper `sendWishListEmail($wishList, $subject, $bodyHtml, $to, $cc=[])`. Subjects always include `WL-X` and `request_date` (Y-m-d). Bodies include link to `wishlist.show` and "Please check notifications online www.virginfarms.net/notifications".
+
+| Action | To | CC |
+|--------|-----|-----|
+| Customer submits | weborders@virginfarms.com | Sales rep (`getSalesRepsNameEmail($user->sales_rep)`) |
+| Admin saves decisions | Customer | weborders@virginfarms.com |
+| Admin changes status | Customer | weborders@virginfarms.com |
+| Customer responds (accept/reject) | weborders@virginfarms.com | Sales rep |
+
+Customer-response notification message format: `"{first_name} accepted N item(s) and rejected M item(s) on WL-X"` (combined into ONE notification row + email).
+
+## Default-prices popover (reusable pattern)
+Eye-icon button next to a price field that shows a 4-row table on hover (FedEx / FOB / Hawaii / FedEx+). Uses `def_price_fedex`, `def_price_fob`, `def_price_hawaii`, `def_price_fedex_2` columns on `products`. See `resources/views/wish-list/show.blade.php` (quoted price, class `wishlist-price-popover`) and `resources/views/products/row.blade.php` (default prices column, class `product-price-popover`, hover trigger, left placement). Popover init script lives in each view's scripts section.
+
+## View denormalization rule (wish list items)
+`wish_list_items` does NOT store image/size/stems/unit — read live from `$item->product`. Only `item_no`, `name`, and `quantity` are snapshotted on the row. When displaying unit number, use `optional($item->product->stemsCount)->total` (relation on Product → UnitOfMeasure where `unit_of_measure` joins on `unit`, returns `total` column).
+
+## Manage Wish Lists filter
+Customer dropdown on `/wish-list/manage` is limited to users who have submitted at least one non-draft wish list. Labels: `{first_name} {last_name} (#{customer_number})`.
 
 ## Files that are large — read with offset/limit if needed
 - `app/Http/Controllers/Web/ProductsController.php` (1471 lines) — main inventory/search/reports
