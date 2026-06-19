@@ -4,7 +4,9 @@ namespace Vanguard\Http\Controllers\Web;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Vanguard\Http\Controllers\Controller;
+use Vanguard\Mail\VirginFarmGlobalMail;
 use Vanguard\Models\Product;
 use Vanguard\Models\WishList;
 use Vanguard\Models\WishListItem;
@@ -213,9 +215,18 @@ class WishListController extends Controller
                 'submitted_at' => now(),
             ]);
 
-            // TODO: send WishListSubmittedMail to sales (mirrors checkOutCart recipients).
             addOwnNotification('Your wish list has been submitted.', null, $wishList->user_id, 'wishlist', $wishList->id);
             addOwnNotification('New Wish List submitted: WL-' . $wishList->id, null, 0, 'wishlist', $wishList->id);
+
+            $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+            $this->sendWishListEmail(
+                $wishList,
+                'Received new Wish List WL-' . $wishList->id . ' for ' . $reqDate,
+                '<p>Received new Wish List for <strong>' . e($reqDate) . '</strong> (WL-' . $wishList->id . ').</p>'
+                . '<p>Please check notifications online <a href="https://www.virginfarms.net/notifications">www.virginfarms.net/notifications</a></p>',
+                'weborders@virginfarms.com',
+                ['juan@virginfarms.com']
+            );
 
             session()->flash('success', 'Wish list submitted. Sales will follow up with a quote.');
             return redirect()->route('wishlist.history');
@@ -398,6 +409,18 @@ class WishListController extends Controller
                     'type'         => 'wishlist',
                     'wish_list_id' => $wishList->id,
                 ]);
+
+                $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+                $this->sendWishListEmail(
+                    $wishList,
+                    'Received updates on Wish List WL-' . $wishList->id . ' for ' . $reqDate,
+                    '<p>Received updates on Wish List <strong>WL-' . $wishList->id . '</strong> for ' . e($reqDate) . '.</p>'
+                    . '<p>' . e($msg) . ' (' . e(optional(auth()->user())->email) . ')</p>'
+                    . '<p>Please check notifications online <a href="https://www.virginfarms.net/notifications">www.virginfarms.net/notifications</a></p>',
+                    'weborders@virginfarms.com',
+                    ['juan@virginfarms.com']
+                );
+
                 session()->flash('success', 'Thanks — your response has been sent to sales.');
             }
         } catch (\Exception $ex) {
@@ -450,6 +473,18 @@ class WishListController extends Controller
                 'wish_list_id' => $wishList->id,
             ]);
 
+            $customer = $wishList->user;
+            if ($customer && $customer->email) {
+                $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+                $this->sendWishListEmail(
+                    $wishList,
+                    'Received updates on Wish List WL-' . $wishList->id . ' for ' . $reqDate,
+                    '<p>Received updates on Wish List <strong>WL-' . $wishList->id . '</strong> for ' . e($reqDate) . '.</p>'
+                    . '<p>Please check notifications online <a href="https://www.virginfarms.net/notifications">www.virginfarms.net/notifications</a></p>',
+                    $customer->email
+                );
+            }
+
             session()->flash('success', 'Decisions saved.');
         } catch (\Exception $ex) {
             Log::error('Error in saveDecisions: ' . $ex->getMessage());
@@ -482,6 +517,22 @@ class WishListController extends Controller
         }
     }
 
+    private function sendWishListEmail(WishList $wishList, string $subject, string $bodyHtml, $to, array $cc = []): void
+    {
+        try {
+            $url = route('wishlist.show', $wishList->id);
+            $content = $bodyHtml . '<p><a href="' . $url . '">View Wish List WL-' . $wishList->id . '</a></p>';
+
+            $mail = Mail::to($to);
+            if (!empty($cc)) {
+                $mail->cc($cc);
+            }
+            $mail->send(new VirginFarmGlobalMail($subject, $content));
+        } catch (\Exception $ex) {
+            Log::error('WishList email failed: ' . $ex->getMessage());
+        }
+    }
+
     public function updateStatus(Request $request, $id)
     {
         try {
@@ -503,6 +554,18 @@ class WishListController extends Controller
                 'type'         => 'wishlist',
                 'wish_list_id' => $wishList->id,
             ]);
+
+            $customer = $wishList->user;
+            if ($customer && $customer->email) {
+                $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+                $this->sendWishListEmail(
+                    $wishList,
+                    'Received updates on Wish List WL-' . $wishList->id . ' for ' . $reqDate,
+                    '<p>Received updates on Wish List <strong>WL-' . $wishList->id . '</strong> for ' . e($reqDate) . ' — status: <strong>' . e($request->status) . '</strong>.</p>'
+                    . '<p>Please check notifications online <a href="https://www.virginfarms.net/notifications">www.virginfarms.net/notifications</a></p>',
+                    $customer->email
+                );
+            }
 
             session()->flash('success', 'Wish list status updated.');
         } catch (\Exception $ex) {
