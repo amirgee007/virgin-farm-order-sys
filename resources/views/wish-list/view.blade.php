@@ -110,15 +110,15 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="request_date">Request Date <span class="text-danger">*</span></label>
+                            <label for="request_date">Ship Date <span class="text-danger">*</span></label>
                             <input type="date"
                                    id="request_date"
                                    name="request_date"
                                    required
                                    min="{{ now()->toDateString() }}"
                                    value="{{ optional($wishList->request_date)->toDateString() }}"
-                                   class="form-control form-control-sm">
-                            <small class="text-muted">When would you like these items?</small>
+                                   class="form-control form-control-sm ship-date-input">
+                            <small class="text-muted">Ship date must be Monday–Thursday.</small>
                         </div>
                         <div class="col-md-8">
                             <label for="notes">Notes for Sales</label>
@@ -152,7 +152,7 @@
                                 <th>WL #</th>
                                 <th>Status</th>
                                 <th>Items</th>
-                                <th>Request Date</th>
+                                <th>Ship Date</th>
                                 <th>Submitted</th>
                                 <th>Notes</th>
                                 <th>Action</th>

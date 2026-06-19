@@ -73,7 +73,7 @@
                             <th>Sales Rep</th>
                             <th>Status</th>
                             <th>Items</th>
-                            <th>Request Date</th>
+                            <th>Ship Date</th>
                             <th>Submitted</th>
                             <th>Action</th>
                         </tr>

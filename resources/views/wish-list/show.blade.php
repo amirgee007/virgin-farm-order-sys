@@ -51,7 +51,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body p-3">
-                    <h6 class="text-muted mb-2">Request</h6>
+                    <h6 class="text-muted mb-2">Ship</h6>
                     <p class="mb-1 small">
                         <strong>Date:</strong>
                         {{ $wishList->request_date ? $wishList->request_date->format('Y-m-d') : '-' }}

@@ -31,7 +31,7 @@
                             <th>WL #</th>
                             <th>Status</th>
                             <th>Items</th>
-                            <th>Request Date</th>
+                            <th>Ship Date</th>
                             <th>Submitted</th>
                             <th>Notes</th>
                             <th>Action</th>
