@@ -225,7 +225,11 @@ class WishListController extends Controller
                 '<p>Received new Wish List for <strong>' . e($reqDate) . '</strong> (WL-' . $wishList->id . ').</p>'
                 . '<p>Please check notifications online <a href="https://www.virginfarms.net/notifications">www.virginfarms.net/notifications</a></p>',
                 'weborders@virginfarms.com',
-                ['juan@virginfarms.com']
+                array_filter([
+                    'christinah@virginfarms.com',
+                    'esteban@virginfarms.com',
+                    getSalesRepsNameEmail($wishList->user->sales_rep ?? null),
+                ])
             );
 
             session()->flash('success', 'Wish list submitted. Sales will follow up with a quote.');
