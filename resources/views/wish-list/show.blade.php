@@ -54,7 +54,7 @@
                     <h6 class="text-muted mb-2">Ship</h6>
                     <p class="mb-1 small">
                         <strong>Date:</strong>
-                        {{ $wishList->request_date ? $wishList->request_date->format('Y-m-d') : '-' }}
+                        {{ $wishList->ship_date ? $wishList->ship_date->format('Y-m-d') : '-' }}
                     </p>
                     <p class="mb-1 small">
                         <strong>Submitted:</strong>

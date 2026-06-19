@@ -102,7 +102,7 @@
                                 {{ $wl->items->count() }} ({{ $wl->items->sum('quantity') }} qty)
                             </td>
                             <td class="align-middle">
-                                {{ $wl->request_date ? $wl->request_date->format('Y-m-d') : '-' }}
+                                {{ $wl->ship_date ? $wl->ship_date->format('Y-m-d') : '-' }}
                             </td>
                             <td class="align-middle">
                                 {{ $wl->submitted_at ? $wl->submitted_at->format('Y-m-d H:i') : '-' }}

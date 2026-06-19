@@ -196,9 +196,15 @@ class WishListController extends Controller
     {
         try {
             $request->validate([
-                'request_date' => 'required|date|after_or_equal:today',
+                'ship_date' => 'required|date|after_or_equal:today',
                 'notes'        => 'nullable|string|max:2000',
             ]);
+
+            $dayOfWeek = \Carbon\Carbon::parse($request->ship_date)->dayOfWeekIso; // 1=Mon..7=Sun
+            if ($dayOfWeek < 1 || $dayOfWeek > 4) {
+                session()->flash('app_error', 'Ship date must be Monday through Thursday.');
+                return back()->withInput();
+            }
 
             $wishList = WishList::mineDraft()->with('items')->first();
 
@@ -209,7 +215,7 @@ class WishListController extends Controller
 
             $wishList->update([
                 'sales_rep'    => auth()->user()->sales_rep,
-                'request_date' => $request->request_date,
+                'ship_date' => $request->ship_date,
                 'notes'        => $request->notes,
                 'status'       => 'submitted',
                 'submitted_at' => now(),
@@ -218,7 +224,7 @@ class WishListController extends Controller
             addOwnNotification('Your wish list has been submitted.', null, $wishList->user_id, 'wishlist', $wishList->id);
             addOwnNotification('New Wish List submitted: WL-' . $wishList->id, null, 0, 'wishlist', $wishList->id);
 
-            $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+            $reqDate = $wishList->ship_date ? \Carbon\Carbon::parse($wishList->ship_date)->format('Y-m-d') : '';
             $this->sendWishListEmail(
                 $wishList,
                 'Received new Wish List WL-' . $wishList->id . ' for ' . $reqDate,
@@ -410,7 +416,7 @@ class WishListController extends Controller
                     'wish_list_id' => $wishList->id,
                 ]);
 
-                $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+                $reqDate = $wishList->ship_date ? \Carbon\Carbon::parse($wishList->ship_date)->format('Y-m-d') : '';
                 $this->sendWishListEmail(
                     $wishList,
                     'Received updates on Wish List WL-' . $wishList->id . ' for ' . $reqDate,
@@ -475,7 +481,7 @@ class WishListController extends Controller
 
             $customer = $wishList->user;
             if ($customer && $customer->email) {
-                $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+                $reqDate = $wishList->ship_date ? \Carbon\Carbon::parse($wishList->ship_date)->format('Y-m-d') : '';
                 $this->sendWishListEmail(
                     $wishList,
                     'Received updates on Wish List WL-' . $wishList->id . ' for ' . $reqDate,
@@ -558,7 +564,7 @@ class WishListController extends Controller
 
             $customer = $wishList->user;
             if ($customer && $customer->email) {
-                $reqDate = $wishList->request_date ? \Carbon\Carbon::parse($wishList->request_date)->format('Y-m-d') : '';
+                $reqDate = $wishList->ship_date ? \Carbon\Carbon::parse($wishList->ship_date)->format('Y-m-d') : '';
                 $this->sendWishListEmail(
                     $wishList,
                     'Received updates on Wish List WL-' . $wishList->id . ' for ' . $reqDate,

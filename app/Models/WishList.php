@@ -13,7 +13,7 @@ class WishList extends Model
     protected $table = 'wish_lists';
     protected $guarded = [];
     protected $casts = [
-        'request_date' => 'date',
+        'ship_date' => 'date',
         'submitted_at' => 'datetime',
     ];
 

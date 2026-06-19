@@ -110,13 +110,13 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-4">
-                            <label for="request_date">Ship Date <span class="text-danger">*</span></label>
+                            <label for="ship_date">Ship Date <span class="text-danger">*</span></label>
                             <input type="date"
-                                   id="request_date"
-                                   name="request_date"
+                                   id="ship_date"
+                                   name="ship_date"
                                    required
                                    min="{{ now()->toDateString() }}"
-                                   value="{{ optional($wishList->request_date)->toDateString() }}"
+                                   value="{{ optional($wishList->ship_date)->toDateString() }}"
                                    class="form-control form-control-sm ship-date-input">
                             <small class="text-muted">Ship date must be Monday–Thursday.</small>
                         </div>
@@ -178,7 +178,7 @@
                                     {{ $wl->items->count() }} ({{ $wl->items->sum('quantity') }} qty)
                                 </td>
                                 <td class="align-middle">
-                                    {{ $wl->request_date ? $wl->request_date->format('Y-m-d') : '-' }}
+                                    {{ $wl->ship_date ? $wl->ship_date->format('Y-m-d') : '-' }}
                                 </td>
                                 <td class="align-middle">
                                     {{ $wl->submitted_at ? $wl->submitted_at->format('Y-m-d H:i') : '-' }}
@@ -201,4 +201,36 @@
         </div>
     @endif
 
+@endsection
+
+@section('scripts')
+@include('partials.toaster-js')
+<script>
+    $(function () {
+        var $shipDate = $('.ship-date-input');
+
+        function isValidShipDay(value) {
+            if (!value) return false;
+            var parts = value.split('-');
+            var d = new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+            var day = d.getUTCDay(); // 1=Mon ... 4=Thu
+            return day >= 1 && day <= 4;
+        }
+
+        $shipDate.on('change', function () {
+            if (this.value && !isValidShipDay(this.value)) {
+                toastr.error('Ship date must be Monday through Thursday.');
+                this.value = '';
+            }
+        });
+
+        $shipDate.closest('form').on('submit', function (e) {
+            var val = $shipDate.val();
+            if (!isValidShipDay(val)) {
+                e.preventDefault();
+                toastr.error('Ship date must be Monday through Thursday.');
+            }
+        });
+    });
+</script>
 @endsection
