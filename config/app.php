@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Virgin Farm Order System'),
+    'name' => env('APP_NAME', 'Virgin Farms Order System'),
 
     /*
     |--------------------------------------------------------------------------
