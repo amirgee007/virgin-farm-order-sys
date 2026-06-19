@@ -48,12 +48,25 @@
     </td>
 
     <td class="align-middle">
-        <div>
-            <small>FOB: {{ $product->def_price_fob }}</small><br>
-            <small>FedEx: {{ $product->def_price_fedex }}</small><br>
-            <small>HI & AK: {{ $product->def_price_hawaii }}</small><br>
-            <small>FedEx+: {{ $product->def_price_fedex_2 }}</small>
-        </div>
+        @php
+            $fmt = fn ($v) => $v !== null ? '$'.number_format((float) $v, 2) : '-';
+            $popover = '<table class="table table-sm mb-0">'
+                . '<tr><td>FedEx</td><td class="text-right">'.$fmt($product->def_price_fedex).'</td></tr>'
+                . '<tr><td>FOB</td><td class="text-right">'.$fmt($product->def_price_fob).'</td></tr>'
+                . '<tr><td>Hawaii</td><td class="text-right">'.$fmt($product->def_price_hawaii).'</td></tr>'
+                . '<tr><td>FedEx+</td><td class="text-right">'.$fmt($product->def_price_fedex_2).'</td></tr>'
+                . '</table>';
+        @endphp
+        <button type="button"
+                class="btn btn-light btn-sm product-price-popover"
+                data-toggle="popover"
+                data-trigger="hover"
+                data-html="true"
+                data-placement="left"
+                title="Default Prices"
+                data-content="{{ $popover }}">
+            <i class="fas fa-eye text-primary"></i>
+        </button>
     </td>
 
     <td class="align-middle">

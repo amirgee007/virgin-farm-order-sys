@@ -770,6 +770,13 @@
     <script src="{{asset('assets/plugins/dropzone/dist/min/dropzone.min.js')}}" type="text/javascript"></script>
 
     <script>
+        $(function () {
+            $('[data-toggle="popover"].product-price-popover').popover({
+                container: 'body',
+                html: true,
+            });
+        });
+
         $(function() {
             const $input = $('#confirm-delete-input');
             const $deleteBtn = $('#confirm-delete-btn');
