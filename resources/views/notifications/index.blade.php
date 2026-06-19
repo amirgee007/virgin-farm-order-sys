@@ -21,42 +21,72 @@
 <div class="card">
     <div class="card-body">
 
+        <form method="GET" class="form-inline mb-3">
+            <label class="mr-2">Type:</label>
+            <select name="type" class="form-control mr-2" onchange="this.form.submit()">
+                <option value="">All</option>
+                <option value="order" {{ ($type ?? '') == 'order' ? 'selected' : '' }}>Order</option>
+                <option value="wishlist" {{ ($type ?? '') == 'wishlist' ? 'selected' : '' }}>Wish List</option>
+            </select>
+        </form>
+
         <div class="table-responsive" id="users-table-wrapper">
             <table class="table table-borderless table-striped">
                 <thead>
                 <tr>
                     <th>@lang('ID')</th>
                     <th>@lang('Client')</th>
+                    <th>@lang('Type')</th>
                     <th>@lang('Order Id')</th>
                     <th class="min-width-100">@lang('Message')</th>
                     <th>@lang('Created')</th>
+                    <th>Read At</th>
                     <th>@lang('Action')</th>
                 </tr>
                 </thead>
                 <tbody>
                     @if (count($notifications))
                         @foreach ($notifications as $index => $notification)
+                            @php
+                                $isWish = $notification->type === 'wishlist';
+                                $clientUser = $notification->user
+                                    ?: ($isWish ? optional($notification->wishList)->user : optional($notification->order)->user);
+                                $clientName = optional($clientUser)->first_name ?: 'N/A';
+                            @endphp
                             <tr>
                                 <td class="align-middle">{{ ++$index }}</td>
                                 <td class="align-middle">
-                                    <span class="badge badge-lg badge-warning">
-                                        {{ @$notification->user->first_name ?: __('N/A') }}
-                                    </span>
+                                    <span class="badge badge-lg badge-warning">{{ $clientName }}</span>
                                 </td>
 
                                 <td class="align-middle">
-                                    <a target="_blank" href="{{route('orders.index')."?search=WO".$notification->id}}"
-                                       title="@lang('View order detail')"
-                                       data-toggle="tooltip"
-                                       data-placement="top">
-                                        <span class="badge badge-lg badge-primary">
-                                            WO-{{ $notification->order_id }}
-                                        </span>
-                                    </a>
+                                    <span class="badge badge-info">{{ ucfirst($notification->type ?: 'order') }}</span>
                                 </td>
 
-                                <td class="align-middle">{{ Str::limit($notification->message , 50) }}</td>
+                                <td class="align-middle">
+                                    @if($isWish && $notification->wish_list_id)
+                                        <a target="_blank" href="{{ route('wishlist.show', $notification->wish_list_id) }}">
+                                            <span class="badge badge-lg badge-success">WL-{{ $notification->wish_list_id }}</span>
+                                        </a>
+                                    @elseif($notification->order_id)
+                                        <a target="_blank" href="{{route('orders.index')."?search=WO".$notification->order_id}}"
+                                           title="View order detail"
+                                           data-toggle="tooltip" data-placement="top">
+                                            <span class="badge badge-lg badge-primary">WO-{{ $notification->order_id }}</span>
+                                        </a>
+                                    @endif
+                                </td>
+
+                                <td class="align-middle">{{ $notification->message }}</td>
                                 <td class="align-middle" title="{{dateFormatMy($notification->created_at)}}">{{ diff4Human($notification->updated_at) }}</td>
+
+                                <td class="align-middle" title="{{ $notification->read_at ? dateFormatMy($notification->read_at) : '' }}">
+                                    @if($notification->read_at)
+                                        {{ diff4Human($notification->read_at) }}
+                                    @else
+                                        <span class="badge badge-secondary">Unread</span>
+                                    @endif
+                                </td>
 
                                 <td class="align-middle">
                                     <a href="{{ route('notification.delete', $notification->id) }}"

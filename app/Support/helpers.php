@@ -601,12 +601,14 @@ function updateSystemStatus($value = 1)
 
 #if user id is zero then it means its for ADMIN
 
-function addOwnNotification($message, $order_id = 0, $user_id = 0)
+function addOwnNotification($message, $order_id = 0, $user_id = 0, $type = 'order', $wish_list_id = null)
 {
     $data = [
         'message' => $message,
         'order_id' => $order_id,
-        'user_id' => $user_id
+        'user_id' => $user_id,
+        'type' => $type,
+        'wish_list_id' => $wish_list_id,
     ];
 
     ClientNotification::updateOrcreate($data, $data);

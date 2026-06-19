@@ -214,8 +214,8 @@ class WishListController extends Controller
             ]);
 
             // TODO: send WishListSubmittedMail to sales (mirrors checkOutCart recipients).
-            addOwnNotification('Your wish list has been submitted.', null, $wishList->user_id);
-            addOwnNotification('New Wish List submitted: WL-' . $wishList->id, null);
+            addOwnNotification('Your wish list has been submitted.', null, $wishList->user_id, 'wishlist', $wishList->id);
+            addOwnNotification('New Wish List submitted: WL-' . $wishList->id, null, 0, 'wishlist', $wishList->id);
 
             session()->flash('success', 'Wish list submitted. Sales will follow up with a quote.');
             return redirect()->route('wishlist.history');
@@ -352,7 +352,8 @@ class WishListController extends Controller
             }
 
             $decisions = $request->input('customer_decisions', []);
-            $changed = false;
+            $accepted = 0;
+            $rejected = 0;
 
             foreach ($wishList->items as $item) {
                 if ($item->approval_status !== 'approved') {
@@ -368,11 +369,27 @@ class WishListController extends Controller
                     'customer_decision'   => $choice,
                     'customer_decided_at' => now(),
                 ]);
-                $changed = true;
+
+                if ($choice === 'accepted') {
+                    $accepted++;
+                } else {
+                    $rejected++;
+                }
             }
 
-            if ($changed) {
-                addOwnNotification('Customer responded on Wish List WL-' . $wishList->id, null);
+            if ($accepted || $rejected) {
+                $customer = optional(auth()->user())->first_name ?: 'Customer';
+                $parts = [];
+                if ($accepted) $parts[] = 'accepted ' . $accepted . ' ' . \Illuminate\Support\Str::plural('item', $accepted);
+                if ($rejected) $parts[] = 'rejected ' . $rejected . ' ' . \Illuminate\Support\Str::plural('item', $rejected);
+                $msg = $customer . ' ' . implode(' and ', $parts) . ' on WL-' . $wishList->id;
+                \Vanguard\Models\ClientNotification::create([
+                    'message'      => $msg,
+                    'order_id'     => null,
+                    'user_id'      => 0,
+                    'type'         => 'wishlist',
+                    'wish_list_id' => $wishList->id,
+                ]);
                 session()->flash('success', 'Thanks — your response has been sent to sales.');
             }
         } catch (\Exception $ex) {
@@ -416,6 +433,14 @@ class WishListController extends Controller
             }
 
             $this->recalculateWishListStatus($wishList);
+
+            \Vanguard\Models\ClientNotification::create([
+                'message'      => 'Sales updated your Wish List WL-' . $wishList->id,
+                'order_id'     => null,
+                'user_id'      => $wishList->user_id,
+                'type'         => 'wishlist',
+                'wish_list_id' => $wishList->id,
+            ]);
 
             session()->flash('success', 'Decisions saved.');
         } catch (\Exception $ex) {
@@ -462,6 +487,14 @@ class WishListController extends Controller
 
             $wishList = WishList::findOrFail($id);
             $wishList->update(['status' => $request->status]);
+
+            \Vanguard\Models\ClientNotification::create([
+                'message'      => 'Your Wish List WL-' . $wishList->id . ' status changed to ' . $request->status,
+                'order_id'     => null,
+                'user_id'      => $wishList->user_id,
+                'type'         => 'wishlist',
+                'wish_list_id' => $wishList->id,
+            ]);
 
             session()->flash('success', 'Wish list status updated.');
         } catch (\Exception $ex) {

@@ -65,10 +65,14 @@
                     @endpermission
 
                     @permission(['client.inventory', 'orders.manage'], false)
+                    @php $unreadWishlistCount = \Vanguard\Models\ClientNotification::mine()->unread()->where('type', 'wishlist')->count(); @endphp
                     <li class="nav-item">
                         <a class="nav-link {{ Request::is('wish-list*') ? 'active' : ''  }}" href="{{ route('wishlist.view') }}">
                             <i class="fas fa-clipboard-list"></i>
                             <span>Wish List</span>
+                            @if($unreadWishlistCount > 0)
+                                <span class="badge badge-danger ml-1">{{ $unreadWishlistCount }}</span>
+                            @endif
                         </a>
                     </li>
                     @endpermission
@@ -170,10 +174,14 @@
             @endpermission
 
             @permission('notification.index')
+            @php $unreadNotifCount = \Vanguard\Models\ClientNotification::mine()->unread()->count(); @endphp
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('notifications*') ? 'active' : ''  }}" href="{{ route('notifications.index') }}">
                     <i class="fas fa-envelope"></i>
                     <span>@lang('Notifications')</span>
+                    @if($unreadNotifCount > 0)
+                        <span class="badge badge-danger ml-1">{{ $unreadNotifCount }}</span>
+                    @endif
                 </a>
             </li>
             @endpermission
