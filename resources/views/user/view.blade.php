@@ -100,7 +100,7 @@
                     <li class="list-group-item">
                         <strong>@lang('Contract Code'):</strong>
                         {{ $user->contract_code }}
-                        {{ getContractCodes()[$user->contract_code] }}
+                        {{ getContractCodes()[$user->contract_code] ?? '' }}
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Terms'):</strong>
@@ -112,7 +112,7 @@
                     </li>
                     <li class="list-group-item">
                         <strong>@lang('Carrier Id'):</strong>
-                        {{ $carriers[$user->carrier_id_default] }}
+                        {{ $carriers[$user->carrier_id_default] ?? '' }}
                     </li>
                 </ul>
             </div>
