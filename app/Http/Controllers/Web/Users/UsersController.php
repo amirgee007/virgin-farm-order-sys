@@ -278,10 +278,21 @@ class UsersController extends Controller
             $query->where('type', $type);
         }
         $notifications = $query->with(['user', 'wishList.user', 'order.user'])->limit(500)->latest()->get();
-        ClientNotification::whereIn('id', $notifications->pluck('id'))
-            ->whereNull('read_at')
-            ->update(['read_at' => now()]);
         return view('notifications.index', compact('notifications', 'type'));
+    }
+
+    public function markNotificationRead($id)
+    {
+        $not = ClientNotification::mine()->findOrFail($id);
+        $not->update(['read_at' => now()]);
+        return back();
+    }
+
+    public function markAllNotificationsRead()
+    {
+        ClientNotification::mine()->whereNull('read_at')->update(['read_at' => now()]);
+        session()->flash('app_message', 'All notifications marked as read.');
+        return back();
     }
 
     public function deleteNotifications($id)

@@ -21,6 +21,13 @@
 <div class="card">
     <div class="card-body">
 
+        <form method="POST" action="{{ route('notification.markAllRead') }}" class="d-inline float-right">
+            @csrf
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fas fa-check-double"></i> Mark all as Read
+            </button>
+        </form>
+
         <form method="GET" class="form-inline mb-3">
             <label class="mr-2">Type:</label>
             <select name="type" class="form-control mr-2" onchange="this.form.submit()">
@@ -89,6 +96,15 @@
                                 </td>
 
                                 <td class="align-middle">
+                                    @if(!$notification->read_at)
+                                        <form method="POST" action="{{ route('notification.markRead', $notification->id) }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-icon" title="Mark as Read" data-toggle="tooltip" data-placement="top">
+                                                <i class="fas fa-check text-success"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+
                                     <a href="{{ route('notification.delete', $notification->id) }}"
                                        class="btn btn-icon"
                                        title="@lang('Delete Notification')"

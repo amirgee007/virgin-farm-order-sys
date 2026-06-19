@@ -327,6 +327,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             'as' => 'notification.delete',
             'uses' => 'Users\UsersController@deleteNotifications'
         ]);
+
+        Route::post('/mark-read/{id}', [
+            'as' => 'notification.markRead',
+            'uses' => 'Users\UsersController@markNotificationRead'
+        ]);
+
+        Route::post('/mark-all-read', [
+            'as' => 'notification.markAllRead',
+            'uses' => 'Users\UsersController@markAllNotificationsRead'
+        ]);
     });
 
 
