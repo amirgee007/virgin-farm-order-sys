@@ -299,9 +299,17 @@ class WishListController extends Controller
                 }
             }
 
-            $users = [0 => 'Show All'] + User::where('status', UserStatus::ACTIVE)
+            $submittedUserIds = WishList::where('status', '!=', 'draft')->distinct()->pluck('user_id');
+            $users = [0 => 'Show All'] + User::whereIn('id', $submittedUserIds)
                 ->orderBy('first_name')
-                ->pluck('first_name', 'id')
+                ->get(['id', 'first_name', 'last_name', 'customer_number'])
+                ->mapWithKeys(function ($u) {
+                    $label = trim($u->first_name . ' ' . $u->last_name);
+                    if ($u->customer_number) {
+                        $label .= ' (#' . $u->customer_number . ')';
+                    }
+                    return [$u->id => $label];
+                })
                 ->toArray();
 
             $count = (clone $query)->count();
