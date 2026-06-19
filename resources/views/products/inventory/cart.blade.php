@@ -312,6 +312,19 @@
                                     need to be adjusted. We appreciate your understanding.
                                 </div>
 
+                                <div class="mt-3 d-none">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="standing-order" onchange="saveStandingOrder()">
+                                        <label class="form-check-label" for="standing-order">
+                                            <strong>Make Standing Order</strong> (same items on a weekly basis)
+                                        </label>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">
+                                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                        Note: You agree you are requesting a standing weekly order of the same items at the quoted price.
+                                    </small>
+                                </div>
+
                             </div>
 
                             <div class="col-md-6">
@@ -397,11 +410,13 @@
                                         <td colspan="5" class="text-right">
                                             <a href="{{ route('inventory.index') }}" class="btn btn-danger"><i
                                                     class="fa fa-angle-left"></i> Continue Shopping</a>
-                                            <a href="{{ route('checkout.cart') }}" class="btn btn-primary"
+                                            <a href="{{ route('checkout.cart') }}" id="checkout-btn" class="btn btn-primary"
                                                title="@lang('Checkout and Confirm the Order')" data-toggle="tooltip"
                                                data-placement="top" data-method="GET"
                                                data-confirm-title="@lang('Please Confirm To Proceed?')"
                                                data-confirm-text="@lang('Once you check out you can no longer change this order..!')"
+                                               data-default-confirm-text="@lang('Once you check out you can no longer change this order..!')"
+                                               data-standing-confirm-text="@lang('Once you check out you can no longer change this order..! You have selected MAKE STANDING ORDER — you agree you are requesting a standing weekly order of the same items at the quoted price.')"
                                                data-confirm-delete="@lang('Yes, Proceed!')">
                                                 Checkout &nbsp;<i class="fa fa-angle-right"></i>
                                             </a>
@@ -490,6 +505,30 @@
                 });
             }
         });
+
+        function saveStandingOrder() {
+            var isChecked = $('#standing-order').is(':checked');
+            var $btn = $('#checkout-btn');
+            $btn.data('confirm-text', isChecked
+                ? $btn.attr('data-standing-confirm-text')
+                : $btn.attr('data-default-confirm-text'));
+            $.ajax({
+                url: '{{ route('cart.save.standing') }}',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({standing: isChecked}),
+                success: function () {
+                    if (isChecked) {
+                        toastr.success('Standing order selected. Please complete checkout within 10 minutes, otherwise this option will be cleared.');
+                    } else {
+                        toastr.info('Standing order preference removed.');
+                    }
+                },
+                error: function () {
+                    toastr.error('Could not save standing order preference. Please try again.');
+                }
+            });
+        }
 
         function saveOrderNote() {
             var textValue = $('#order-notes').val().trim();

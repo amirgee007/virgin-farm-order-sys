@@ -34,11 +34,22 @@ class CartController extends Controller
         }
     }
 
+    public function saveStandingOrder(Request $request)
+    {
+        try {
+            $time = now()->addMinutes(10);
+            Cache::put('standing_order_' . auth()->id(), (bool) $request->boolean('standing'), $time);
+        } catch (\Exception $ex) {
+            Log::error('Error in saveStandingOrder: ' . $ex->getMessage());
+        }
+    }
+
     public function viewCart()
     {
         try {
             self::makeCartEmptyIfTimePassed();
             Cache::forget("order_note_" . auth()->id());
+            Cache::forget("standing_order_" . auth()->id());
 
             $user = auth()->user();
             $carts = getMyCart();
@@ -263,6 +274,7 @@ class CartController extends Controller
 
             // === Step 7: Final update to order ===
             $notes = Cache::pull("order_note_{$user->id}");
+            $isStandingOrder = (bool) Cache::pull("standing_order_{$user->id}");
 
             $order->update([
                 'sub_total' => round2Digit($total),
@@ -272,6 +284,7 @@ class CartController extends Controller
                 'full_add_on' => $order->full_add_on ?: $full_add_on,
                 'total' => round2Digit($totalWithTax),
                 'notes' => $notes,
+                'is_standing_order' => $isStandingOrder,
             ]);
 
             $order->refresh();

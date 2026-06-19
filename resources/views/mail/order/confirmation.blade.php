@@ -33,6 +33,9 @@
 @endcomponent
 
 # Total Units: {{$order->countQty()}}
+@if($order->is_standing_order)
+##### Standing Order: Yes — customer requested a standing weekly order of the same items at the quoted price.
+@endif
 ##### Order Notes: {{$order->notes}}
 Your sales representative will contact you to confirm your online order.
 

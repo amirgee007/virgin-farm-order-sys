@@ -35,6 +35,7 @@ Route::post('remove-from-cart', [CartController::class, 'remove'])->name('remove
 Route::get('empty-cart', [CartController::class, 'emptyCart'])->name('empty.cart');#done DB
 Route::get('checkout-from-cart', [CartController::class, 'checkOutCart'])->name('checkout.cart'); #done DB
 Route::post('update-cart-notes', [CartController::class, 'saveOrderNotes'])->name('cart.save.notes'); #done DB
+Route::post('update-cart-standing', [CartController::class, 'saveStandingOrder'])->name('cart.save.standing');
 
 Route::post('/api/validate-cart-size', 'CartController@validateCartSelection');
 

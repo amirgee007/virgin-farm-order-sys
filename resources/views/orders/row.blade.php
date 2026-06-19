@@ -5,6 +5,9 @@
         data-placement="left">
         <i class="fa fa-angle-double-down"></i>
         WO{{ $order->id }}
+        @if($order->is_standing_order)
+            <span class="badge badge-info" title="Standing weekly order">Standing</span>
+        @endif
     </td>
 
     <td class="align-middle">{{ $order->name }}</td>
