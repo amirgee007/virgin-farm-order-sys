@@ -517,20 +517,37 @@
         </div>
 
         {{-- Inline supplier-switch notice (replaces the swal popup) --}}
+        <style>
+            @keyframes supplierSwitchPulse {
+                0%   { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.55); }
+                70%  { box-shadow: 0 0 0 14px rgba(255, 152, 0, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(255, 152, 0, 0); }
+            }
+            #supplier-switch-notice .alert {
+                background: #fff3cd;
+                border: 2px solid #ffb300;
+                border-radius: 8px;
+                padding: 14px 18px;
+                gap: 12px;
+                animation: supplierSwitchPulse 1.6s ease-out infinite;
+            }
+            #supplier-switch-notice .switch-msg { font-size: 16px; line-height: 1.4; }
+            #supplier-switch-notice .switch-msg b { color: #d84315; }
+            #supplier-switch-notice .btn { font-size: 14px; padding: 8px 14px; font-weight: 600; }
+        </style>
         <div class="col-md-12" id="supplier-switch-notice" style="display:none;">
-            <div class="alert mb-2 d-flex align-items-center flex-wrap justify-content-between"
-                 style="background:#fff8e1; border:1px solid #ffe082; border-radius:6px; gap:10px;">
-                <div style="font-size:13px;">
-                    <i class="fas fa-info-circle text-warning mr-1"></i>
-                    <span id="switch-notice-supplier" style="font-weight:600;"></span>
+            <div class="alert mb-2 d-flex align-items-center flex-wrap justify-content-between">
+                <div class="switch-msg">
+                    <i class="fas fa-exclamation-triangle text-warning mr-2" style="font-size:20px;"></i>
+                    <span id="switch-notice-supplier" style="font-weight:700;"></span>
                     has no inventory for <b id="switch-notice-from"></b>.
                     Next available: <b id="switch-notice-to"></b>
                 </div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button id="confirm-supplier-switch" class="btn btn-success btn-sm">
+                    <button id="confirm-supplier-switch" class="btn btn-success">
                         Switch to <span id="switch-btn-date"></span>
                     </button>
-                    <button id="cancel-supplier-switch" class="btn btn-outline-secondary btn-sm">
+                    <button id="cancel-supplier-switch" class="btn btn-outline-secondary">
                         <i class="fas fa-arrow-left"></i> Stay on current
                     </button>
                 </div>
