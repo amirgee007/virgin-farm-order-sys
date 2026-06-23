@@ -95,6 +95,7 @@ Latest migrations (all need `php artisan migrate`):
 - `2026_06_19_130000_add_read_at_to_notifications_table`
 - `2026_06_19_140000_add_type_to_notifications_table` — `type` (default 'order'), index
 - `2026_06_19_150000_add_wish_list_id_to_notifications_table`
+- `2026_06_19_200000_rename_request_date_on_wish_lists` — renamed `request_date` → `ship_date` on `wish_lists`. All controller/model/view references use `ship_date` now.
 
 ## Notifications system
 - Table: `notifications`, model `Vanguard\Models\ClientNotification` (`app/Models/ClientNotification.php`).
@@ -108,7 +109,7 @@ Latest migrations (all need `php artisan migrate`):
 - Sidebar (`resources/views/partials/sidebar/main.blade.php`): Notifications tab shows total unread badge; Wish List tab shows badge filtered to `type='wishlist'`.
 
 ## Wish list emails (via VirginFarmGlobalMail)
-Triggered from `WishListController` using private helper `sendWishListEmail($wishList, $subject, $bodyHtml, $to, $cc=[])`. Subjects always include `WL-X` and `request_date` (Y-m-d). Bodies include link to `wishlist.show` and "Please check notifications online www.virginfarms.net/notifications".
+Triggered from `WishListController` using private helper `sendWishListEmail($wishList, $subject, $bodyHtml, $to, $cc=[])`. Subjects always include `WL-X` and `ship_date` (Y-m-d). Customer-response email CCs `christinah@virginfarms.com` (not Juan, as of Jun 24 2026). Bodies include link to `wishlist.show` and "Please check notifications online www.virginfarms.net/notifications".
 
 | Action | To | CC |
 |--------|-----|-----|
