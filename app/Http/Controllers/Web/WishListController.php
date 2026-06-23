@@ -424,7 +424,7 @@ class WishListController extends Controller
                     . '<p>' . e($msg) . ' (' . e(optional(auth()->user())->email) . ')</p>'
                     . '<p>Please check notifications online <a href="https://www.virginfarms.net/notifications">www.virginfarms.net/notifications</a></p>',
                     'weborders@virginfarms.com',
-                    ['juan@virginfarms.com']
+                    ['christinah@virginfarms.com']
                 );
 
                 session()->flash('success', 'Thanks — your response has been sent to sales.');
