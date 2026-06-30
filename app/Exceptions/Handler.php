@@ -4,6 +4,7 @@ namespace Vanguard\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -38,6 +39,13 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (TokenMismatchException $e, $request) {
+            return redirect()
+                ->route('login')
+                ->with('error', 'Your session expired. Please sign in again.')
+                ->withInput($request->except(['password', 'password_confirmation', '_token']));
         });
     }
 }

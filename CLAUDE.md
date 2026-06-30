@@ -140,6 +140,7 @@ Customer dropdown on `/wish-list/manage` is limited to users who have submitted 
 - **Write simple, easy code.** No clever abstractions, no over-engineering. Plain Laravel/Blade/jQuery as used elsewhere in this project. Match existing style.
 - **Never `git push` or create a PR without explicit permission.** Don't commit either unless asked.
 - Keep changes small and focused on what was requested.
+- **After every change, suggest a short commit message** (one line, conventional style — e.g. `fix: redirect 419 to login with flash error`) so the user can copy-paste it when they commit. Do this at the end of any task that modifies files, without being asked.
 
 ## What NOT to do
 - Don't add a `ProductPrice` model — pricing uses column selection only
